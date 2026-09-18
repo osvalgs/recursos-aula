@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejercicio: clase de palabra y función sintáctica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#faf8f4;--paper:#f2ede4;--ink:#1a1612;--ink-muted:#7a736a;
+  --accent:#c0392b;--accent-soft:#f9ece9;
+  --blue:#2563a8;--blue-soft:#e8f0fb;
+  --green:#1a6b3c;--green-soft:#e4f3eb;
+  --amber:#92600a;--amber-soft:#fdf3dc;
+  --border:#ddd5c8;--shadow:0 2px 12px rgba(26,22,18,.08);--radius:6px;
+  --font-serif:'Lora',Georgia,serif;--font-sans:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font-family:var(--font-sans);font-size:16px;line-height:1.7;min-height:100vh;}
+header{background:var(--ink);color:var(--cream);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden;}
+header::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:40px solid rgba(255,255,255,.04);}
+header::after{content:'';position:absolute;bottom:-80px;left:40%;width:300px;height:300px;border-radius:50%;border:50px solid rgba(255,255,255,.03);}
+.header-label{font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(250,248,244,.5);margin-bottom:.5rem;}
+header h1{font-family:var(--font-serif);font-size:clamp(17px,3vw,24px);font-weight:600;line-height:1.3;margin-bottom:.5rem;}
+.header-words{font-family:var(--font-serif);font-size:clamp(20px,4.5vw,36px);font-weight:600;font-style:italic;color:rgba(250,248,244,.85);line-height:1.4;margin-bottom:1rem;}
+.header-words span{color:var(--cream);}
+.instrucciones{background:rgba(250,248,244,.08);border:1px solid rgba(250,248,244,.12);border-radius:var(--radius);padding:1rem 1.25rem;font-size:14px;line-height:1.8;color:rgba(250,248,244,.8);max-width:760px;position:relative;z-index:1;}
+.instrucciones strong{color:var(--cream);}
+.legend{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(250,248,244,.12);}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(250,248,244,.7);}
+.legend-dot{width:13px;height:13px;border-radius:3px;flex-shrink:0;}
+.bloque-nav{background:var(--paper);border-bottom:1px solid var(--border);padding:.55rem 1.5rem;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;}
+.nav-btn{padding:5px 13px;font-size:12.5px;font-family:var(--font-sans);font-weight:500;border-radius:20px;border:1px solid var(--border);background:white;color:var(--ink-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.nav-btn:hover{background:var(--paper);color:var(--ink);}
+.nav-btn.activo{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.nav-btn.completado{border-color:#7dc49e;color:var(--green);}
+.nav-btn.completado.activo{background:var(--green);color:white;border-color:var(--green);}
+.stats-bar{background:var(--paper);border-bottom:1px solid var(--border);padding:.55rem 1.5rem;display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+.stat{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-muted);}
+.stat span{font-weight:500;font-size:14px;}
+.n-ok{color:var(--green);}.n-err{color:var(--accent);}
+.btn-reset,.btn-pdf{margin-left:auto;padding:5px 13px;font-size:12.5px;font-family:var(--font-sans);font-weight:500;border-radius:var(--radius);border:1px solid var(--border);background:white;color:var(--ink);cursor:pointer;}
+.btn-reset:hover{background:var(--paper);}
+.btn-pdf{background:var(--ink);color:var(--cream);border-color:var(--ink);margin-left:6px;}
+.btn-pdf:hover{background:#333;}
+main{max-width:790px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+.bloque-titulo{font-family:var(--font-serif);font-size:19px;font-weight:600;color:var(--ink);margin-bottom:.35rem;padding-bottom:.45rem;border-bottom:2px solid var(--ink);}
+.bloque-subtitulo{font-family:var(--font-serif);font-size:13px;font-style:italic;color:var(--ink-muted);margin-bottom:1.3rem;}
+.oracion-wrap{position:relative;margin-bottom:1.1rem;padding:.8rem 1rem .8rem 3rem;background:white;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font-serif);font-size:16px;line-height:2.1;transition:border-color .2s,background .2s;box-shadow:var(--shadow);}
+.oracion-wrap.respondida-ok{background:var(--green-soft);border-color:#a8d9bc;}
+.oracion-wrap.respondida-err{background:var(--accent-soft);border-color:#f0b8b0;}
+.oracion-num{position:absolute;left:.65rem;top:.85rem;font-family:var(--font-sans);font-size:11px;font-weight:500;color:var(--ink-muted);}
+.palabra-btn{display:inline;background:var(--blue-soft);color:var(--blue);font-weight:600;font-family:var(--font-serif);font-size:16px;border:1px solid #b8cef0;border-radius:3px;padding:0 5px;cursor:pointer;line-height:inherit;}
+.palabra-btn:hover{background:#d4e4f8;}
+.palabra-btn.respondida-ok{background:#b8e8cc;border-color:#7dc49e;color:var(--green);}
+.palabra-btn.respondida-err{background:#f5c0b8;border-color:#e08070;color:var(--accent);}
+.inline-popup-anchor{display:inline;position:relative;}
+.inline-popup{display:none;position:absolute;top:calc(100% + 8px);left:0;z-index:500;background:white;border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 32px rgba(26,22,18,.2);padding:1rem 1.1rem;min-width:340px;max-width:400px;font-family:var(--font-sans);}
+.inline-popup.visible{display:block;}
+.inline-popup h4{font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);margin-bottom:.5rem;}
+.inline-popup h4 em{font-style:normal;color:var(--blue);font-family:var(--font-serif);font-size:15px;text-transform:none;letter-spacing:0;font-weight:600;}
+.pop-label{font-size:11px;font-weight:500;color:var(--ink-muted);letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;margin-top:.5rem;}
+.pop-label:first-of-type{margin-top:0;}
+.inline-popup select{width:100%;font-size:13px;font-family:var(--font-sans);padding:6px 8px;border-radius:var(--radius);border:1px solid var(--border);background:var(--cream);color:var(--ink);}
+.nota-ant{font-size:12px;color:var(--amber);font-style:italic;margin-top:.5rem;padding:.4rem .6rem;background:var(--amber-soft);border-radius:4px;border:1px solid #e8c87a;line-height:1.5;display:none;}
+.nota-ant.visible{display:block;}
+.pop-btns{display:flex;gap:8px;margin-top:.7rem;}
+.btn-check{flex:1;padding:8px;font-size:13px;font-weight:500;font-family:var(--font-sans);border-radius:var(--radius);border:1px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer;}
+.btn-check:hover{background:#333;}
+.btn-close-pop{padding:8px 14px;font-size:13px;font-family:var(--font-sans);border-radius:var(--radius);border:1px solid var(--border);background:white;color:var(--ink-muted);cursor:pointer;}
+.btn-close-pop:hover{background:var(--paper);}
+.feedback{font-size:12.5px;line-height:1.65;margin-top:.6rem;padding:.6rem .8rem;border-radius:var(--radius);}
+.feedback.ok{background:var(--green-soft);color:#145a30;}
+.feedback.err{background:var(--accent-soft);color:#7b1a13;}
+.resultado-bloque{margin-top:2rem;padding:1.5rem;background:white;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);}
+.resultado-bloque h3{font-family:var(--font-serif);font-size:17px;font-weight:600;margin-bottom:1rem;}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1rem;}
+.res-card{background:var(--paper);border-radius:var(--radius);padding:.7rem 1rem;text-align:center;}
+.res-num{font-size:24px;font-weight:500;}
+.res-label{font-size:12px;color:var(--ink-muted);margin-top:2px;}
+.btn-siguiente{display:inline-block;margin-top:.7rem;padding:9px 22px;font-size:14px;font-weight:500;font-family:var(--font-sans);border-radius:var(--radius);border:1px solid var(--ink);background:var(--ink);color:var(--cream);cursor:pointer;}
+.btn-siguiente:hover{background:#333;}
+.puntuacion-final{margin-top:2rem;padding:2rem;background:var(--ink);color:var(--cream);border-radius:8px;text-align:center;}
+.puntuacion-final h3{font-family:var(--font-serif);font-size:18px;font-weight:600;margin-bottom:.75rem;}
+.nota-grande{font-size:58px;font-weight:600;font-family:var(--font-serif);line-height:1;}
+.nota-sub{font-size:13px;color:rgba(250,248,244,.55);margin-top:.4rem;}
+.nota-comentario{font-size:14px;margin-top:.9rem;color:rgba(250,248,244,.8);}
+@media print{
+  .bloque-nav,.stats-bar,.inline-popup,.btn-siguiente,.btn-reset,.btn-pdf,.nota-ant{display:none!important;}
+  .oracion-wrap{break-inside:avoid;background:white!important;border:1px solid #ccc!important;box-shadow:none!important;}
+  .palabra-btn{background:#e8f0fb!important;border:1px solid #b8cef0!important;color:#2563a8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  main{padding:1rem;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Lengua castellana y literatura · Sintaxis</div>
+  <h1>Clase de palabra y función sintáctica</h1>
+  <div class="header-words">
+    <span>que</span> / <span>qué</span> &nbsp;·&nbsp;
+    <span>quien</span> / <span>quién</span> &nbsp;·&nbsp;
+    <span>cuando</span> / <span>cuándo</span><br>
+    <span>donde</span> / <span>dónde</span> &nbsp;·&nbsp;
+    <span>como</span> / <span>cómo</span> &nbsp;·&nbsp;
+    <span>cuyo</span> &nbsp;·&nbsp; <span>si</span>
+  </div>
+  <div class="instrucciones">
+    <strong>Instrucciones.</strong> El ejercicio está dividido en cuatro bloques de 15 oraciones. Los bloques 1 y 3 trabajan palabras sin tilde; los bloques 2 y 4, palabras con tilde o el relativo posesivo <em>cuyo</em>. Haz clic en la palabra resaltada en <strong style="color:#a8c8f8">azul</strong> para abrir el menú: selecciona la <strong>clase de palabra</strong> y la <strong>función sintáctica</strong>, y pulsa <em>Comprobar</em>. Cuando la palabra sea un pronombre o determinante relativo, selecciona también el antecedente (el referente anafórico) en la oración. Al finalizar cada bloque, pulsa <em>Ver resultados</em>. Al terminar los cuatro bloques, se mostrará la nota final sobre 10.
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#a8c8f8;border:1px solid #6a9ed8"></div>Palabra a analizar</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#b8e8cc;border:1px solid #7dc49e"></div>Respuesta correcta</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f5c0b8;border:1px solid #e08070"></div>Respuesta incorrecta</div>
+    </div>
+  </div>
+</header>
+
+<div class="bloque-nav">
+  <button class="nav-btn activo" id="nav0" onclick="irA(0)">Bloque 1 · sin tilde</button>
+  <button class="nav-btn" id="nav1" onclick="irA(1)">Bloque 2 · con tilde / cuyo</button>
+  <button class="nav-btn" id="nav2" onclick="irA(2)">Bloque 3 · sin tilde</button>
+  <button class="nav-btn" id="nav3" onclick="irA(3)">Bloque 4 · con tilde / cuyo</button>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">Respondidas: <span id="st-total">0</span></div>
+  <div class="stat">Correctas: <span class="n-ok" id="st-ok">0</span></div>
+  <div class="stat">Incorrectas: <span class="n-err" id="st-err">0</span></div>
+  <button class="btn-reset" onclick="resetAll()">↺ Reiniciar</button>
+  <button class="btn-pdf" onclick="window.print()">⬇ Imprimir / PDF</button>
+</div>
+
+<main id="main"></main>
+
+<script>
+// ── DESPLEGABLES ─────────────────────────────────────────────────────────────
+
+const CL1=[
+  {v:"",l:"— Selecciona la clase —"},
+  {v:"conj-sust",    l:"Conjunción de una subordinada sustantiva"},
+  {v:"pron-rel-adj", l:"Pronombre relativo de una subordinada adjetiva"},
+  {v:"pron-rel-sus", l:"Pronombre relativo de una subordinada sustantiva"},
+  {v:"conj-adv",     l:"Conjunción de una subordinada adverbial"},
+  {v:"conj-bip",     l:"Conjunción de una oración bipolar"},
+];
+const FN1=[
+  {v:"",l:"— Selecciona la función —"},
+  {v:"nexo-sust",    l:"NEXO de una subordinada sustantiva"},
+  {v:"nexo-sust-suj",l:"NEXO + SUJETO de una subordinada sustantiva"},
+  {v:"nexo-adj-suj", l:"NEXO + SUJETO de una subordinada adjetiva"},
+  {v:"nexo-adj-cd",  l:"NEXO + CD de una subordinada adjetiva"},
+  {v:"nexo-adv-cct", l:"NEXO + CCT de una subordinada adverbial"},
+  {v:"nexo-adv-ccl", l:"NEXO + CCL de una subordinada adverbial"},
+  {v:"nexo-adv-ccm", l:"NEXO + CCM de una subordinada adverbial"},
+  {v:"nexo-bip",     l:"NEXO de una oración bipolar"},
+];
+
+const CL2=[
+  {v:"",l:"— Selecciona la clase —"},
+  {v:"det-int", l:"Determinante interrogativo / exclamativo de una subordinada sustantiva"},
+  {v:"pron-int",l:"Pronombre interrogativo / exclamativo de una subordinada sustantiva"},
+  {v:"det-rel", l:"Determinante relativo posesivo de una subordinada adjetiva"},
+  {v:"adv-int", l:"Adverbio interrogativo / exclamativo de una subordinada sustantiva"},
+];
+const FN2=[
+  {v:"",l:"— Selecciona la función —"},
+  {v:"det-fn",  l:"DET de una frase nominal"},
+  {v:"nexo-suj",l:"NEXO + SUJ de una subordinada sustantiva"},
+  {v:"nexo-cd", l:"NEXO + CD de una subordinada sustantiva"},
+  {v:"nexo-cct",l:"NEXO + CCT de una subordinada sustantiva"},
+  {v:"nexo-ccl",l:"NEXO + CCL de una subordinada sustantiva"},
+  {v:"nexo-ccm",l:"NEXO + CCM de una subordinada sustantiva"},
+];
+
+// ── FRASES DE SUSTITUCIÓN ────────────────────────────────────────────────────
+// Usadas en las explicaciones:
+// adj  → «el nexo puede sustituirse por <em>el cual / la cual / los cuales / las cuales</em>»
+// sust → «la subordinada puede sustituirse por <em>eso</em>»
+// cct  → «la subordinada puede sustituirse por <em>entonces</em>»
+// ccl  → «la subordinada puede sustituirse por <em>allí</em>»
+// ccm  → «la subordinada puede sustituirse por <em>así</em>»
+
+const S_ADJ  = ' El nexo puede sustituirse por <em>el cual / la cual / los cuales / las cuales</em>.';
+const S_SUST = ' La subordinada puede sustituirse por <em>eso</em>.';
+const S_CCT  = ' La subordinada puede sustituirse por <em>entonces</em>.';
+const S_CCL  = ' La subordinada puede sustituirse por <em>allí</em>.';
+const S_CCM  = ' La subordinada puede sustituirse por <em>así</em>.';
+
+// ── BLOQUE 1 — 15 oraciones sin tilde (serie A) ──────────────────────────────
+const DAT1=[
+  // que conj.sust (3)
+  {id:"a_qc1",rel:false,t:'Espero <T> llegues a tiempo a la reunión.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es una <strong>conjunción de una subordinada sustantiva</strong>: introduce la subordinada <em>que llegues a tiempo</em>, CD de <em>espero</em>. Solo ejerce de <strong>NEXO</strong>; no lleva tilde."+S_SUST},
+  {id:"a_qc2",rel:false,t:'Es fundamental <T> comprendáis bien los conceptos.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>conjunción de una subordinada sustantiva</strong>: introduce la subordinada en función de sujeto de <em>es fundamental</em>. Solo ejerce de <strong>NEXO</strong>."+S_SUST},
+  {id:"a_qc3",rel:false,t:'La profesora insistió <T> debíamos repasar el tema.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>conjunción de una subordinada sustantiva</strong> (CD de <em>insistió</em>). Solo es <strong>NEXO</strong>."+S_SUST},
+  // que pron.rel.adj SUJ (2)
+  {id:"a_qrs1",rel:true,antOK:"el alumno",t:'El alumno <T> llegó tarde no pudo entregar el examen.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>el alumno</em>; es <strong>NEXO y sujeto</strong> de <em>llegó</em>."+S_ADJ},
+  {id:"a_qrs2",rel:true,antOK:"las palabras",t:'Las palabras <T> duelen más se olvidan antes.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>las palabras</em>; es <strong>NEXO y sujeto</strong> de <em>duelen</em>."+S_ADJ},
+  // que pron.rel.adj CD (2)
+  {id:"a_qrc1",rel:true,antOK:"el libro",t:'El libro <T> me recomendaste resultó fascinante.',
+    cl:"pron-rel-adj",fn:"nexo-adj-cd",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>el libro</em>; es <strong>NEXO y CD</strong> de <em>recomendaste</em>."+S_ADJ},
+  {id:"a_qrc2",rel:true,antOK:"el proyecto",t:'El proyecto <T> presentamos ayer ganó el primer premio.',
+    cl:"pron-rel-adj",fn:"nexo-adj-cd",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>el proyecto</em>; es <strong>NEXO y CD</strong> de <em>presentamos</em>."+S_ADJ},
+  // quien pron.rel.adj SUJ (2) — con preposición cuando corresponde
+  {id:"a_wra1",rel:true,antOK:"el médico",t:'El médico con <T> hablé me tranquilizó enseguida.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"quien",
+    ex:"<strong><em>Quien</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong> sin tilde: antecedente <em>el médico</em>; es <strong>NEXO y sujeto</strong> de <em>hablé</em>. La preposición <em>con</em> lo acompaña por exigencia del verbo."+S_ADJ},
+  {id:"a_wra2",rel:true,antOK:"las personas",t:'Las personas <T> cuidan a los demás merecen respeto.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"quienes",
+    ex:"<strong><em>Quienes</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong> sin tilde (plural de <em>quien</em>): antecedente <em>las personas</em>; es <strong>NEXO y sujeto</strong> de <em>cuidan</em>."+S_ADJ},
+  // quien pron.rel.sust SUJ (1)
+  {id:"a_wrs1",rel:false,t:'<T> mucho abarca poco aprieta.',
+    cl:"pron-rel-sus",fn:"nexo-sust-suj",p:"Quien",
+    ex:"<strong><em>Quien</em></strong> sin tilde y sin antecedente introduce una <strong>subordinada sustantiva</strong> en función de sujeto de <em>aprieta</em>. Es <strong>pronombre relativo de una subordinada sustantiva</strong> y ejerce de <strong>NEXO y sujeto</strong>."+S_SUST},
+  // cuando conj.adv CCT (2)
+  {id:"a_cc1",rel:false,t:'<T> termines los deberes, podrás salir a jugar.',
+    cl:"conj-adv",fn:"nexo-adv-cct",p:"Cuando",
+    ex:"<strong><em>Cuando</em></strong> sin tilde es una <strong>conjunción de una subordinada adverbial temporal</strong>: introduce <em>cuando termines los deberes</em>. Actúa como <strong>NEXO + CCT</strong>."+S_CCT},
+  {id:"a_cc2",rel:false,t:'Llámame <T> llegues al aeropuerto.',
+    cl:"conj-adv",fn:"nexo-adv-cct",p:"cuando",
+    ex:"<strong><em>Cuando</em></strong> es <strong>conjunción de una subordinada adverbial temporal</strong>. Introduce la subordinada adverbial y actúa como <strong>NEXO + CCT</strong>."+S_CCT},
+  // donde conj.adv CCL (2)
+  {id:"a_dc1",rel:false,t:'Vive <T> le resulta más cómodo.',
+    cl:"conj-adv",fn:"nexo-adv-ccl",p:"donde",
+    ex:"<strong><em>Donde</em></strong> sin tilde y sin antecedente es una <strong>conjunción de una subordinada adverbial de lugar</strong>. Actúa como <strong>NEXO + CCL</strong>."+S_CCL},
+  {id:"a_dc2",rel:false,t:'Deja el abrigo <T> lo encuentres al entrar.',
+    cl:"conj-adv",fn:"nexo-adv-ccl",p:"donde",
+    ex:"<strong><em>Donde</em></strong> es <strong>conjunción de una subordinada adverbial de lugar</strong> sin antecedente. Ejerce de <strong>NEXO + CCL</strong>."+S_CCL},
+  // si conj.sust (1)
+  {id:"a_ss1",rel:false,t:'No sé <T> podremos ir al concierto esta noche.',
+    cl:"conj-sust",fn:"nexo-sust",p:"si",
+    ex:"<strong><em>Si</em></strong> sin tilde introduce una subordinada sustantiva interrogativa indirecta (CD de <em>sé</em>). Es <strong>conjunción de una subordinada sustantiva</strong> que actúa solo como <strong>NEXO</strong>."+S_SUST},
+];
+
+// ── BLOQUE 2 — 15 oraciones con tilde / cuyo (serie A) ──────────────────────
+const DAT2=[
+  // qué det (2)
+  {id:"b_qd1",rel:false,t:'¡<T> noticia tan inesperada nos dieron ayer!',
+    cl:"det-int",fn:"det-fn",p:"Qué",
+    ex:"<strong><em>Qué</em></strong> es un <strong>determinante exclamativo de una subordinada sustantiva</strong> (tilde): acompaña a <em>noticia</em> y actúa como <strong>DET de esa frase nominal</strong>."},
+  {id:"b_qd2",rel:false,t:'Dime <T> libro quieres que te compre.',
+    cl:"det-int",fn:"det-fn",p:"qué",
+    ex:"<strong><em>Qué</em></strong> es un <strong>determinante interrogativo de una subordinada sustantiva</strong> (tilde): modifica a <em>libro</em> y actúa como <strong>DET de esa frase nominal</strong>."},
+  // quién pron.int SUJ (3)
+  {id:"b_qi1",rel:false,t:'No sé <T> ha llamado a esta hora.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>sé</em>) y ejerce de <strong>NEXO y sujeto</strong> de <em>ha llamado</em>."+S_SUST},
+  {id:"b_qi2",rel:false,t:'Me pregunto <T> habrá organizado este desastre.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>pregunto</em>) y actúa como <strong>NEXO y sujeto</strong> de <em>habrá organizado</em>."+S_SUST},
+  {id:"b_qi3",rel:false,t:'El juez preguntó <T> había presenciado los hechos.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>preguntó</em>) y actúa como <strong>NEXO y sujeto</strong> de <em>había presenciado</em>."+S_SUST},
+  // quién pron.int CD — TOKEN solo "quién", la preposición va fuera (2)
+  {id:"b_qc1",rel:false,t:'No recuerda a <T> invitó a la fiesta.',
+    cl:"pron-int",fn:"nexo-cd",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>recuerda</em>) y dentro de esa subordinada ejerce de <strong>NEXO y complemento directo</strong> de <em>invitó</em>."+S_SUST},
+  {id:"b_qc2",rel:false,t:'Dime a <T> has visto esta tarde por la calle.',
+    cl:"pron-int",fn:"nexo-cd",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>dime</em>) y ejerce de <strong>NEXO y CD</strong> de <em>has visto</em>."+S_SUST},
+  // cuándo adv.int CCT (3)
+  {id:"b_ci1",rel:false,t:'No recuerda <T> llegaron sus padres al país.',
+    cl:"adv-int",fn:"nexo-cct",p:"cuándo",
+    ex:"<strong><em>Cuándo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>recuerda</em>) y actúa como <strong>NEXO + CCT</strong> de <em>llegaron</em>."+S_SUST},
+  {id:"b_ci2",rel:false,t:'Me preguntó <T> podría devolver el libro.',
+    cl:"adv-int",fn:"nexo-cct",p:"cuándo",
+    ex:"<strong><em>Cuándo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>preguntó</em>) y actúa como <strong>NEXO + CCT</strong> de <em>podría devolver</em>."+S_SUST},
+  {id:"b_ci3",rel:false,t:'El director explicó <T> se haría pública la decisión.',
+    cl:"adv-int",fn:"nexo-cct",p:"cuándo",
+    ex:"<strong><em>Cuándo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>explicó</em>) y ejerce de <strong>NEXO + CCT</strong> de <em>se haría pública</em>."+S_SUST},
+  // dónde adv.int CCL (3)
+  {id:"b_di1",rel:false,t:'No recuerdo <T> aparqué el coche esta mañana.',
+    cl:"adv-int",fn:"nexo-ccl",p:"dónde",
+    ex:"<strong><em>Dónde</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>recuerdo</em>) y actúa como <strong>NEXO + CCL</strong> de <em>aparqué</em>."+S_SUST},
+  {id:"b_di2",rel:false,t:'Pregúntale <T> vive el nuevo compañero.',
+    cl:"adv-int",fn:"nexo-ccl",p:"dónde",
+    ex:"<strong><em>Dónde</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>pregúntale</em>) y funciona como <strong>NEXO + CCL</strong> de <em>vive</em>."+S_SUST},
+  {id:"b_di3",rel:false,t:'Nadie sabe <T> han ido a parar los documentos.',
+    cl:"adv-int",fn:"nexo-ccl",p:"dónde",
+    ex:"<strong><em>Dónde</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>sabe</em>) y es <strong>NEXO + CCL</strong> de <em>han ido a parar</em>."+S_SUST},
+  // cómo adv.int CCM (2)
+  {id:"b_mi1",rel:false,t:'No entiendo <T> has podido olvidarte de algo así.',
+    cl:"adv-int",fn:"nexo-ccm",p:"cómo",
+    ex:"<strong><em>Cómo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>entiendo</em>) y funciona como <strong>NEXO + CCM</strong> de <em>has podido olvidarte</em>."+S_SUST},
+  {id:"b_mi2",rel:false,t:'Me mostró <T> se preparaba ese plato tradicional.',
+    cl:"adv-int",fn:"nexo-ccm",p:"cómo",
+    ex:"<strong><em>Cómo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>mostró</em>) y actúa como <strong>NEXO + CCM</strong> de <em>se preparaba</em>."+S_SUST},
+  // cuyo det.rel (1) — en bloque 2 incluimos solo 1 para completar los 15 exactos a 15
+  // Reajuste: qué×2 + quién-suj×3 + quién-cd×2 + cuándo×3 + dónde×3 + cómo×2 = 15 ✓ sin cuyo
+  // Dejamos cuyo para el bloque 4 (abajo tiene 3)
+];
+// Nota: DAT2 tiene exactamente 15 ítems ✓
+
+// ── BLOQUE 3 — 15 oraciones sin tilde (serie B) ──────────────────────────────
+const DAT3=[
+  // que conj.sust (3)
+  {id:"c_qc1",rel:false,t:'Todos saben <T> el resultado fue injusto.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>conjunción de una subordinada sustantiva</strong> (CD de <em>saben</em>). Solo actúa como <strong>NEXO</strong>."+S_SUST},
+  {id:"c_qc2",rel:false,t:'Me alegra <T> hayas tomado esa decisión.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>conjunción de una subordinada sustantiva</strong>: introduce la subordinada en función de sujeto de <em>alegra</em>. Solo ejerce de <strong>NEXO</strong>."+S_SUST},
+  {id:"c_qc3",rel:false,t:'El informe demuestra <T> las medidas han funcionado.',
+    cl:"conj-sust",fn:"nexo-sust",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>conjunción de una subordinada sustantiva</strong> (CD de <em>demuestra</em>). Solo ejerce de <strong>NEXO</strong>."+S_SUST},
+  // que pron.rel.adj SUJ (2)
+  {id:"c_qrs1",rel:true,antOK:"el mensaje",t:'El mensaje <T> apareció en pantalla era muy extraño.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>el mensaje</em>; es <strong>NEXO y sujeto</strong> de <em>apareció</em>."+S_ADJ},
+  {id:"c_qrs2",rel:true,antOK:"los coches",t:'Los coches <T> consumen menos gasolina contaminan menos.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>los coches</em>; ejerce de <strong>NEXO y sujeto</strong> de <em>consumen</em>."+S_ADJ},
+  // que pron.rel.adj CD (2)
+  {id:"c_qrc1",rel:true,antOK:"la canción",t:'La canción <T> pusiste anoche me gusta mucho.',
+    cl:"pron-rel-adj",fn:"nexo-adj-cd",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>la canción</em>; es <strong>NEXO y CD</strong> de <em>pusiste</em>."+S_ADJ},
+  {id:"c_qrc2",rel:true,antOK:"el error",t:'El error <T> cometiste podría haberse evitado.',
+    cl:"pron-rel-adj",fn:"nexo-adj-cd",p:"que",
+    ex:"<strong><em>Que</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong>: antecedente <em>el error</em>; ejerce de <strong>NEXO y CD</strong> de <em>cometiste</em>."+S_ADJ},
+  // quien pron.rel.adj SUJ (2) — con preposición donde corresponde
+  {id:"c_wra1",rel:true,antOK:"el autor",t:'El autor del <T> te hablé recibió el Premio Nacional.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"quien",
+    ex:"<strong><em>Quien</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong> sin tilde: antecedente <em>el autor</em>; ejerce de <strong>NEXO y sujeto</strong> dentro de la subordinada. La preposición <em>del</em> es exigida por el verbo."+S_ADJ},
+  {id:"c_wra2",rel:true,antOK:"los estudiantes",t:'Los estudiantes a <T> felicitó el director trabajan muy duro.',
+    cl:"pron-rel-adj",fn:"nexo-adj-suj",p:"quienes",
+    ex:"<strong><em>Quienes</em></strong> es <strong>pronombre relativo de una subordinada adjetiva</strong> sin tilde: antecedente <em>los estudiantes</em>; ejerce de <strong>NEXO y sujeto</strong> de la subordinada. La preposición <em>a</em> es exigida por el verbo."+S_ADJ},
+  // quien pron.rel.sust SUJ (1)
+  {id:"c_wrs1",rel:false,t:'<T> busca encuentra.',
+    cl:"pron-rel-sus",fn:"nexo-sust-suj",p:"Quien",
+    ex:"<strong><em>Quien</em></strong> sin tilde y sin antecedente introduce una <strong>subordinada sustantiva</strong> en función de sujeto de <em>encuentra</em>. Es <strong>pronombre relativo de una subordinada sustantiva</strong> y actúa como <strong>NEXO y sujeto</strong>."+S_SUST},
+  // cuando conj.adv CCT (2)
+  {id:"c_cc1",rel:false,t:'Ella siempre canta <T> cocina.',
+    cl:"conj-adv",fn:"nexo-adv-cct",p:"cuando",
+    ex:"<strong><em>Cuando</em></strong> es <strong>conjunción de una subordinada adverbial temporal</strong>. Introduce la subordinada <em>cuando cocina</em> y ejerce de <strong>NEXO + CCT</strong>."+S_CCT},
+  {id:"c_cc2",rel:false,t:'<T> salió el sol, los pájaros empezaron a cantar.',
+    cl:"conj-adv",fn:"nexo-adv-cct",p:"Cuando",
+    ex:"<strong><em>Cuando</em></strong> es <strong>conjunción de una subordinada adverbial temporal</strong>. Actúa como <strong>NEXO + CCT</strong> de la oración principal."+S_CCT},
+  // donde conj.adv CCL (2)
+  {id:"c_dc1",rel:false,t:'Puedes sentarte <T> prefieras.',
+    cl:"conj-adv",fn:"nexo-adv-ccl",p:"donde",
+    ex:"<strong><em>Donde</em></strong> es <strong>conjunción de una subordinada adverbial de lugar</strong> sin antecedente. Actúa como <strong>NEXO + CCL</strong>."+S_CCL},
+  {id:"c_dc2",rel:false,t:'Aparca el coche <T> no molestes el tráfico.',
+    cl:"conj-adv",fn:"nexo-adv-ccl",p:"donde",
+    ex:"<strong><em>Donde</em></strong> es <strong>conjunción de una subordinada adverbial de lugar</strong> sin antecedente. Ejerce de <strong>NEXO + CCL</strong> de la oración principal."+S_CCL},
+  // si conj.sust (1)
+  {id:"c_ss1",rel:false,t:'Me preguntó <T> quería acompañarle al museo.',
+    cl:"conj-sust",fn:"nexo-sust",p:"si",
+    ex:"<strong><em>Si</em></strong> sin tilde introduce una subordinada sustantiva interrogativa indirecta (CD de <em>preguntó</em>). Es <strong>conjunción de una subordinada sustantiva</strong> que actúa solo como <strong>NEXO</strong>."+S_SUST},
+];
+
+// ── BLOQUE 4 — 15 oraciones con tilde / cuyo (serie B) ──────────────────────
+const DAT4=[
+  // qué det (2)
+  {id:"d_qd1",rel:false,t:'No sé <T> respuesta esperaba recibir.',
+    cl:"det-int",fn:"det-fn",p:"qué",
+    ex:"<strong><em>Qué</em></strong> es <strong>determinante interrogativo de una subordinada sustantiva</strong> (tilde): modifica a <em>respuesta</em> y actúa como <strong>DET de esa frase nominal</strong>."},
+  {id:"d_qd2",rel:false,t:'¡<T> valentía tan admirable ha demostrado!',
+    cl:"det-int",fn:"det-fn",p:"Qué",
+    ex:"<strong><em>Qué</em></strong> es <strong>determinante exclamativo de una subordinada sustantiva</strong> (tilde): acompaña a <em>valentía</em> y actúa como <strong>DET de esa frase nominal</strong>."},
+  // quién pron.int SUJ (3)
+  {id:"d_qi1",rel:false,t:'Nadie sabe <T> llegará primero a la meta.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>sabe</em>) y funciona como <strong>NEXO y sujeto</strong> de <em>llegará</em>."+S_SUST},
+  {id:"d_qi2",rel:false,t:'Averigua <T> ha filtrado esa información confidencial.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>averigua</em>) y ejerce de <strong>NEXO y sujeto</strong> de <em>ha filtrado</em>."+S_SUST},
+  {id:"d_qi3",rel:false,t:'Dime <T> te parece más adecuado para el puesto.',
+    cl:"pron-int",fn:"nexo-suj",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>dime</em>) y ejerce de <strong>NEXO y sujeto</strong> de <em>parece</em>."+S_SUST},
+  // quién pron.int CD — TOKEN solo "quién" (2)
+  {id:"d_qc1",rel:false,t:'Todavía no han decidido a <T> nombrarán para el cargo.',
+    cl:"pron-int",fn:"nexo-cd",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>han decidido</em>) y ejerce de <strong>NEXO y CD</strong> de <em>nombrarán</em>."+S_SUST},
+  {id:"d_qc2",rel:false,t:'No recordaba a <T> había citado para esa mañana.',
+    cl:"pron-int",fn:"nexo-cd",p:"quién",
+    ex:"<strong><em>Quién</em></strong> es <strong>pronombre interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>recordaba</em>) y ejerce de <strong>NEXO y CD</strong> de <em>había citado</em>."+S_SUST},
+  // cuándo adv.int CCT (2)
+  {id:"d_ci1",rel:false,t:'Averigua <T> sale el próximo tren a Madrid.',
+    cl:"adv-int",fn:"nexo-cct",p:"cuándo",
+    ex:"<strong><em>Cuándo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>averigua</em>) y es <strong>NEXO + CCT</strong> de <em>sale</em>."+S_SUST},
+  {id:"d_ci2",rel:false,t:'Nadie supo decirnos <T> regresaría el equipo.',
+    cl:"adv-int",fn:"nexo-cct",p:"cuándo",
+    ex:"<strong><em>Cuándo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>supo decirnos</em>) y actúa como <strong>NEXO + CCT</strong> de <em>regresaría</em>."+S_SUST},
+  // dónde adv.int CCL (2)
+  {id:"d_di1",rel:false,t:'Me explicó <T> podía encontrar la sala de reuniones.',
+    cl:"adv-int",fn:"nexo-ccl",p:"dónde",
+    ex:"<strong><em>Dónde</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>explicó</em>) y ejerce de <strong>NEXO + CCL</strong> de <em>podía encontrar</em>."+S_SUST},
+  {id:"d_di2",rel:false,t:'Aún no han confirmado <T> se celebrará el acto.',
+    cl:"adv-int",fn:"nexo-ccl",p:"dónde",
+    ex:"<strong><em>Dónde</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>han confirmado</em>) y actúa como <strong>NEXO + CCL</strong> de <em>se celebrará</em>."+S_SUST},
+  // cómo adv.int CCM (3)
+  {id:"d_mi1",rel:false,t:'Cuéntame <T> fue la entrevista de trabajo.',
+    cl:"adv-int",fn:"nexo-ccm",p:"cómo",
+    ex:"<strong><em>Cómo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>cuéntame</em>) y ejerce de <strong>NEXO + CCM</strong> de <em>fue</em>."+S_SUST},
+  {id:"d_mi2",rel:false,t:'El instructor explicó <T> debíamos realizar el ejercicio.',
+    cl:"adv-int",fn:"nexo-ccm",p:"cómo",
+    ex:"<strong><em>Cómo</em></strong> es <strong>adverbio interrogativo de una subordinada sustantiva</strong> (tilde): introduce la interrogativa indirecta (CD de <em>explicó</em>) y ejerce de <strong>NEXO + CCM</strong> de <em>debíamos realizar</em>."+S_SUST},
+  // cuyo det.rel (1)
+  {id:"d_cy1",rel:true,antOK:"el escritor",t:'El escritor <T> novela leímos el año pasado ganó un premio.',
+    cl:"det-rel",fn:"det-fn",p:"cuya",
+    ex:"<strong><em>Cuya</em></strong> es un <strong>determinante relativo posesivo de una subordinada adjetiva</strong>: antecedente <em>el escritor</em>. Dentro de la subordinada actúa como <strong>DET de la frase nominal</strong> <em>cuya novela</em>, que ejerce de CD de <em>leímos</em>."+S_ADJ},
+  {id:"d_cy2",rel:true,antOK:"los vecinos",t:'Los vecinos <T> perro ladra toda la noche han recibido una queja.',
+    cl:"det-rel",fn:"det-fn",p:"cuyo",
+    ex:"<strong><em>Cuyo</em></strong> es un <strong>determinante relativo posesivo de una subordinada adjetiva</strong>: antecedente <em>los vecinos</em>. Actúa como <strong>DET de la frase nominal</strong> <em>cuyo perro</em>, sujeto de <em>ladra</em>."+S_ADJ},
+];
+// Comprobaciones: DAT1=15, DAT2=15, DAT3=15, DAT4=15 ✓
+
+// ── LÓGICA ───────────────────────────────────────────────────────────────────
+
+const ALL_DATA=[DAT1,DAT2,DAT3,DAT4];
+const ALL_CL=[CL1,CL2,CL1,CL2];
+const ALL_FN=[FN1,FN2,FN1,FN2];
+
+function sig(item){
+  return item.p.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,"_")+'|'+item.cl;
+}
+function shuffle(a){
+  const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;
+}
+function shuffleNC(datos){
+  const idx=datos.map((_,i)=>i);
+  for(let t=0;t<400;t++){
+    const s=shuffle(idx);let ok=true;
+    for(let i=1;i<s.length;i++){if(sig(datos[s[i]])===sig(datos[s[i-1]])){ok=false;break;}}
+    if(ok)return s;
+  }
+  const s=shuffle(idx);
+  for(let i=1;i<s.length;i++){
+    if(sig(datos[s[i]])===sig(datos[s[i-1]])){
+      for(let j=i+1;j<s.length;j++){
+        const aOk=j+1>=s.length||sig(datos[s[i]])!==sig(datos[s[j+1]]);
+        const cOk=sig(datos[s[j]])!==sig(datos[s[i-1]]);
+        if(cOk&&aOk){[s[i],s[j]]=[s[j],s[i]];break;}
+      }
+    }
+  }
+  return s;
+}
+
+function norm(s){return (s||'').toLowerCase().replace(/\s+/g,' ').trim().replace(/^(el|la|los|las|un|una|al|del|a)\s+/,'');}
+
+function esRelativo(b,cl){
+  return b===0||b===2 ? cl==='pron-rel-adj' : cl==='det-rel';
+}
+
+function onClaseChange(selId,b){
+  const itemId=selId.replace('sc-','');
+  const v=document.getElementById(selId).value;
+  const nota=document.getElementById('nota-ant-'+itemId);
+  if(nota){nota.classList[esRelativo(b,v)?'add':'remove']('visible');}
+}
+
+let ORDENES=[0,1,2,3].map(b=>shuffleNC(ALL_DATA[b]));
+let estado={};
+let popupAbierto=null;
+let bloqueActual=0;
+let resVistos=[false,false,false,false];
+
+function renderBloque(b){
+  const M=document.getElementById('main');M.innerHTML='';
+  const tits=['Primer bloque de oraciones','Segundo bloque de oraciones','Tercer bloque de oraciones','Cuarto bloque de oraciones'];
+  const subs=[
+    'Palabras sin tilde: que · quien / quienes · cuando · donde · si',
+    'Palabras con tilde o relativo posesivo: qué · quién / quiénes · cuándo · dónde · cómo',
+    'Palabras sin tilde: que · quien / quienes · cuando · donde · si',
+    'Palabras con tilde o relativo posesivo: qué · quién / quiénes · cuándo · dónde · cómo · cuyo',
+  ];
+  const tit=document.createElement('h2');tit.className='bloque-titulo';tit.textContent=tits[b];M.appendChild(tit);
+  const sub=document.createElement('p');sub.className='bloque-subtitulo';sub.textContent=subs[b];M.appendChild(sub);
+
+  const datos=ALL_DATA[b];const cl=ALL_CL[b];const fn=ALL_FN[b];
+  ORDENES[b].forEach((idx,pos)=>{
+    const it=datos[idx];const st=estado[it.id]||{};
+    const num=b*15+pos+1;
+    const wc='oracion-wrap'+(st.respondido?(st.correcto?' respondida-ok':' respondida-err'):'');
+    const bc='palabra-btn'+(st.respondido?(st.correcto?' respondida-ok':' respondida-err'):'');
+
+    const claSel='<select id="sc-'+it.id+'" onchange="onClaseChange(\'sc-'+it.id+'\','+b+')">'
+      +cl.map(o=>'<option value="'+o.v+'">'+o.l+'</option>').join('')+'</select>';
+    const fnSel='<select id="sf-'+it.id+'">'+fn.map(o=>'<option value="'+o.v+'">'+o.l+'</option>').join('')+'</select>';
+    const notaAnt='<div class="nota-ant" id="nota-ant-'+it.id+'">⚠ Pronombre/determinante relativo: selecciona la palabra o grupo nominal antecedente en la oración antes de pulsar Comprobar.</div>';
+
+    const popup='<div class="inline-popup" id="pop-'+it.id+'">'
+      +'<h4>Analiza: <em>'+it.p+'</em></h4>'
+      +'<div class="pop-label">Clase de palabra</div>'+claSel
+      +'<div class="pop-label">Función sintáctica</div>'+fnSel
+      +notaAnt
+      +'<div id="fb-'+it.id+'" class="feedback" style="display:none"></div>'
+      +'<div class="pop-btns"><button class="btn-check" onclick="comprobar(\''+it.id+'\','+b+')" type="button">Comprobar</button>'
+      +'<button class="btn-close-pop" onclick="cerrar(\''+it.id+'\')" type="button">Cerrar</button></div></div>';
+
+    const btnEl='<span class="inline-popup-anchor" id="anchor-'+it.id+'">'
+      +'<button class="'+bc+'" id="btn-'+it.id+'" onclick="togglePopup(\''+it.id+'\')" type="button">'+it.p+'</button>'
+      +popup+'</span>';
+
+    const html=it.t.replace('<T>',btnEl);
+    const div=document.createElement('div');div.className=wc;div.id='or-'+it.id;
+    div.innerHTML='<span class="oracion-num">'+num+'</span><span id="txt-'+it.id+'">'+html+'</span>';
+    M.appendChild(div);
+
+    const sc=document.getElementById('sc-'+it.id);const sf=document.getElementById('sf-'+it.id);
+    if(st.cl&&sc)sc.value=st.cl;if(st.fn&&sf)sf.value=st.fn;
+    if(st.cl&&esRelativo(b,st.cl)){const n=document.getElementById('nota-ant-'+it.id);if(n)n.classList.add('visible');}
+    if(st.respondido){const fb=document.getElementById('fb-'+it.id);if(fb){fb.style.display='block';fb.className='feedback '+(st.correcto?'ok':'err');fb.innerHTML=(st.correcto?'✓ Correcto. ':'✗ Incorrecto. ')+it.ex+(st.antMsg||'');}}
+  });
+
+  const rd=document.createElement('div');rd.className='resultado-bloque';rd.id='res-b-'+b;
+  if(!resVistos[b]){
+    rd.innerHTML='<h3>Resultados del bloque '+(b+1)+'</h3><p style="font-size:14px;color:var(--ink-muted);margin-bottom:.75rem">Responde todas las oraciones y pulsa el botón para ver tu puntuación parcial.</p>'
+      +'<button class="btn-siguiente" onclick="verResultados('+b+')">Ver resultados de este bloque</button>';
+  } else {rd.innerHTML=buildResHTML(b);}
+  M.appendChild(rd);updateStats();updateNav();
+}
+
+function buildResHTML(b){
+  const datos=ALL_DATA[b];let ok=0,err=0;
+  ORDENES[b].forEach(idx=>{const st=estado[datos[idx].id]||{};if(st.respondido){if(st.correcto)ok++;else err++;}});
+  const pct=Math.round(ok/15*100);
+  let h='<h3>Resultados del bloque '+(b+1)+'</h3>'
+    +'<div class="res-grid"><div class="res-card"><div class="res-num">15</div><div class="res-label">oraciones</div></div>'
+    +'<div class="res-card"><div class="res-num n-ok">'+ok+'</div><div class="res-label">correctas</div></div>'
+    +'<div class="res-card"><div class="res-num n-err">'+err+'</div><div class="res-label">incorrectas</div></div></div>'
+    +'<p style="font-size:14px;color:var(--ink-muted)">Aciertos en este bloque: <strong style="color:var(--ink)">'+pct+'%</strong></p>';
+  if(b<3){h+='<button class="btn-siguiente" onclick="irA('+(b+1)+')">Continuar con el bloque '+(b+2)+' →</button>';}
+  else{h+=buildFinal();}
+  return h;
+}
+
+function buildFinal(){
+  let totalOk=0;
+  ALL_DATA.flat().forEach(it=>{if((estado[it.id]||{}).correcto)totalOk++;});
+  const nota=(totalOk/60*10).toFixed(1);
+  const c=totalOk>=54?'Excelente dominio del contenido.':totalOk>=42?'Buen resultado. Repasa los casos en que te has equivocado.':totalOk>=30?'Resultado aceptable. Conviene repasar con atención los conceptos trabajados.':'Necesitas repasar el tema. Vuelve a intentarlo tras estudiar los contenidos.';
+  return '<div class="puntuacion-final"><h3>Puntuación final del ejercicio</h3>'
+    +'<div class="nota-grande">'+nota+'</div>'
+    +'<div class="nota-sub">sobre 10 · '+totalOk+' aciertos de 60</div>'
+    +'<div class="nota-comentario">'+c+'</div></div>';
+}
+
+function verResultados(b){
+  const datos=ALL_DATA[b];
+  const sin=ORDENES[b].filter(idx=>!(estado[datos[idx].id]||{}).respondido);
+  if(sin.length>0&&!confirm('Quedan '+sin.length+' oración(es) sin responder. ¿Mostrar resultados igualmente?'))return;
+  ORDENES[b].forEach(idx=>{const it=datos[idx];if(!(estado[it.id]||{}).respondido)estado[it.id]={cl:'',fn:'',respondido:true,correcto:false};});
+  resVistos[b]=true;renderBloque(b);
+}
+
+function irA(b){bloqueActual=b;popupAbierto=null;renderBloque(b);window.scrollTo(0,0);}
+
+function togglePopup(id){
+  const pop=document.getElementById('pop-'+id);if(!pop)return;
+  const vis=pop.classList.contains('visible');
+  if(popupAbierto&&popupAbierto!==id){const p=document.getElementById('pop-'+popupAbierto);if(p)p.classList.remove('visible');}
+  if(vis){pop.classList.remove('visible');popupAbierto=null;}
+  else{
+    pop.classList.add('visible');popupAbierto=id;
+    const st=estado[id]||{};
+    const sc=document.getElementById('sc-'+id);const sf=document.getElementById('sf-'+id);
+    if(sc&&st.cl)sc.value=st.cl;if(sf&&st.fn)sf.value=st.fn;
+    if(st.cl&&esRelativo(bloqueActual,st.cl)){const n=document.getElementById('nota-ant-'+id);if(n)n.classList.add('visible');}
+  }
+}
+
+function cerrar(id){const p=document.getElementById('pop-'+id);if(p)p.classList.remove('visible');if(popupAbierto===id)popupAbierto=null;}
+
+function getSelTxt(id){
+  const sel=window.getSelection();if(!sel||sel.isCollapsed)return '';
+  const el=document.getElementById('txt-'+id);if(!el)return '';
+  try{const r=sel.getRangeAt(0);if(!el.contains(r.commonAncestorContainer))return '';return sel.toString().trim();}catch(e){return '';}
+}
+
+function comprobar(id,b){
+  const datos=ALL_DATA[b];const it=datos.find(x=>x.id===id);
+  const sc=document.getElementById('sc-'+id);const sf=document.getElementById('sf-'+id);const fb=document.getElementById('fb-'+id);
+  if(!it||!sc||!sf||!fb)return;
+  const cl=sc.value,fn=sf.value;
+  if(!cl||!fn){fb.style.display='block';fb.className='feedback err';fb.innerHTML='Selecciona tanto la clase de palabra como la función.';return;}
+  const ok=cl===it.cl&&fn===it.fn;
+  let antMsg='';
+  if(it.rel){
+    const selTxt=getSelTxt(id);
+    const selN=norm(selTxt);const antN=norm(it.antOK);
+    const antOk=selN.length>0&&(selN===antN||selN.includes(antN)||antN.includes(selN));
+    if(!selTxt)antMsg='<br><em>⚠ No has seleccionado el antecedente. Selecciona la palabra o grupo nominal al que hace referencia el pronombre/determinante relativo.</em>';
+    else if(!antOk)antMsg='<br><em>⚠ Antecedente seleccionado («'+selTxt+'») incorrecto. El antecedente es: <strong>'+it.antOK+'</strong>.</em>';
+    else antMsg='<br><em>✓ Antecedente identificado correctamente: <strong>'+selTxt+'</strong>.</em>';
+  }
+  fb.style.display='block';fb.className='feedback '+(ok?'ok':'err');
+  fb.innerHTML=(ok?'✓ Correcto. ':'✗ Incorrecto. ')+it.ex+antMsg;
+  estado[id]={cl,fn,respondido:true,correcto:ok,antMsg};
+  const orDiv=document.getElementById('or-'+id);
+  if(orDiv){orDiv.classList.remove('respondida-ok','respondida-err');orDiv.classList.add(ok?'respondida-ok':'respondida-err');}
+  const btn=document.getElementById('btn-'+id);
+  if(btn){btn.classList.remove('respondida-ok','respondida-err');btn.classList.add(ok?'respondida-ok':'respondida-err');}
+  updateStats();
+}
+
+function updateStats(){
+  const datos=ALL_DATA[bloqueActual];let t=0,ok=0,err=0;
+  ORDENES[bloqueActual].forEach(idx=>{const st=estado[datos[idx].id]||{};if(st.respondido){t++;if(st.correcto)ok++;else err++;}});
+  document.getElementById('st-total').textContent=t;document.getElementById('st-ok').textContent=ok;document.getElementById('st-err').textContent=err;
+}
+
+function updateNav(){
+  for(let i=0;i<4;i++){
+    const b=document.getElementById('nav'+i);b.classList.remove('activo','completado');
+    if(i===bloqueActual)b.classList.add('activo');if(resVistos[i])b.classList.add('completado');
+  }
+}
+
+function resetAll(){
+  if(!confirm('¿Seguro que quieres reiniciar el ejercicio? Se perderán todas las respuestas.'))return;
+  estado={};ORDENES=[0,1,2,3].map(b=>shuffleNC(ALL_DATA[b]));
+  resVistos=[false,false,false,false];popupAbierto=null;bloqueActual=0;
+  renderBloque(0);window.scrollTo(0,0);
+}
+
+document.addEventListener('click',e=>{
+  if(!popupAbierto)return;
+  const a=document.getElementById('anchor-'+popupAbierto);
+  if(a&&!a.contains(e.target))cerrar(popupAbierto);
+});
+
+renderBloque(0);
+</script>
+</body>
+</html>

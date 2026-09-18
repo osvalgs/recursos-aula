@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pasatiempos LCL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Work+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F3E8;
+  --paper-dark:#EFE8D6;
+  --ink:#22303C;
+  --ink-soft:#5B6B76;
+  --yellow:#FFC93C;
+  --red:#D64541;
+  --teal:#2E8B7D;
+  --line:#C9C2AC;
+  --card:#FFFFFF;
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--paper);
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px);
+  background-size: 100% 34px;
+  color:var(--ink);
+  font-family:'Work Sans', sans-serif;
+  line-height:1.5;
+  min-height:100vh;
+}
+a{color:inherit;}
+
+header.top{
+  background:var(--ink);
+  color:var(--paper);
+  padding:22px 24px 26px;
+  position:relative;
+  overflow:hidden;
+}
+header.top::after{
+  content:"";
+  position:absolute;
+  bottom:0;left:0;right:0;height:8px;
+  background:repeating-linear-gradient(90deg, var(--yellow) 0 18px, transparent 18px 26px);
+}
+header.top h1{
+  font-family:'Kalam', cursive;
+  font-size:clamp(28px,4vw,42px);
+  margin:0 0 4px;
+  transform:rotate(-1deg);
+  display:inline-block;
+  background:var(--yellow);
+  color:var(--ink);
+  padding:6px 22px;
+  border-radius:14px;
+}
+header.top p{
+  margin:0;
+  color:#D9E0E3;
+  font-size:15px;
+  max-width:640px;
+}
+
+.layout{
+  display:flex;
+  max-width:1180px;
+  margin:0 auto;
+  align-items:flex-start;
+  min-height:calc(100vh - 130px);
+}
+
+nav.rail{
+  width:230px;
+  flex-shrink:0;
+  padding:22px 10px 40px 22px;
+  position:sticky;
+  top:0;
+}
+nav.rail .tab{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 14px;
+  margin-bottom:6px;
+  border-radius: 10px 3px 3px 10px;
+  cursor:pointer;
+  background:var(--paper-dark);
+  border:1px solid transparent;
+  font-size:14px;
+  font-weight:500;
+  color:var(--ink-soft);
+  transition:transform .12s ease;
+}
+nav.rail .tab .n{
+  font-family:'Space Mono', monospace;
+  font-weight:700;
+  font-size:12px;
+  background:var(--card);
+  border:1px solid var(--line);
+  width:22px;height:22px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+nav.rail .tab:hover{ transform:translateX(2px); }
+nav.rail .tab.active{
+  background:var(--card);
+  color:var(--ink);
+  font-weight:700;
+  border-color:var(--line);
+  box-shadow: -3px 3px 0 var(--yellow);
+}
+nav.rail .tab.active .n{ background:var(--ink); color:var(--yellow); border-color:var(--ink); }
+nav.rail .tab .check{
+  margin-left:auto;
+  font-size:12px;
+  color:var(--teal);
+  font-weight:700;
+  visibility:hidden;
+}
+nav.rail .tab.done .check{ visibility:visible; }
+
+main{
+  flex:1;
+  min-width:0;
+  padding:24px 24px 80px 10px;
+}
+
+.mobiletabs{
+  display:none;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:26px 28px 30px;
+  position:relative;
+  box-shadow: 5px 5px 0 rgba(34,48,60,0.06);
+}
+.card .eyebrow{
+  font-family:'Space Mono', monospace;
+  font-size:12px;
+  color:var(--ink-soft);
+}
+.card h2{
+  font-family:'Kalam', cursive;
+  font-size:30px;
+  margin:2px 0 6px;
+}
+.card .instructions{
+  color:var(--ink-soft);
+  font-size:15px;
+  margin-bottom:22px;
+  max-width:680px;
+}
+.scorebadge{
+  position:absolute;
+  top:26px; right:28px;
+  background:var(--paper-dark);
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:6px 14px;
+  font-family:'Space Mono', monospace;
+  font-size:13px;
+  font-weight:700;
+}
+.scorebadge.good{ background:#E4F3EE; border-color:var(--teal); color:var(--teal); }
+
+button.check-btn, button.reveal-btn{
+  background:var(--ink);
+  color:var(--paper);
+  border:none;
+  padding:10px 20px;
+  border-radius:8px;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  font-family:'Work Sans',sans-serif;
+}
+button.check-btn:hover, button.reveal-btn:hover{ background:#0F1A22; }
+button.reveal-btn{ background:transparent; color:var(--ink); border:1px solid var(--line); }
+
+.feedback-row{ display:flex; align-items:center; gap:14px; margin-top:18px; flex-wrap:wrap;}
+.feedback-msg{ font-size:14px; font-weight:600; }
+.feedback-msg.ok{ color:var(--teal); }
+.feedback-msg.bad{ color:var(--red); }
+
+footer.pagefoot{
+  text-align:center;
+  color:var(--ink-soft);
+  font-size:12px;
+  padding:20px;
+}
+
+/* ============ EXERCISE 1: SOPA DE LETRAS ============ */
+.ws-wrap{ display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
+#ws-grid{
+  display:grid;
+  gap:2px;
+  user-select:none;
+  font-family:'Space Mono', monospace;
+  font-weight:700;
+}
+#ws-grid .cell{
+  width:28px;height:28px;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--paper-dark);
+  border-radius:4px;
+  font-size:14px;
+  cursor:pointer;
+  color:var(--ink);
+}
+#ws-grid .cell.sel{ background:var(--yellow); }
+#ws-grid .cell.found{ background:var(--teal); color:#fff; }
+.ws-list{ min-width:210px; }
+.ws-list ul{ list-style:none; padding:0; margin:0; }
+.ws-list li{
+  font-family:'Space Mono', monospace;
+  font-size:13px;
+  padding:6px 10px;
+  border-bottom:1px dashed var(--line);
+  color:var(--ink-soft);
+}
+.ws-list li.found{ color:var(--teal); text-decoration:line-through; font-weight:700; }
+
+/* ============ EXERCISE 2: CRUCIGRAMA ============ */
+.cw-wrap{ display:flex; gap:30px; flex-wrap:wrap; align-items:flex-start; }
+#cw-grid{
+  display:grid;
+  gap:1px;
+  background:var(--ink);
+  border:2px solid var(--ink);
+  width:max-content;
+}
+#cw-grid .cwcell{
+  width:26px;height:26px;
+  background:var(--card);
+  position:relative;
+}
+#cw-grid .cwcell.blank{ background:transparent; box-shadow:none; }
+#cw-grid .cwcell input{
+  width:100%;height:100%;
+  border:none;
+  text-align:center;
+  font-family:'Space Mono',monospace;
+  font-weight:700;
+  font-size:14px;
+  text-transform:uppercase;
+  background:transparent;
+  outline:none;
+  padding:0;
+}
+#cw-grid .cwcell input.correct{ background:#E4F3EE; }
+#cw-grid .cwcell input.wrong{ background:#FBE4E3; }
+#cw-grid .cwcell .num{
+  position:absolute; top:0; left:2px; font-size:9px; font-weight:700; color:var(--ink); font-family:'Space Mono',monospace;
+}
+.cw-clues{ min-width:260px; max-width:340px; }
+.cw-clues h4{ margin:0 0 6px; font-family:'Kalam',cursive; font-size:19px;}
+.cw-clues ol{ padding-left:4px; margin:0 0 18px; list-style:none; }
+.cw-clues li{ font-size:13px; margin-bottom:8px; color:var(--ink-soft); }
+.cw-clues li b{ color:var(--ink); }
+
+/* ============ EXERCISE 3: RELACIONA ============ */
+.match-wrap{ display:flex; gap:32px; flex-wrap:wrap; }
+.match-col{ flex:1 1 300px; max-width:420px; }
+.match-item{
+  padding:9px 12px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  margin-bottom:8px;
+  cursor:pointer;
+  font-size:14px;
+  background:var(--paper-dark);
+}
+.match-item.word{ font-weight:700; font-family:'Space Mono',monospace; }
+.match-item.selected{ outline:2px solid var(--yellow); }
+.match-item.paired{ background:#E4F3EE; border-color:var(--teal); }
+.match-item.wrongflash{ background:#FBE4E3; border-color:var(--red); }
+
+/* ============ EXERCISE 4: ANAGRAMAS ============ */
+/* ============ EXERCISE 5: COMPLETA FRASES ============ */
+.fb-item{ margin-bottom:16px; font-size:15px; }
+.fb-item .num{ font-family:'Space Mono',monospace; color:var(--ink-soft); margin-right:6px; }
+.fb-item select{
+  font-family:'Work Sans',sans-serif; font-weight:600;
+  padding:4px 8px; border-radius:6px; border:1px solid var(--line); background:#fff;
+}
+.fb-item select.correct{ border-color:var(--teal); background:#E4F3EE; }
+.fb-item select.wrong{ border-color:var(--red); background:#FBE4E3; }
+
+/* ============ EXERCISE 6: V/F ============ */
+.tf-item{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:10px 0; border-bottom:1px dashed var(--line); font-size:14.5px; }
+.tf-btns{ display:flex; gap:6px; flex-shrink:0; }
+.tf-btns button{ border:1px solid var(--line); background:#fff; padding:6px 14px; border-radius:6px; cursor:pointer; font-weight:700; font-size:13px; }
+.tf-btns button.sel-true.active{ background:var(--teal); color:#fff; border-color:var(--teal); }
+.tf-btns button.sel-false.active{ background:var(--red); color:#fff; border-color:var(--red); }
+.tf-item.correct{ background:#E4F3EE; }
+.tf-item.wrong{ background:#FBE4E3; }
+
+/* ============ EXERCISE 7 & 8 : MCQ ============ */
+.mcq-item{ margin-bottom:18px; padding-bottom:14px; border-bottom:1px dashed var(--line); }
+.mcq-def{ font-size:14.5px; margin-bottom:8px; }
+.mcq-def b{ font-family:'Space Mono',monospace; }
+.mcq-opts{ display:flex; gap:8px; flex-wrap:wrap; }
+.mcq-opts button{
+  border:1px solid var(--line); background:#fff; padding:7px 13px; border-radius:20px; cursor:pointer; font-size:13.5px;
+}
+.mcq-opts button.correct{ background:var(--teal); color:#fff; border-color:var(--teal); }
+.mcq-opts button.wrong{ background:var(--red); color:#fff; border-color:var(--red); }
+.mcq-opts button:disabled{ cursor:default; }
+
+/* ============ EXERCISE 9: ADIVINA ============ */
+.riddle-item{ border:1px solid var(--line); border-radius:10px; padding:16px 18px; margin-bottom:16px; background:var(--paper-dark); }
+.riddle-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+.riddle-letters{ font-family:'Space Mono',monospace; letter-spacing:5px; font-size:17px; }
+.riddle-hints{ margin-top:8px; font-size:13px; color:var(--ink-soft); }
+.riddle-hints div{ margin-top:4px; }
+.riddle-item input{ margin-top:10px; padding:7px 10px; border:1px solid var(--line); border-radius:6px; font-family:'Space Mono',monospace; text-transform:uppercase; width:220px; max-width:100%; }
+.riddle-item input.correct{ border-color:var(--teal); background:#E4F3EE; }
+.riddle-item input.wrong{ border-color:var(--red); background:#FBE4E3; }
+.riddle-item .hintbtn{ font-size:12px; background:none; border:1px solid var(--line); border-radius:14px; padding:3px 10px; cursor:pointer; color:var(--ink-soft); }
+
+/* ============ EXERCISE 10: RETO FINAL ============ */
+.write-themes{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+.write-themes button{ border:1px solid var(--line); background:#fff; border-radius:20px; padding:7px 14px; font-size:13px; cursor:pointer; }
+.write-themes button.active{ background:var(--yellow); border-color:var(--yellow); font-weight:700;}
+#write-area{ width:100%; min-height:170px; border:1px solid var(--line); border-radius:10px; padding:14px; font-family:'Work Sans',sans-serif; font-size:15px; resize:vertical; background:#fff;}
+.write-checklist{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.write-checklist span{
+  font-family:'Space Mono',monospace; font-size:12px; padding:5px 10px; border-radius:14px; border:1px solid var(--line); color:var(--ink-soft);
+}
+.write-checklist span.used{ background:var(--teal); color:#fff; border-color:var(--teal); }
+.write-count{ margin-top:10px; font-size:13px; color:var(--ink-soft); }
+
+@media (max-width: 860px){
+  .layout{ flex-direction:column; }
+  nav.rail{ display:none; }
+  .mobiletabs{
+    display:flex; gap:8px; overflow-x:auto; padding:14px 16px; position:sticky; top:0; background:var(--paper); z-index:5; border-bottom:1px solid var(--line);
+  }
+  .mobiletabs .tab{
+    flex-shrink:0; font-family:'Space Mono',monospace; font-size:12px; font-weight:700; padding:8px 12px; border-radius:16px; background:var(--paper-dark); border:1px solid transparent; cursor:pointer;
+  }
+  .mobiletabs .tab.active{ background:var(--ink); color:var(--yellow); }
+  main{ padding:16px; width:100%; }
+  .card{ padding:20px 18px 24px; }
+  .scorebadge{ position:static; display:inline-block; margin-bottom:12px; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Pasatiempos LCL</h1>
+  <p>Repasa las 12 palabras del dictado con sopas de letras, crucigramas y mucho más. Resuelve cada ficha y comprueba tus respuestas al momento.</p>
+</header>
+
+<div class="mobiletabs" id="mobiletabs"></div>
+
+<div class="layout">
+  <nav class="rail" id="rail"></nav>
+  <main>
+
+    <section class="exercise" id="ex-1">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 1</div>
+        <h2>Sopa de letras</h2>
+        <p class="instructions">Encuentra las 12 palabras escondidas en la cuadrícula. Haz clic en la primera letra y luego en la última letra de cada palabra (en horizontal, vertical o diagonal, en cualquier sentido).</p>
+        <div class="scorebadge" id="ws-score">0 / 12</div>
+        <div class="ws-wrap">
+          <div id="ws-grid"></div>
+          <div class="ws-list"><ul id="ws-list"></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-2">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 2</div>
+        <h2>Crucigrama</h2>
+        <p class="instructions">Lee las definiciones y escribe la palabra correspondiente en la cuadrícula, una letra por casilla. Escríbelas correctamente, con tilde cuando la lleven. Pulsa «Corregir» para ver los aciertos.</p>
+        <div class="scorebadge" id="cw-score">0 / 12</div>
+        <div class="cw-wrap">
+          <div id="cw-grid"></div>
+          <div class="cw-clues">
+            <h4>Horizontales →</h4>
+            <ol id="cw-across"></ol>
+            <h4>Verticales ↓</h4>
+            <ol id="cw-down"></ol>
+          </div>
+        </div>
+        <div class="feedback-row">
+          <button class="check-btn" onclick="checkCrossword()">Corregir</button>
+          <span class="feedback-msg" id="cw-feedback"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-3">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 3</div>
+        <h2>Relaciona</h2>
+        <p class="instructions">Haz clic en una palabra y después en la definición que le corresponde. Si aciertas, se emparejan en verde.</p>
+        <div class="scorebadge" id="match-score">0 / 12</div>
+        <div class="match-wrap">
+          <div class="match-col" id="match-words"></div>
+          <div class="match-col" id="match-defs"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-5">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 4</div>
+        <h2>Completa las frases</h2>
+        <p class="instructions">Elige en cada desplegable la palabra que completa correctamente la frase.</p>
+        <div class="scorebadge" id="fb-score">0 / 12</div>
+        <div id="fb-list"></div>
+        <div class="feedback-row">
+          <button class="check-btn" onclick="checkFillBlanks()">Corregir</button>
+          <span class="feedback-msg" id="fb-feedback"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-6">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 5</div>
+        <h2>Verdadero o falso</h2>
+        <p class="instructions">Decide si cada afirmación sobre el significado de la palabra es verdadera o falsa.</p>
+        <div class="scorebadge" id="tf-score">0 / 12</div>
+        <div id="tf-list"></div>
+        <div class="feedback-row">
+          <button class="check-btn" onclick="checkTF()">Corregir</button>
+          <span class="feedback-msg" id="tf-feedback"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-8">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 6</div>
+        <h2>Sinónimos</h2>
+        <p class="instructions">Elige la palabra que significa casi lo mismo que la palabra destacada.</p>
+        <div class="scorebadge" id="syn-score">0 / 12</div>
+        <div id="syn-list"></div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-9">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 7</div>
+        <h2>Adivina la palabra</h2>
+        <p class="instructions">Usa la categoría gramatical, el número de letras y la pista para descubrir cada palabra.</p>
+        <div class="scorebadge" id="riddle-score">0 / 12</div>
+        <div id="riddle-list"></div>
+      </div>
+    </section>
+
+    <section class="exercise" id="ex-10">
+      <div class="card">
+        <div class="eyebrow">Pasatiempo 8 · Reto final</div>
+        <h2>Escribe con las 12 palabras</h2>
+        <p class="instructions">Elige un tema y redacta un texto breve usando al menos 4 de las 12 palabras. Se irán marcando en verde a medida que las utilices.</p>
+        <div class="write-themes" id="write-themes"></div>
+        <textarea id="write-area" placeholder="Escribe aquí tu texto..."></textarea>
+        <div class="write-checklist" id="write-checklist"></div>
+        <div class="write-count" id="write-count">Palabras usadas: 0 / 12 · Objetivo: 4</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+<footer class="pagefoot">Pasatiempos LCL · Lengua Castellana y Literatura</footer>
+
+<script id="payload-data" type="application/json">
+{"words": [{"w": "PERSPICAZ", "disp": "perspicaz", "def": "Que tiene agudeza e ingenio para comprender las cosas con rapidez.", "cat": "adjetivo", "syn": "sagaz", "syn_wrong": ["torpe", "ingenuo"], "anagram": "SCAPZRIPE", "sentence": "Marta es muy {blank}: enseguida entendió la trampa antes que nadie."}, {"w": "HIPERBOLE", "disp": "hipérbole", "def": "Figura retórica que consiste en exagerar aquello de lo que se habla.", "cat": "sustantivo femenino", "syn": "exageración", "syn_wrong": ["comparación", "silencio"], "anagram": "LPBOHERIE", "sentence": "«Lloré un río entero» es un ejemplo perfecto de {blank}."}, {"w": "DESAHOGO", "disp": "desahogo", "def": "Alivio de una pena, un trabajo o una necesidad.", "cat": "sustantivo masculino", "syn": "alivio", "syn_wrong": ["agobio", "ruido"], "anagram": "OOSEDGHA", "sentence": "Hablar con un amigo de tus problemas produce un gran {blank}."}, {"w": "ADVERBIO", "disp": "adverbio", "def": "Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio.", "cat": "sustantivo masculino", "syn": "modificador", "syn_wrong": ["sustantivo", "sujeto"], "anagram": "BDIAVROE", "sentence": "En la oración «corre rápidamente», la palabra «rápidamente» es un {blank}."}, {"w": "INHOSPITO", "disp": "inhóspito", "def": "Que no ofrece condiciones agradables o de seguridad para vivir.", "cat": "adjetivo", "syn": "hostil", "syn_wrong": ["acogedor", "luminoso"], "anagram": "TOOIHINSP", "sentence": "Aquel desierto resultó ser un lugar completamente {blank} para instalar el campamento."}, {"w": "YACIMIENTO", "disp": "yacimiento", "def": "Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos.", "cat": "sustantivo masculino", "syn": "depósito", "syn_wrong": ["puente", "sendero"], "anagram": "OENIYCMTIA", "sentence": "Los arqueólogos descubrieron un importante {blank} de cerámica romana."}, {"w": "ESBELTO", "disp": "esbelto", "def": "Que tiene un cuerpo alto, delgado y de proporciones armoniosas.", "cat": "adjetivo", "syn": "estilizado", "syn_wrong": ["robusto", "encorvado"], "anagram": "TSOBLEE", "sentence": "El bailarín, alto y {blank}, se movía con gracia sobre el escenario."}, {"w": "URGENCIA", "disp": "urgencia", "def": "Cualidad de urgente, es decir, que necesita atención o solución inmediata.", "cat": "sustantivo femenino", "syn": "emergencia", "syn_wrong": ["calma", "rutina"], "anagram": "GNARIUCE", "sentence": "Llama al 112 solo en caso de verdadera {blank}."}, {"w": "APOGEO", "disp": "apogeo", "def": "Punto culminante o momento de mayor esplendor de algo.", "cat": "sustantivo masculino", "syn": "culminación", "syn_wrong": ["decadencia", "inicio"], "anagram": "EOOGAP", "sentence": "Aquel imperio alcanzó su {blank} en el siglo II."}, {"w": "VALLA", "disp": "valla", "def": "Cercado de tablas, estacas u otro material que delimita un terreno.", "cat": "sustantivo femenino", "syn": "cerca", "syn_wrong": ["puerta", "ventana"], "anagram": "VALAL", "sentence": "Los vecinos levantaron una {blank} para separar los dos jardines."}, {"w": "VISLUMBRAR", "disp": "vislumbrar", "def": "Ver algo de forma confusa o a lo lejos, o intuirlo por indicios.", "cat": "verbo", "syn": "entrever", "syn_wrong": ["ignorar", "ocultar"], "anagram": "SRVBRMAIUL", "sentence": "Desde la colina pudimos {blank} las luces del pueblo entre la niebla."}, {"w": "ESPARCIR", "disp": "esparcir", "def": "Extender o separar lo que estaba junto o amontonado.", "cat": "verbo", "syn": "dispersar", "syn_wrong": ["recoger", "apilar"], "anagram": "EARSRCPI", "sentence": "El viento se encargó de {blank} las hojas por todo el patio."}], "tf": [{"text": "«Perspicaz» significa que tiene agudeza e ingenio para comprender las cosas con rapidez.", "val": true}, {"text": "«Hipérbole» es una figura retórica que consiste en repetir varias veces la misma palabra.", "val": false}, {"text": "«Desahogo» es el alivio de una pena, un trabajo o una necesidad.", "val": true}, {"text": "«Adverbio» es la categoría gramatical que nombra personas, animales o cosas.", "val": false}, {"text": "«Inhóspito» significa que ofrece condiciones muy agradables y seguras para vivir.", "val": false}, {"text": "«Yacimiento» es el lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos.", "val": true}, {"text": "«Esbelto» significa que tiene un cuerpo alto, delgado y de proporciones armoniosas.", "val": true}, {"text": "«Urgencia» significa que no hace falta ninguna atención inmediata, sino todo lo contrario.", "val": false}, {"text": "«Apogeo» es el punto culminante o momento de mayor esplendor de algo.", "val": true}, {"text": "«Valla» es un cercado de tablas, estacas u otro material que delimita un terreno.", "val": true}, {"text": "«Vislumbrar» significa ver algo con total claridad y de muy cerca.", "val": false}, {"text": "«Esparcir» significa juntar o amontonar varias cosas en un mismo lugar.", "val": false}], "mcq": [{"def": "Que tiene agudeza e ingenio para comprender las cosas con rapidez.", "correct": "perspicaz", "options_extra": ["adverbio", "esbelto", "valla"]}, {"def": "Figura retórica que consiste en exagerar aquello de lo que se habla.", "correct": "hipérbole", "options_extra": ["inhóspito", "urgencia", "vislumbrar"]}, {"def": "Alivio de una pena, un trabajo o una necesidad.", "correct": "desahogo", "options_extra": ["yacimiento", "apogeo", "esparcir"]}, {"def": "Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio.", "correct": "adverbio", "options_extra": ["esbelto", "valla", "perspicaz"]}, {"def": "Que no ofrece condiciones agradables o de seguridad para vivir.", "correct": "inhóspito", "options_extra": ["urgencia", "vislumbrar", "hipérbole"]}, {"def": "Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos.", "correct": "yacimiento", "options_extra": ["apogeo", "esparcir", "desahogo"]}, {"def": "Que tiene un cuerpo alto, delgado y de proporciones armoniosas.", "correct": "esbelto", "options_extra": ["valla", "perspicaz", "adverbio"]}, {"def": "Cualidad de urgente, es decir, que necesita atención o solución inmediata.", "correct": "urgencia", "options_extra": ["vislumbrar", "hipérbole", "inhóspito"]}, {"def": "Punto culminante o momento de mayor esplendor de algo.", "correct": "apogeo", "options_extra": ["esparcir", "desahogo", "yacimiento"]}, {"def": "Cercado de tablas, estacas u otro material que delimita un terreno.", "correct": "valla", "options_extra": ["perspicaz", "adverbio", "esbelto"]}, {"def": "Ver algo de forma confusa o a lo lejos, o intuirlo por indicios.", "correct": "vislumbrar", "options_extra": ["hipérbole", "inhóspito", "urgencia"]}, {"def": "Extender o separar lo que estaba junto o amontonado.", "correct": "esparcir", "options_extra": ["desahogo", "yacimiento", "apogeo"]}], "wordsearch": {"grid": [["E", "J", "O", "C", "V", "I", "S", "L", "U", "M", "B", "R", "A", "R"], ["F", "G", "O", "G", "Z", "A", "C", "I", "P", "S", "R", "E", "P", "E"], ["I", "D", "G", "U", "O", "G", "O", "H", "A", "S", "E", "D", "A", "O"], ["O", "C", "Y", "A", "C", "I", "M", "I", "E", "N", "T", "O", "P", "I"], ["T", "A", "R", "V", "E", "H", "M", "U", "L", "H", "C", "U", "O", "B"], ["N", "I", "X", "T", "B", "L", "I", "W", "X", "O", "T", "J", "G", "R"], ["M", "C", "B", "N", "M", "R", "M", "P", "T", "F", "D", "S", "E", "E"], ["M", "N", "D", "H", "F", "E", "O", "I", "E", "N", "J", "A", "O", "V"], ["M", "E", "B", "V", "U", "T", "P", "Y", "E", "R", "S", "X", "E", "D"], ["P", "G", "Q", "Z", "L", "S", "F", "W", "A", "B", "B", "D", "B", "A"], ["H", "R", "U", "E", "O", "M", "C", "K", "Y", "J", "N", "O", "K", "E"], ["T", "U", "B", "H", "O", "H", "H", "V", "A", "L", "L", "A", "L", "Z"], ["M", "S", "N", "E", "S", "P", "A", "R", "C", "I", "R", "V", "R", "E"], ["E", "I", "Q", "O", "Z", "Y", "A", "L", "S", "Q", "Z", "H", "K", "K"]], "N": 14, "placements": {"YACIMIENTO": [3, 2, 0, 1], "VISLUMBRAR": [0, 4, 0, 1], "PERSPICAZ": [1, 12, 0, -1], "HIPERBOLE": [4, 5, 1, 1], "INHOSPITO": [13, 1, -1, 1], "DESAHOGO": [2, 11, 0, -1], "ADVERBIO": [9, 13, -1, 0], "URGENCIA": [11, 1, -1, 0], "ESPARCIR": [12, 3, 0, 1], "ESBELTO": [13, 0, -1, 1], "APOGEO": [2, 12, 1, 0], "VALLA": [11, 7, 0, 1]}}, "crossword": {"nrows": 21, "ncols": 12, "numbering": {"0_6": 1, "5_0": 2, "6_0": 3, "9_0": 4, "9_8": 5, "9_11": 6, "11_2": 7, "13_6": 8, "14_1": 9, "16_1": 10, "17_0": 11, "20_1": 12}, "across": [{"num": 3, "word": "ESPARCIR", "row": 6, "col": 0, "len": 8, "clue": "Extender o separar lo que estaba junto o amontonado."}, {"num": 4, "word": "HIPERBOLE", "row": 9, "col": 0, "len": 9, "clue": "Figura retórica que consiste en exagerar aquello de lo que se habla."}, {"num": 7, "word": "VISLUMBRAR", "row": 11, "col": 2, "len": 10, "clue": "Ver algo de forma confusa o a lo lejos, o intuirlo por indicios."}, {"num": 9, "word": "INHOSPITO", "row": 14, "col": 1, "len": 9, "clue": "Que no ofrece condiciones agradables o de seguridad para vivir."}, {"num": 11, "word": "YACIMIENTO", "row": 17, "col": 0, "len": 10, "clue": "Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos."}, {"num": 12, "word": "ADVERBIO", "row": 20, "col": 1, "len": 8, "clue": "Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio."}], "down": [{"num": 1, "word": "URGENCIA", "row": 0, "col": 6, "len": 8, "clue": "Cualidad de urgente, es decir, que necesita atención o solución inmediata."}, {"num": 2, "word": "DESAHOGO", "row": 5, "col": 0, "len": 8, "clue": "Alivio de una pena, un trabajo o una necesidad."}, {"num": 5, "word": "ESBELTO", "row": 9, "col": 8, "len": 7, "clue": "Que tiene un cuerpo alto, delgado y de proporciones armoniosas."}, {"num": 6, "word": "PERSPICAZ", "row": 9, "col": 11, "len": 9, "clue": "Que tiene agudeza e ingenio para comprender las cosas con rapidez."}, {"num": 8, "word": "APOGEO", "row": 13, "col": 6, "len": 6, "clue": "Punto culminante o momento de mayor esplendor de algo."}, {"num": 10, "word": "VALLA", "row": 16, "col": 1, "len": 5, "clue": "Cercado de tablas, estacas u otro material que delimita un terreno."}], "placed": [["YACIMIENTO", 17, 0, "H"], ["VALLA", 16, 1, "V"], ["ADVERBIO", 20, 1, "H"], ["APOGEO", 13, 6, "V"], ["INHOSPITO", 14, 1, "H"], ["ESBELTO", 9, 8, "V"], ["HIPERBOLE", 9, 0, "H"], ["VISLUMBRAR", 11, 2, "H"], ["PERSPICAZ", 9, 11, "V"], ["DESAHOGO", 5, 0, "V"], ["ESPARCIR", 6, 0, "H"], ["URGENCIA", 0, 6, "V"]]}}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('payload-data').textContent);
+const WORDS = DATA.words; // list of {w, disp, def, cat, syn, syn_wrong, anagram, sentence}
+const byKey = Object.fromEntries(WORDS.map(w=>[w.w,w]));
+
+/* Mismo orden de aparición que en la versión Word, fijo (no aleatorio),
+   para que ningún ejercicio delate el orden de otro. */
+const ORDER = {
+  match_words: ["APOGEO","VISLUMBRAR","YACIMIENTO","DESAHOGO","ESPARCIR","HIPERBOLE","ESBELTO","PERSPICAZ","INHOSPITO","VALLA","URGENCIA","ADVERBIO"],
+  match_defs:  ["ESPARCIR","APOGEO","URGENCIA","INHOSPITO","VISLUMBRAR","DESAHOGO","PERSPICAZ","ESBELTO","VALLA","HIPERBOLE","YACIMIENTO","ADVERBIO"],
+  fillblanks:  ["ESPARCIR","PERSPICAZ","ADVERBIO","DESAHOGO","URGENCIA","YACIMIENTO","VALLA","INHOSPITO","VISLUMBRAR","ESBELTO","HIPERBOLE","APOGEO"],
+  tf:          ["URGENCIA","DESAHOGO","YACIMIENTO","APOGEO","ESBELTO","VISLUMBRAR","VALLA","INHOSPITO","ADVERBIO","PERSPICAZ","HIPERBOLE","ESPARCIR"],
+  synonyms:    ["ESBELTO","ADVERBIO","INHOSPITO","PERSPICAZ","VALLA","URGENCIA","HIPERBOLE","APOGEO","ESPARCIR","DESAHOGO","YACIMIENTO","VISLUMBRAR"],
+  riddles:     ["VISLUMBRAR","INHOSPITO","APOGEO","URGENCIA","HIPERBOLE","VALLA","DESAHOGO","ESBELTO","YACIMIENTO","ESPARCIR","ADVERBIO","PERSPICAZ"],
+};
+
+/* Paleta de 12 colores distintos para marcar cada palabra de la sopa de letras al encontrarla */
+const WORD_COLORS = {
+  PERSPICAZ:  "#2E8B7D", HIPERBOLE:  "#D64541", DESAHOGO:   "#3B6EA5",
+  ADVERBIO:   "#C77DBA", INHOSPITO:  "#E08E1D", YACIMIENTO: "#6C8C2E",
+  ESBELTO:    "#B5541A", URGENCIA:   "#1D8FA6", APOGEO:     "#8956C9",
+  VALLA:      "#A3862B", VISLUMBRAR: "#4A7A3D", ESPARCIR:   "#C24E7E",
+};
+function contrastText(hex){
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  return (0.299*r+0.587*g+0.114*b) > 150 ? '#22303C' : '#FFFFFF';
+}
+
+function stripAccents(s){
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+function norm(s){
+  return stripAccents(String(s||'')).toUpperCase().trim();
+}
+function numToLetter(n){
+  return String.fromCharCode(96+n); // 1 -> a, 2 -> b ...
+}
+const CROSSWORD_ACCENTED = { HIPERBOLE:'HIPÉRBOLE', INHOSPITO:'INHÓSPITO' };
+
+/* ---------------- NAV ---------------- */
+const EXS = [
+  {id:'ex-1', label:'Sopa de letras'},
+  {id:'ex-2', label:'Crucigrama'},
+  {id:'ex-3', label:'Relaciona'},
+  {id:'ex-5', label:'Completa frases'},
+  {id:'ex-6', label:'Verdadero/Falso'},
+  {id:'ex-8', label:'Sinónimos'},
+  {id:'ex-9', label:'Adivina la palabra'},
+  {id:'ex-10', label:'Reto final'},
+];
+const doneState = {};
+function buildNav(){
+  const rail = document.getElementById('rail');
+  const mob = document.getElementById('mobiletabs');
+  rail.innerHTML=''; mob.innerHTML='';
+  EXS.forEach((ex,i)=>{
+    const tab = document.createElement('div');
+    tab.className='tab'+(i===0?' active':'');
+    tab.dataset.target=ex.id;
+    tab.innerHTML = `<span class="n">${i+1}</span><span>${ex.label}</span><span class="check">✓</span>`;
+    tab.onclick=()=>showEx(ex.id);
+    rail.appendChild(tab);
+
+    const mtab = document.createElement('div');
+    mtab.className='tab'+(i===0?' active':'');
+    mtab.dataset.target=ex.id;
+    mtab.textContent=(i+1)+'. '+ex.label;
+    mtab.onclick=()=>showEx(ex.id);
+    mob.appendChild(mtab);
+  });
+}
+function showEx(id){
+  document.querySelectorAll('.exercise').forEach(s=>s.style.display=(s.id===id?'block':'none'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.target===id));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function markDone(id){
+  document.querySelectorAll('.tab[data-target="'+id+'"]').forEach(t=>t.classList.add('done'));
+}
+
+/* ================= EXERCISE 1: SOPA DE LETRAS ================= */
+function initWordsearch(){
+  const {grid, N, placements} = DATA.wordsearch;
+  const container = document.getElementById('ws-grid');
+  container.style.gridTemplateColumns = `repeat(${N}, 28px)`;
+  const cellEls = [];
+  for(let r=0;r<N;r++){
+    cellEls.push([]);
+    for(let c=0;c<N;c++){
+      const div = document.createElement('div');
+      div.className='cell';
+      div.textContent = grid[r][c];
+      div.dataset.r=r; div.dataset.c=c;
+      div.onclick = ()=>onWsCellClick(r,c,div);
+      container.appendChild(div);
+      cellEls[r].push(div);
+    }
+  }
+  const list = document.getElementById('ws-list');
+  WORDS.forEach(w=>{
+    const li = document.createElement('li');
+    li.textContent = w.disp;
+    li.id = 'ws-item-'+w.w;
+    list.appendChild(li);
+  });
+
+  // pre-compute cell paths for each placement
+  const paths = {};
+  Object.keys(placements).forEach(word=>{
+    const [r,c,dr,dc] = placements[word];
+    const len = word.length;
+    const cells = [];
+    for(let i=0;i<len;i++) cells.push([r+dr*i, c+dc*i]);
+    paths[word]=cells;
+  });
+
+  let start = null;
+  let found = new Set();
+  let selectedCells = [];
+
+  function clearSelection(){
+    selectedCells.forEach(([r,c])=>{
+      if(!cellEls[r][c].classList.contains('found')) cellEls[r][c].classList.remove('sel');
+    });
+    selectedCells = [];
+    start = null;
+  }
+
+  window.onWsCellClick = function(r,c,el){
+    if(el.classList.contains('found')) return;
+    if(!start){
+      start = [r,c];
+      selectedCells = [[r,c]];
+      el.classList.add('sel');
+      return;
+    }
+    const [r0,c0] = start;
+    let dr = Math.sign(r-r0), dc = Math.sign(c-c0);
+    if(r===r0 && c===c0){ clearSelection(); return; }
+    if(!(dr===0 || dc===0 || Math.abs(r-r0)===Math.abs(c-c0))){
+      clearSelection(); return;
+    }
+    const steps = Math.max(Math.abs(r-r0), Math.abs(c-c0));
+    const path = [];
+    for(let i=0;i<=steps;i++) path.push([r0+dr*i, c0+dc*i]);
+
+    let matchWord = null;
+    for(const word in paths){
+      if(found.has(word)) continue;
+      const pcells = paths[word];
+      const fwd = JSON.stringify(pcells)===JSON.stringify(path);
+      const bwd = JSON.stringify([...pcells].reverse())===JSON.stringify(path);
+      if(fwd||bwd){ matchWord=word; break; }
+    }
+    clearSelection();
+    if(matchWord){
+      found.add(matchWord);
+      const color = WORD_COLORS[matchWord] || 'var(--teal)';
+      const textColor = contrastText(color.startsWith('#')?color:'#2E8B7D');
+      paths[matchWord].forEach(([rr,cc])=>{
+        cellEls[rr][cc].classList.add('found');
+        cellEls[rr][cc].style.background = color;
+        cellEls[rr][cc].style.color = textColor;
+      });
+      const li = document.getElementById('ws-item-'+matchWord);
+      li.classList.add('found');
+      li.style.color = color;
+      document.getElementById('ws-score').textContent = found.size+' / 12';
+      if(found.size===12){
+        document.getElementById('ws-score').classList.add('good');
+        markDone('ex-1');
+      }
+    }
+  };
+}
+
+/* ================= EXERCISE 2: CRUCIGRAMA ================= */
+function initCrossword(){
+  const cw = DATA.crossword;
+  const container = document.getElementById('cw-grid');
+  container.style.gridTemplateColumns = `repeat(${cw.ncols}, 26px)`;
+  const solution = {}; // "r_c" -> letter
+  cw.placed.forEach(([word,r,c,d])=>{
+    const disp = CROSSWORD_ACCENTED[word] || word;
+    for(let i=0;i<disp.length;i++){
+      const rr = d==='V' ? r+i : r;
+      const cc = d==='H' ? c+i : c;
+      solution[rr+'_'+cc] = disp[i];
+    }
+  });
+  const totalCells = Object.keys(solution).length;
+  document.getElementById('cw-score').textContent = '0 / '+totalCells+' letras';
+
+  for(let r=0;r<cw.nrows;r++){
+    for(let c=0;c<cw.ncols;c++){
+      const key = r+'_'+c;
+      const cell = document.createElement('div');
+      if(solution[key]){
+        cell.className='cwcell';
+        if(cw.numbering[key]){
+          const num = document.createElement('span');
+          num.className='num'; num.textContent=numToLetter(cw.numbering[key]);
+          cell.appendChild(num);
+        }
+        const inp = document.createElement('input');
+        inp.maxLength=1;
+        inp.dataset.key=key;
+        inp.addEventListener('input', (e)=>{
+          e.target.value = e.target.value.toUpperCase().slice(0,1);
+          e.target.classList.remove('correct','wrong');
+        });
+        cell.appendChild(inp);
+      } else {
+        cell.className='cwcell blank';
+      }
+      container.appendChild(cell);
+    }
+  }
+
+  function renderClues(list, elId){
+    const ol = document.getElementById(elId);
+    list.forEach(entry=>{
+      const li = document.createElement('li');
+      li.innerHTML = `<b>${numToLetter(entry.num)})</b> ${entry.clue} <i>(${entry.len} letras)</i>`;
+      ol.appendChild(li);
+    });
+  }
+  renderClues(cw.across, 'cw-across');
+  renderClues(cw.down, 'cw-down');
+
+  window.checkCrossword = function(){
+    let correct=0;
+    document.querySelectorAll('#cw-grid input').forEach(inp=>{
+      const key = inp.dataset.key;
+      const val = inp.value.toUpperCase().trim();
+      const ok = val === (solution[key]||'').toUpperCase();
+      inp.classList.toggle('correct', ok);
+      inp.classList.toggle('wrong', !ok && inp.value!=='');
+      if(ok) correct++;
+    });
+    document.getElementById('cw-score').textContent = correct+' / '+totalCells+' letras';
+    document.getElementById('cw-feedback').textContent = (correct===totalCells) ? '¡Crucigrama completo!' : 'Sigue intentándolo.';
+    document.getElementById('cw-feedback').className = 'feedback-msg '+(correct===totalCells?'ok':'bad');
+    if(correct===totalCells){ document.getElementById('cw-score').classList.add('good'); markDone('ex-2'); }
+  };
+}
+
+/* ================= EXERCISE 3: RELACIONA ================= */
+function initMatch(){
+  const wordsCol = document.getElementById('match-words');
+  const defsCol = document.getElementById('match-defs');
+  const shuffledWords = ORDER.match_words.map(k=>byKey[k]);
+  const shuffledDefs = ORDER.match_defs.map(k=>byKey[k]);
+  let pending = null;
+  let pairedCount = 0;
+
+  shuffledWords.forEach(w=>{
+    const div = document.createElement('div');
+    div.className='match-item word';
+    div.textContent = w.disp;
+    div.dataset.word = w.w;
+    div.onclick=()=>onMatchClick(div,'word',w.w);
+    wordsCol.appendChild(div);
+  });
+  shuffledDefs.forEach(w=>{
+    const div = document.createElement('div');
+    div.className='match-item def';
+    div.textContent = w.def;
+    div.dataset.word = w.w;
+    div.onclick=()=>onMatchClick(div,'def',w.w);
+    defsCol.appendChild(div);
+  });
+
+  function onMatchClick(el,type,word){
+    if(el.classList.contains('paired')) return;
+    if(!pending){
+      pending = {el,type,word};
+      el.classList.add('selected');
+      return;
+    }
+    if(pending.type===type){
+      pending.el.classList.remove('selected');
+      pending = {el,type,word};
+      el.classList.add('selected');
+      return;
+    }
+    // different types -> check match
+    if(pending.word===word){
+      pending.el.classList.remove('selected');
+      pending.el.classList.add('paired');
+      el.classList.add('paired');
+      pairedCount++;
+      document.getElementById('match-score').textContent = pairedCount+' / 12';
+      if(pairedCount===12){ document.getElementById('match-score').classList.add('good'); markDone('ex-3'); }
+      pending=null;
+    } else {
+      el.classList.add('wrongflash');
+      pending.el.classList.add('wrongflash');
+      setTimeout(()=>{
+        el.classList.remove('wrongflash');
+        pending.el.classList.remove('wrongflash','selected');
+        pending=null;
+      },550);
+    }
+  }
+}
+
+/* ================= EXERCISE: COMPLETA FRASES ================= */
+function initFillBlanks(){
+  const list = document.getElementById('fb-list');
+  const options = [...WORDS].sort((a,b)=>a.disp.localeCompare(b.disp,'es'));
+  const orderedWords = ORDER.fillblanks.map(k=>byKey[k]);
+  orderedWords.forEach((w,i)=>{
+    const div = document.createElement('div');
+    div.className='fb-item';
+    const [before, after] = w.sentence.split('{blank}');
+    const sel = document.createElement('select');
+    sel.dataset.word = w.w;
+    const optDefault = document.createElement('option');
+    optDefault.textContent='— elige —'; optDefault.value='';
+    sel.appendChild(optDefault);
+    options.forEach(o=>{
+      const opt = document.createElement('option');
+      opt.value=o.w; opt.textContent=o.disp;
+      sel.appendChild(opt);
+    });
+    div.innerHTML = `<span class="num">${i+1}.</span>${before}`;
+    div.appendChild(sel);
+    div.insertAdjacentHTML('beforeend', after);
+    list.appendChild(div);
+  });
+  window.checkFillBlanks = function(){
+    let correct=0;
+    document.querySelectorAll('#fb-list select').forEach(sel=>{
+      const ok = sel.value===sel.dataset.word;
+      sel.classList.toggle('correct', ok);
+      sel.classList.toggle('wrong', !ok && sel.value!=='');
+      if(ok) correct++;
+    });
+    document.getElementById('fb-score').textContent = correct+' / 12';
+    document.getElementById('fb-feedback').textContent = correct===12?'¡Perfecto!':'Todavía hay huecos incorrectos.';
+    document.getElementById('fb-feedback').className='feedback-msg '+(correct===12?'ok':'bad');
+    if(correct===12){ document.getElementById('fb-score').classList.add('good'); markDone('ex-5'); }
+  };
+}
+
+/* ================= EXERCISE 6: V/F ================= */
+function initTF(){
+  const list = document.getElementById('tf-list');
+  const tfByWord = Object.fromEntries(WORDS.map((w,i)=>[w.w, DATA.tf[i]]));
+  const orderedTF = ORDER.tf.map(k=>tfByWord[k]);
+  orderedTF.forEach((item,i)=>{
+    const div = document.createElement('div');
+    div.className='tf-item';
+    div.dataset.val = item.val;
+    div.innerHTML = `<span>${item.text}</span>
+      <span class="tf-btns">
+        <button class="sel-true" data-v="true">Verdadero</button>
+        <button class="sel-false" data-v="false">Falso</button>
+      </span>`;
+    div.querySelectorAll('button').forEach(btn=>{
+      btn.onclick=()=>{
+        div.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        div.dataset.chosen = btn.dataset.v;
+      };
+    });
+    list.appendChild(div);
+  });
+  window.checkTF = function(){
+    let correct=0, answered=0;
+    document.querySelectorAll('#tf-list .tf-item').forEach(div=>{
+      const chosen = div.dataset.chosen;
+      if(chosen!==undefined) answered++;
+      const ok = chosen===String(div.dataset.val==='true');
+      div.classList.remove('correct','wrong');
+      if(chosen!==undefined) div.classList.add(ok?'correct':'wrong');
+      if(ok) correct++;
+    });
+    document.getElementById('tf-score').textContent = correct+' / 12';
+    document.getElementById('tf-feedback').textContent = correct===12?'¡Las 12 correctas!':'Comprueba las marcadas en rojo.';
+    document.getElementById('tf-feedback').className='feedback-msg '+(correct===12?'ok':'bad');
+    if(correct===12){ document.getElementById('tf-score').classList.add('good'); markDone('ex-6'); }
+  };
+}
+
+/* ================= EXERCISE: SINONIMOS ================= */
+function initSynonyms(){
+  const list = document.getElementById('syn-list');
+  let score=0;
+  const orderedWords = ORDER.synonyms.map(k=>byKey[k]);
+  orderedWords.forEach((w,i)=>{
+    const opts = [...w.syn_wrong, w.syn].sort(()=>Math.random()-0.5);
+    const div = document.createElement('div');
+    div.className='mcq-item';
+    div.innerHTML = `<div class="mcq-def">${i+1}. ¿Cuál es el sinónimo de <b>${w.disp}</b>?</div><div class="mcq-opts"></div>`;
+    const optsDiv = div.querySelector('.mcq-opts');
+    opts.forEach(opt=>{
+      const btn=document.createElement('button');
+      btn.textContent=opt;
+      btn.onclick=()=>{
+        optsDiv.querySelectorAll('button').forEach(b=>b.disabled=true);
+        if(opt===w.syn){ btn.classList.add('correct'); score++; }
+        else {
+          btn.classList.add('wrong');
+          optsDiv.querySelectorAll('button').forEach(b=>{ if(b.textContent===w.syn) b.classList.add('correct'); });
+        }
+        document.getElementById('syn-score').textContent = score+' / 12';
+        if(score===12){ document.getElementById('syn-score').classList.add('good'); markDone('ex-8'); }
+      };
+      optsDiv.appendChild(btn);
+    });
+    list.appendChild(div);
+  });
+}
+
+/* ================= EXERCISE 9: ADIVINA LA PALABRA ================= */
+const RIDDLES = {
+ PERSPICAZ:"Un buen jugador de ajedrez y un detective de novela comparten esta cualidad.",
+ HIPERBOLE:"Si dices que has esperado «un siglo» en la cola del cine, acabas de usar una.",
+ DESAHOGO:"Lo contrario de guardarse un peso dentro.",
+ ADVERBIO:"«Lentamente», «ayer» y «aquí» pertenecen a la misma familia gramatical.",
+ INHOSPITO:"Ni un cactus se sentiría a gusto allí.",
+ YACIMIENTO:"Los arqueólogos sueñan con encontrar uno intacto.",
+ ESBELTO:"Un junco frente al viento podría describirse así.",
+ URGENCIA:"En la sala de un hospital, la puerta que nunca cierra.",
+ APOGEO:"Justo antes de empezar la cuesta abajo, ahí estaba.",
+ VALLA:"Un atleta la salta; un jardín la necesita para no mezclarse con el de al lado.",
+ VISLUMBRAR:"La niebla deja adivinar formas, no certezas.",
+ ESPARCIR:"Lo que hace el viento con las semillas de un diente de león."
+};
+function initRiddles(){
+  const list = document.getElementById('riddle-list');
+  let score=0;
+  const orderedWords = ORDER.riddles.map(k=>byKey[k]);
+  orderedWords.forEach((w,i)=>{
+    const mask = ' _'.repeat(w.w.length);
+    const div = document.createElement('div');
+    div.className='riddle-item';
+    div.innerHTML = `
+      <div class="riddle-head">
+        <div><b>${i+1}.</b> <span class="riddle-letters">${mask}</span> · <i>${w.cat}, ${w.w.length} letras</i></div>
+        <button class="hintbtn">+ Pista</button>
+      </div>
+      <div class="riddle-hints" style="display:none;">${RIDDLES[w.w]}</div>
+      <input type="text" data-word="${w.w}" placeholder="Tu respuesta...">
+      <button class="hintbtn checkone">Comprobar</button>
+    `;
+    div.querySelector('.hintbtn:not(.checkone)').onclick=(e)=>{
+      div.querySelector('.riddle-hints').style.display='block';
+      e.target.style.display='none';
+    };
+    div.querySelector('.checkone').onclick=()=>{
+      const inp = div.querySelector('input');
+      const ok = norm(inp.value)===norm(w.w);
+      const wasCorrect = inp.classList.contains('correct');
+      inp.classList.toggle('correct', ok);
+      inp.classList.toggle('wrong', !ok);
+      if(ok && !wasCorrect){ score++; document.getElementById('riddle-score').textContent = score+' / 12';
+        if(score===12){ document.getElementById('riddle-score').classList.add('good'); markDone('ex-9'); } }
+    };
+    list.appendChild(div);
+  });
+}
+
+/* ================= EXERCISE 10: RETO FINAL ================= */
+function initWriting(){
+  const themes = [
+    "Un descubrimiento arqueológico inesperado",
+    "Un viaje a un lugar extremo",
+    "Un secreto que por fin compartes"
+  ];
+  const themesDiv = document.getElementById('write-themes');
+  themes.forEach((t,i)=>{
+    const btn = document.createElement('button');
+    btn.textContent = t;
+    if(i===0) btn.classList.add('active');
+    btn.onclick=()=>{
+      themesDiv.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    themesDiv.appendChild(btn);
+  });
+  const checklist = document.getElementById('write-checklist');
+  WORDS.forEach(w=>{
+    const span = document.createElement('span');
+    span.textContent = w.disp;
+    span.id = 'chip-'+w.w;
+    checklist.appendChild(span);
+  });
+  document.getElementById('write-area').addEventListener('input', (e)=>{
+    const text = norm(e.target.value);
+    let used=0;
+    WORDS.forEach(w=>{
+      const chip = document.getElementById('chip-'+w.w);
+      const re = new RegExp('\\b'+norm(w.w).slice(0,Math.max(4,w.w.length-3))+'\\w*','');
+      const found = re.test(text);
+      chip.classList.toggle('used', found);
+      if(found) used++;
+    });
+    document.getElementById('write-count').textContent = `Palabras usadas: ${used} / 12 · Objetivo: 4`;
+    if(used>=4) markDone('ex-10');
+  });
+}
+
+/* ================= INIT ================= */
+buildNav();
+initWordsearch();
+initCrossword();
+initMatch();
+initFillBlanks();
+initTF();
+initSynonyms();
+initRiddles();
+initWriting();
+showEx('ex-1');
+</script>
+</body>
+</html>

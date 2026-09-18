@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ejercicio de Sintaxis — Redes Sociales · 2.º Bachillerato</title>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy:#1c2b4a; --navy2:#2d4270; --gold:#b8892e; --gold2:#d4aa5c;
+  --cream:#f5f0e8; --white:#fff; --text:#1e1e1e; --muted:#6b7280;
+  --border:#ddd5c8; --ok:#15803d; --ok-bg:#dcfce7; --err:#b91c1c;
+  --err-bg:#fee2e2; --blue:#1d4ed8; --blue-bg:#eff6ff;
+}
+body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--text); min-height:100vh; }
+
+/* ── VER TEXTO ───────────────────────────────────── */
+#btn-ver-texto {
+  position:fixed; left:0; top:50%; transform:translateY(-50%);
+  z-index:300; background:var(--gold); color:white; border:none;
+  padding:1rem 0.45rem; cursor:pointer; border-radius:0 8px 8px 0;
+  font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:700;
+  writing-mode:vertical-rl; letter-spacing:0.07em;
+  box-shadow:3px 0 14px rgba(0,0,0,0.22); transition:all 0.2s; display:none;
+}
+#btn-ver-texto:hover { background:var(--gold2); padding-left:0.65rem; }
+
+/* ── WELCOME ─────────────────────────────────────── */
+#welcome-screen {
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:2rem; background:linear-gradient(140deg,var(--navy) 0%,var(--navy2) 100%);
+}
+.welcome-card {
+  background:white; border-radius:20px; padding:2.5rem 2.25rem 2rem;
+  max-width:440px; width:100%; box-shadow:0 32px 80px rgba(0,0,0,0.35);
+}
+.welcome-icon { font-size:2.4rem; margin-bottom:0.75rem; }
+.welcome-card h1 { font-family:'Crimson Pro',serif; font-size:2rem; color:var(--navy); margin-bottom:0.2rem; line-height:1.15; }
+.welcome-subtitle { font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.13em; color:var(--gold); margin-bottom:1rem; }
+.welcome-desc { font-size:0.875rem; color:var(--muted); line-height:1.65; margin-bottom:1.75rem; }
+.form-group { margin-bottom:0.875rem; }
+.form-group label { display:block; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.09em; color:var(--navy); margin-bottom:0.35rem; }
+.form-group input { width:100%; padding:0.7rem 1rem; border:2px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.95rem; outline:none; transition:border-color 0.2s,background 0.2s; background:var(--cream); color:var(--text); }
+.form-group input:focus { border-color:var(--navy); background:white; }
+.btn-start { width:100%; margin-top:0.75rem; padding:0.9rem; background:var(--navy); color:white; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-start:hover { background:var(--navy2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(28,43,74,0.35); }
+.welcome-meta { text-align:center; font-size:0.73rem; color:var(--muted); margin-top:1.25rem; }
+
+/* ── HEADER ──────────────────────────────────────── */
+header { background:var(--navy); color:white; padding:0.875rem 2rem 0.875rem 2.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 16px rgba(0,0,0,0.25); }
+.header-subject { font-size:0.67rem; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold2); }
+.header-exercise { font-family:'Crimson Pro',serif; font-size:1.05rem; font-weight:600; margin-top:0.1rem; }
+#header-info { font-size:0.82rem; color:var(--gold2); font-style:italic; text-align:right; }
+
+/* ── CONTAINER ───────────────────────────────────── */
+.container { max-width:940px; margin:0 auto; padding:2rem 1.5rem 5rem; }
+
+/* ── PROGRESS ────────────────────────────────────── */
+.progress-wrap { margin-bottom:1.75rem; }
+.progress-label { display:flex; justify-content:space-between; font-size:0.78rem; color:var(--muted); font-weight:500; margin-bottom:0.4rem; }
+.progress-track { background:#e2dcd4; border-radius:999px; height:5px; }
+.progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); border-radius:999px; transition:width 0.35s ease; width:0%; }
+
+/* ── TEXT CARD ───────────────────────────────────── */
+.text-card { background:white; border-radius:14px; padding:2rem 2.25rem; margin-bottom:1.5rem; box-shadow:0 2px 18px rgba(28,43,74,0.08); border-top:3px solid var(--gold); }
+.text-label { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:var(--gold); margin-bottom:1.25rem; }
+.text-body { font-family:'Crimson Pro',serif; font-size:1.05rem; line-height:1.92; color:var(--text); }
+.text-body p { margin-bottom:1.1rem; }
+.text-body p:last-child { margin-bottom:0; }
+.elem { font-weight:700; color:var(--navy2); }
+.elem-badge { display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; background:var(--gold); color:white; border-radius:50%; font-size:0.58rem; font-family:'DM Sans',sans-serif; font-weight:700; vertical-align:super; margin-left:1px; line-height:1; }
+.text-source { font-style:italic; font-size:0.8rem; color:var(--muted); margin-top:1.1rem; padding-top:0.75rem; border-top:1px solid var(--border); }
+
+/* ── INSTRUCTIONS ────────────────────────────────── */
+.instructions { background:var(--blue-bg); border:1px solid #bfdbfe; border-radius:10px; padding:0.875rem 1.25rem; font-size:0.84rem; color:var(--blue); line-height:1.65; margin-bottom:1.75rem; }
+.instructions strong { font-weight:600; }
+
+/* ── TABLE ───────────────────────────────────────── */
+.table-wrap { background:white; border-radius:14px; overflow:hidden; box-shadow:0 2px 18px rgba(28,43,74,0.08); margin-bottom:1.5rem; }
+table { width:100%; border-collapse:collapse; }
+thead tr { background:var(--navy); }
+thead th { color:white; padding:0.875rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.09em; }
+.col-num { width:46px; text-align:center; }
+.col-element { width:33%; }
+
+/* Block header */
+.block-hdr td { background:var(--navy2); color:white; padding:0.55rem 1rem; font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+.block-hdr.done td { background:#1a5e38; }
+
+/* Question rows */
+.q-row { border-bottom:1px solid #f0ece5; transition:background 0.15s; }
+.q-row:hover { background:#faf7f2; }
+.q-row.row-ok td { background:#f0fdf4; }
+.q-row.row-err td { background:#fef2f2; }
+.q-row td { padding:0.65rem 1rem; vertical-align:middle; }
+.td-num { text-align:center; font-weight:700; font-size:0.82rem; color:var(--navy); width:46px; }
+.td-element { font-family:'Crimson Pro',serif; font-size:0.95rem; font-style:italic; font-weight:600; color:var(--navy2); text-align:right; padding-right:1.25rem; }
+.td-status { width:28px; text-align:center; font-size:1rem; }
+
+/* Select */
+.answer-select { width:100%; padding:0.46rem 0.7rem; border:2px solid var(--border); border-radius:7px; font-family:'DM Sans',sans-serif; font-size:0.79rem; background:white; cursor:pointer; outline:none; transition:border-color 0.2s,background 0.2s; color:var(--text); }
+.answer-select:focus { border-color:var(--navy); }
+.answer-select.answered { border-color:var(--navy2); background:#f0f4ff; }
+.answer-select:disabled { background:#f4f4f4; color:#999; cursor:default; border-color:#ddd; }
+
+/* Block check row */
+.block-check-row td { background:#f8f5f0; padding:0.65rem 1rem; border-bottom:2px solid var(--border); }
+.block-check-inner { display:flex; align-items:center; justify-content:flex-end; gap:1rem; flex-wrap:wrap; }
+.btn-check { padding:0.45rem 1.2rem; background:var(--gold); color:white; border:none; border-radius:7px; font-family:'DM Sans',sans-serif; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-check:hover:not(:disabled) { background:var(--gold2); transform:translateY(-1px); }
+.btn-check:disabled { background:#ccc; cursor:not-allowed; transform:none; }
+.block-score-badge { display:none; font-size:0.83rem; font-weight:600; padding:0.35rem 0.85rem; border-radius:999px; }
+.block-score-badge.show { display:inline-block; }
+.badge-full  { background:var(--ok-bg); color:var(--ok); }
+.badge-good  { background:#fef9c3; color:#854d0e; }
+.badge-low   { background:var(--err-bg); color:var(--err); }
+
+/* ── SCORE PANEL ─────────────────────────────────── */
+.score-panel { background:white; border-radius:14px; padding:1.25rem 1.5rem; box-shadow:0 2px 18px rgba(28,43,74,0.08); margin-bottom:1.5rem; border-left:4px solid var(--gold); }
+.score-panel h3 { font-family:'Crimson Pro',serif; font-size:1rem; font-weight:700; color:var(--navy); margin-bottom:0.875rem; text-transform:uppercase; letter-spacing:0.05em; font-size:0.75rem; }
+.score-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; margin-bottom:0.875rem; }
+.score-cell { background:var(--cream); border-radius:8px; padding:0.6rem 0.75rem; text-align:center; }
+.score-cell.checked { background:var(--ok-bg); }
+.score-cell.pending { opacity:0.5; }
+.score-cell-label { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.07em; color:var(--muted); }
+.score-cell.checked .score-cell-label { color:var(--ok); }
+.score-cell-val { font-family:'Crimson Pro',serif; font-size:1.2rem; font-weight:700; color:var(--navy); margin-top:0.1rem; }
+.score-cell.checked .score-cell-val { color:var(--ok); }
+.score-total-row { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1rem; background:var(--navy); border-radius:10px; color:white; }
+.score-total-label { font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--gold2); }
+.score-total-val { font-family:'Crimson Pro',serif; font-size:1.5rem; font-weight:700; color:var(--gold2); }
+.score-nota { font-size:0.82rem; color:#94a3b8; margin-top:0.15rem; text-align:right; }
+
+/* ── SUBMIT ──────────────────────────────────────── */
+.submit-section { text-align:center; padding:0.5rem 0 2rem; }
+.btn-submit { padding:0.9rem 2.75rem; background:var(--navy); color:white; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 18px rgba(28,43,74,0.28); }
+.btn-submit:hover { background:var(--navy2); transform:translateY(-2px); }
+.btn-submit:disabled { background:#aab; cursor:not-allowed; transform:none; box-shadow:none; }
+.submit-note { font-size:0.78rem; color:var(--muted); margin-top:0.75rem; }
+
+/* ── RESULTS ─────────────────────────────────────── */
+.results-header { background:linear-gradient(140deg,var(--navy) 0%,var(--navy2) 100%); color:white; text-align:center; padding:3rem 2rem 2.5rem; }
+.score-ring { width:120px; height:120px; border-radius:50%; border:3px solid var(--gold); display:flex; flex-direction:column; align-items:center; justify-content:center; margin:0 auto 1.5rem; box-shadow:0 0 0 8px rgba(184,137,46,0.15); }
+.score-num-big { font-family:'Crimson Pro',serif; font-size:2.6rem; font-weight:700; line-height:1; color:var(--gold2); }
+.score-denom { font-size:0.78rem; color:#94a3b8; margin-top:0.1rem; }
+.results-title { font-family:'Crimson Pro',serif; font-size:1.6rem; font-weight:600; }
+.results-student { font-size:0.88rem; color:var(--gold2); margin-top:0.3rem; font-style:italic; }
+.results-container { max-width:940px; margin:0 auto; padding:2rem 1.5rem 4rem; }
+.action-row { display:flex; gap:0.875rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+.btn-action { padding:0.65rem 1.6rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:500; cursor:pointer; transition:all 0.2s; border:2px solid var(--navy); }
+.btn-action.gold   { background:var(--gold); border-color:var(--gold); color:white; font-weight:600; }
+.btn-action.gold:hover { background:var(--gold2); border-color:var(--gold2); }
+.btn-action.primary { background:var(--navy); color:white; }
+.btn-action.primary:hover { background:var(--navy2); }
+.btn-action.secondary { background:transparent; color:var(--navy); }
+.btn-action.secondary:hover { background:var(--navy); color:white; }
+
+/* Block summary in results */
+.res-block-summary { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; margin-bottom:1.75rem; }
+.res-block-cell { background:white; border-radius:10px; padding:0.875rem 1rem; text-align:center; box-shadow:0 2px 10px rgba(28,43,74,0.07); }
+.res-block-title { font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--muted); margin-bottom:0.25rem; }
+.res-block-score { font-family:'Crimson Pro',serif; font-size:1.5rem; font-weight:700; color:var(--navy); }
+.res-block-max { font-size:0.72rem; color:var(--muted); }
+
+.results-table-wrap { background:white; border-radius:14px; overflow:hidden; box-shadow:0 2px 18px rgba(28,43,74,0.08); margin-bottom:2rem; }
+.result-correct td { background:#f0fdf4; }
+.result-wrong   td { background:#fef2f2; }
+.tag { display:inline-block; padding:0.2rem 0.55rem; border-radius:999px; font-size:0.7rem; font-weight:700; white-space:nowrap; }
+.tag-ok  { background:var(--ok-bg); color:var(--ok); }
+.tag-err { background:var(--err-bg); color:var(--err); }
+
+/* ── MODAL ───────────────────────────────────────── */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:999; padding:1.5rem; backdrop-filter:blur(3px); }
+.modal-box { background:white; border-radius:16px; padding:2rem; max-width:400px; width:100%; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,0.3); }
+.modal-box h3 { font-family:'Crimson Pro',serif; font-size:1.4rem; color:var(--navy); margin-bottom:0.75rem; }
+.modal-box p { font-size:0.875rem; color:var(--muted); line-height:1.65; margin-bottom:1.5rem; }
+.modal-btns { display:flex; gap:0.75rem; }
+.modal-btns button { flex:1; padding:0.7rem; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer; transition:all 0.2s; border:2px solid var(--navy); }
+.m-cancel  { background:transparent; color:var(--navy); }
+.m-confirm { background:var(--navy); color:white; }
+.m-cancel:hover  { background:#f1f5f9; }
+.m-confirm:hover { background:var(--navy2); }
+
+@media (max-width:640px) {
+  .container,.results-container { padding:1rem 0.875rem 4rem; }
+  .text-card { padding:1.25rem; }
+  header { padding:0.875rem 1rem 0.875rem 2rem; }
+  .col-element { display:none; }
+  .score-grid { grid-template-columns:repeat(2,1fr); }
+  .res-block-summary { grid-template-columns:repeat(2,1fr); }
+}
+@media print {
+  #welcome-screen,header,#exercise-screen,.action-row,#btn-ver-texto { display:none !important; }
+  #results-screen { display:block !important; }
+}
+
+/* ── FLOATING TEXT PANEL ─────────────────────────── */
+#text-panel {
+  position:fixed; top:70px; left:20px;
+  width:400px; max-height:calc(100vh - 100px);
+  background:white; border-radius:12px;
+  border:2px solid var(--gold);
+  box-shadow:0 12px 48px rgba(0,0,0,0.4);
+  z-index:9999;
+  display:none; flex-direction:column;
+  overflow:hidden; resize:both;
+  min-width:260px; min-height:180px;
+}
+#text-panel.visible { display:flex; }
+#panel-header {
+  background:var(--navy); color:white;
+  padding:0.55rem 0.75rem;
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:grab; user-select:none; flex-shrink:0;
+  border-radius:10px 10px 0 0;
+}
+#panel-header:active { cursor:grabbing; }
+#panel-header span { font-size:0.78rem; font-weight:600; letter-spacing:0.03em; }
+#panel-header-btns { display:flex; gap:0.35rem; }
+.panel-btn {
+  background:rgba(255,255,255,0.18); color:white; border:none;
+  border-radius:4px; width:22px; height:22px; cursor:pointer;
+  font-size:0.8rem; display:flex; align-items:center; justify-content:center;
+  transition:background 0.15s; flex-shrink:0;
+}
+.panel-btn:hover { background:rgba(255,255,255,0.35); }
+#panel-body {
+  overflow-y:auto; padding:1.2rem 1.4rem; flex:1;
+  font-family:'Crimson Pro',serif; font-size:0.98rem;
+  line-height:1.88; color:var(--text);
+}
+#panel-body p { margin-bottom:1rem; }
+#panel-body p:last-child { margin-bottom:0; }
+#panel-body .elem { font-weight:700; color:var(--navy2); }
+#panel-body .elem-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:16px; height:16px; background:var(--gold); color:white;
+  border-radius:50%; font-size:0.58rem; font-family:'DM Sans',sans-serif;
+  font-weight:700; vertical-align:super; margin-left:1px;
+}
+.panel-source {
+  font-style:italic; font-size:0.78rem; color:var(--muted);
+  border-top:1px solid var(--border); padding-top:0.65rem; margin-top:1rem;
+}
+</style>
+</head>
+<body>
+
+<!-- VER TEXTO -->
+<button id="btn-ver-texto" onclick="openTextWindow()">📄&nbsp;Ver texto</button>
+
+<!-- WELCOME -->
+<section id="welcome-screen">
+  <div class="welcome-card">
+    <div class="welcome-icon">📖</div>
+    <h1>Ejercicio de Sintaxis</h1>
+    <p class="welcome-subtitle">Redes sociales y adolescencia · PAU</p>
+    <p class="welcome-desc">30 elementos en 6 bloques de 5. Comprueba tu nota tras cada bloque. Cada acierto vale <strong>0,25 puntos</strong> (máx. 1,25 por bloque).</p>
+    <div class="form-group">
+      <label for="inp-nombre">Nombre y apellidos</label>
+      <input type="text" id="inp-nombre" placeholder="Escribe tu nombre y apellidos" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label for="inp-curso">Curso</label>
+      <input type="text" id="inp-curso" placeholder="Ej: 2º Bach A" autocomplete="off">
+    </div>
+    <button class="btn-start" onclick="startExercise()">Comenzar el ejercicio →</button>
+    <p class="welcome-meta">Lengua Castellana y Literatura · 2.º Bachillerato</p>
+  </div>
+</section>
+
+<!-- APP -->
+<div id="app" style="display:none">
+
+  <header>
+    <div>
+      <div class="header-subject">Lengua Castellana y Literatura · 2.º Bachillerato</div>
+      <div class="header-exercise">Estructuras y Funciones Sintácticas en un Texto</div>
+    </div>
+    <div id="header-info"></div>
+  </header>
+
+  <!-- EXERCISE -->
+  <div id="exercise-screen">
+    <div class="container">
+
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Bloques comprobados</span>
+          <span id="progress-text">0 / 6 bloques</span>
+        </div>
+        <div class="progress-track"><div id="progress-bar" class="progress-fill"></div></div>
+      </div>
+
+      <div class="text-card">
+        <div class="text-label">Texto — Redes sociales y adolescencia</div>
+        <div class="text-body" id="text-body"></div>
+        <p class="text-source">Adaptado de <em>El País</em>, 8 de mayo de 2026</p>
+      </div>
+
+      <div class="instructions">
+        💡 <strong>Recuerda:</strong> funciones en MAYÚSCULAS (SUJ, CD, CI, CAG, CPTVO, CCL, CCT, CCM, MOD, AT, NÚC, ENL, TÉRM, CRÉG, NEXO…) y tipo de unidad en minúsculas (conjunción, pron. relativo, adv. relativo, pron. pers. átono, adj., f. nom., f. prep., f. adj., cláus. sub. sust., etc.). · <strong>Comprueba cada bloque de 5 preguntas antes de continuar.</strong>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-num">N.º</th>
+              <th class="col-element" style="text-align:right;padding-right:1.25rem">Elemento destacado</th>
+              <th>Tipo de unidad — Función sintáctica</th>
+              <th style="width:28px"></th>
+            </tr>
+          </thead>
+          <tbody id="question-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- Score panel -->
+      <div class="score-panel">
+        <h3>Puntuación por bloques (0,25 pts / acierto · máx. 1,25 pts / bloque)</h3>
+        <div class="score-grid" id="score-grid"></div>
+        <div class="score-total-row">
+          <div>
+            <div class="score-total-label">Puntuación total</div>
+            <div class="score-nota" id="score-nota-sub">Completa todos los bloques para ver la nota</div>
+          </div>
+          <div style="text-align:right">
+            <div class="score-total-val" id="score-total-val">— / 7,50</div>
+            <div class="score-nota" id="score-nota-10" style="color:var(--gold2);font-size:0.9rem;font-weight:600"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-section">
+        <button class="btn-submit" id="btn-submit" onclick="trySubmit()" disabled>
+          Ver resultados completos y enviar al profesor
+        </button>
+        <p class="submit-note" id="submit-note">Comprueba los 6 bloques para activar el envío.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-screen" style="display:none">
+    <div class="results-header">
+      <div class="score-ring">
+        <div class="score-num-big" id="res-nota">—</div>
+        <div class="score-denom">/ 10</div>
+      </div>
+      <div class="results-title" id="res-title">Resultados finales</div>
+      <div class="results-student" id="res-student"></div>
+    </div>
+    <div class="results-container">
+      <div class="action-row">
+        <button class="btn-action gold" id="btn-send-form" onclick="sendToForm()">📨&nbsp; Enviar nota al profesor</button>
+        <button class="btn-action primary"   onclick="window.print()">🖨&nbsp; Imprimir / PDF</button>
+        <button class="btn-action secondary" onclick="copyResults()">📋&nbsp; Copiar resultados</button>
+      </div>
+
+      <div class="res-block-summary" id="res-block-summary"></div>
+
+      <div class="results-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-num">N.º</th>
+              <th class="col-element">Elemento</th>
+              <th>Tu respuesta</th>
+              <th>Respuesta correcta</th>
+              <th style="width:75px;text-align:center">Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="action-row">
+        <button class="btn-action secondary" onclick="restartExercise()">↩&nbsp; Volver a intentarlo</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- FLOATING TEXT PANEL (always on top, draggable) -->
+<div id="text-panel">
+  <div id="panel-header">
+    <span>📄 Texto del ejercicio</span>
+    <div id="panel-header-btns">
+      <button class="panel-btn" onclick="closeTextPanel()" title="Cerrar">✕</button>
+    </div>
+  </div>
+  <div id="panel-body"></div>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3 id="modal-title">Atención</h3>
+    <p id="modal-text"></p>
+    <div class="modal-btns">
+      <button class="m-cancel" onclick="closeModal()">Volver</button>
+      <button class="m-confirm" id="modal-confirm" onclick="">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TEXT ──────────────────────────────────────────────────────────────
+const TEXT_HTML = `
+<p>Los investigadores <span class="elem">que<span class="elem-badge">1</span></span> analizaron el impacto de las redes sociales en jóvenes presentaron sus conclusiones <span class="elem">el martes pasado<span class="elem-badge">2</span></span>. El informe fue redactado <span class="elem">por un equipo de cinco universidades<span class="elem-badge">3</span></span>. La tecnología <span class="elem">los<span class="elem-badge">4</span></span> atrapa con facilidad; muchos adolescentes no saben cómo reaccionar. Los datos <span class="elem">que<span class="elem-badge">5</span></span> publicaron resultaron preocupantes incluso para sus propios autores.</p>
+<p>La psicóloga Ana Ferrer advirtió <span class="elem">que<span class="elem-badge">6</span></span> el problema <span class="elem">nos<span class="elem-badge">7</span></span> afecta a todos sin excepción. «La pantalla <span class="elem">te<span class="elem-badge">8</span></span> engancha <span class="elem">cuando<span class="elem-badge">9</span></span> menos te lo esperas», explicó ante el auditorio. El alcalde, <span class="elem">que<span class="elem-badge">10</span></span> recibió el informe <span class="elem">visiblemente preocupado<span class="elem-badge">11</span></span>, prometió actuar de inmediato. Los jóvenes <span class="elem">se<span class="elem-badge">12</span></span> miran constantemente en las redes. A muchos de ellos <span class="elem">les<span class="elem-badge">13</span></span> resulta difícil renunciar a esa conexión; acaban por no conseguir <span class="elem">desconectarse<span class="elem-badge">14</span></span>.</p>
+<p>El estudio se realizó <span class="elem">donde<span class="elem-badge">15</span></span> el acceso a internet era casi universal. Los investigadores eligieron la ciudad <span class="elem">donde<span class="elem-badge">16</span></span> los índices de uso resultaban más altos. El diseño fue aprobado <span class="elem">por los propios jóvenes participantes<span class="elem-badge">17</span></span>. La conclusión principal fue la de <span class="elem">que la regulación resulta urgente e ineludible<span class="elem-badge">18</span></span>. A los participantes <span class="elem">les<span class="elem-badge">19</span></span> comunicaron los resultados antes de hacerlos públicos.</p>
+<p><span class="elem">Cuando<span class="elem-badge">20</span></span> el documento llegó a los medios, generó una polémica inesperada. La prensa <span class="elem">lo<span class="elem-badge">21</span></span> consideró <span class="elem">revolucionario<span class="elem-badge">22</span></span> cuando en realidad era una síntesis de trabajos previos. El momento <span class="elem">cuando<span class="elem-badge">23</span></span> el debate se intensificó fue justo tras la rueda de prensa. <span class="elem">Nos<span class="elem-badge">24</span></span> sorprendió la rapidez con <span class="elem">que<span class="elem-badge">25</span></span> las familias respondieron al informe.</p>
+<p>La escuela y la familia son los espacios <span class="elem">donde<span class="elem-badge">26</span></span> este cambio debe empezar. Los expertos señalan <span class="elem">que<span class="elem-badge">27</span></span> el sistema depende de <span class="elem">la implicación de todos<span class="elem-badge">28</span></span>. El objetivo es ofrecerles herramientas que les permitan <span class="elem">gestionar su tiempo<span class="elem-badge">29</span></span>. La solución no vendrá sola: <span class="elem">nos<span class="elem-badge">30</span></span> exige un esfuerzo colectivo y sostenido.</p>`;
+
+// ── QUESTIONS ─────────────────────────────────────────────────────────
+const QUESTIONS = [
+  {id:1,  element:'que',
+   correct:'pronombre relativo — NEXO y SUJ de «analizaron»',
+   options:['pronombre relativo — NEXO y SUJ de «analizaron»','conjunción — NEXO de cláus. sust.','pronombre relativo — NEXO y CD de «analizaron»','pronombre relativo — NEXO y CCT de «analizaron»','conjunción — NEXO de cláus. adv. de tiempo','adverbio relativo — NEXO y CCL de «analizaron»']},
+  {id:2,  element:'el martes pasado',
+   correct:'f. nom. — CCT de «presentaron»',
+   options:['f. nom. — CCT de «presentaron»','f. nom. — SUJ de «presentaron»','f. prep. — CCT de «presentaron»','f. nom. — CD de «presentaron»','adv. — CCT de «presentaron»','f. nom. — MOD del NÚC «conclusiones»']},
+  {id:3,  element:'por un equipo de cinco universidades',
+   correct:'f. prep. — CAG de «fue redactado»',
+   options:['f. prep. — CAG de «fue redactado»','f. prep. — CI de «fue redactado»','f. prep. — CCM de «fue redactado»','f. prep. — CRÉG de «fue redactado»','f. prep. — CD de «fue redactado»','f. prep. — CCL de «fue redactado»']},
+  {id:4,  element:'los',
+   correct:'pronombre personal átono — CD de «atrapa»',
+   options:['pronombre personal átono — CD de «atrapa»','pronombre personal átono — CI de «atrapa»','pronombre personal átono — SUJ de «atrapa»','determinante artículo — DET de f. nom.','pronombre personal átono — CRÉG de «atrapa»','pronombre personal átono — CPTVO del SUJ']},
+  {id:5,  element:'que',
+   correct:'pronombre relativo — NEXO y CD de «publicaron»',
+   options:['pronombre relativo — NEXO y CD de «publicaron»','conjunción — NEXO de cláus. sust.','pronombre relativo — NEXO y SUJ de «publicaron»','pronombre relativo — NEXO y MOD del NÚC «datos»','conjunción — NEXO de cláus. adv. de modo','adverbio relativo — NEXO y CCT de «publicaron»']},
+  {id:6,  element:'que',
+   correct:'conjunción — NEXO de la cláus. sust.',
+   options:['conjunción — NEXO de la cláus. sust.','pronombre relativo — NEXO y SUJ de «afecta»','pronombre relativo — NEXO y CD de «advirtió»','conjunción — NEXO de cláus. adv. de modo','adverbio relativo — NEXO y CCT de «advirtió»','pronombre relativo — NEXO y MOD del NÚC «problema»']},
+  {id:7,  element:'nos',
+   correct:'pronombre personal átono — CD de «afecta»',
+   options:['pronombre personal átono — CD de «afecta»','pronombre personal átono — CI de «afecta»','pronombre personal átono — SUJ de «afecta»','pronombre personal átono — CRÉG de «afecta»','determinante posesivo — DET de f. nom.','pronombre personal átono — CPTVO del SUJ']},
+  {id:8,  element:'te',
+   correct:'pronombre personal átono — CD de «engancha»',
+   options:['pronombre personal átono — CD de «engancha»','pronombre personal átono — CI de «engancha»','pronombre personal átono — SUJ de «engancha»','pronombre personal átono — CRÉG de «engancha»','pronombre personal átono — CPTVO del CD','pronombre personal átono — CCL de «engancha»']},
+  {id:9,  element:'cuando',
+   correct:'conjunción — NEXO de la cláus. adv. temporal',
+   options:['conjunción — NEXO de la cláus. adv. temporal','adverbio relativo — NEXO y CCT de «esperas»','conjunción — NEXO de cláus. sust.','adverbio relativo — NEXO y CCL de «esperas»','conjunción — NEXO de cláus. adv. condicional','adverbio — CCT de «engancha»']},
+  {id:10, element:'que',
+   correct:'pronombre relativo — NEXO y SUJ de «recibió»',
+   options:['pronombre relativo — NEXO y SUJ de «recibió»','conjunción — NEXO de cláus. sust.','pronombre relativo — NEXO y CD de «recibió»','pronombre relativo — NEXO y CCT de «recibió»','conjunción — NEXO de cláus. adv. de modo','adverbio relativo — NEXO y CCL de «recibió»']},
+  {id:11, element:'visiblemente preocupado',
+   correct:'f. adj. — CPTVO del SUJ «el alcalde»',
+   options:['f. adj. — CPTVO del SUJ «el alcalde»','f. adj. — AT del verbo «recibió»','f. adj. — MOD del NÚC «informe»','f. adj. — CPTVO del CD «informe»','f. adj. — CCM de «recibió»','adv. — MOD ORACIONAL']},
+  {id:12, element:'se',
+   correct:'pronombre personal átono — CD de «miran» (reflexivo)',
+   options:['pronombre personal átono — CD de «miran» (reflexivo)','pronombre personal átono — CI de «miran»','pronombre personal átono — SUJ de «miran»','pronombre personal átono — marca de pasiva refleja','pronombre personal átono — CRÉG de «miran»','pronombre personal átono — parte del verbo pronominal']},
+  {id:13, element:'les',
+   correct:'pronombre personal átono — CI de «resulta»',
+   options:['pronombre personal átono — CI de «resulta»','pronombre personal átono — CD de «resulta»','pronombre personal átono — SUJ de «resulta»','pronombre personal átono — CRÉG de «resulta»','determinante — DET de f. nom.','pronombre personal átono — CI de «renunciar»']},
+  {id:14, element:'desconectarse',
+   correct:'cláus. sub. sust. (infinitivo) — CD de «conseguir»',
+   options:['cláus. sub. sust. (infinitivo) — CD de «conseguir»','cláus. sub. sust. (infinitivo) — SUJ de «conseguir»','cláus. sub. sust. (infinitivo) — CRÉG de «conseguir»','f. nom. — CD de «conseguir»','cláus. sub. sust. (infinitivo) — AT de «conseguir»','cláus. sub. adv. de modo — CCM de «conseguir»']},
+  {id:15, element:'donde',
+   correct:'conjunción — NEXO de la cláus. adv. de lugar',
+   options:['conjunción — NEXO de la cláus. adv. de lugar','adverbio relativo — NEXO y CCL de «era»','conjunción — NEXO de cláus. sust.','adverbio relativo — NEXO y CCT de «era»','conjunción — NEXO de cláus. adv. de tiempo','adverbio — CCL de «realizó»']},
+  {id:16, element:'donde',
+   correct:'adverbio relativo — NEXO y CCL de «resultaban»',
+   options:['adverbio relativo — NEXO y CCL de «resultaban»','conjunción — NEXO de cláus. adv. de lugar','adverbio relativo — NEXO y CCT de «resultaban»','adverbio relativo — NEXO y SUJ de «resultaban»','conjunción — NEXO de cláus. sust.','conjunción — NEXO de cláus. adv. de tiempo']},
+  {id:17, element:'por los propios jóvenes participantes',
+   correct:'f. prep. — CAG de «fue aprobado»',
+   options:['f. prep. — CAG de «fue aprobado»','f. prep. — CI de «fue aprobado»','f. prep. — CCM de «fue aprobado»','f. prep. — CRÉG de «fue aprobado»','f. prep. — CD de «fue aprobado»','f. prep. — CCL de «fue aprobado»']},
+  {id:18, element:'que la regulación resulta urgente e ineludible',
+   correct:'cláus. sub. sust. — TÉRM del ENL «de»',
+   options:['cláus. sub. sust. — TÉRM del ENL «de»','cláus. sub. sust. — CD del verbo «fue»','cláus. sub. sust. — AT del verbo «fue»','cláus. sub. sust. — SUJ del verbo «fue»','cláus. sub. adjetiva — MOD del NÚC «conclusión»','cláus. sub. adv. de modo — CCM de «fue»']},
+  {id:19, element:'les',
+   correct:'pronombre personal átono — CI de «comunicaron»',
+   options:['pronombre personal átono — CI de «comunicaron»','pronombre personal átono — CD de «comunicaron»','pronombre personal átono — SUJ de «comunicaron»','pronombre personal átono — CRÉG de «comunicaron»','pronombre personal átono — MOD del NÚC «resultados»','pronombre personal átono — CI de «hacerlos»']},
+  {id:20, element:'Cuando',
+   correct:'conjunción — NEXO de la cláus. adv. temporal',
+   options:['conjunción — NEXO de la cláus. adv. temporal','adverbio relativo — NEXO y CCT de «llegó»','conjunción — NEXO de cláus. sust.','adverbio relativo — NEXO y CCL de «llegó»','adverbio — CCT de «generó»','conjunción — NEXO de cláus. adv. condicional']},
+  {id:21, element:'lo',
+   correct:'pronombre personal átono — CD de «consideró»',
+   options:['pronombre personal átono — CD de «consideró»','pronombre personal átono — CI de «consideró»','determinante artículo — DET de f. nom.','pronombre personal átono — SUJ de «consideró»','pronombre personal átono — AT de «consideró»','pronombre personal átono — CPTVO del SUJ']},
+  {id:22, element:'revolucionario',
+   correct:'adjetivo — CPTVO del CD «lo»',
+   options:['adjetivo — CPTVO del CD «lo»','adjetivo — AT del verbo «consideró»','adjetivo — MOD del NÚC «síntesis»','adjetivo — CPTVO del SUJ «la prensa»','adjetivo — NÚC de f. adj.','adverbio — CCM de «consideró»']},
+  {id:23, element:'cuando',
+   correct:'adverbio relativo — NEXO y CCT de «se intensificó»',
+   options:['adverbio relativo — NEXO y CCT de «se intensificó»','conjunción — NEXO de cláus. adv. temporal','adverbio relativo — NEXO y CCL de «se intensificó»','conjunción — NEXO de cláus. sust.','adverbio — CCT de «fue»','adverbio relativo — NEXO y SUJ de «se intensificó»']},
+  {id:24, element:'Nos',
+   correct:'pronombre personal átono — CI de «sorprendió»',
+   options:['pronombre personal átono — CI de «sorprendió»','pronombre personal átono — CD de «sorprendió»','pronombre personal átono — SUJ de «sorprendió»','pronombre personal átono — CRÉG de «sorprendió»','pronombre personal átono — CPTVO del SUJ','determinante posesivo — DET de f. nom.']},
+  {id:25, element:'que',
+   correct:'pronombre relativo — NEXO y TÉRM del ENL «con»',
+   options:['pronombre relativo — NEXO y TÉRM del ENL «con»','conjunción — NEXO de cláus. sust.','pronombre relativo — NEXO y SUJ de «respondieron»','pronombre relativo — NEXO y CD de «respondieron»','conjunción — NEXO de cláus. adv. de modo','adverbio relativo — NEXO y CCM de «respondieron»']},
+  {id:26, element:'donde',
+   correct:'adverbio relativo — NEXO y CCL de «debe empezar»',
+   options:['adverbio relativo — NEXO y CCL de «debe empezar»','conjunción — NEXO de cláus. adv. de lugar','adverbio relativo — NEXO y CCT de «debe empezar»','conjunción — NEXO de cláus. sust.','adverbio — CCL de «son»','adverbio relativo — NEXO y MOD del NÚC «espacios»']},
+  {id:27, element:'que',
+   correct:'conjunción — NEXO de la cláus. sust.',
+   options:['conjunción — NEXO de la cláus. sust.','pronombre relativo — NEXO y SUJ de «depende»','pronombre relativo — NEXO y CD de «señalan»','conjunción — NEXO de cláus. adv. de modo','adverbio relativo — NEXO y CCT de «señalan»','pronombre relativo — NEXO y MOD del NÚC «sistema»']},
+  {id:28, element:'la implicación de todos',
+   correct:'f. nom. — TÉRM del ENL «de»',
+   options:['f. nom. — TÉRM del ENL «de»','f. nom. — CD del verbo «depende»','f. nom. — CRÉG del verbo «depende»','f. nom. — SUJ del verbo «depende»','f. prep. — TÉRM del ENL «de»','f. nom. — AT del verbo «depende»']},
+  {id:29, element:'gestionar su tiempo',
+   correct:'cláus. sub. sust. (infinitivo) — CD de «permitan»',
+   options:['cláus. sub. sust. (infinitivo) — CD de «permitan»','cláus. sub. sust. (infinitivo) — SUJ de «permitan»','cláus. sub. sust. (infinitivo) — CRÉG de «permitan»','f. nom. — CD de «permitan»','cláus. sub. sust. (infinitivo) — CI de «permitan»','cláus. sub. adv. de modo — CCM de «permitan»']},
+  {id:30, element:'nos',
+   correct:'pronombre personal átono — CI de «exige»',
+   options:['pronombre personal átono — CI de «exige»','pronombre personal átono — CD de «exige»','pronombre personal átono — SUJ de «exige»','pronombre personal átono — CPTVO del SUJ','pronombre personal átono — CRÉG de «exige»','determinante posesivo — DET de f. nom.']}
+];
+
+const NUM_BLOCKS = 6;
+const BLOCK_MAX  = 1.25; // 5 × 0.25
+const TOTAL_MAX  = NUM_BLOCKS * BLOCK_MAX; // 7.50
+
+// ── STATE ──────────────────────────────────────────────────────────────
+let studentName  = '';
+let curso        = '';
+let answers      = Array(30).fill(null);
+let shuffledOpts = [];
+let blockChecked = Array(NUM_BLOCKS).fill(false);
+let blockScores  = Array(NUM_BLOCKS).fill(null);  // points per block
+let blockCorrect = Array(NUM_BLOCKS).fill(null);  // correct count per block
+let finalNota    = 0;
+
+// ── UTILS ──────────────────────────────────────────────────────────────
+function shuffle(arr) {
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n,d=2){return n.toFixed(d).replace('.',',');}
+
+// ── FLOATING TEXT PANEL ────────────────────────────────────────────────
+function openTextWindow() {
+  const panel = document.getElementById('text-panel');
+  if (panel.classList.contains('visible')) {
+    panel.classList.remove('visible');
+  } else {
+    // Inject text once
+    const body = document.getElementById('panel-body');
+    if (!body.hasChildNodes()) {
+      body.innerHTML = TEXT_HTML +
+        '<p class="panel-source">Adaptado de <em>El País</em>, 8 de mayo de 2026</p>';
+    }
+    panel.classList.add('visible');
+  }
+}
+
+function closeTextPanel() {
+  document.getElementById('text-panel').classList.remove('visible');
+}
+
+function initPanelDrag() {
+  const panel  = document.getElementById('text-panel');
+  const header = document.getElementById('panel-header');
+  let dragging = false, ox = 0, oy = 0;
+
+  header.addEventListener('mousedown', e => {
+    if (e.target.tagName === 'BUTTON') return;
+    dragging = true;
+    const r = panel.getBoundingClientRect();
+    // Fix position so we can drag freely
+    panel.style.right = 'auto';
+    panel.style.left  = r.left + 'px';
+    panel.style.top   = r.top  + 'px';
+    ox = e.clientX - r.left;
+    oy = e.clientY - r.top;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    let l = e.clientX - ox;
+    let t = e.clientY - oy;
+    l = Math.max(0, Math.min(l, window.innerWidth  - panel.offsetWidth));
+    t = Math.max(0, Math.min(t, window.innerHeight - 60));
+    panel.style.left = l + 'px';
+    panel.style.top  = t + 'px';
+  });
+
+  document.addEventListener('mouseup', () => { dragging = false; });
+
+  // Touch support
+  header.addEventListener('touchstart', e => {
+    if (e.target.tagName === 'BUTTON') return;
+    dragging = true;
+    const r = panel.getBoundingClientRect();
+    panel.style.right = 'auto';
+    panel.style.left  = r.left + 'px';
+    panel.style.top   = r.top  + 'px';
+    ox = e.touches[0].clientX - r.left;
+    oy = e.touches[0].clientY - r.top;
+  }, {passive:true});
+
+  document.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    let l = e.touches[0].clientX - ox;
+    let t = e.touches[0].clientY - oy;
+    l = Math.max(0, Math.min(l, window.innerWidth  - panel.offsetWidth));
+    t = Math.max(0, Math.min(t, window.innerHeight - 60));
+    panel.style.left = l + 'px';
+    panel.style.top  = t + 'px';
+  }, {passive:true});
+
+  document.addEventListener('touchend', () => { dragging = false; });
+}
+
+// ── START ──────────────────────────────────────────────────────────────
+function startExercise() {
+  const nombre = document.getElementById('inp-nombre').value.trim();
+  const cursoV = document.getElementById('inp-curso').value.trim();
+  if(!nombre){alert('Por favor, escribe tu nombre y apellidos.');return;}
+  if(!cursoV) {alert('Por favor, escribe tu curso.');return;}
+  studentName = nombre; curso = cursoV;
+  document.getElementById('header-info').textContent = `${studentName} · ${curso}`;
+  shuffledOpts = QUESTIONS.map(q=>shuffle(q.options));
+  document.getElementById('text-body').innerHTML = TEXT_HTML;
+  renderTable();
+  renderScoreGrid();
+  document.getElementById('welcome-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('btn-ver-texto').style.display='block';
+  initPanelDrag();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+// ── RENDER TABLE ───────────────────────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('question-tbody');
+  tbody.innerHTML='';
+  for(let b=0;b<NUM_BLOCKS;b++){
+    const start=b*5;
+    // Block header
+    const hdr=document.createElement('tr');
+    hdr.className='block-hdr'; hdr.id=`blk-hdr-${b}`;
+    hdr.innerHTML=`<td colspan="4">Bloque ${b+1} &nbsp;·&nbsp; Preguntas ${start+1}–${start+5}</td>`;
+    tbody.appendChild(hdr);
+    // 5 questions
+    for(let qi=start;qi<start+5;qi++){
+      const q=QUESTIONS[qi];
+      const tr=document.createElement('tr');
+      tr.className='q-row'; tr.id=`row-${qi}`;
+      const opts=shuffledOpts[qi].map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('');
+      tr.innerHTML=`
+        <td class="td-num">${q.id}</td>
+        <td class="td-element">${esc(q.element)}</td>
+        <td><select class="answer-select" id="sel-${qi}" onchange="onAnswer(${qi},this)">
+          <option value="">— Selecciona —</option>${opts}
+        </select></td>
+        <td class="td-status" id="st-${qi}"></td>`;
+      tbody.appendChild(tr);
+    }
+    // Check row
+    const cr=document.createElement('tr');
+    cr.className='block-check-row';
+    cr.innerHTML=`<td colspan="4"><div class="block-check-inner">
+      <span class="block-score-badge" id="badge-${b}"></span>
+      <button class="btn-check" id="btn-check-${b}" onclick="checkBlock(${b})">
+        ✓ Comprobar bloque ${b+1}
+      </button>
+    </div></td>`;
+    tbody.appendChild(cr);
+  }
+}
+
+// ── RENDER SCORE GRID ──────────────────────────────────────────────────
+function renderScoreGrid() {
+  const g=document.getElementById('score-grid'); g.innerHTML='';
+  for(let b=0;b<NUM_BLOCKS;b++){
+    const d=document.createElement('div');
+    d.className='score-cell pending'; d.id=`sc-cell-${b}`;
+    d.innerHTML=`<div class="score-cell-label">Bloque ${b+1}</div>
+                 <div class="score-cell-val" id="sc-val-${b}">—</div>`;
+    g.appendChild(d);
+  }
+}
+
+// ── ON ANSWER ──────────────────────────────────────────────────────────
+function onAnswer(idx, sel) {
+  answers[idx]=sel.value||null;
+  sel.classList.toggle('answered',!!sel.value);
+}
+
+// ── CHECK BLOCK ────────────────────────────────────────────────────────
+function checkBlock(b) {
+  const start=b*5;
+  let correct=0;
+  // Evaluate and lock
+  for(let i=start;i<start+5;i++){
+    const sel=document.getElementById(`sel-${i}`);
+    const row=document.getElementById(`row-${i}`);
+    const st =document.getElementById(`st-${i}`);
+    const ok = answers[i]===QUESTIONS[i].correct;
+    if(ok) correct++;
+    sel.disabled=true;
+    row.classList.add(ok?'row-ok':'row-err');
+    st.textContent=ok?'✓':'✗';
+    st.style.color=ok?'var(--ok)':'var(--err)';
+    st.style.fontWeight='700';
+  }
+  blockScores[b]  = correct * 0.25;
+  blockCorrect[b] = correct;
+  blockChecked[b] = true;
+
+  // Update block header
+  document.getElementById(`blk-hdr-${b}`).classList.add('done');
+
+  // Show badge
+  const badge=document.getElementById(`badge-${b}`);
+  const pts=blockScores[b];
+  badge.textContent=`${correct}/5 correctas → ${fmt(pts)} pts`;
+  badge.className='block-score-badge show '+(pts===BLOCK_MAX?'badge-full':pts>=0.75?'badge-good':'badge-low');
+
+  // Disable check button
+  document.getElementById(`btn-check-${b}`).disabled=true;
+
+  // Update score cell
+  const cell=document.getElementById(`sc-cell-${b}`);
+  cell.classList.replace('pending','checked');
+  document.getElementById(`sc-val-${b}`).textContent=`${fmt(pts)} / ${fmt(BLOCK_MAX)}`;
+
+  // Update totals
+  updateTotals();
+  updateProgress();
+  checkAllDone();
+}
+
+// ── TOTALS ─────────────────────────────────────────────────────────────
+function updateTotals() {
+  const checkedBlocks = blockScores.filter(s=>s!==null);
+  if(checkedBlocks.length===0) return;
+  const total=checkedBlocks.reduce((a,b)=>a+b,0);
+  const nota=(total/TOTAL_MAX)*10;
+  document.getElementById('score-total-val').textContent=`${fmt(total)} / ${fmt(TOTAL_MAX)}`;
+  if(blockChecked.every(Boolean)){
+    document.getElementById('score-nota-10').textContent=`Nota: ${fmt(nota)} / 10`;
+    document.getElementById('score-nota-sub').textContent='Puntuación final:';
+    finalNota=nota;
+  } else {
+    const done=checkedBlocks.length;
+    document.getElementById('score-nota-sub').textContent=`${done} de ${NUM_BLOCKS} bloques comprobados`;
+  }
+}
+
+function updateProgress() {
+  const done=blockChecked.filter(Boolean).length;
+  document.getElementById('progress-text').textContent=`${done} / ${NUM_BLOCKS} bloques`;
+  document.getElementById('progress-bar').style.width=`${(done/NUM_BLOCKS)*100}%`;
+}
+
+function checkAllDone() {
+  if(blockChecked.every(Boolean)){
+    document.getElementById('btn-submit').disabled=false;
+    document.getElementById('submit-note').textContent='Todos los bloques comprobados. ¡Ya puedes ver los resultados!';
+  }
+}
+
+// ── SUBMIT ─────────────────────────────────────────────────────────────
+function trySubmit() {
+  const unchecked=blockChecked.filter(b=>!b).length;
+  if(unchecked>0){
+    showModal(
+      'Bloques sin comprobar',
+      `Hay ${unchecked} bloque${unchecked>1?'s':''} sin comprobar. Comprueba todos antes de enviar.`,
+      null, 'Entendido', false
+    );
+    return;
+  }
+  showResults();
+}
+
+function showModal(title, text, onConfirm, confirmLabel='Continuar', showCancel=true) {
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-text').textContent=text;
+  const btn=document.getElementById('modal-confirm');
+  btn.textContent=confirmLabel;
+  btn.style.display=onConfirm?'block':'none';
+  document.querySelector('.m-cancel').textContent=showCancel?'Volver':'Cerrar';
+  document.querySelector('.m-cancel').onclick=closeModal;
+  if(onConfirm) btn.onclick=()=>{closeModal();onConfirm();};
+  document.getElementById('modal').style.display='flex';
+}
+function closeModal(){document.getElementById('modal').style.display='none';}
+
+// ── RESULTS ────────────────────────────────────────────────────────────
+function showResults() {
+  const total=blockScores.reduce((a,b)=>a+(b||0),0);
+  finalNota=Math.round((total/TOTAL_MAX)*10*100)/100;
+
+  // Score header
+  document.getElementById('res-nota').textContent=fmt(finalNota);
+  document.getElementById('res-title').textContent=scoreLabel(finalNota);
+  document.getElementById('res-student').textContent=`${studentName} · ${curso}`;
+
+  // Block summary
+  const bs=document.getElementById('res-block-summary'); bs.innerHTML='';
+  for(let b=0;b<NUM_BLOCKS;b++){
+    const pts=blockScores[b]||0; const c=blockCorrect[b]||0;
+    const d=document.createElement('div'); d.className='res-block-cell';
+    d.innerHTML=`<div class="res-block-title">Bloque ${b+1}</div>
+                 <div class="res-block-score">${fmt(pts)}</div>
+                 <div class="res-block-max">${c}/5 correctas · máx. ${fmt(BLOCK_MAX)}</div>`;
+    bs.appendChild(d);
+  }
+
+  // Full results table
+  const tbody=document.getElementById('results-tbody'); tbody.innerHTML='';
+  QUESTIONS.forEach((q,i)=>{
+    const given=answers[i]||'—';
+    const ok=given===q.correct;
+    const tr=document.createElement('tr');
+    tr.className=ok?'result-correct':'result-wrong';
+    tr.innerHTML=`
+      <td class="td-num">${q.id}</td>
+      <td style="font-family:'Crimson Pro',serif;font-style:italic;font-size:.9rem;font-weight:600;color:var(--navy2)">${esc(q.element)}</td>
+      <td style="font-size:.79rem;color:${ok?'var(--ok)':'var(--err)'};">${esc(given)}</td>
+      <td style="font-size:.79rem;color:var(--ok);">${esc(q.correct)}</td>
+      <td style="text-align:center"><span class="tag ${ok?'tag-ok':'tag-err'}">${ok?'✓ Bien':'✗ Mal'}</span></td>`;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('exercise-screen').style.display='none';
+  document.getElementById('results-screen').style.display='block';
+  document.getElementById('btn-ver-texto').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function scoreLabel(n){
+  if(n>=9)  return '¡Excelente! Dominas la sintaxis.';
+  if(n>=7)  return '¡Muy bien! Resultado notable.';
+  if(n>=5)  return 'Bien, sigue practicando.';
+  if(n>=3)  return 'Necesitas repasar la teoría.';
+  return 'Revisa los apuntes e inténtalo de nuevo.';
+}
+
+// ── SEND TO FORM (silent submission, no window opens) ─────────────────
+function sendToForm() {
+  const btn = document.getElementById('btn-send-form');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSelHfTl4g7jlpu5DNLUY_hYgJ9K-r34zXC_3F3Hc6MympbUZw/formResponse';
+  const fd = new FormData();
+  fd.append('entry.965384595', studentName);
+  fd.append('entry.2013791434', curso);
+  fd.append('entry.591257558', finalNota.toFixed(2));
+  fd.append('pageHistory', '0');
+
+  fetch(FORM_URL, { method: 'POST', mode: 'no-cors', body: fd })
+    .then(() => {
+      btn.textContent = '✓ Nota enviada al profesor';
+      btn.style.background  = 'var(--ok)';
+      btn.style.borderColor = 'var(--ok)';
+      btn.style.cursor      = 'default';
+    })
+    .catch(() => {
+      btn.disabled = false;
+      btn.textContent = '📨 Enviar nota al profesor';
+      alert('No se pudo conectar. Comprueba tu conexión a internet e inténtalo de nuevo.');
+    });
+}
+
+// ── COPY ───────────────────────────────────────────────────────────────
+function copyResults() {
+  const date=new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'long',year:'numeric'});
+  const total=blockScores.reduce((a,b)=>a+(b||0),0);
+  let t=`EJERCICIO DE SINTAXIS — REDES SOCIALES Y ADOLESCENCIA\n`;
+  t+=`Alumno/a: ${studentName} · Curso: ${curso} · Fecha: ${date}\n`;
+  t+=`${'─'.repeat(50)}\n`;
+  for(let b=0;b<NUM_BLOCKS;b++) t+=`Bloque ${b+1}: ${blockCorrect[b]||0}/5 correctas = ${fmt(blockScores[b]||0)} pts\n`;
+  t+=`${'─'.repeat(50)}\n`;
+  t+=`Total: ${fmt(total)} / ${fmt(TOTAL_MAX)} pts → Nota: ${fmt(finalNota)} / 10\n\n`;
+  QUESTIONS.forEach((q,i)=>{
+    const given=answers[i]||'—'; const ok=given===q.correct;
+    t+=`${String(q.id).padStart(2,'0')}. ${q.element}\n    ${ok?'✓':'✗'} ${given}\n`;
+    if(!ok) t+=`    → Correcta: ${q.correct}\n`;
+    t+='\n';
+  });
+  navigator.clipboard.writeText(t).then(()=>alert('Resultados copiados.')).catch(()=>alert('No se pudo copiar. Usa el botón de impresión.'));
+}
+
+// ── RESTART ────────────────────────────────────────────────────────────
+function restartExercise() {
+  answers=Array(30).fill(null);
+  blockChecked=Array(NUM_BLOCKS).fill(false);
+  blockScores=Array(NUM_BLOCKS).fill(null);
+  blockCorrect=Array(NUM_BLOCKS).fill(null);
+  finalNota=0;
+  shuffledOpts=QUESTIONS.map(q=>shuffle(q.options));
+  document.getElementById('btn-submit').disabled=true;
+  document.getElementById('submit-note').textContent='Comprueba los 6 bloques para activar el envío.';
+  document.getElementById('score-nota-10').textContent='';
+  document.getElementById('score-nota-sub').textContent='Completa todos los bloques para ver la nota';
+  document.getElementById('score-total-val').textContent=`— / ${fmt(TOTAL_MAX)}`;
+  document.getElementById('results-screen').style.display='none';
+  document.getElementById('exercise-screen').style.display='block';
+  document.getElementById('btn-ver-texto').style.display='block';
+  renderTable(); renderScoreGrid(); updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

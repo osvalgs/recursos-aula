@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oraciones Compuestas · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f0e0c;
+  --cream: #f7f3ec;
+  --warm: #ede8df;
+  --accent: #c4581a;
+  --accent2: #2a6496;
+  --accent3: #1a7a4a;
+  --gold: #c9952a;
+  --muted: #7a7468;
+  --slide-w: 100vw;
+  --slide-h: 100vh;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: #0f0e0c;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  user-select: none;
+}
+
+/* ── SLIDES CONTAINER ── */
+#deck {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2vw 5.5vw;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.15) transparent;
+}
+.slide::-webkit-scrollbar { width: 5px; }
+.slide::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+.slide.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── NAVIGATION ── */
+#nav {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 999;
+  background: rgba(15,14,12,0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50px;
+  padding: 0.45rem 1.4rem;
+}
+/* Side arrow buttons */
+.nav-side {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 999;
+  background: rgba(15,14,12,0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 50%;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.22s;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1;
+}
+.nav-side:hover {
+  color: white;
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.28);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+#btn-prev-side { left: 1.25rem; }
+#btn-next-side { right: 1.25rem; }
+#slide-counter {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.1em;
+  min-width: 60px;
+  text-align: center;
+}
+#progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+  z-index: 999;
+}
+
+/* ══════════════════════════════════════════════
+   SLIDE THEMES
+══════════════════════════════════════════════ */
+
+/* PORTADA */
+.slide-portada {
+  background: var(--ink);
+  text-align: center;
+}
+.slide-portada::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 80%, rgba(196,88,26,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 20%, rgba(42,100,150,0.15) 0%, transparent 60%);
+}
+.slide-portada .grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.portada-tag {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.portada-tag::before, .portada-tag::after {
+  content: '──';
+  margin: 0 0.75rem;
+  opacity: 0.4;
+}
+.portada-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.05;
+  position: relative;
+  margin-bottom: 1rem;
+}
+.portada-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.portada-sub {
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  color: rgba(247,243,236,0.5);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.portada-chips {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+.chip {
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+.chip-red { border-color: rgba(196,88,26,0.5); color: rgba(196,88,26,0.9); background: rgba(196,88,26,0.08); }
+.chip-blue { border-color: rgba(42,100,150,0.5); color: rgba(42,100,150,0.9); background: rgba(42,100,150,0.08); }
+.chip-green { border-color: rgba(26,122,74,0.5); color: rgba(26,122,74,0.9); background: rgba(26,122,74,0.08); }
+
+/* SECTION DIVIDER */
+.slide-section {
+  text-align: center;
+}
+.slide-section-sub { color: rgba(255,255,255,0.45); font-size: 1rem; font-weight: 300; margin-bottom: 0.5rem; }
+.slide-section-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(6rem, 12vw, 10rem);
+  font-weight: 900;
+  line-height: 0.9;
+  opacity: 0.07;
+  position: absolute;
+  pointer-events: none;
+}
+.slide-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  position: relative;
+}
+.slide-section-desc {
+  font-size: clamp(1.2rem, 1.9vw, 1.45rem);
+  font-weight: 300;
+  max-width: 100%;
+  line-height: 1.7;
+  margin-top: 1.25rem;
+  position: relative;
+}
+.slide-section-line {
+  width: 50px;
+  height: 3px;
+  margin: 1.25rem auto;
+  border-radius: 2px;
+  position: relative;
+}
+
+/* DARK slides */
+.dark {
+  background: var(--ink);
+  color: var(--cream);
+}
+.dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(196,88,26,0.06) 0%, transparent 70%);
+}
+
+/* LIGHT slides */
+.light {
+  background: var(--cream);
+  color: var(--ink);
+}
+.light::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 90% 10%, rgba(196,88,26,0.07) 0%, transparent 60%);
+}
+
+/* SPLIT slides */
+.split {
+  flex-direction: row;
+  align-items: stretch;
+  padding: 0;
+  gap: 0;
+}
+.split-left, .split-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5vw 4vw;
+}
+.split-left { background: var(--ink); color: var(--cream); }
+.split-right { background: var(--cream); color: var(--ink); }
+
+/* ── TYPOGRAPHY UTILITIES ── */
+.slide-label {
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  opacity: 0.5;
+}
+.slide-h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+.slide-h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4.2vw, 4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+}
+.slide-body {
+  font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+  line-height: 1.75;
+  font-weight: 300;
+  max-width: 100%;
+}
+.slide-body strong { font-weight: 600; }
+.accent-red { color: var(--accent); }
+.accent-blue { color: var(--accent2); }
+.accent-green { color: var(--accent3); }
+.accent-gold { color: var(--gold); }
+
+.rule { width: 40px; height: 3px; border-radius: 2px; margin-bottom: 1.5rem; }
+.rule-red { background: var(--accent); }
+.rule-blue { background: var(--accent2); }
+.rule-green { background: var(--accent3); }
+.rule-gold { background: var(--gold); }
+.rule-cream { background: var(--cream); }
+
+/* ── DEFINITION BOX ── */
+.def-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-left: 4px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 1.4rem 1.8rem;
+  margin: 1rem 0;
+  font-size: clamp(1.05rem, 1.65vw, 1.3rem);
+  line-height: 1.75;
+  max-width: 100%;
+}
+.def-box-light {
+  background: rgba(15,14,12,0.04);
+  border: 1px solid rgba(15,14,12,0.1);
+  border-left: 4px solid;
+  border-radius: 0 8px 8px 0;
+  padding: 1.4rem 1.8rem;
+  margin: 1rem 0;
+  font-size: clamp(1.05rem, 1.65vw, 1.3rem);
+  line-height: 1.75;
+  max-width: 100%;
+}
+.def-box-red { border-left-color: var(--accent); }
+.def-box-blue { border-left-color: var(--accent2); }
+.def-box-green { border-left-color: var(--accent3); }
+.def-box-gold { border-left-color: var(--gold); }
+
+/* ── TABLE ── */
+.slide-table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  font-size: clamp(1.05rem, 1.55vw, 1.25rem);
+  position: relative;
+}
+.slide-table th {
+  padding: 0.9rem 1.2rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-size: clamp(0.88rem, 1.2vw, 1rem);
+  text-transform: uppercase;
+}
+.slide-table td {
+  padding: 0.9rem 1.2rem;
+  vertical-align: top;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.slide-table .th-dark { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5); }
+.slide-table .td-dark { color: rgba(247,243,236,0.85); }
+.slide-table .td-dark:first-child { font-weight: 600; color: white; }
+.slide-table .th-light { background: rgba(15,14,12,0.06); color: rgba(15,14,12,0.5); }
+.slide-table .td-light { color: rgba(15,14,12,0.85); border-bottom-color: rgba(15,14,12,0.07); }
+.slide-table .td-light:first-child { font-weight: 600; color: var(--ink); }
+
+/* ── EJEMPLO BADGE ── */
+.ej-wrap {
+  margin-top: 0.6rem;
+}
+.ej-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  margin-bottom: 3px;
+}
+.ej-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  line-height: 1.5;
+}
+.ej-text mark {
+  background: transparent;
+  font-weight: 700;
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.ej-mark-red mark { text-decoration-color: var(--accent); color: var(--accent); }
+.ej-mark-blue mark { text-decoration-color: var(--accent2); color: var(--accent2); }
+.ej-mark-green mark { text-decoration-color: var(--accent3); color: var(--accent3); }
+.ej-mark-gold mark { text-decoration-color: var(--gold); color: var(--gold); }
+
+/* ── TIPO CARDS ── */
+.cards-grid {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.cards-3 { grid-template-columns: repeat(3, 1fr); }
+.cards-2 { grid-template-columns: repeat(2, 1fr); }
+.cards-4 { grid-template-columns: repeat(4, 1fr); }
+
+.tipo-card {
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.tipo-card-light {
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid rgba(15,14,12,0.1);
+}
+.tipo-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.tipo-card-def {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.55;
+  opacity: 0.75;
+  margin-bottom: 0.6rem;
+}
+.tipo-card-ej {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  opacity: 0.9;
+}
+.tipo-card-nexo {
+  font-size: 14px;
+  margin-top: 0.5rem;
+  opacity: 0.5;
+  font-weight: 500;
+}
+
+/* color variants dark */
+.card-red { background: rgba(196,88,26,0.12); border-color: rgba(196,88,26,0.25); }
+.card-blue { background: rgba(42,100,150,0.12); border-color: rgba(42,100,150,0.25); }
+.card-green { background: rgba(26,122,74,0.12); border-color: rgba(26,122,74,0.25); }
+.card-gold { background: rgba(201,149,42,0.12); border-color: rgba(201,149,42,0.25); }
+.card-purple { background: rgba(120,80,160,0.12); border-color: rgba(120,80,160,0.25); }
+.card-teal { background: rgba(20,140,130,0.12); border-color: rgba(20,140,130,0.25); }
+
+.card-red .tipo-card-name { color: #e07040; }
+.card-blue .tipo-card-name { color: #5090c0; }
+.card-green .tipo-card-name { color: #40a870; }
+.card-gold .tipo-card-name { color: #d4a040; }
+.card-purple .tipo-card-name { color: #a070d0; }
+.card-teal .tipo-card-name { color: #30c0b0; }
+
+/* color variants light */
+.card-red-l { background: rgba(196,88,26,0.07); border-color: rgba(196,88,26,0.2); }
+.card-blue-l { background: rgba(42,100,150,0.07); border-color: rgba(42,100,150,0.2); }
+.card-green-l { background: rgba(26,122,74,0.07); border-color: rgba(26,122,74,0.2); }
+.card-gold-l { background: rgba(201,149,42,0.07); border-color: rgba(201,149,42,0.2); }
+.card-purple-l { background: rgba(120,80,160,0.07); border-color: rgba(120,80,160,0.2); }
+.card-teal-l { background: rgba(20,140,130,0.07); border-color: rgba(20,140,130,0.2); }
+
+.card-red-l .tipo-card-name { color: #b04010; }
+.card-blue-l .tipo-card-name { color: #1a5080; }
+.card-green-l .tipo-card-name { color: #0a5830; }
+.card-gold-l .tipo-card-name { color: #906010; }
+.card-purple-l .tipo-card-name { color: #6040a0; }
+.card-teal-l .tipo-card-name { color: #0a7070; }
+
+/* ── NEXOS HIGHLIGHT ── */
+.nexos-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.nexo-badge {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+/* ── EJERCICIO ── */
+.slide-ejercicio {
+  background: #0f0e0c;
+}
+.slide-ejercicio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 10% 50%, rgba(201,149,42,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 50%, rgba(196,88,26,0.08) 0%, transparent 60%);
+}
+.ej-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.ej-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.ej-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  color: var(--cream);
+}
+.ej-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.ej-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+.ej-item:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); }
+.ej-item-num {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+  opacity: 0.7;
+  min-width: 20px;
+  padding-top: 2px;
+}
+.ej-item-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.75vw, 1.4rem);
+  color: var(--cream);
+  line-height: 1.5;
+  flex: 1;
+}
+.ej-item-resp {
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  color: var(--gold);
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s;
+  align-self: center;
+  white-space: nowrap;
+  padding-left: 0.5rem;
+}
+.ej-item.revealed .ej-item-resp { opacity: 1; }
+.ej-item.revealed { border-color: rgba(201,149,42,0.4); background: rgba(201,149,42,0.06); }
+.ej-hint {
+  font-size: 14px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 0.75rem;
+  font-style: italic;
+  position: relative;
+}
+
+/* ── CLASIFICACIÓN VISUAL ── */
+.clasif-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.clasif-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.clasif-tipo {
+  min-width: 185px;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+.clasif-content {
+  padding: 1.1rem 1.3rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+}
+.clasif-nexos {
+  font-size: 14px;
+  opacity: 0.5;
+  margin-bottom: 4px;
+}
+.clasif-ej {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.75vw, 1.4rem);
+}
+
+/* ── OVERVIEW 3 BLOQUES ── */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.ov-card {
+  border-radius: 14px;
+  padding: 2rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.ov-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.15;
+}
+.ov-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.ov-desc {
+  font-size: 1.12rem;
+  opacity: 0.6;
+  line-height: 1.6;
+}
+.ov-sub-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.ov-sub-list li {
+  font-size: 15px;
+  opacity: 0.55;
+  padding-left: 14px;
+  position: relative;
+}
+.ov-sub-list li::before {
+  content: '·';
+  position: absolute;
+  left: 0;
+}
+
+/* ── SUSTANTIVA DETALLE ── */
+.func-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.func-card {
+  border-radius: 10px;
+  padding: 1.2rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+}
+.func-name {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+.func-ej {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 1.75vw, 1.4rem);
+  line-height: 1.5;
+}
+
+/* ── ADVERBIAL TABS ── */
+.adv-tab-wrap {
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.adv-tabs {
+  display: flex;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.adv-tab-btn {
+  padding: 0.55rem 1.4rem;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.adv-tab-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.adv-tab-btn:hover:not(.active) { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+.adv-panel { display: none; }
+.adv-panel.active { display: block; }
+
+/* ── BIPOLAR TABLE ── */
+.bip-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* ── RESUMEN FINAL ── */
+.resumen-wrap {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+.res-block {
+  border-radius: 14px;
+  padding: 1.6rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.res-block-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.res-item {
+  font-size: 17px;
+  line-height: 1.9;
+  opacity: 0.7;
+}
+.res-item strong { opacity: 1; }
+
+@media (max-width: 768px) {
+  .cards-3, .cards-4 { grid-template-columns: repeat(2,1fr); }
+  .overview-grid, .resumen-wrap, .bip-grid { grid-template-columns: 1fr 1fr; }
+  .func-grid { grid-template-columns: 1fr; }
+}
+
+/* ── CHIPS AS BUTTONS ── */
+.chip-btn {
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0.55rem 1.3rem;
+  font-size: 13px;
+}
+.chip-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.3);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+}
+.chip-btn::after { content: ' →'; opacity: 0.6; }
+
+/* ── EXPANDABLE CARDS ── */
+.expandable {
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  position: relative;
+}
+.expandable:hover {
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  filter: brightness(1.08);
+}
+.expandable::after {
+  content: '⤢';
+  position: absolute;
+  top: 0.55rem;
+  right: 0.7rem;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: rgba(255,255,255,0.5);
+  pointer-events: none;
+}
+.expandable-light::after { color: rgba(15,14,12,0.35); }
+.expandable:hover::after { opacity: 1; }
+
+/* ── MODAL ── */
+#modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(10,9,8,0.88);
+  backdrop-filter: blur(14px);
+  align-items: center;
+  justify-content: center;
+  padding: 4vw;
+}
+#modal-overlay.open { display: flex; animation: modalFadeIn 0.25s ease; }
+@keyframes modalFadeIn { from { opacity:0; } to { opacity:1; } }
+#modal-box {
+  background: #1a1816;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: clamp(2rem,5vw,3.5rem) clamp(2rem,6vw,4rem);
+  max-width: 100%;
+  width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+  animation: modalSlideUp 0.3s cubic-bezier(.22,1,.36,1);
+}
+#modal-box.light-modal {
+  background: #f0ece3;
+  border-color: rgba(15,14,12,0.15);
+}
+@keyframes modalSlideUp {
+  from { transform:translateY(28px); opacity:0; }
+  to   { transform:translateY(0);    opacity:1; }
+}
+#modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 50%;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: rgba(255,255,255,0.6);
+  font-size: 1.1rem;
+  transition: all 0.15s;
+  font-family: 'Outfit', sans-serif;
+  line-height: 1;
+}
+#modal-close:hover { background: rgba(255,255,255,0.16); color: white; }
+.light-modal #modal-close {
+  background: rgba(15,14,12,0.06);
+  border-color: rgba(15,14,12,0.12);
+  color: rgba(15,14,12,0.45);
+}
+.light-modal #modal-close:hover { background: rgba(15,14,12,0.14); color: var(--ink); }
+#modal-content { color: rgba(247,243,236,0.88); }
+#modal-content.light-content { color: rgba(15,14,12,0.88); }
+#modal-hint {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  text-align: center;
+  margin-top: 1.5rem;
+  font-style: italic;
+}
+.light-modal #modal-hint { color: rgba(15,14,12,0.28); }
+
+/* modal zoom: bigger text — legible desde el fondo del aula */
+#modal-box { padding: clamp(2.5rem,5vw,4rem) clamp(2.5rem,6vw,5rem); }
+#modal-content { font-size: clamp(1.15rem,2vw,1.5rem); line-height: 1.85; }
+#modal-content .def-box,
+#modal-content .def-box-light { font-size: clamp(1.2rem,2.2vw,1.6rem); line-height:1.9; max-width:100%; padding: 1.5rem 1.8rem; }
+#modal-content .tipo-card-def { font-size: clamp(1.05rem,1.8vw,1.3rem); }
+#modal-content .tipo-card-ej  { font-size: clamp(1.15rem,2vw,1.45rem); }
+#modal-content .tipo-card-name{ font-size: clamp(0.9rem,1.4vw,1.1rem); letter-spacing:0.12em; }
+#modal-content .tipo-card-nexo{ font-size: clamp(0.88rem,1.3vw,1.05rem); }
+#modal-content .ov-num  { font-size: clamp(2.5rem,5vw,4rem); }
+#modal-content .ov-name { font-size: clamp(1.4rem,2.5vw,2rem); }
+#modal-content .ov-desc { font-size: clamp(1.05rem,1.8vw,1.3rem); }
+#modal-content .ov-sub-list li { font-size: clamp(1rem,1.6vw,1.2rem); }
+#modal-content .func-name { font-size: clamp(0.9rem,1.4vw,1.1rem); }
+#modal-content .func-ej   { font-size: clamp(1.2rem,2.1vw,1.5rem); }
+#modal-content .clasif-ej { font-size: clamp(1.2rem,2.1vw,1.5rem); }
+#modal-content .clasif-tipo{ font-size: clamp(1rem,1.6vw,1.25rem); }
+#modal-content .res-block-title { font-size: clamp(1.2rem,2vw,1.6rem); }
+#modal-content .res-item  { font-size: clamp(1.1rem,1.8vw,1.35rem); line-height:2.1; }
+#modal-content .slide-label { font-size: clamp(0.82rem,1.2vw,1rem); }
+#modal-content .slide-h2 { font-size: clamp(1.8rem,3.5vw,3rem); }
+#modal-content mark { font-size: inherit !important; }
+#modal-content strong { font-size: inherit !important; }
+#modal-content span { font-size: inherit !important; }
+#modal-content .ej-sustitución {
+  display: block;
+  margin-top: 0.6rem;
+  font-style: normal;
+  font-size: clamp(1rem,1.7vw,1.25rem) !important;
+  font-family: 'Outfit', sans-serif;
+  opacity: 0.75;
+}
+
+/* ── HOME BUTTON ── */
+#btn-home {
+  position: fixed;
+  top: 1.1rem;
+  left: 1.25rem;
+  z-index: 998;
+  background: rgba(15,14,12,0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50px;
+  padding: 0.45rem 1rem 0.45rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  transition: all 0.2s;
+  text-decoration: none;
+}
+#btn-home:hover {
+  background: rgba(15,14,12,0.9);
+  color: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
+}
+#btn-home.on-portada { display: none; }
+.home-icon { font-size: 14px; line-height: 1; }
+
+
+/* ── SUSTITUCIÓN TRUCO ── */
+.sust-sustit {
+  margin-top: 0.45rem;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: clamp(1.05rem, 1.55vw, 1.2rem);
+  color: rgba(247,243,236,0.55);
+  letter-spacing: 0.01em;
+}
+#modal-content .sust-sustit {
+  font-size: clamp(1rem, 1.7vw, 1.3rem);
+  margin-top: 0.6rem;
+}
+
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<button id="btn-home" onclick="goTo(0)" title="Volver a la portada"><span class="home-icon">⌂</span> Inicio</button>
+
+<div id="deck">
+
+  <!-- ══ 0 · PORTADA ══ -->
+  <div class="slide slide-portada active" data-slide="0">
+    <div class="grid-bg"></div>
+    <div class="portada-tag">Lengua Castellana y Literatura · Sintaxis</div>
+    <h1 class="portada-title">Oraciones<br><em>Compuestas</em></h1>
+    <p class="portada-sub">Subordinadas · Coordinadas · Bipolares</p>
+    <div class="portada-chips">
+      <span class="chip chip-red chip-btn" onclick="goTo(2)" title="Ir a Cláusulas subordinadas">Cláusulas subordinadas</span>
+      <span class="chip chip-blue chip-btn" onclick="goTo(8)" title="Ir a Oraciones coordinadas">Oraciones coordinadas</span>
+      <span class="chip chip-green chip-btn" onclick="goTo(11)" title="Ir a Oraciones bipolares">Oraciones bipolares</span>
+    </div>
+  </div>
+
+  <!-- ══ 1 · ¿QUÉ ES UNA ORACIÓN COMPUESTA? ══ -->
+  <div class="slide dark" data-slide="1">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(247,243,236,0.4)">Punto de partida</div>
+      <h2 class="slide-h1" style="color:var(--cream);margin-bottom:1.25rem;">¿Qué es una <span class="accent-red">oración compuesta</span>?</h2>
+      <div class="rule rule-red"></div>
+      <div class="def-box def-box-red expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+        Una oración compuesta es aquella que contiene <strong>más de un verbo en forma personal</strong> (o formas no personales con valor verbal). Las oraciones que la integran pueden relacionarse de tres maneras distintas.
+      </div>
+      <div class="overview-grid" style="margin-top:1.5rem;">
+        <div class="ov-card expandable" onclick="openModal(this,false)" style="background:rgba(196,88,26,0.1);border-color:rgba(196,88,26,0.25);">
+          <div class="ov-num" style="color:#ff6b35;opacity:1;font-size:3.5rem;text-shadow:0 0 30px rgba(255,107,53,0.4)">1</div>
+          <div class="ov-name" style="color:var(--cream)">Subordinadas</div>
+          <div class="ov-desc" style="color:rgba(247,243,236,0.6)">Una cláusula depende de la otra y desempeña una función sintáctica.</div>
+          <ul class="ov-sub-list" style="color:rgba(247,243,236,0.6)">
+            <li>Sustantiva</li><li>Adjetiva</li><li>Adverbial (lugar, tiempo, modo, cantidad)</li>
+          </ul>
+        </div>
+        <div class="ov-card expandable" onclick="openModal(this,false)" style="background:rgba(42,100,150,0.1);border-color:rgba(42,100,150,0.25);">
+          <div class="ov-num" style="color:#4da6ff;opacity:1;font-size:3.5rem;text-shadow:0 0 30px rgba(77,166,255,0.4)">2</div>
+          <div class="ov-name" style="color:var(--cream)">Coordinadas</div>
+          <div class="ov-desc" style="color:rgba(247,243,236,0.6)">Dos oraciones independientes unidas por conjunciones.</div>
+          <ul class="ov-sub-list" style="color:rgba(247,243,236,0.6)">
+            <li>Copulativa · Disyuntiva</li><li>Distributiva · Explicativa</li><li>Yuxtapuesta</li>
+          </ul>
+        </div>
+        <div class="ov-card expandable" onclick="openModal(this,false)" style="background:rgba(26,122,74,0.1);border-color:rgba(26,122,74,0.25);">
+          <div class="ov-num" style="color:#3dcc80;opacity:1;font-size:3.5rem;text-shadow:0 0 30px rgba(61,204,128,0.4)">3</div>
+          <div class="ov-name" style="color:var(--cream)">Bipolares</div>
+          <div class="ov-desc" style="color:rgba(247,243,236,0.6)">Unidas por interordinación: se necesitan mutuamente.</div>
+          <ul class="ov-sub-list" style="color:rgba(247,243,236,0.6)">
+            <li>Causal · Condicional · Concesiva</li><li>Adversativa · Consecutiva</li><li>Comparativa</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 2 · SECCIÓN 1 ══ -->
+  <div class="slide dark slide-section" data-slide="2">
+    <div class="slide-section-num" style="color:var(--accent)">1</div>
+    <div class="slide-section-sub">Primer bloque</div>
+    <h2 class="slide-section-title" style="color:var(--cream)">Cláusulas<br><span class="accent-red">Subordinadas</span></h2>
+    <div class="slide-section-line rule-red"></div>
+    <p class="slide-section-desc" style="color:rgba(247,243,236,0.55)">Dependen de un verbo principal y ejercen una función sintáctica dentro de la oración. Van introducidas por un nexo (<em>que, donde, cuando, como…</em>) o llevan el verbo en forma no personal.</p>
+  </div>
+
+  <!-- ══ 3 · SUBORDINADA SUSTANTIVA ══ -->
+  <div class="slide dark" data-slide="3">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(196,88,26,0.7)">Subordinadas · tipo 1</div>
+      <h2 class="slide-h2" style="color:var(--cream)">Cláusula <span class="accent-red">Sustantiva</span></h2>
+      <div class="def-box def-box-red expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+        Equivale a un <strong>sustantivo</strong>. Se puede sustituir por el pronombre <strong style="color:#e07050">«eso»</strong>. Funciones: <strong>SUJ, CD, AT, TÉRM</strong>. Nexos: <em>que, si, dónde, cuándo…</em>
+      </div>
+      <div class="func-grid" style="margin-top:1rem;">
+        <div class="func-card card-red expandable" onclick="openModal(this,false)">
+          <div class="func-name" style="color:#e07040">Sujeto (SUJ)</div>
+          <div class="func-ej" style="color:var(--cream)"><mark style="background:transparent;color:#e07040;text-decoration:underline;text-decoration-color:#e07040;text-underline-offset:3px">Que llegues tarde</mark> me disgusta.</div>
+          <div class="sust-sustit">→ <em style="color:#e07050">Eso</em> me disgusta ✓</div>
+        </div>
+        <div class="func-card card-blue expandable" onclick="openModal(this,false)">
+          <div class="func-name" style="color:#5090c0">CD</div>
+          <div class="func-ej" style="color:var(--cream)">El testigo afirmó <mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">que vio al sospechoso</mark>.</div>
+          <div class="sust-sustit">→ El testigo afirmó <em style="color:#e07050">eso</em> ✓</div>
+        </div>
+        <div class="func-card card-green expandable" onclick="openModal(this,false)">
+          <div class="func-name" style="color:#40a870">Atributo (AT)</div>
+          <div class="func-ej" style="color:var(--cream)">Mi deseo es <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">que seas feliz</mark>.</div>
+          <div class="sust-sustit">→ Mi deseo es <em style="color:#e07050">eso</em> ✓</div>
+        </div>
+        <div class="func-card card-gold expandable" onclick="openModal(this,false)">
+          <div class="func-name" style="color:#d4a040">Término (TÉRM)</div>
+          <div class="func-ej" style="color:var(--cream)">Estoy seguro <mark style="background:transparent;color:#d4a040;text-decoration:underline;text-decoration-color:#d4a040;text-underline-offset:3px">de que aprobaremos</mark>.</div>
+          <div class="sust-sustit">→ Estoy seguro de <em style="color:#e07050">eso</em> ✓</div>
+        </div>
+      </div>
+      <div class="ej-wrap" style="margin-top:0.9rem;">
+        <div class="ej-label" style="color:rgba(247,243,236,0.35)">Truco</div>
+        <div style="font-size:0.88rem;color:rgba(247,243,236,0.6)">Si puedes sustituir la cláusula por <em style="color:#e07050">«eso»</em> → es sustantiva. Ej: <em>No sé <strong style="color:#e07050">si</strong> vendrá</em> → No sé <em style="color:#e07050">eso</em> ✓</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 4 · SUBORDINADA ADJETIVA ══ -->
+  <div class="slide dark" data-slide="4">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(42,100,150,0.8)">Subordinadas · tipo 2</div>
+      <h2 class="slide-h2" style="color:var(--cream)">Cláusula <span class="accent-blue">Adjetiva</span></h2>
+      <div class="def-box def-box-blue expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+        Modifica a un <strong>sustantivo</strong> (su antecedente). Función: <strong>MOD</strong>. El nexo se puede sustituir por <strong style="color:#5090c0">«el/la/los/las cual/es»</strong>. Nexos: <em>que, quien, cuyo/a, donde…</em>
+      </div>
+      <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.75rem;max-width:100%">
+        <div class="clasif-row expandable" onclick="openModal(this,false)">
+          <div class="clasif-tipo" style="background:rgba(42,100,150,0.2);color:#80b0d8;min-width:130px">Pron. relativo</div>
+          <div class="clasif-content">
+            <div class="clasif-ej" style="color:rgba(247,243,236,0.9)">Ese es el muchacho <mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">que</mark> ha sido detenido.</div>
+            <div class="sust-sustit">→ Ese es el muchacho <em style="color:#5090c0">el cual</em> ha sido detenido ✓</div>
+          </div>
+        </div>
+        <div class="clasif-row expandable" onclick="openModal(this,false)">
+          <div class="clasif-tipo" style="background:rgba(42,100,150,0.15);color:#80b0d8;min-width:130px">Det. relativo</div>
+          <div class="clasif-content">
+            <div class="clasif-ej" style="color:rgba(247,243,236,0.9)">El escritor <mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">cuyo</mark> libro leímos dará una charla.</div>
+          </div>
+        </div>
+        <div class="clasif-row expandable" onclick="openModal(this,false)">
+          <div class="clasif-tipo" style="background:rgba(42,100,150,0.1);color:#80b0d8;min-width:130px">Adv. relativo</div>
+          <div class="clasif-content">
+            <div class="clasif-ej" style="color:rgba(247,243,236,0.9)">El pueblo <mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">donde</mark> nací es muy pequeño.</div>
+            <div class="sust-sustit">→ El pueblo <em style="color:#5090c0">en el que</em> nací es muy pequeño ✓</div>
+          </div>
+        </div>
+        <div class="clasif-row expandable" onclick="openModal(this,false)">
+          <div class="clasif-tipo" style="background:rgba(42,100,150,0.08);color:#80b0d8;min-width:130px">Sin antecedente</div>
+          <div class="clasif-content">
+            <div class="clasif-ej" style="color:rgba(247,243,236,0.9)"><mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">Quien</mark> mal anda, mal acaba. <span style="font-style:normal;font-size:11px;opacity:0.5">(sustantivada)</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:0.9rem;font-size:0.85rem;color:rgba(247,243,236,0.5)">
+        🔑 Truco: si sustituir el nexo por <em style="color:#5090c0">«el cual»</em> suena bien → es adjetiva.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 5 · SUBORDINADA ADVERBIAL ══ -->
+  <div class="slide dark" data-slide="5">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(26,122,74,0.8)">Subordinadas · tipo 3</div>
+      <h2 class="slide-h2" style="color:var(--cream)">Cláusula <span class="accent-green">Adverbial</span></h2>
+      <div class="adv-tab-wrap">
+        <div class="adv-tabs">
+          <button class="adv-tab-btn active" onclick="setAdvTab(0,this)">📍 Lugar</button>
+          <button class="adv-tab-btn" onclick="setAdvTab(1,this)">⏱ Tiempo</button>
+          <button class="adv-tab-btn" onclick="setAdvTab(2,this)">🎯 Modo</button>
+          <button class="adv-tab-btn" onclick="setAdvTab(3,this)">🔢 Cantidad</button>
+        </div>
+        <div id="adv-panel-0" class="adv-panel active">
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+            <strong>Lugar (CCL)</strong> — Sustituible por <strong style="color:#40a870">«allí»</strong>. Nexo: <em>donde</em>.<br>
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Lo encontró <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">donde lo habías dejado</mark>.</span><br>
+            <span style="font-size:0.85rem;opacity:0.6">→ Lo encontró <em>allí</em> ✓</span>
+          </div>
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%;margin-top:0.5rem">
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Iremos <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">donde tú quieras</mark>.</span><br>
+            <div class="sust-sustit">→ Iremos <em style="color:#40a870">allí</em> ✓</div>
+          </div>
+        </div>
+        <div id="adv-panel-1" class="adv-panel">
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+            <strong>Tiempo (CCT)</strong> — Sustituible por <strong style="color:#40a870">«entonces»</strong>. Nexo: <em>cuando</em>.<br>
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Me duele <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">cuando hablo demasiado</mark>.</span><br>
+            <span style="font-size:0.85rem;opacity:0.6">→ Me duele <em>entonces</em> ✓</span>
+          </div>
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%;margin-top:0.5rem">
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Avísame <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">cuando llegues a casa</mark>.</span><br>
+            <div class="sust-sustit">→ Avísame <em style="color:#40a870">entonces</em> ✓</div>
+          </div>
+        </div>
+        <div id="adv-panel-2" class="adv-panel">
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+            <strong>Modo (CCM)</strong> — Sustituible por <strong style="color:#40a870">«así»</strong>. Nexo: <em>como</em>.<br>
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Disparó <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">como había aprendido</mark>.</span><br>
+            <span style="font-size:0.85rem;opacity:0.6">→ Disparó <em>así</em> ✓</span>
+          </div>
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%;margin-top:0.5rem">
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Hazlo <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">como te enseñó el profesor</mark>.</span><br>
+            <div class="sust-sustit">→ Hazlo <em style="color:#40a870">así</em> ✓</div>
+          </div>
+        </div>
+        <div id="adv-panel-3" class="adv-panel">
+          <div class="def-box def-box-green expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+            <strong>Cantidad (CCCANT)</strong> — Sustituible por <strong style="color:#40a870">«mucho»</strong>. Nexo: <em>cuanto</em>.<br>
+            <span style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;">Mi hermano estudia <mark style="background:transparent;color:#40a870;text-decoration:underline;text-decoration-color:#40a870;text-underline-offset:3px">cuanto puede</mark>.</span><br>
+            <span style="font-size:0.85rem;opacity:0.6">→ Mi hermano estudia <em>mucho</em> ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 6 · FORMAS NO PERSONALES ══ -->
+  <div class="slide dark" data-slide="6">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(201,149,42,0.8)">Subordinadas · sin nexo</div>
+      <h2 class="slide-h2" style="color:var(--cream)">Formas <span class="accent-gold">no personales</span></h2>
+      <div class="def-box def-box-gold expandable" onclick="openModal(this,false)" style="color:rgba(247,243,236,0.85);max-width:100%">
+        Cuando la cláusula subordinada <strong>no lleva nexo</strong>, el verbo aparece en una forma no personal: <strong style="color:#d4a040">infinitivo, participio o gerundio</strong>.
+      </div>
+      <div class="cards-grid cards-3" style="margin-top:1rem;">
+        <div class="tipo-card card-gold expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Infinitivo</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Función nominal.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Confío en <mark style="background:transparent;color:#d4a040;text-decoration:underline;text-decoration-color:#d4a040;text-underline-offset:3px">salir bien</mark> de todo.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">No quiero <em>estudiar</em> hoy.</div>
+        </div>
+        <div class="tipo-card card-red expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Participio</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Valor adjetivo.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">La casa <mark style="background:transparent;color:#e07040;text-decoration:underline;text-decoration-color:#e07040;text-underline-offset:3px">construida por mi abuelo</mark> sigue en pie.</div>
+        </div>
+        <div class="tipo-card card-blue expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Gerundio</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Valor adverbial.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Me duele la garganta <mark style="background:transparent;color:#5090c0;text-decoration:underline;text-decoration-color:#5090c0;text-underline-offset:3px">hablando demasiado</mark>.</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;font-size:0.85rem;color:rgba(247,243,236,0.5)">
+        Los alumnos estudiados aprobaron → <em style="color:#d4a040">participio con valor de cláusula adjetiva</em>.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 7 · EJERCICIO 1 ══ -->
+  <div class="slide slide-ejercicio" data-slide="7">
+    <div class="ej-header">
+      <div class="ej-icon">✏️</div>
+      <div class="ej-title">Ejercicio 1 — Cláusulas subordinadas</div>
+    </div>
+    <p style="color:rgba(247,243,236,0.5);font-size:0.88rem;margin-bottom:1rem;position:relative">Identifica el tipo de subordinada. Haz clic en cada oración para ver la respuesta.</p>
+    <ul class="ej-list">
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">1</span>
+        <span class="ej-item-text">Me disgusta que llegues tarde siempre.</span>
+        <span class="ej-item-resp">Sustantiva · SUJ («que llegues tarde siempre»)</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">2</span>
+        <span class="ej-item-text">El pueblo donde nací es muy pequeño.</span>
+        <span class="ej-item-resp">Adjetiva · adv. relativo «donde» · antecedente: «el pueblo»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">3</span>
+        <span class="ej-item-text">Avísame cuando llegues a casa.</span>
+        <span class="ej-item-resp">Adverbial de tiempo · CCT</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">4</span>
+        <span class="ej-item-text">El escritor cuyo libro leímos dará una charla.</span>
+        <span class="ej-item-resp">Adjetiva · det. relativo «cuyo» · antecedente: «el escritor»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">5</span>
+        <span class="ej-item-text">Estoy seguro de que aprobaremos el examen.</span>
+        <span class="ej-item-resp">Sustantiva · TÉRM de «de»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">6</span>
+        <span class="ej-item-text">Hazlo como te enseñó el profesor.</span>
+        <span class="ej-item-resp">Adverbial de modo · CCM</span>
+      </li>
+    </ul>
+    <p class="ej-hint">💡 Usa los trucos: sustituye por «eso», «el cual» o el adverbio correspondiente.</p>
+  </div>
+
+  <!-- ══ 8 · SECCIÓN 2 ══ -->
+  <div class="slide dark slide-section" data-slide="8">
+    <div class="slide-section-num" style="color:var(--accent2)">2</div>
+    <div class="slide-section-sub">Segundo bloque</div>
+    <h2 class="slide-section-title" style="color:var(--cream)">Oraciones<br><span class="accent-blue">Coordinadas</span></h2>
+    <div class="slide-section-line rule-blue"></div>
+    <p class="slide-section-desc" style="color:rgba(247,243,236,0.55)">Dos oraciones simples <strong style="color:rgba(247,243,236,0.85)">independientes</strong> relacionadas por conjunciones. Cada una podría aparecer sola y tendría sentido completo.</p>
+  </div>
+
+  <!-- ══ 9 · COORDINADAS TIPOS ══ -->
+  <div class="slide dark" data-slide="9">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(42,100,150,0.8)">Coordinadas</div>
+      <h2 class="slide-h2" style="color:var(--cream);margin-bottom:1rem">Tipos de <span class="accent-blue">coordinadas</span></h2>
+      <div class="cards-grid cards-3" style="gap:0.65rem;">
+        <div class="tipo-card card-blue expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Copulativa</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Suma o adición.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Bebe <mark style="background:transparent;color:#5090c0;font-style:normal;font-weight:700">y</mark> habla incansablemente.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">y · e · ni</div>
+        </div>
+        <div class="tipo-card card-red expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Disyuntiva</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Los significados se excluyen.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">¿Te quedas <mark style="background:transparent;color:#e07040;font-style:normal;font-weight:700">o</mark> te unes?</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">o · u · o bien</div>
+        </div>
+        <div class="tipo-card card-purple expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Distributiva</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Acciones alternantes.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)"><mark style="background:transparent;color:#a070d0;font-style:normal;font-weight:700">Unos</mark> días sonríe, <mark style="background:transparent;color:#a070d0;font-style:normal;font-weight:700">otros</mark> llora.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">ya…ya · unos…otros</div>
+        </div>
+        <div class="tipo-card card-gold expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Explicativa</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">La 2.ª aclara a la 1.ª.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Son actrices, <mark style="background:transparent;color:#d4a040;font-style:normal;font-weight:700">o sea</mark>, no tienen experiencia.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">es decir · o sea · esto es</div>
+        </div>
+        <div class="tipo-card card-teal expandable" onclick="openModal(this,false)" style="grid-column:span 2">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Yuxtapuesta</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Sin conjunción. Se usa coma o punto y coma.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">No se cayó<mark style="background:transparent;color:#30c0b0;font-style:normal;font-weight:700">;</mark> lo has empujado tú.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">— (coma · punto y coma)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ 10 · EJERCICIO 2 ══ -->
+  <div class="slide slide-ejercicio" data-slide="10">
+    <div class="ej-header">
+      <div class="ej-icon">✏️</div>
+      <div class="ej-title">Ejercicio 2 — Oraciones coordinadas</div>
+    </div>
+    <p style="color:rgba(247,243,236,0.5);font-size:0.88rem;margin-bottom:1rem;position:relative">¿Qué tipo de coordinada es? Haz clic para revelar.</p>
+    <ul class="ej-list">
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">1</span>
+        <span class="ej-item-text">Tú eliges el regalo y yo lo compro.</span>
+        <span class="ej-item-resp">Copulativa · nexo «y»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">2</span>
+        <span class="ej-item-text">¿Te quedas en casa o te unes a nosotros?</span>
+        <span class="ej-item-resp">Disyuntiva · nexo «o»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">3</span>
+        <span class="ej-item-text">Son actrices jóvenes, o sea, no tienen experiencia.</span>
+        <span class="ej-item-resp">Explicativa · nexo «o sea»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">4</span>
+        <span class="ej-item-text">No se cayó accidentalmente, lo has empujado tú.</span>
+        <span class="ej-item-resp">Yuxtapuesta · separadas por coma</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">5</span>
+        <span class="ej-item-text">Unos días sonríe, otros llora sin consuelo.</span>
+        <span class="ej-item-resp">Distributiva · nexo «unos…otros»</span>
+      </li>
+    </ul>
+    <p class="ej-hint">💡 Clave: ¿podrían aparecer las dos oraciones por separado con sentido completo?</p>
+  </div>
+
+  <!-- ══ 11 · SECCIÓN 3 ══ -->
+  <div class="slide dark slide-section" data-slide="11">
+    <div class="slide-section-num" style="color:var(--accent3)">3</div>
+    <div class="slide-section-sub">Tercer bloque</div>
+    <h2 class="slide-section-title" style="color:var(--cream)">Oraciones<br><span class="accent-green">Bipolares</span></h2>
+    <div class="slide-section-line rule-green"></div>
+    <p class="slide-section-desc" style="color:rgba(247,243,236,0.55)">Unidas por <strong style="color:rgba(247,243,236,0.85)">interordinación</strong>: ninguna de las dos oraciones puede entenderse completamente sin la otra. Dependen mutuamente.</p>
+  </div>
+
+  <!-- ══ 12 · BIPOLARES TIPOS ══ -->
+  <div class="slide dark" data-slide="12">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(26,122,74,0.8)">Bipolares</div>
+      <h2 class="slide-h2" style="color:var(--cream);margin-bottom:1rem">Tipos de oraciones <span class="accent-green">bipolares</span></h2>
+      <div class="bip-grid">
+        <div class="tipo-card card-red expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Causal</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Efecto y causa.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Cena después <mark style="background:transparent;color:#e07040;font-style:normal;font-weight:700">porque</mark> tiene que estudiar.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">porque · puesto que · ya que</div>
+        </div>
+        <div class="tipo-card card-gold expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Condicional</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Condicionante y condicionado.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)"><mark style="background:transparent;color:#d4a040;font-style:normal;font-weight:700">Si</mark> me lo hubieras explicado, no me habría enfadado.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">si · como · siempre que</div>
+        </div>
+        <div class="tipo-card card-purple expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Concesiva</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Objeción y concesión.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)"><mark style="background:transparent;color:#a070d0;font-style:normal;font-weight:700">Aunque</mark> me lo hubieras explicado, me habría enfadado.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">aunque · a pesar de que</div>
+        </div>
+        <div class="tipo-card card-blue expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Adversativa</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Tesis y antítesis.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Le expliqué el ejercicio <mark style="background:transparent;color:#5090c0;font-style:normal;font-weight:700">pero</mark> no lo ha entendido.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">pero · mas · sino · sin embargo</div>
+        </div>
+        <div class="tipo-card card-teal expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Consecutiva</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Antecedente y consecuente.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">El coche se estropeó, <mark style="background:transparent;color:#30c0b0;font-style:normal;font-weight:700">por tanto</mark>, iremos en autobús.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">por tanto · así que · luego</div>
+        </div>
+        <div class="tipo-card card-green expandable" onclick="openModal(this,false)">
+          <div class="tipo-card-name expandable" onclick="openModal(this,false)">Comparativa</div>
+          <div class="tipo-card-def expandable" onclick="openModal(this,false)">Comparando y comparado.</div>
+          <div class="tipo-card-ej expandable" onclick="openModal(this,false)" style="color:var(--cream)">Inspiran <mark style="background:transparent;color:#40a870;font-style:normal;font-weight:700">más</mark> confianza <mark style="background:transparent;color:#40a870;font-style:normal;font-weight:700">que</mark> los anteriores.</div>
+          <div class="tipo-card-nexo expandable" onclick="openModal(this,false)">más/menos…que · tan…como</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ══ 14 · EJERCICIO 3 ══ -->
+  <div class="slide slide-ejercicio" data-slide="14">
+    <div class="ej-header">
+      <div class="ej-icon">✏️</div>
+      <div class="ej-title">Ejercicio 3 — Oraciones bipolares</div>
+    </div>
+    <p style="color:rgba(247,243,236,0.5);font-size:0.88rem;margin-bottom:1rem;position:relative">Clasifica cada oración. Haz clic para ver la respuesta.</p>
+    <ul class="ej-list">
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">1</span>
+        <span class="ej-item-text">Si me lo hubieras explicado, no me habría enfadado.</span>
+        <span class="ej-item-resp">Condicional · nexo «si»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">2</span>
+        <span class="ej-item-text">Aunque me lo hubieras explicado, me habría enfadado.</span>
+        <span class="ej-item-resp">Concesiva · nexo «aunque»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">3</span>
+        <span class="ej-item-text">María cena después porque tiene que estudiar más.</span>
+        <span class="ej-item-resp">Causal · nexo «porque»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">4</span>
+        <span class="ej-item-text">Le expliqué el ejercicio pero no lo ha entendido.</span>
+        <span class="ej-item-resp">Adversativa · nexo «pero»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">5</span>
+        <span class="ej-item-text">Está tan oscuro que tengo miedo.</span>
+        <span class="ej-item-resp">Consecutiva · nexo «tan…que»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">6</span>
+        <span class="ej-item-text">Inspiran más confianza que los anteriores.</span>
+        <span class="ej-item-resp">Comparativa · nexo «más…que»</span>
+      </li>
+    </ul>
+    <p class="ej-hint">💡 Fíjate siempre en el nexo: es la pista más clara.</p>
+  </div>
+
+  <!-- ══ 15 · EJERCICIO FINAL ══ -->
+  <div class="slide slide-ejercicio" data-slide="15">
+    <div class="ej-header">
+      <div class="ej-icon">🏆</div>
+      <div class="ej-title">Ejercicio final — Clasifica las 10 oraciones</div>
+    </div>
+    <p style="color:rgba(247,243,236,0.5);font-size:0.88rem;margin-bottom:0.75rem;position:relative">Subordinada (tipo) · Coordinada (tipo) · Bipolar (tipo). Haz clic para revelar.</p>
+    <ul class="ej-list" style="gap:0.45rem;">
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">1</span>
+        <span class="ej-item-text">Dime cuánto te costó el coche.</span>
+        <span class="ej-item-resp">Sub. sustantiva · CD · «cuánto» adv. interrog.</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">2</span>
+        <span class="ej-item-text">Iremos donde tú quieras.</span>
+        <span class="ej-item-resp">Sub. adverbial de lugar · CCL</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">3</span>
+        <span class="ej-item-text">No sé si vendrá a la fiesta.</span>
+        <span class="ej-item-resp">Sub. sustantiva · CD · «si» conj.</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">4</span>
+        <span class="ej-item-text">Esa es su decisión, es decir, ha dicho su última palabra.</span>
+        <span class="ej-item-resp">Coordinada explicativa · nexo «es decir»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">5</span>
+        <span class="ej-item-text">El coche se ha estropeado, por tanto, iremos en autobús.</span>
+        <span class="ej-item-resp">Bipolar consecutiva · nexo «por tanto»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">6</span>
+        <span class="ej-item-text">Quien mal anda, mal acaba.</span>
+        <span class="ej-item-resp">Sub. adjetiva sustantivada · «quien» sin antecedente · SUJ</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">7</span>
+        <span class="ej-item-text">Si repasas los apuntes, aprobarás el examen.</span>
+        <span class="ej-item-resp">Bipolar condicional · nexo «si»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">8</span>
+        <span class="ej-item-text">Bebe y habla incansablemente.</span>
+        <span class="ej-item-resp">Coordinada copulativa · nexo «y»</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">9</span>
+        <span class="ej-item-text">Mi deseo es que seas feliz.</span>
+        <span class="ej-item-resp">Sub. sustantiva · AT («que seas feliz»)</span>
+      </li>
+      <li class="ej-item" onclick="toggleRespuesta(this)">
+        <span class="ej-item-num">10</span>
+        <span class="ej-item-text">Confío en salir bien de todo.</span>
+        <span class="ej-item-resp">Sub. sustantiva · TÉRM · infinitivo sin nexo</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ══ 16 · RESUMEN ══ -->
+  <div class="slide dark" data-slide="16">
+    <div style="width:100%;position:relative;">
+      <div class="slide-label" style="color:rgba(247,243,236,0.35)">Para recordar</div>
+      <h2 class="slide-h2" style="color:var(--cream);margin-bottom:1.25rem">Resumen <span class="accent-gold">esquemático</span></h2>
+      <div class="resumen-wrap">
+        <div class="res-block expandable" onclick="openModal(this,false)" style="background:rgba(196,88,26,0.1);border-color:rgba(196,88,26,0.2);">
+          <div class="res-block-title" style="color:#e07040;border-color:rgba(196,88,26,0.15)">1. Subordinadas</div>
+          <div class="res-item" style="color:rgba(247,243,236,0.75)">
+            <strong style="color:rgba(247,243,236,0.95)">Sustantiva</strong> → eso<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adjetiva</strong> → el cual<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adv. lugar</strong> → allí<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adv. tiempo</strong> → entonces<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adv. modo</strong> → así<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adv. cantidad</strong> → mucho
+          </div>
+        </div>
+        <div class="res-block expandable" onclick="openModal(this,false)" style="background:rgba(42,100,150,0.1);border-color:rgba(42,100,150,0.2);">
+          <div class="res-block-title" style="color:#5090c0;border-color:rgba(42,100,150,0.15)">2. Coordinadas</div>
+          <div class="res-item" style="color:rgba(247,243,236,0.75)">
+            <strong style="color:rgba(247,243,236,0.95)">Copulativa</strong> → y, e, ni<br>
+            <strong style="color:rgba(247,243,236,0.95)">Disyuntiva</strong> → o, u<br>
+            <strong style="color:rgba(247,243,236,0.95)">Distributiva</strong> → ya…ya<br>
+            <strong style="color:rgba(247,243,236,0.95)">Explicativa</strong> → es decir<br>
+            <strong style="color:rgba(247,243,236,0.95)">Yuxtapuesta</strong> → ; ,
+          </div>
+        </div>
+        <div class="res-block expandable" onclick="openModal(this,false)" style="background:rgba(26,122,74,0.1);border-color:rgba(26,122,74,0.2);">
+          <div class="res-block-title" style="color:#40a870;border-color:rgba(26,122,74,0.15)">3. Bipolares</div>
+          <div class="res-item" style="color:rgba(247,243,236,0.75)">
+            <strong style="color:rgba(247,243,236,0.95)">Causal</strong> → porque<br>
+            <strong style="color:rgba(247,243,236,0.95)">Condicional</strong> → si<br>
+            <strong style="color:rgba(247,243,236,0.95)">Concesiva</strong> → aunque<br>
+            <strong style="color:rgba(247,243,236,0.95)">Adversativa</strong> → pero<br>
+            <strong style="color:rgba(247,243,236,0.95)">Consecutiva</strong> → por tanto<br>
+            <strong style="color:rgba(247,243,236,0.95)">Comparativa</strong> → más…que
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:1.25rem;text-align:center;font-size:0.85rem;color:rgba(247,243,236,0.35);position:relative">
+        Usa siempre los <em>trucos de sustitución</em> para identificar el tipo · Fíjate en el <em>nexo</em>
+      </div>
+    </div>
+  </div>
+
+
+</div><!-- /deck -->
+
+<!-- ══ MODAL OVERLAY ══ -->
+<div id="modal-overlay" onclick="closeModal(event)">
+  <div id="modal-box">
+    <button id="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modal-content"></div>
+    <div id="modal-hint">Pulsa Escape o haz clic fuera para cerrar</div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<button class="nav-side" id="btn-prev-side" onclick="prevSlide()" title="Anterior (←)">←</button>
+<button class="nav-side" id="btn-next-side" onclick="nextSlide()" title="Siguiente (→)">→</button>
+<div id="nav">
+  <span id="slide-counter">1 / 17</span>
+</div>
+
+<script>
+const TOTAL = document.querySelectorAll('.slide').length;
+let current = 0;
+let modalOpen = false;
+
+function goTo(n) {
+  if (modalOpen) return;
+  document.querySelectorAll('.slide')[current].classList.remove('active');
+  current = Math.max(0, Math.min(n, TOTAL - 1));
+  document.querySelectorAll('.slide')[current].classList.add('active');
+  document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + TOTAL;
+  document.getElementById('progress-bar').style.width = ((current / (TOTAL - 1)) * 100) + '%';
+  // Ocultar botón Inicio en la portada (slide 0)
+  const btnHome = document.getElementById('btn-home');
+  if (btnHome) btnHome.classList.toggle('on-portada', current === 0);
+}
+function nextSlide() { goTo(current + 1); }
+function prevSlide() { goTo(current - 1); }
+
+document.addEventListener('keydown', e => {
+  if (modalOpen) {
+    if (e.key === 'Escape') closeModalDirect();
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     { e.preventDefault(); prevSlide(); }
+});
+
+// Touch / swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+document.addEventListener('touchend',   e => {
+  if (modalOpen) return;
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) dx < 0 ? nextSlide() : prevSlide();
+}, {passive:true});
+
+// ── MODAL ──────────────────────────────────────────
+function openModal(el, isLight) {
+  // Don't open if clicked element is a button/tab inside
+  if (event && event.target && (event.target.tagName === 'BUTTON' || event.target.classList.contains('adv-tab-btn'))) return;
+
+  const overlay = document.getElementById('modal-overlay');
+  const box     = document.getElementById('modal-box');
+  const content = document.getElementById('modal-content');
+
+  // Clone the element's inner HTML
+  content.innerHTML = el.innerHTML;
+  content.className = isLight ? 'light-content' : '';
+
+  // Remove nested expandable classes and onclick from cloned content (avoid re-triggering)
+  content.querySelectorAll('.expandable').forEach(c => {
+    c.classList.remove('expandable');
+    c.removeAttribute('onclick');
+    c.style.cursor = 'default';
+    c.style.transform = 'none';
+  });
+  // Remove the expand icon pseudo-elements by removing class from clone
+  content.querySelectorAll('[onclick]').forEach(c => c.removeAttribute('onclick'));
+
+  box.className = isLight ? 'light-modal' : '';
+  overlay.classList.add('open');
+  modalOpen = true;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  // Only close if clicking the overlay backdrop itself
+  if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+}
+
+function closeModalDirect() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  modalOpen = false;
+  document.body.style.overflow = '';
+}
+
+// Ejercicios: revelar respuesta al clic
+function toggleRespuesta(el) {
+  event.stopPropagation();
+  el.classList.toggle('revealed');
+}
+
+// Adverbial tabs
+function setAdvTab(idx, btn) {
+  event.stopPropagation();
+  document.querySelectorAll('.adv-panel').forEach((p,i) => p.classList.toggle('active', i === idx));
+  document.querySelectorAll('.adv-tab-btn').forEach((b,i) => b.classList.toggle('active', i === idx));
+}
+
+goTo(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oraciones Compuestas · Taller de Escritura</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1A1A2E;
+  --paper: #FAFAF7;
+  --paper2: #F3F2EC;
+  --accent: #C0392B;
+  --accent2: #E8A838;
+  --teal: #1A6B6B;
+  --teal-light: #E6F4F4;
+  --violet: #4A2C7A;
+  --violet-light: #F0EAF8;
+  --green: #1A5C2A;
+  --green-light: #E6F4E8;
+  --border: rgba(26,26,46,0.12);
+  --shadow: 0 2px 20px rgba(26,26,46,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,26,46,0.14);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.6; }
+
+/* ── LOGIN ── */
+.login-overlay { position: fixed; inset: 0; background: rgba(26,26,46,0.82); backdrop-filter: blur(6px); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+.login-box { background: var(--paper); border-radius: 16px; padding: 2.5rem 2rem; max-width: 420px; width: 100%; text-align: center; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.login-box h2 { font-family: 'Lora', serif; font-size: 22px; color: var(--ink); margin-bottom: 0.3rem; }
+.login-box p { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+.login-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; margin-bottom: 1rem; transition: border-color 0.15s; }
+.login-input:focus { outline: none; border-color: var(--accent); }
+.login-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+.login-btn:hover { background: #A93226; }
+.login-err { font-size: 12px; color: var(--accent); margin-top: 0.5rem; display: none; }
+
+/* ── HEADER ── */
+.site-header { background: var(--ink); color: white; padding: 2.5rem 2rem 2rem; text-align: center; position: relative; overflow: hidden; }
+.site-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px); }
+.header-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--accent2); text-transform: uppercase; margin-bottom: 0.75rem; position: relative; }
+.site-header h1 { font-family: 'Lora', serif; font-size: clamp(22px,4vw,36px); font-weight: 700; position: relative; margin-bottom: 0.4rem; }
+.site-header .sub { font-size: 14px; opacity: 0.65; position: relative; margin-bottom: 1.25rem; }
+.nav-user { position: relative; font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+.nav-user span { color: var(--accent2); }
+
+/* ── NAV TABS ── */
+.tabs-wrap { background: white; border-bottom: 2px solid var(--paper2); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+.tabs { display: flex; overflow-x: auto; max-width: 1000px; margin: 0 auto; }
+.tab-btn { padding: 14px 14px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #888; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; flex-shrink: 0; }
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+.section { display: none; padding: 2.5rem 0 3rem; }
+.section.active { display: block; }
+
+/* ── THEORY ── */
+.theory-intro { background: var(--ink); color: white; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2rem; }
+.theory-intro h2 { font-family: 'Lora', serif; font-size: 20px; margin-bottom: 0.4rem; }
+.theory-intro p { font-size: 13px; opacity: 0.75; line-height: 1.6; }
+.th-block { margin-bottom: 2rem; }
+.th-block-title { font-family: 'Lora', serif; font-size: 17px; color: var(--ink); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem; }
+.th-block-title::before { content: ''; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; display: block; flex-shrink: 0; }
+.th-note { background: var(--paper2); border-left: 3px solid var(--accent2); border-radius: 0 6px 6px 0; padding: 0.75rem 1rem; font-size: 13px; color: var(--ink); margin-bottom: 1rem; line-height: 1.6; }
+table.teoria { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; }
+table.teoria thead th { background: var(--ink); color: white; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+table.teoria tbody tr:nth-child(even) { background: var(--paper2); }
+table.teoria tbody tr:nth-child(odd) { background: white; }
+table.teoria td { padding: 10px 14px; vertical-align: top; border-bottom: 1px solid var(--border); line-height: 1.5; }
+table.teoria td:first-child { font-weight: 600; color: var(--teal); white-space: nowrap; }
+table.teoria td em { color: #888; font-style: normal; font-size: 12px; }
+table.teoria td code { background: var(--paper2); border-radius: 3px; padding: 1px 5px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--violet); }
+
+/* ── EXERCISE CARDS ── */
+.ex-card { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; box-shadow: var(--shadow); }
+.ex-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--paper2); }
+.ex-num { width: 36px; height: 36px; flex-shrink: 0; background: var(--accent); color: white; border-radius: 8px; font-family: 'Lora', serif; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.ex-header-text h3 { font-family: 'Lora', serif; font-size: 17px; margin-bottom: 0.2rem; }
+.ex-header-text p { font-size: 13px; color: #777; }
+.ex-body { padding: 1.5rem; }
+.enunciado { background: var(--paper2); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; }
+.enunciado strong { color: var(--accent); }
+.tipos-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+.tipo-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--ink); color: white; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 12px; letter-spacing: 0.04em; }
+.tipo-tag.coordinada { background: var(--teal); }
+.tipo-tag.bipolar { background: var(--violet); }
+.tipo-tag.mixto { background: var(--accent); }
+.tipo-tag.subord { background: #2E4A8B; }
+.tipo-tag.impers { background: #5A6A20; }
+.metodo-box { background: #FFFBF0; border: 1px solid var(--accent2); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 13px; }
+.metodo-box h4 { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.5rem; }
+.metodo-leyenda { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+.leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.leyenda-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+.textarea-wrap { position: relative; margin-bottom: 1rem; }
+.texto-input { width: 100%; min-height: 160px; border: 2px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 15px; font-family: 'Lora', serif; color: var(--ink); background: white; resize: vertical; line-height: 1.8; transition: border-color 0.15s; }
+.texto-input:focus { outline: none; border-color: var(--teal); }
+.char-count { font-family: 'DM Mono', monospace; font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+.char-count.warn { color: var(--accent); }
+.marcado-instruc { font-size: 13px; color: #666; margin-bottom: 0.75rem; }
+.marcado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+@media(max-width:600px){.marcado-grid{grid-template-columns:1fr;}}
+.marcado-item { display: flex; align-items: center; gap: 8px; }
+.marcado-label { font-size: 13px; flex-shrink: 0; min-width: 170px; }
+.marcado-select { flex: 1; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; cursor: pointer; transition: border-color 0.15s; }
+.marcado-select:focus { outline: none; border-color: var(--teal); }
+.imp-row { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+.imp-row label { font-size: 13px; font-weight: 600; min-width: 90px; flex-shrink: 0; color: var(--violet); }
+.imp-row input { flex: 2; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; }
+.imp-row select { flex: 1; min-width: 0; max-width: 220px; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; }
+@media(max-width:640px){ .imp-row { flex-wrap: wrap; } .imp-row input, .imp-row select { max-width: 100%; } }
+.btn-corregir { background: var(--teal); color: white; border: none; padding: 11px 24px; border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 1rem; display: inline-flex; align-items: center; gap: 7px; }
+.btn-corregir:hover { background: #145555; }
+.feedback-box { display: none; margin-top: 1.25rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.feedback-box.visible { display: block; }
+.feedback-header { padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+.feedback-header.ok { background: var(--green-light); color: var(--green); }
+.feedback-header.parcial { background: #FFF8E8; color: #7A5200; }
+.feedback-header.mal { background: #FEF0EF; color: var(--accent); }
+.feedback-body { padding: 1rem 1.25rem; background: white; }
+.feedback-item { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--paper2); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+.feedback-item:last-child { border-bottom: none; }
+.nota-ex { display: inline-flex; align-items: center; gap:6px; background: var(--ink); color: white; border-radius: 20px; padding: 5px 14px; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; margin-top: 0.75rem; }
+.nota-ex .pts { color: var(--accent2); font-size: 16px; font-weight: 700; }
+
+/* ── SCORE PANEL ── */
+.score-panel { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); margin-top: 2rem; display: none; }
+.score-panel.visible { display: block; }
+.score-header { background: var(--ink); color: white; padding: 1.5rem 2rem; }
+.score-header h3 { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 0.3rem; }
+.score-header p { font-size: 13px; opacity: 0.7; }
+.score-body { padding: 1.5rem 2rem; }
+.score-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+@media(max-width:600px){.score-grid{grid-template-columns:1fr 1fr;}}
+.score-cell { background: var(--paper2); border-radius: 8px; padding: 1rem; text-align: center; border: 1px solid var(--border); }
+.score-cell .val { font-family: 'Lora', serif; font-size: 28px; color: var(--ink); line-height: 1; }
+.score-cell .lbl { font-size: 11px; color: #888; margin-top: 4px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
+.nota-final-box { background: var(--ink); border-radius: 10px; padding: 1.5rem; text-align: center; color: white; margin-bottom: 1.25rem; }
+.nota-final-box .nota { font-family: 'Lora', serif; font-size: 58px; line-height: 1; color: var(--accent2); }
+.nota-final-box .nota-lbl { font-size: 13px; opacity: 0.7; margin-top: 4px; }
+.nota-final-box .nota-msg { font-size: 14px; margin-top: 0.5rem; opacity: 0.9; }
+.errores-wrap { background: var(--paper2); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.errores-wrap h4 { font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-bottom: 8px; }
+.error-item { font-size: 13px; color: var(--accent); padding: 3px 0; }
+.btn-enviar { width: 100%; background: var(--green); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; margin-top: 0.5rem; }
+.btn-enviar:hover { background: #145522; }
+.btn-enviar:disabled { background: #999; cursor: not-allowed; }
+.envio-ok { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 8px; padding: 1rem; text-align: center; color: var(--green); font-size: 14px; display: none; margin-top: 0.75rem; }
+.incompleto-msg { background: #FFF8E8; border: 1.5px solid var(--accent2); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; color: #7A5200; font-size: 13px; margin-bottom: 0.75rem; display: none; }
+.pending-msg { background: var(--paper2); border: 1px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; font-size: 14px; color: #aaa; margin-top: 1rem; }
+
+/* Colores leyenda */
+.c1{background:#2E8B6A;} .c2{background:#2E5E8B;} .c3{background:#7A2E8B;} .c4{background:#8B6A2E;}
+.c5{background:#8B2E2E;} .c6{background:#2E4A8B;} .c7{background:#5A2E8B;} .c8{background:#8B2E5A;}
+.c9{background:#3A7A3A;} .c10{background:#7A6A20;}
+
+.section-title { font-family: 'Lora', serif; font-size: 26px; color: var(--ink); margin-bottom: 0.4rem; }
+.section-lead { font-size: 14px; color: #888; margin-bottom: 2rem; border-left: 3px solid var(--accent); padding-left: 0.75rem; }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.15em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;">ESO / Bachillerato · Lengua Castellana y Literatura</div>
+    <h2>Taller de escritura<br>de oraciones compuestas <br> e impersonales</h2>
+    <p>Rellena los datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
+    <input class="login-input" type="text" id="loginNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
+    <input class="login-input" type="text" id="loginCurso" placeholder="Curso (ej.: 4º ESO B)" maxlength="30">
+    <div class="login-err" id="loginErr" style="font-size:12px;color:var(--accent);margin-top:-0.5rem;margin-bottom:0.75rem;display:none;">Por favor, rellena todos los campos antes de continuar.</div>
+    <button class="login-btn" onclick="doLogin()">Empezar →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-tag">Sintaxis · Oraciones compuestas</div>
+  <h1>Taller de escritura</h1>
+  <p class="sub">Crea textos coherentes e identifica las oraciones según su tipo</p>
+  <div class="nav-user">Alumno/a: <span id="navNombre">—</span></div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active"  onclick="show('teoria')">📖 Teoría</button>
+    <button class="tab-btn" onclick="show('ej1')">✏️ Ejercicio 1</button>
+    <button class="tab-btn" onclick="show('ej2')">✏️ Ejercicio 2</button>
+    <button class="tab-btn" onclick="show('ej3')">✏️ Ejercicio 3</button>
+    <button class="tab-btn" onclick="show('ej4')">✏️ Ejercicio 4</button>
+    <button class="tab-btn" onclick="show('ej5')">✏️ Ejercicio 5</button>
+    <button class="tab-btn" onclick="show('resultados')">📊 Resultados</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- TEORÍA                                                             -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main active" id="s-teoria">
+  <div class="theory-intro">
+    <h2>Oraciones compuestas e impersonales</h2>
+    <p>Las oraciones compuestas contienen dos o más verbos. Según cómo se relacionan, se clasifican en <strong style="color:var(--accent2)">subordinadas</strong>, <strong style="color:var(--accent2)">coordinadas</strong> o <strong style="color:var(--accent2)">bipolares</strong>. Lee con atención la teoría antes de pasar a los ejercicios.</p>
+  </div>
+
+  <!-- SUBORDINADAS -->
+  <div class="th-block">
+    <h3 class="th-block-title">1. Oraciones subordinadas</h3>
+    <div class="th-note">Dependen de un verbo principal y desempeñan una función sintáctica. Suelen ir introducidas por un nexo (<em>que, cuyo, donde, como, cuando…</em>). Sin nexo, el verbo de la subordinada aparece en <strong>forma no personal</strong>: infinitivo, participio o gerundio.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Definición y función</th><th>Criterio / Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Sustantiva</td><td>Equivale a un sustantivo. Funciones: SUJ, CD, AT, TÉRM.</td><td>Sustituir por <code>eso</code>. Nexos: <em>que, si, dónde, cuándo…</em></td><td><em>«No se propicia que el pensamiento…»</em></td></tr>
+        <tr><td>Adjetiva</td><td>Modifica a un núcleo sustantivo. Función: MOD.</td><td>Sustituir nexo por <code>el/la cual</code>. Nexos: <em>que, cuyo/a…</em></td><td><em>«Ese es el muchacho que ha sido detenido»</em></td></tr>
+        <tr><td>Adv. de lugar</td><td>Expresa circunstancia de lugar. Función: CCL.</td><td>Sustituir por <code>allí</code>. Nexo: <em>donde</em></td><td><em>«Lo encontró donde lo habías dejado»</em></td></tr>
+        <tr><td>Adv. de tiempo</td><td>Expresa circunstancia temporal. Función: CCT.</td><td>Sustituir por <code>entonces</code>. Nexo: <em>cuando</em></td><td><em>«Me duele cuando hablo demasiado»</em></td></tr>
+        <tr><td>Adv. de modo</td><td>Expresa circunstancia de modo. Función: CCM.</td><td>Sustituir por <code>así</code>. Nexo: <em>como</em></td><td><em>«Disparó como había aprendido»</em></td></tr>
+        <tr><td>Adv. de cantidad</td><td>Expresa grado o cantidad. Función: CCCANT.</td><td>Sustituir por <code>mucho</code>. Nexo: <em>cuanto</em></td><td><em>«Mi hermano estudia cuanto puede»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COORDINADAS -->
+  <div class="th-block">
+    <h3 class="th-block-title">2. Oraciones coordinadas</h3>
+    <div class="th-note">Son <strong>oraciones completas</strong> relacionadas por conjunciones. Cada una tiene sentido completo y podría aparecer de forma independiente. <strong>No confundir con la coordinación de palabras o frases.</strong></div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Significado</th><th>Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Copulativa</td><td>Suma o adición de significados.</td><td><code>y, e, ni</code></td><td><em>«Bebe mucho y habla incansablemente»</em></td></tr>
+        <tr><td>Disyuntiva</td><td>Los significados se excluyen.</td><td><code>o, u, o bien</code></td><td><em>«¿Te quedas en casa o te unes a nosotros?»</em></td></tr>
+        <tr><td>Distributiva</td><td>Acciones alternantes no excluyentes.</td><td><code>ya…ya, unos…otros</code></td><td><em>«Unos días sonríe, otros llora»</em></td></tr>
+        <tr><td>Explicativa</td><td>La segunda aclara a la primera.</td><td><code>es decir, o sea, esto es</code></td><td><em>«Son actrices, o sea, no tienen experiencia»</em></td></tr>
+        <tr><td>Yuxtapuesta</td><td>Ausencia de conjunción.</td><td>Coma o punto y coma</td><td><em>«No se cayó; lo has empujado tú»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BIPOLARES -->
+  <div class="th-block">
+    <h3 class="th-block-title">3. Oraciones bipolares</h3>
+    <div class="th-note">Relacionadas por interordinación e interdependencia lógica entre las dos cláusulas.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Relación lógica</th><th>Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Causal</td><td>Efecto y causa.</td><td><code>porque, puesto que, ya que</code></td><td><em>«Cena después porque tiene que estudiar»</em></td></tr>
+        <tr><td>Condicional</td><td>Condicionante y condicionado.</td><td><code>si, como, siempre que</code></td><td><em>«Si me lo hubieras explicado, no…»</em></td></tr>
+        <tr><td>Concesiva</td><td>Objeción y concesión.</td><td><code>aunque, a pesar de que</code></td><td><em>«Aunque me lo hubieras explicado, …»</em></td></tr>
+        <tr><td>Adversativa</td><td>Tesis y antítesis (contraposición).</td><td><code>pero, mas, sino, sin embargo</code></td><td><em>«Le expliqué el ejercicio pero no lo ha entendido»</em></td></tr>
+        <tr><td>Consecutiva</td><td>Antecedente y consecuente.</td><td><code>por tanto, así que, luego</code></td><td><em>«Se ha estropeado, por tanto, iremos…»</em></td></tr>
+        <tr><td>Comparativa</td><td>Comparando y comparado.</td><td><code>más/menos que, tan…como</code></td><td><em>«Inspira más confianza que los anteriores»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- IMPERSONALES -->
+  <div class="th-block">
+    <h3 class="th-block-title">4. Oraciones impersonales o unimembres</h3>
+    <div class="th-note">Son cláusulas <strong>sin sujeto léxico</strong>. El verbo está conjugado obligatoriamente en 3.ª persona del singular, pero no se refiere a ningún sujeto. En <em>«Llueve mucho en Asturias»</em>, la 3.ª persona no admite ningún sintagma que funcione como sujeto.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Descripción</th><th>Verbos / construcción</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Meteorológica</td><td>Fenómenos atmosféricos o del tiempo.</td><td><code>llover, nevar, granizar, tronar…</code> También <code>estar</code> con ese significado.</td><td><em>«Ayer nevó en el Teide»; «Está nublado»</em></td></tr>
+        <tr><td>SER temporal</td><td>Construcciones que sitúan en el tiempo.</td><td><code>ser</code> en uso temporal.</td><td><em>«Es de noche»; «Era lunes»</em></td></tr>
+        <tr><td>HABER no auxiliar</td><td>HABER existencial (no como auxiliar).</td><td><code>haber</code>: <em>hay, había, hubo…</em></td><td><em>«No hay nadie»; «Había mucho ruido»</em></td></tr>
+        <tr><td>HACER temporal</td><td>Tiempo meteorológico o cronológico.</td><td><code>hacer</code>: <em>hace, hacía…</em></td><td><em>«Hace frío»; «Hacía dos años»</em></td></tr>
+        <tr><td>BASTAR / SOBRAR</td><td>En determinados contextos impersonales.</td><td><code>bastar, sobrar</code></td><td><em>«Basta con leerlo»; «Sobra con siete»</em></td></tr>
+        <tr><td>SE impersonal</td><td>Impersonal refleja: <em>se</em> + verbo en 3.ª sing. sin sujeto posible.</td><td><code>se</code> + verbo activo en 3.ª sing.</td><td><em>«Se vive bien en Lugo»; «Se trabaja mucho»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin-top:1.5rem;">
+    <button class="btn-corregir" onclick="show('ej1')">Ir al Ejercicio 1 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 1 — Solo coordinadas                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej1">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">1</div>
+      <div class="ex-header-text">
+        <h3>Solo coordinadas</h3>
+        <p>Copulativa · Disyuntiva · Distributiva · Explicativa</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas las siguientes oraciones coordinadas:<br>
+        una <strong>copulativa</strong>, una <strong>disyuntiva</strong>, una <strong>distributiva</strong> y una <strong>explicativa</strong>.<br>
+        Recuerda que debes coordinar <strong>oraciones completas</strong> (con verbo), no palabras o frases sueltas.<br>
+        Luego <strong>copia las dos oraciones coordinadas</strong> (completas, con su nexo) en cada campo.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag coordinada">COORDINADAS</span>
+        <span class="tipo-tag" style="background:var(--teal)">Copulativa</span>
+        <span class="tipo-tag" style="background:#2E5E8B">Disyuntiva</span>
+        <span class="tipo-tag" style="background:#7A2E8B">Distributiva</span>
+        <span class="tipo-tag" style="background:#8B6A2E">Explicativa</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;margin-bottom:6px;">Escribe el texto. Luego, en cada campo, <strong>copia y pega las dos oraciones coordinadas completas</strong> (incluyendo el nexo). No vale copiar solo una de las dos, ni solo palabras o frases.</p>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex1" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(1)"></textarea>
+        <div class="char-count" id="cc1">0 palabras</div>
+      </div>
+      <p class="marcado-instruc">Copia las <strong>dos oraciones coordinadas</strong> (con su nexo) que corresponden a cada tipo:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:var(--teal);font-weight:600;">🟢 Copulativa:</label>
+          <input class="marcado-select" id="m1_cop" type="text" placeholder="Oración 1 + y/e/ni + Oración 2…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E5E8B;font-weight:600;">🔵 Disyuntiva:</label>
+          <input class="marcado-select" id="m1_dis" type="text" placeholder="Oración 1 + o/u + Oración 2…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#7A2E8B;font-weight:600;">🟣 Distributiva:</label>
+          <input class="marcado-select" id="m1_dst" type="text" placeholder="Ya… / Unos… + Otros…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B6A2E;font-weight:600;">🟡 Explicativa:</label>
+          <input class="marcado-select" id="m1_exp" type="text" placeholder="Oración 1 + es decir/o sea + Oración 2…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+      <button class="btn-corregir" onclick="corregir(1)">✓ Corregir ejercicio 1</button>
+      <div class="feedback-box" id="fb1">
+        <div class="feedback-header" id="fb1-head"></div>
+        <div class="feedback-body" id="fb1-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 2 — Solo bipolares                                       -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej2">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">2</div>
+      <div class="ex-header-text">
+        <h3>Solo bipolares</h3>
+        <p>Condicional · Concesiva · Adversativa · Consecutiva</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas las siguientes oraciones bipolares:<br>
+        una <strong>condicional</strong>, una <strong>concesiva</strong>, una <strong>adversativa</strong> y una <strong>consecutiva</strong>.<br>
+        Identifícalas copiando las dos oraciones o solo la que lleva el nexo, pero <strong>siempre incluyendo el nexo y la oración</strong>.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag bipolar">BIPOLARES</span>
+        <span class="tipo-tag" style="background:#2E4A8B">Condicional</span>
+        <span class="tipo-tag" style="background:#5A2E8B">Concesiva</span>
+        <span class="tipo-tag" style="background:#8B2E5A">Adversativa</span>
+        <span class="tipo-tag" style="background:#3A7A3A">Consecutiva</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;">Escribe el texto y copia en cada campo la oración (o las dos) que cumple esa función. El nexo debe aparecer siempre.</p>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex2" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(2)"></textarea>
+        <div class="char-count" id="cc2">0 palabras</div>
+      </div>
+      <p class="marcado-instruc">Indica qué oración de tu texto cumple cada función (con el nexo incluido):</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E4A8B;font-weight:600;">🔷 Condicional:</label>
+          <input class="marcado-select" id="m2_con" type="text" placeholder="Copia la oración con si / como…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#5A2E8B;font-weight:600;">🟣 Concesiva:</label>
+          <input class="marcado-select" id="m2_cnc" type="text" placeholder="Copia la oración con aunque / a pesar de…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E5A;font-weight:600;">🔴 Adversativa:</label>
+          <input class="marcado-select" id="m2_adv" type="text" placeholder="Copia la oración con pero / sin embargo…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#3A7A3A;font-weight:600;">🟢 Consecutiva:</label>
+          <input class="marcado-select" id="m2_cns" type="text" placeholder="Copia la oración con por tanto / así que…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+      <button class="btn-corregir" onclick="corregir(2)">✓ Corregir ejercicio 2</button>
+      <div class="feedback-box" id="fb2">
+        <div class="feedback-header" id="fb2-head"></div>
+        <div class="feedback-body" id="fb2-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 3 — Coordinadas y bipolares                              -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej3">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">3</div>
+      <div class="ex-header-text">
+        <h3>Coordinadas y bipolares</h3>
+        <p>Copulativa · Causal · Condicional · Comparativa</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas:<br>
+        una coordinada <strong>copulativa</strong>, una bipolar <strong>causal</strong>, una bipolar <strong>condicional</strong> y una bipolar <strong>comparativa</strong>.<br>
+        Para la copulativa, <strong>copia las dos oraciones completas</strong>. Para las bipolares, incluye el nexo y la oración.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag mixto">MEZCLA</span>
+        <span class="tipo-tag" style="background:var(--teal)">Copulativa</span>
+        <span class="tipo-tag" style="background:#8B2E2E">Causal</span>
+        <span class="tipo-tag" style="background:#2E4A8B">Condicional</span>
+        <span class="tipo-tag" style="background:#7A6A20">Comparativa</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;">Escribe el texto y copia en cada campo la oración que corresponde. La copulativa requiere copiar las dos oraciones coordinadas completas.</p>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex3" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(3)"></textarea>
+        <div class="char-count" id="cc3">0 palabras</div>
+      </div>
+      <p class="marcado-instruc">Indica qué oración de tu texto cumple cada función:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:var(--teal);font-weight:600;">🟢 Copulativa:</label>
+          <input class="marcado-select" id="m3_cop" type="text" placeholder="Oración 1 + y/e/ni + Oración 2…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E2E;font-weight:600;">🔴 Causal:</label>
+          <input class="marcado-select" id="m3_cau" type="text" placeholder="Copia la oración con porque / ya que…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E4A8B;font-weight:600;">🔷 Condicional:</label>
+          <input class="marcado-select" id="m3_con" type="text" placeholder="Copia la oración con si / como…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#7A6A20;font-weight:600;">🟡 Comparativa:</label>
+          <input class="marcado-select" id="m3_cmp" type="text" placeholder="Copia la oración con más…que / tan…como…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+      <button class="btn-corregir" onclick="corregir(3)">✓ Corregir ejercicio 3</button>
+      <div class="feedback-box" id="fb3">
+        <div class="feedback-header" id="fb3-head"></div>
+        <div class="feedback-body" id="fb3-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 4 — Subordinadas                                         -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej4">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">4</div>
+      <div class="ex-header-text">
+        <h3>Subordinadas</h3>
+        <p>Sustantiva · Adjetiva · Adverbial de tiempo · Adverbial de modo</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas las siguientes oraciones subordinadas:<br>
+        una <strong>sustantiva</strong>, una <strong>adjetiva de relativo</strong>, una <strong>adverbial de tiempo</strong> y una <strong>adverbial de modo</strong>.<br>
+        Identifícalas copiando <strong>únicamente la oración subordinada</strong>: <em>desde el nexo (o la forma no personal del verbo) hasta el final de la subordinada, ni más ni menos</em>.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag subord">SUBORDINADAS</span>
+        <span class="tipo-tag" style="background:#2E4A8B">Sustantiva</span>
+        <span class="tipo-tag" style="background:#5A2E8B">Adjetiva</span>
+        <span class="tipo-tag" style="background:#2E6B4A">Adv. tiempo</span>
+        <span class="tipo-tag" style="background:#7A6A20">Adv. modo</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Clave de identificación</h4>
+        <p style="font-size:13px;margin-bottom:4px;">Copia <strong>solo la subordinada</strong>: empieza por el nexo (o por una forma no personal: infinitivo, gerundio…) y termina donde termina esa cláusula. <strong>No incluyas la oración principal.</strong></p>
+        <ul style="font-size:12px;color:#666;margin:6px 0 0 18px;line-height:1.7;">
+          <li><strong>Sustantiva:</strong> nexos <em>que, si, cómo, cuándo, dónde, cuánto…</em> — puedes sustituirla por «eso»</li>
+          <li><strong>Adjetiva:</strong> nexo relativo <em>que, quien, cuyo/a, donde, cuando…</em> — modifica un sustantivo</li>
+          <li><strong>Adv. tiempo:</strong> nexos <em>cuando, mientras, antes de (que), después de (que), en cuanto…</em></li>
+          <li><strong>Adv. modo:</strong> nexos <em>como, según, conforme, tal como…</em></li>
+        </ul>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex4" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(4)"></textarea>
+        <div class="char-count" id="cc4">0 palabras</div>
+      </div>
+      <p class="marcado-instruc">Copia <strong>solo la oración subordinada</strong> (desde el nexo o forma no personal hasta que finalice):</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E4A8B;font-weight:600;">🔷 Sustantiva:</label>
+          <input class="marcado-select" id="m4_sust" type="text" placeholder="que… / si… / cómo… / cuándo…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#5A2E8B;font-weight:600;">🟣 Adjetiva:</label>
+          <input class="marcado-select" id="m4_adj" type="text" placeholder="que… / quien… / cuyo/a… / donde…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E6B4A;font-weight:600;">🟢 Adv. tiempo:</label>
+          <input class="marcado-select" id="m4_advt" type="text" placeholder="cuando… / mientras… / antes de…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#7A6A20;font-weight:600;">🟡 Adv. modo:</label>
+          <input class="marcado-select" id="m4_advm" type="text" placeholder="como… / según… / conforme…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+      <button class="btn-corregir" onclick="corregir(4)">✓ Corregir ejercicio 4</button>
+      <div class="feedback-box" id="fb4">
+        <div class="feedback-header" id="fb4-head"></div>
+        <div class="feedback-body" id="fb4-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 5 — Oraciones impersonales                               -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej5">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">5</div>
+      <div class="ex-header-text">
+        <h3>Oraciones impersonales</h3>
+        <p>Cuatro tipos distintos de oraciones impersonales</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas <strong>cuatro oraciones impersonales de tipos distintos</strong>.<br>
+        Para cada una, <strong>copia la oración impersonal</strong> y <strong>selecciona su tipo</strong> en el desplegable.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag impers">IMPERSONALES</span>
+        <span class="tipo-tag" style="background:#2E6B8B">Meteorológica</span>
+        <span class="tipo-tag" style="background:#6B2E2E">SER temporal</span>
+        <span class="tipo-tag" style="background:#2E4A8B">HABER</span>
+        <span class="tipo-tag" style="background:#7A6A20">HACER</span>
+        <span class="tipo-tag" style="background:#3A7A3A">BASTAR/SOBRAR</span>
+        <span class="tipo-tag" style="background:#5A2E8B">SE impersonal</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Recuerda</h4>
+        <p style="font-size:13px;">Las oraciones impersonales <strong>no tienen sujeto</strong>. El verbo va en 3.ª persona del singular y no se refiere a ninguna persona o cosa. Los cuatro tipos elegidos deben ser <strong>distintos entre sí</strong>.</p>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex5" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(5)"></textarea>
+        <div class="char-count" id="cc5">0 palabras</div>
+      </div>
+      <p class="marcado-instruc">Para cada oración impersonal: <strong>copia la oración</strong> y <strong>elige el tipo</strong> en el desplegable.</p>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1rem;">
+        <div class="imp-row">
+          <label>Impersonal 1:</label>
+          <input id="m5_imp1" type="text" placeholder="Copia aquí la primera oración impersonal…">
+          <select id="s5_imp1">
+            <option value="">— Selecciona el tipo —</option>
+            <option value="meteorologica">Meteorológica (llueve, nieva, graniza…)</option>
+            <option value="ser">SER temporal (es de noche, era lunes…)</option>
+            <option value="haber">HABER no auxiliar (hay, había…)</option>
+            <option value="hacer">HACER temporal (hace frío, calor…)</option>
+            <option value="bastar">BASTAR / SOBRAR (basta con, sobra…)</option>
+            <option value="se">SE impersonal (se vive, se trabaja…)</option>
+          </select>
+        </div>
+        <div class="imp-row">
+          <label>Impersonal 2:</label>
+          <input id="m5_imp2" type="text" placeholder="Copia aquí la segunda oración impersonal…">
+          <select id="s5_imp2">
+            <option value="">— Selecciona el tipo —</option>
+            <option value="meteorologica">Meteorológica (llueve, nieva, graniza…)</option>
+            <option value="ser">SER temporal (es de noche, era lunes…)</option>
+            <option value="haber">HABER no auxiliar (hay, había…)</option>
+            <option value="hacer">HACER temporal (hace frío, calor…)</option>
+            <option value="bastar">BASTAR / SOBRAR (basta con, sobra…)</option>
+            <option value="se">SE impersonal (se vive, se trabaja…)</option>
+          </select>
+        </div>
+        <div class="imp-row">
+          <label>Impersonal 3:</label>
+          <input id="m5_imp3" type="text" placeholder="Copia aquí la tercera oración impersonal…">
+          <select id="s5_imp3">
+            <option value="">— Selecciona el tipo —</option>
+            <option value="meteorologica">Meteorológica (llueve, nieva, graniza…)</option>
+            <option value="ser">SER temporal (es de noche, era lunes…)</option>
+            <option value="haber">HABER no auxiliar (hay, había…)</option>
+            <option value="hacer">HACER temporal (hace frío, calor…)</option>
+            <option value="bastar">BASTAR / SOBRAR (basta con, sobra…)</option>
+            <option value="se">SE impersonal (se vive, se trabaja…)</option>
+          </select>
+        </div>
+        <div class="imp-row">
+          <label>Impersonal 4:</label>
+          <input id="m5_imp4" type="text" placeholder="Copia aquí la cuarta oración impersonal…">
+          <select id="s5_imp4">
+            <option value="">— Selecciona el tipo —</option>
+            <option value="meteorologica">Meteorológica (llueve, nieva, graniza…)</option>
+            <option value="ser">SER temporal (es de noche, era lunes…)</option>
+            <option value="haber">HABER no auxiliar (hay, había…)</option>
+            <option value="hacer">HACER temporal (hace frío, calor…)</option>
+            <option value="bastar">BASTAR / SOBRAR (basta con, sobra…)</option>
+            <option value="se">SE impersonal (se vive, se trabaja…)</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-corregir" onclick="corregir(5)">✓ Corregir ejercicio 5</button>
+      <div class="feedback-box" id="fb5">
+        <div class="feedback-header" id="fb5-head"></div>
+        <div class="feedback-body" id="fb5-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- RESULTADOS                                                          -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-resultados">
+  <h2 class="section-title">Resultados</h2>
+  <p class="section-lead">Aquí verás tu nota final cuando hayas completado y corregido los cinco ejercicios.</p>
+
+  <div class="pending-msg" id="pendingMsg">⏳ Aún no has corregido todos los ejercicios. Completa los cinco para ver tu nota.</div>
+
+  <div class="score-panel" id="scorePanel">
+    <div class="score-header">
+      <h3>📊 Resultados de <span id="scoreNombre">—</span></h3>
+      <p>Taller de escritura · Oraciones compuestas e impersonales</p>
+    </div>
+    <div class="score-body">
+      <div class="score-grid">
+        <div class="score-cell"><div class="val" id="r1">—</div><div class="lbl">Ejercicio 1</div></div>
+        <div class="score-cell"><div class="val" id="r2">—</div><div class="lbl">Ejercicio 2</div></div>
+        <div class="score-cell"><div class="val" id="r3">—</div><div class="lbl">Ejercicio 3</div></div>
+        <div class="score-cell"><div class="val" id="r4">—</div><div class="lbl">Ejercicio 4</div></div>
+        <div class="score-cell"><div class="val" id="r5">—</div><div class="lbl">Ejercicio 5</div></div>
+      </div>
+      <div class="nota-final-box">
+        <div class="nota" id="notaFinal">—</div>
+        <div class="nota-lbl">Nota final sobre 10</div>
+        <div class="nota-msg" id="notaMsg"></div>
+      </div>
+      <div class="errores-wrap" id="erroresWrap" style="display:none">
+        <h4>Aspectos a mejorar</h4>
+        <div id="erroresList"></div>
+      </div>
+      <div class="incompleto-msg" id="incompletoMsg"></div>
+      <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
+      <div class="envio-ok" id="envioOk">✅ El formulario se ha abierto en una nueva pestaña. Comprueba que los datos son correctos y envíalo.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                          -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────
+var ALUMNO = '';
+var CURSO  = '';
+var NOTAS  = {1:null, 2:null, 3:null, 4:null, 5:null};
+var TEXTOS = {1:'', 2:'', 3:'', 4:'', 5:''};
+var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSeY9UMPiAlg3OqEc9jXSppolIsOHdU5TZ9iQ0zSLTMU4jucvA/viewform';
+
+// ── LOGIN ──────────────────────────────────────────────────────────
+function doLogin() {
+  var n = document.getElementById('loginNombre').value.trim();
+  var c = document.getElementById('loginCurso').value.trim();
+  if (!n || !c) { document.getElementById('loginErr').style.display = 'block'; return; }
+  ALUMNO = n; CURSO = c;
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('navNombre').textContent = n;
+}
+document.getElementById('loginNombre').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('loginCurso').focus(); });
+document.getElementById('loginCurso').addEventListener('keydown',  function(e){ if(e.key==='Enter') doLogin(); });
+
+// ── NAVEGACIÓN ──────────────────────────────────────────────────────
+var SECTIONS = ['teoria','ej1','ej2','ej3','ej4','ej5','resultados'];
+function show(k) {
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('s-'+k).classList.add('active');
+  var idx = SECTIONS.indexOf(k);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (k === 'resultados') actualizarResultados();
+}
+
+// ── CONTEO PALABRAS ─────────────────────────────────────────────────
+function countChars(n) {
+  var t = document.getElementById('tex'+n).value.trim();
+  var words = t ? t.split(/\s+/).length : 0;
+  var el = document.getElementById('cc'+n);
+  el.textContent = words + ' palabras';
+  el.className = 'char-count' + (words < 30 || words > 120 ? ' warn' : '');
+}
+
+// ── TIPOS: COORDINADAS Y BIPOLARES ──────────────────────────────────
+var TIPOS = {
+  cop: { nombre:'Copulativa',    nexos:[' y ',' e ',' ni ','y ','e ','ni '], patron:null,
+         desc:'Debe contener un nexo copulativo (y, e, ni) y copiar las dos oraciones completas.' },
+  dis: { nombre:'Disyuntiva',    nexos:[' o ',' u ',' o bien ','o ','u '], patron:null,
+         desc:'Debe contener un nexo disyuntivo (o, u, o bien) y copiar las dos oraciones.' },
+  dst: { nombre:'Distributiva',  nexos:['ya ','unos ','otros ','unas ','un día','otro ','a veces','por momentos','unas veces','otras veces'], patron:null,
+         desc:'Debe contener nexos distributivos (ya…ya, unos…otros, a veces…otras…).' },
+  exp: { nombre:'Explicativa',   nexos:['es decir','o sea','esto es','o lo que es lo mismo','en otras palabras','es más'], patron:null,
+         desc:'Debe contener un nexo explicativo (es decir, o sea, esto es…) y las dos oraciones.' },
+  cau: { nombre:'Causal',        nexos:['porque','puesto que','ya que','debido a que',' pues ','pues,','dado que','por cuanto','a causa de que','visto que'], patron:null,
+         desc:'Debe contener un nexo causal (porque, ya que, puesto que, dado que…).' },
+  con: { nombre:'Condicional',   nexos:[' si ',' si,','siempre que','siempre y cuando','a condición de que','con tal de que','en caso de que','a menos que','a no ser que','con que ','como '], patron:null,
+         desc:'Debe contener un nexo condicional (si, siempre que, en caso de que…).' },
+  cnc: { nombre:'Concesiva',     nexos:['aunque','a pesar de que','a pesar de ','si bien','por más que','por mucho que','aun cuando','pese a que','pese a '], patron:null,
+         desc:'Debe contener un nexo concesivo (aunque, a pesar de que, si bien…).' },
+  adv: { nombre:'Adversativa',   nexos:['pero','mas ','sino','sin embargo','no obstante','ahora bien','con todo','empero'], patron:null,
+         desc:'Debe contener un nexo adversativo (pero, sin embargo, sino, no obstante…).' },
+  cns: { nombre:'Consecutiva',   nexos:['por tanto','por lo tanto','así que','así pues','luego','por ello','por eso','de modo que','de manera que','conque','en consecuencia','por consiguiente','de ahí que'], patron:null,
+         desc:'Debe contener un nexo consecutivo (por tanto, así que, en consecuencia…).' },
+  cmp: { nombre:'Comparativa',   nexos:[], patron:'comparativa',
+         desc:'Debe contener nexos comparativos (más…que, menos…que, tan…como, igual que…).' },
+};
+
+// ── EJ_CONFIG: valType indica el tipo de validación ─────────────────
+// 'coord' = coordinada (dos oraciones completas), 'bip' = bipolar (nexo + oración)
+var EJ_CONFIG = {
+  1: { campos:[
+    {id:'m1_cop', tipo:'cop', valType:'coord'},
+    {id:'m1_dis', tipo:'dis', valType:'coord'},
+    {id:'m1_dst', tipo:'dst', valType:'coord'},
+    {id:'m1_exp', tipo:'exp', valType:'coord'},
+  ]},
+  2: { campos:[
+    {id:'m2_con', tipo:'con', valType:'bip'},
+    {id:'m2_cnc', tipo:'cnc', valType:'bip'},
+    {id:'m2_adv', tipo:'adv', valType:'bip'},
+    {id:'m2_cns', tipo:'cns', valType:'bip'},
+  ]},
+  3: { campos:[
+    {id:'m3_cop', tipo:'cop', valType:'coord'},
+    {id:'m3_cau', tipo:'cau', valType:'bip'},
+    {id:'m3_con', tipo:'con', valType:'bip'},
+    {id:'m3_cmp', tipo:'cmp', valType:'bip'},
+  ]},
+};
+
+// ── DETECCIÓN DE NEXOS ───────────────────────────────────────────────
+function tieneNexoComparativa(t) {
+  if (/más\s+\S[\s\S]{0,60}?\bque\b/.test(t)) return true;
+  if (/mas\s+\S[\s\S]{0,60}?\bque\b/.test(t))  return true;
+  if (/menos\s+\S[\s\S]{0,60}?\bque\b/.test(t)) return true;
+  if (/tan\s+\S[\s\S]{0,60}?\bcomo\b/.test(t))  return true;
+  if (/tanto[as]?\s[\s\S]{0,60}?\bcomo\b/.test(t)) return true;
+  if (/igual\s+(de\s+)?\S[\s\S]{0,40}?\b(que|como)\b/.test(t)) return true;
+  if (/mejor\s+[\s\S]{0,40}?\bque\b/.test(t)) return true;
+  if (/peor\s+[\s\S]{0,40}?\bque\b/.test(t))  return true;
+  return false;
+}
+
+function tieneNexo(tipo, texto) {
+  var t = texto.toLowerCase();
+  var info = TIPOS[tipo];
+  if (!info) return false;
+  if (info.patron === 'comparativa') return tieneNexoComparativa(t);
+  return info.nexos.some(function(nx){ return t.includes(nx.toLowerCase()); });
+}
+
+// ── VALIDACIÓN COORDINADA ───────────────────────────────────────────
+// Para coordinadas: el alumno debe copiar las DOS oraciones completas.
+// Comprobamos que haya contenido suficiente a ambos lados del nexo.
+function validarCoordinada(tipo, val) {
+  var tL = val.toLowerCase().trim();
+  if (!tieneNexo(tipo, tL)) return false;
+  // Distributiva: patrón correlativo — solo comprobamos que haya nexo y extensión mínima
+  if (tipo === 'dst') {
+    return tL.split(/\s+/).length >= 6;
+  }
+  // Explicativa: "es decir", "o sea" etc. — el nexo suele ir entre las dos oraciones
+  // Buscar el nexo y comprobar contenido a cada lado
+  var nexos = TIPOS[tipo].nexos;
+  for (var i = 0; i < nexos.length; i++) {
+    var nx = nexos[i].toLowerCase();
+    var pos = tL.indexOf(nx);
+    if (pos > 0) {
+      var antes   = tL.substring(0, pos).trim();
+      var despues = tL.substring(pos + nx.length).trim();
+      var wA = antes   ? antes.split(/\s+/).length   : 0;
+      var wD = despues ? despues.split(/\s+/).length : 0;
+      if (wA >= 2 && wD >= 2) return true;
+    }
+  }
+  return false;
+}
+
+// ── VALIDACIÓN BIPOLAR ──────────────────────────────────────────────
+// Para bipolares: vale con copiar nexo + la oración (o las dos).
+function validarBipolar(tipo, val) {
+  return tieneNexo(tipo, val.toLowerCase());
+}
+
+// ── DATOS SUBORDINADAS ───────────────────────────────────────────────
+var CAMPOS_SUBORD = [
+  { id:'m4_sust', nombre:'Sustantiva',
+    nexos:['que ','que,','si ','dónde ','donde ','cuándo ','cuando ','cómo ','como ','cuánto ','cuanto '],
+    desc:'La identificación debe comenzar por el nexo (que, si, dónde, cómo…) y no incluir la oración principal.' },
+  { id:'m4_adj', nombre:'Adjetiva de relativo',
+    nexos:['que ','que,','que.','quien ','quienes ','cuyo ','cuya ','cuyos ','cuyas ','donde ','cuando ','cual '],
+    desc:'La identificación debe comenzar por el pronombre relativo (que, quien, cuyo/a, donde…).' },
+  { id:'m4_advt', nombre:'Adverbial de tiempo',
+    nexos:['cuando ','cuando,','mientras ','antes de ','después de ','en cuanto ','tan pronto ','cada vez que ','siempre que ','una vez que ','al ','nada más '],
+    desc:'La identificación debe comenzar por cuando, mientras, antes de, después de, en cuanto…' },
+  { id:'m4_advm', nombre:'Adverbial de modo',
+    nexos:['como ','como,','según ','conforme ','tal como ','de la manera ','del modo ','de modo que '],
+    desc:'La identificación debe comenzar por como, según, conforme, tal como…' },
+];
+
+// La respuesta debe EMPEZAR por el nexo o por una forma no personal
+function validarSubordinada(campo, val) {
+  var tL = val.toLowerCase().trim();
+  if (!tL) return false;
+  for (var i = 0; i < campo.nexos.length; i++) {
+    if (tL.startsWith(campo.nexos[i].toLowerCase())) return true;
+  }
+  // Formas no personales: infinitivo (-ar/-er/-ir) o gerundio (-ando/-iendo)
+  if (/^[a-záéíóúüñ]+(ar|er|ir|arse|erse|irse|ándose|iéndose)\b/i.test(val)) return true;
+  if (/^[a-záéíóúüñ]+(ando|iendo)\b/i.test(val)) return true;
+  return false;
+}
+
+// ── DATOS IMPERSONALES ───────────────────────────────────────────────
+var NOMBRES_IMPERSONAL = {
+  meteorologica: 'Meteorológica',
+  ser:           'SER temporal',
+  haber:         'HABER no auxiliar',
+  hacer:         'HACER temporal',
+  bastar:        'BASTAR / SOBRAR',
+  se:            'SE impersonal',
+};
+
+function detectarTipoImpersonal(val) {
+  var t = val.toLowerCase();
+  if (/\b(llueve|llovizna|nieva|graniza|truena|relampaguea|amanece|anochece|diluviar|dilavia|está\s+(nublado|despejado|soleado|lloviendo|nevando|granizando|nubloso|cubierto))\b/.test(t)) return 'meteorologica';
+  if (/\b(es|era|fue|será|sería)\s+(de\s+)?(noche|día|tarde|mañana|madrugada|medianoche|mediodía|lunes|martes|miércoles|jueves|viernes|sábado|domingo|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre|verano|invierno|otoño|primavera)\b/.test(t)) return 'ser';
+  if (/\b(hay|había|hubo|habrá|habría|haya)\b/.test(t) && !/\b(ha|han|has|había|habías|habían|hubiera|hubiese)\s+\w+(ado|ido)\b/.test(t)) return 'haber';
+  if (/\b(hace|hacía|hizo|hará|haría)\s+(frío|calor|viento|sol|fresco|niebla|bochorno|humedad|buen\s*tiempo|mal\s*tiempo|\d+\s*(años|meses|días|semanas|horas|siglos))\b/.test(t)) return 'hacer';
+  if (/\b(basta|bastaba|bastó|bastará|sobra|sobraba|sobró|sobrará)\b/.test(t)) return 'bastar';
+  if (/\bse\s+[a-záéíóúüñ]+(a|e|ó|ía|ará|aría|ería|irá|iría)\b/.test(t)) return 'se';
+  return null;
+}
+
+// ── CORRECCIÓN ORTOGRÁFICA (simplificada) ────────────────────────────
+function contarFaltasOrtografia(texto) {
+  var t = texto.toLowerCase();
+  var count = 0;
+  var patrones = [
+    /\bsalio\b/g, /\bllego\b/g, /\bcomio\b/g, /\bvivio\b/g, /\bcorrio\b/g,
+    /\btambien\b/g, /\bdespues\b/g, /\bademas\b/g, /\baqui\b/g, /\balli\b/g,
+    /\bahi\b/g, /\basi\b(?!\s*que|\s*pues)/g, /\bdia\b(?!\s*rio|\s*blo|\s*na)/g,
+    /\bfacil\b/g, /\bdificil\b/g, /\butil\b/g, /\bmas\b(?!\s+que|\s+de|\s+o\s+menos)/g,
+    /\baber\b/g, /\bacer\b(?!ia)/g, /\bhechar\b/g, /\bvien\b/g,
+    /\bporque\b(?=\s*\?)/g, /\btambien\b/g,
+  ];
+  patrones.forEach(function(p) {
+    var m = t.match(p);
+    if (m) count += m.length;
+  });
+  return count;
+}
+
+// ── FUNCIÓN GENÉRICA DE CORRECCIÓN (ej. 1-3) ────────────────────────
+function corregirEstandar(n) {
+  var config  = EJ_CONFIG[n];
+  var texto   = document.getElementById('tex'+n).value.trim();
+  var palabras = texto ? texto.split(/\s+/).length : 0;
+  var items   = [];
+  var puntosOraciones = 0;
+
+  if (!texto) {
+    items.push({ ok:false, msg:'No has escrito ningún texto. Completa el ejercicio antes de corregirlo.' });
+    mostrarFeedback(n, items, 0, 0, 0, 0);
+    return;
+  }
+
+  var coherenciaOk = (palabras >= 28 && palabras <= 130);
+
+  config.campos.forEach(function(c) {
+    var val    = document.getElementById(c.id).value.trim();
+    var tipoInfo = TIPOS[c.tipo];
+
+    if (!val) {
+      items.push({ ok:false, msg:'❌ <strong>' + tipoInfo.nombre + '</strong>: no has indicado ninguna oración.' });
+      return;
+    }
+
+    var ok = false;
+    if (c.valType === 'coord') {
+      ok = validarCoordinada(c.tipo, val);
+      if (!ok) {
+        items.push({ ok:false, msg:'❌ <strong>' + tipoInfo.nombre + '</strong>: la identificación no es correcta. Recuerda que debes copiar las <strong>dos oraciones coordinadas completas</strong> (con su nexo). ' + tipoInfo.desc });
+      }
+    } else { // bip
+      ok = validarBipolar(c.tipo, val);
+      if (!ok) {
+        items.push({ ok:false, msg:'❌ <strong>' + tipoInfo.nombre + '</strong>: la oración no contiene el nexo adecuado. ' + tipoInfo.desc });
+      }
+    }
+
+    if (ok) {
+      items.push({ ok:true, msg:'✅ <strong>' + tipoInfo.nombre + '</strong>: correctamente identificada.' });
+      puntosOraciones += 0.25;
+    }
+  });
+
+  // Calidad del texto: coherencia + ortografía comparten el tramo 0-0.25
+  var nFaltas = contarFaltasOrtografia(texto);
+  var descOrt = Math.min(Math.floor(nFaltas / 2) * 0.10, 0.25);
+  var calidad = coherenciaOk ? Math.max(0, 0.25 - descOrt) : 0;
+
+  if (!coherenciaOk) {
+    items.push({ ok:false, msg:'❌ El texto debe tener entre 5 y 6 líneas aproximadamente (actualmente: ' + palabras + ' palabras). Se descuenta la calidad del texto.' });
+  } else if (nFaltas > 0) {
+    items.push({ ok:false, msg:'⚠️ <strong>Ortografía</strong>: se detectan posibles errores (' + nFaltas + '). Descuento de ' + (0.25-calidad).toFixed(2) + ' pt sobre la calidad del texto.' });
+  } else {
+    items.push({ ok:true, msg:'✅ El texto tiene la extensión correcta y no se detectan errores ortográficos.' });
+  }
+
+  var total = Math.max(0, Math.round((puntosOraciones + calidad) * 100) / 100);
+  NOTAS[n]  = total;
+  TEXTOS[n] = texto;
+  mostrarFeedback(n, items, total, puntosOraciones, calidad, 0.25 - calidad);
+}
+
+// ── CORRECCIÓN EJERCICIO 4: SUBORDINADAS ────────────────────────────
+function corregirSubordinadas() {
+  var n = 4;
+  var texto   = document.getElementById('tex'+n).value.trim();
+  var palabras = texto ? texto.split(/\s+/).length : 0;
+  var items   = [];
+  var puntosOraciones = 0;
+
+  if (!texto) {
+    items.push({ ok:false, msg:'No has escrito ningún texto.' });
+    mostrarFeedback(n, items, 0, 0, 0, 0);
+    return;
+  }
+
+  var coherenciaOk = (palabras >= 28 && palabras <= 130);
+
+  CAMPOS_SUBORD.forEach(function(c) {
+    var val = document.getElementById(c.id).value.trim();
+    if (!val) {
+      items.push({ ok:false, msg:'❌ <strong>' + c.nombre + '</strong>: no has indicado ninguna oración.' });
+      return;
+    }
+    var ok = validarSubordinada(c, val);
+    if (ok) {
+      items.push({ ok:true, msg:'✅ <strong>' + c.nombre + '</strong>: correctamente identificada (comienza por el nexo o forma no personal).' });
+      puntosOraciones += 0.25;
+    } else {
+      items.push({ ok:false, msg:'❌ <strong>' + c.nombre + '</strong>: la identificación no es correcta. ' + c.desc });
+    }
+  });
+
+  var nFaltas = contarFaltasOrtografia(texto);
+  var descOrt = Math.min(Math.floor(nFaltas / 2) * 0.10, 0.25);
+  var calidad = coherenciaOk ? Math.max(0, 0.25 - descOrt) : 0;
+
+  if (!coherenciaOk) {
+    items.push({ ok:false, msg:'❌ El texto debe tener entre 5 y 6 líneas. Descuento en calidad del texto.' });
+  } else if (nFaltas > 0) {
+    items.push({ ok:false, msg:'⚠️ <strong>Ortografía</strong>: se detectan posibles errores (' + nFaltas + ').' });
+  } else {
+    items.push({ ok:true, msg:'✅ Extensión y ortografía correctas.' });
+  }
+
+  var total = Math.max(0, Math.round((puntosOraciones + calidad) * 100) / 100);
+  NOTAS[n]  = total;
+  TEXTOS[n] = texto;
+  mostrarFeedback(n, items, total, puntosOraciones, calidad, 0.25 - calidad);
+}
+
+// ── CORRECCIÓN EJERCICIO 5: IMPERSONALES ────────────────────────────
+function corregirImpersonales() {
+  var n = 5;
+  var texto   = document.getElementById('tex'+n).value.trim();
+  var palabras = texto ? texto.split(/\s+/).length : 0;
+  var items   = [];
+  var puntosOraciones = 0;
+
+  if (!texto) {
+    items.push({ ok:false, msg:'No has escrito ningún texto.' });
+    mostrarFeedback(n, items, 0, 0, 0, 0);
+    return;
+  }
+
+  var coherenciaOk = (palabras >= 28 && palabras <= 130);
+  var tiposUsados  = [];
+
+  for (var i = 1; i <= 4; i++) {
+    var val      = document.getElementById('m5_imp' + i).value.trim();
+    var tipoSel  = document.getElementById('s5_imp' + i).value;
+    var etiqueta = 'Oración ' + i;
+
+    if (!val || !tipoSel) {
+      items.push({ ok:false, msg:'❌ <strong>' + etiqueta + '</strong>: falta la oración o no has seleccionado el tipo.' });
+      continue;
+    }
+    if (tiposUsados.indexOf(tipoSel) >= 0) {
+      items.push({ ok:false, msg:'❌ <strong>' + etiqueta + '</strong>: el tipo «' + NOMBRES_IMPERSONAL[tipoSel] + '» ya está usado. Los cuatro tipos deben ser distintos.' });
+      continue;
+    }
+
+    var tipoDetectado = detectarTipoImpersonal(val);
+    tiposUsados.push(tipoSel);
+
+    if (tipoDetectado === tipoSel) {
+      items.push({ ok:true,  msg:'✅ <strong>' + etiqueta + '</strong>: impersonal de tipo <strong>' + NOMBRES_IMPERSONAL[tipoSel] + '</strong> correctamente clasificada.' });
+      puntosOraciones += 0.25;
+    } else if (tipoDetectado === null) {
+      // No detectada automáticamente: dar crédito provisional (revisión del profesor)
+      items.push({ ok:true,  msg:'✅ <strong>' + etiqueta + '</strong>: clasificada como <strong>' + NOMBRES_IMPERSONAL[tipoSel] + '</strong>. La corrección automática no ha podido verificarla; el profesor revisará su idoneidad.' });
+      puntosOraciones += 0.25;
+    } else {
+      items.push({ ok:false, msg:'❌ <strong>' + etiqueta + '</strong>: parece que la oración corresponde a un tipo diferente («' + NOMBRES_IMPERSONAL[tipoDetectado] + '»). Revisa la clasificación.' });
+    }
+  }
+
+  var nFaltas = contarFaltasOrtografia(texto);
+  var descOrt = Math.min(Math.floor(nFaltas / 2) * 0.10, 0.25);
+  var calidad = coherenciaOk ? Math.max(0, 0.25 - descOrt) : 0;
+
+  if (!coherenciaOk) {
+    items.push({ ok:false, msg:'❌ El texto debe tener entre 5 y 6 líneas. Descuento en calidad.' });
+  } else if (nFaltas > 0) {
+    items.push({ ok:false, msg:'⚠️ <strong>Ortografía</strong>: posibles errores detectados (' + nFaltas + ').' });
+  } else {
+    items.push({ ok:true, msg:'✅ Extensión y ortografía correctas.' });
+  }
+
+  var total = Math.max(0, Math.round((puntosOraciones + calidad) * 100) / 100);
+  NOTAS[n]  = total;
+  TEXTOS[n] = texto;
+  mostrarFeedback(n, items, total, puntosOraciones, calidad, 0.25 - calidad);
+}
+
+// ── DISPATCHER ──────────────────────────────────────────────────────
+function corregir(n) {
+  if (n === 4) { corregirSubordinadas(); return; }
+  if (n === 5) { corregirImpersonales(); return; }
+  corregirEstandar(n);
+}
+
+// ── MOSTRAR FEEDBACK ────────────────────────────────────────────────
+function mostrarFeedback(n, items, total, ptsOr, ptsCal, descuento) {
+  var fb   = document.getElementById('fb'+n);
+  var head = document.getElementById('fb'+n+'-head');
+  var body = document.getElementById('fb'+n+'-body');
+
+  var pct  = total / 1.25;
+  var cls  = pct >= 0.8 ? 'ok' : (pct >= 0.5 ? 'parcial' : 'mal');
+  var icon = pct >= 0.8 ? '🎉' : (pct >= 0.5 ? '👍' : '📝');
+  var msg  = pct >= 0.8 ? 'Muy bien hecho' : (pct >= 0.5 ? 'Bien, pero revisa algunos puntos' : 'Hay aspectos que mejorar');
+
+  head.className = 'feedback-header ' + cls;
+  head.innerHTML = icon + ' ' + msg;
+
+  var html = items.map(function(i){ return '<div class="feedback-item">' + i.msg + '</div>'; }).join('');
+
+  html += '<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--paper2);font-size:13px;">';
+  html += '<strong>Desglose:</strong><br>';
+  html += '&nbsp;&nbsp;Oraciones identificadas: ' + ptsOr.toFixed(2) + ' / 1,00 pt<br>';
+  html += '&nbsp;&nbsp;Calidad del texto (coherencia y ortografía): ' + ptsCal.toFixed(2) + ' / 0,25 pt';
+  if (descuento > 0) html += ' <span style="color:var(--accent)">(-' + descuento.toFixed(2) + ' por errores)</span>';
+  html += '</div>';
+  html += '<div style="margin-top:0.5rem;"><span class="nota-ex">Nota ejercicio ' + n + ': <span class="pts">' + total.toFixed(2) + '</span> / 1,25</span></div>';
+
+  body.innerHTML = html;
+  fb.classList.add('visible');
+  fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── RESULTADOS FINALES ───────────────────────────────────────────────
+function actualizarResultados() {
+  var todos = [1,2,3,4,5].every(function(n){ return NOTAS[n] !== null; });
+  document.getElementById('pendingMsg').style.display = todos ? 'none' : 'block';
+  document.getElementById('scorePanel').classList.toggle('visible', todos);
+  if (!todos) return;
+
+  document.getElementById('scoreNombre').textContent = ALUMNO;
+  [1,2,3,4,5].forEach(function(n){
+    document.getElementById('r'+n).textContent = NOTAS[n].toFixed(2);
+  });
+
+  var sumRaw = NOTAS[1] + NOTAS[2] + NOTAS[3] + NOTAS[4] + NOTAS[5]; // máx 6,25
+  var nota10 = Math.min(10, Math.max(0, Math.round(sumRaw / 6.25 * 100) / 10));
+
+  document.getElementById('notaFinal').textContent = nota10.toFixed(1);
+
+  var msgs = [
+    [0,   4,   'Necesitas revisar los conceptos. Lee de nuevo la teoría.'],
+    [4,   6,   'Bien encaminado/a, pero hay varios tipos que conviene repasar.'],
+    [6,   8,   'Buen trabajo. Revisa los nexos de los tipos que has fallado.'],
+    [8,   9.5, '¡Muy bien! Dominas la mayor parte de los tipos.'],
+    [9.5, 11,  '¡Excelente! Has identificado perfectamente todos los tipos. 🎉'],
+  ];
+  var msge = msgs.find(function(m){ return nota10 >= m[0] && nota10 < m[1]; });
+  document.getElementById('notaMsg').textContent = msge ? msge[2] : '';
+
+  var errWrap = document.getElementById('erroresWrap');
+  var errList = document.getElementById('erroresList');
+  var errItems = [];
+  [1,2,3,4,5].forEach(function(n){
+    if (NOTAS[n] < 1.25) errItems.push('Ejercicio ' + n + ': ' + NOTAS[n].toFixed(2) + ' / 1,25');
+  });
+  if (errItems.length > 0) {
+    errWrap.style.display = 'block';
+    errList.innerHTML = errItems.map(function(e){ return '<div class="error-item">• ' + e + '</div>'; }).join('');
+  } else {
+    errWrap.style.display = 'none';
+  }
+}
+
+// ── ENVÍO AL FORMULARIO ─────────────────────────────────────────────
+function enviarResultados() {
+  var todos = [1,2,3,4,5].every(function(n){ return NOTAS[n] !== null; });
+  if (!todos) {
+    document.getElementById('incompletoMsg').style.display = 'block';
+    document.getElementById('incompletoMsg').textContent = 'Debes completar y corregir los cinco ejercicios antes de enviar.';
+    return;
+  }
+
+  var sumRaw = NOTAS[1] + NOTAS[2] + NOTAS[3] + NOTAS[4] + NOTAS[5];
+  var nota10 = Math.min(10, Math.max(0, Math.round(sumRaw / 6.25 * 100) / 10));
+
+  var p = new URLSearchParams({
+    'usp':             'pp_url',
+    'entry.965384595': ALUMNO,
+    'entry.2013791434': CURSO,
+    'entry.591257558': nota10.toFixed(1),
+  });
+
+  window.open(FORM_BASE + '?' + p.toString(), '_blank');
+
+  document.getElementById('btnEnviar').disabled = true;
+  document.getElementById('btnEnviar').innerHTML = '✅ Formulario abierto';
+  document.getElementById('envioOk').style.display = 'block';
+}
+</script>
+</body>
+</html>

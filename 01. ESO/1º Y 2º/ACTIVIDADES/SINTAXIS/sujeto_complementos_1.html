@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sintaxis: SUJETO, CD y CI · Unidad Didáctica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#1A3A6B;--wine-light:#2A5299;--gold:#C9972A;--gold-light:#E8B84B;--cream:#F4F7FC;--parchment:#E8EEF8;--dark:#0E1526;--text:#1A2340;--muted:#4A5A7B;--border:rgba(26,58,107,0.15);--shadow:0 4px 24px rgba(14,21,38,0.10);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text);font-size:16px;line-height:1.7;}
+
+.login-overlay{position:fixed;inset:0;background:rgba(14,21,38,0.85);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.login-box{background:white;border-radius:12px;padding:2.5rem 2rem;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.login-box h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin-bottom:0.4rem;}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:1.5rem;}
+.login-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;color:var(--text);margin-bottom:1rem;transition:border-color 0.15s;}
+.login-input:focus{outline:none;border-color:var(--wine);}
+.login-btn{width:100%;background:var(--wine);color:white;border:none;padding:13px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;}
+.login-btn:hover{background:var(--wine-light);}
+.login-label{display:block;text-align:left;font-size:13px;font-weight:600;color:var(--wine);margin-bottom:.3rem;margin-top:.8rem;letter-spacing:.04em;}
+.next-sec-bar{margin-top:2.5rem;padding-top:1.8rem;border-top:2px solid var(--parchment);display:flex;justify-content:flex-end;}
+.btn-next-sec{background:var(--wine);color:white;border:none;padding:12px 26px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;display:flex;align-items:center;gap:.5rem;letter-spacing:.02em;}
+.btn-next-sec:hover{background:var(--wine-light);}
+.btn-next-sec svg{width:17px;height:17px;}
+.login-error{font-size:13px;color:#C0392B;margin-top:0.5rem;display:none;}
+
+.hero{background:var(--wine);color:white;padding:0;position:relative;overflow:hidden;min-height:300px;display:flex;align-items:stretch;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 75% 50%,rgba(201,151,42,0.18) 0%,transparent 60%);}
+.hero-inner{position:relative;max-width:1100px;margin:0 auto;padding:3rem 2rem;display:flex;align-items:center;gap:2.5rem;width:100%;}
+.hero-text{flex:1;}
+.hero-tag{display:inline-block;background:var(--gold);color:var(--dark);font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:4px 12px;border-radius:2px;margin-bottom:1rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.15;margin-bottom:0.75rem;color:white;}
+.hero h1 em{color:var(--gold-light);font-style:italic;}
+.hero-sub{font-size:15px;opacity:0.85;max-width:580px;margin-bottom:1.25rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:white;font-size:12px;padding:4px 12px;border-radius:20px;}
+
+.main-nav{background:white;border-bottom:2px solid var(--parchment);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 2rem;display:flex;gap:0;overflow-x:auto;}
+.nav-btn{padding:14px 16px;font-family:'Source Sans 3',sans-serif;font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s;letter-spacing:0.03em;text-transform:uppercase;}
+.nav-btn:hover{color:var(--wine);}
+.nav-btn.active{color:var(--wine);border-bottom-color:var(--wine);}
+.nav-user{margin-left:auto;padding:0 1rem;display:none;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap;}
+.nav-user strong{color:var(--wine);}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.section{display:none;padding:3rem 0;}
+.section.active{display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:32px;color:var(--wine);margin-bottom:0.4rem;}
+.section-lead{font-size:16px;color:var(--muted);margin-bottom:2rem;max-width:680px;border-left:3px solid var(--gold);padding-left:1rem;}
+
+.card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.5rem;box-shadow:var(--shadow);}
+.card-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--wine);margin-bottom:0.5rem;}
+.card p{font-size:15px;color:var(--text);line-height:1.7;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr;}.hero-inner{flex-direction:column;}.hero-pills{justify-content:flex-start;}}
+
+/* Tabla de funciones */
+.func-table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:14px;}
+.func-table th{background:var(--wine);color:white;padding:10px 14px;text-align:left;font-weight:600;letter-spacing:0.03em;}
+.func-table td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:top;}
+.func-table tr:nth-child(even) td{background:#F8FAFF;}
+.func-table tr:hover td{background:var(--parchment);}
+.func-tag{display:inline-block;background:var(--wine);color:white;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.05em;}
+.func-tag.cd{background:#B7470B;}
+.func-tag.ci{background:#1A6B3A;}
+
+/* Caja de teoría */
+.teoria-box{background:white;border:1px solid var(--border);border-radius:8px;margin-bottom:2rem;box-shadow:var(--shadow);overflow:hidden;}
+.teoria-header{background:var(--wine);color:white;padding:1rem 1.5rem;display:flex;align-items:center;gap:0.75rem;}
+.teoria-header.cd{background:#B7470B;}
+.teoria-header.ci{background:#1A6B3A;}
+.teoria-header h2{font-family:'Playfair Display',serif;font-size:22px;margin:0;}
+.teoria-badge{background:rgba(255,255,255,0.2);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.08em;}
+.teoria-body{padding:1.5rem;}
+
+/* Prueba destacada */
+.prueba-box{background:var(--parchment);border-left:5px solid var(--gold);border-radius:0 8px 8px 0;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+.prueba-box h4{font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.prueba-box ul{margin-left:1.2rem;font-size:14px;color:var(--text);}
+.prueba-box ul li{margin-bottom:4px;}
+.prueba-box .aviso{font-size:13px;color:#8B1A1A;background:#FDEAEA;border:1px solid #E8A0A0;border-radius:5px;padding:8px 12px;margin-top:0.75rem;}
+
+/* Ejemplo */
+.ejemplo{background:#F0F5FF;border:1px solid #C0D0F0;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+.ejemplo h4{font-size:12px;font-weight:700;color:var(--wine);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;}
+.ejemplo-sent{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:0.6rem;font-style:italic;}
+.ejemplo-sent span{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
+.ejemplo-nota{font-size:13px;color:var(--muted);margin-bottom:4px;}
+.ejemplo-nota strong{color:var(--text);}
+
+/* Análisis visual */
+.analisis{background:white;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:14px;}
+.analisis-sent{font-size:16px;font-family:'Playfair Display',serif;color:var(--dark);margin-bottom:1rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.analisis-row{display:flex;gap:1.5rem;flex-wrap:wrap;}
+.analisis-item{text-align:center;}
+.analisis-word{font-weight:700;font-size:16px;color:var(--dark);padding:4px 12px;border-radius:5px;background:var(--parchment);}
+.analisis-func{font-size:11px;font-weight:700;color:var(--wine);margin-top:4px;letter-spacing:0.05em;}
+.analisis-func.cd{color:#B7470B;}
+.analisis-func.ci{color:#1A6B3A;}
+.analisis-form{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* Ejercicios */
+.ej-box{background:white;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--shadow);}
+.ej-header{background:var(--parchment);border-bottom:1px solid var(--border);padding:1rem 1.5rem;}
+.ej-header h3{font-family:'Playfair Display',serif;font-size:16px;color:var(--wine);}
+.ej-body{padding:1.5rem;}
+.ej-instruc{font-size:14px;color:var(--muted);margin-bottom:1rem;font-style:italic;}
+
+.vf-item{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.vf-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.vf-stmt{font-size:14px;color:var(--text);margin-bottom:8px;line-height:1.5;}
+.vf-btns{display:flex;gap:8px;}
+.vf-btn{padding:6px 20px;border-radius:5px;border:1.5px solid var(--border);font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.vf-btn.v{border-color:#2D7A4A;color:#2D7A4A;background:white;}
+.vf-btn.v:hover{background:#2D7A4A;color:white;}
+.vf-btn.f{border-color:#C0392B;color:#C0392B;background:white;}
+.vf-btn.f:hover{background:#C0392B;color:white;}
+.vf-btn.ok{background:#2D7A4A;color:white;border-color:#2D7A4A;}
+.vf-btn.fail{background:#C0392B;color:white;border-color:#C0392B;}
+.vf-btn.disabled{pointer-events:none;opacity:0.7;}
+.vf-fb{font-size:12px;margin-top:6px;padding:5px 10px;border-radius:4px;}
+.vf-fb.ok{background:#EAF4EE;color:#1A4A2E;}
+.vf-fb.fail{background:#FDEAEA;color:#8B1A1A;}
+
+/* Ejercicio selección */
+.sel-item{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border);}
+.sel-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.sel-stmt{font-size:14px;color:var(--dark);margin-bottom:8px;line-height:1.5;font-family:'Playfair Display',serif;font-style:italic;}
+.sel-opts{display:flex;gap:8px;flex-wrap:wrap;}
+.sel-opt{padding:6px 16px;border-radius:5px;border:1.5px solid var(--border);font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s;color:var(--text);background:white;}
+.sel-opt:hover{border-color:var(--wine);background:var(--parchment);}
+.sel-opt.ok{background:#EAF4EE;border-color:#2D7A4A;color:#1A4A2E;pointer-events:none;}
+.sel-opt.fail{background:#FDEAEA;border-color:#C0392B;color:#8B1A1A;pointer-events:none;}
+.sel-opt.disabled{pointer-events:none;opacity:0.55;}
+.sel-fb{font-size:12px;margin-top:6px;padding:5px 10px;border-radius:4px;}
+.sel-fb.ok{background:#EAF4EE;color:#1A4A2E;}
+.sel-fb.fail{background:#FDEAEA;color:#8B1A1A;}
+
+/* Huecos */
+.hueco-text{font-size:15px;line-height:2.8;color:var(--text);margin-bottom:1rem;}
+.hueco-inp{width:120px;border:none;border-bottom:2px solid var(--wine);background:transparent;font-family:'Source Sans 3',sans-serif;font-size:14px;color:var(--dark);padding:0 4px;outline:none;transition:border-color 0.15s;}
+.hueco-inp:focus{border-color:var(--gold);}
+.hueco-inp.ok{border-color:#2D7A4A;color:#1A4A2E;}
+.hueco-inp.fail{border-color:#C0392B;color:#8B1A1A;}
+.ej-check-btn{background:var(--wine);color:white;border:none;padding:10px 24px;border-radius:6px;font-size:14px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;margin-top:0.75rem;}
+.ej-check-btn:hover{background:var(--wine-light);}
+.ej-result{font-size:14px;margin-top:8px;font-weight:600;}
+.ej-result.ok{color:#2D7A4A;}
+.ej-result.parcial{color:#B7800A;}
+
+/* Tests */
+.quiz-header{background:var(--wine);color:white;padding:1.25rem 1.5rem;border-radius:8px 8px 0 0;}
+.quiz-header.cd{background:#B7470B;}
+.quiz-header h3{font-family:'Playfair Display',serif;font-size:18px;}
+.quiz-header p{font-size:13px;opacity:0.8;margin-top:2px;}
+.quiz-body{background:white;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:1.5rem;}
+.quiz-score{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding:0.75rem 1rem;background:var(--parchment);border-radius:6px;}
+.score-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--wine);}
+.score-bar-bg{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.score-bar{height:100%;background:var(--gold);border-radius:4px;width:0%;transition:width 0.4s;}
+.q-item{margin-bottom:1.5rem;}
+.q-num{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.q-text{font-size:15px;font-weight:600;color:var(--dark);margin-bottom:0.75rem;line-height:1.5;}
+.q-opts{display:flex;flex-direction:column;gap:6px;}
+.q-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;font-size:14px;color:var(--text);background:white;transition:all 0.15s;text-align:left;}
+.q-opt:hover{border-color:var(--wine);background:var(--parchment);}
+.q-opt.correct{background:#EAF4EE;border-color:#2D7A4A;color:#1A4A2E;}
+.q-opt.wrong{background:#FDEAEA;border-color:#C0392B;color:#8B1A1A;}
+.q-opt.revealed{pointer-events:none;}
+.opt-letter{width:24px;height:24px;flex-shrink:0;border-radius:50%;background:var(--parchment);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--wine);}
+.q-opt.correct .opt-letter{background:#2D7A4A;color:white;}
+.q-opt.wrong .opt-letter{background:#C0392B;color:white;}
+.q-fb{font-size:13px;margin-top:8px;padding:8px 12px;border-radius:4px;display:none;}
+.q-fb.correct{background:#EAF4EE;color:#1A4A2E;display:block;}
+.q-fb.wrong{background:#FDEAEA;color:#8B1A1A;display:block;}
+.q-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0;}
+
+/* Resumen final */
+.resumen-final{background:white;border:1px solid var(--border);border-radius:12px;padding:2rem;box-shadow:var(--shadow);margin-top:2rem;display:none;}
+.resumen-final h3{font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin-bottom:1.5rem;text-align:center;}
+.resumen-stats{display:flex;justify-content:center;gap:2rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.resumen-stat{text-align:center;}
+.resumen-stat .val{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--wine);}
+.resumen-stat .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-top:2px;}
+.nota-final-wrap{text-align:center;margin-bottom:1.5rem;}
+.nota-num{font-family:'Playfair Display',serif;font-size:64px;font-weight:700;color:var(--wine);line-height:1;}
+.nota-lbl{font-size:14px;color:var(--muted);margin-top:4px;}
+.nota-msg{font-size:15px;color:var(--text);margin-top:0.75rem;font-style:italic;}
+.resumen-errores{background:#FFF8E8;border:1px solid #E8C870;border-radius:8px;padding:1rem 1.5rem;margin-bottom:1rem;}
+.resumen-errores h4{font-size:14px;font-weight:600;color:#7A5200;margin-bottom:0.5rem;}
+.error-item{font-size:13px;color:#5A3A00;margin-bottom:4px;}
+.tests-incompletos{background:#FDEAEA;border:1px solid #E8A0A0;border-radius:6px;padding:0.75rem 1rem;font-size:13px;color:#8B1A1A;margin-bottom:1rem;}
+.btn-enviar{width:100%;background:var(--wine);color:white;border:none;padding:14px;border-radius:8px;font-size:16px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;margin-top:0.5rem;}
+.btn-enviar:hover:not(:disabled){background:var(--wine-light);}
+.btn-enviar:disabled{opacity:0.5;cursor:default;}
+.envio-ok{background:#EAF4EE;border:1px solid #2D7A4A;border-radius:6px;padding:0.75rem 1rem;font-size:14px;color:#1A4A2E;margin-top:0.75rem;display:none;}
+
+/* Caja transformación */
+.transf-box{background:#F0F5FF;border:1px dashed #90A8D0;border-radius:8px;padding:1.25rem;margin:0.75rem 0;font-size:14px;}
+.transf-label{font-size:11px;font-weight:700;color:var(--wine);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}
+.transf-sent{font-family:'Playfair Display',serif;font-size:16px;color:var(--dark);}
+
+footer{background:var(--wine);color:white;text-align:center;padding:1.5rem;margin-top:3rem;font-size:13px;opacity:0.9;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>Sintaxis: SUJ, CD y CI</h2>
+    <p>Introduce tus datos para comenzar la unidad did&aacute;ctica</p>
+    <label class="login-label">Nombre y apellidos</label>
+    <input class="login-input" id="loginNombre" type="text" autocomplete="off">
+    <label class="login-label">Curso</label>
+    <input class="login-input" id="loginCurso" type="text" autocomplete="off">
+    <button class="login-btn" onclick="doLogin()">Entrar &#8594;</button>
+    <div class="login-error" id="loginError">Por favor, rellena los dos campos antes de continuar.</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-tag">Lengua Castellana y Literatura &middot; Secundaria / Bachillerato</span>
+      <h1>Sintaxis: <em>SUJETO,</em><br><em>CD</em> y <em>CI</em></h1>
+      <p class="hero-sub">Las tres funciones sint&aacute;cticas esenciales de la cl&aacute;usula simple: c&oacute;mo identificarlas, c&oacute;mo distinguirlas y c&oacute;mo no confundirlas.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">&#128270; SUJETO</span>
+        <span class="hero-pill">&#127919; Complemento Directo</span>
+        <span class="hero-pill">&#127891; Complemento Indirecto</span>
+        <span class="hero-pill">&#9997;&#65039; Pruebas sint&aacute;cticas</span>
+        <span class="hero-pill">&#128221; Ejercicios pr&aacute;cticos</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('suj')">SUJETO</button>
+    <button class="nav-btn" onclick="show('cd')">Comp. Directo</button>
+    <button class="nav-btn" onclick="show('ci')">Comp. Indirecto</button>
+    <button class="nav-btn" onclick="show('distinciones')">CD vs CI</button>
+    <button class="nav-btn" onclick="show('test1')">Test 1</button>
+    <button class="nav-btn" onclick="show('test2')">Test 2</button>
+    <span class="nav-user" id="navUser">Alumno: <strong id="navNombre"></strong></span>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===== SUJETO ===== -->
+<section class="section active container" id="s-suj">
+  <h2 class="section-title">El SUJETO (SUJ)</h2>
+  <p class="section-lead">El SUJETO es la funci&oacute;n sint&aacute;ctica que designa a quien realiza la acci&oacute;n del verbo o de quien se predica algo. Es uno de los dos grandes constituyentes de la cl&aacute;usula simple junto con el PREDICADO.</p>
+
+  <div class="teoria-box">
+    <div class="teoria-header">
+      <div>
+        <span class="teoria-badge">FUNCI&Oacute;N</span>
+        <h2>SUJETO &mdash; SUJ</h2>
+      </div>
+    </div>
+    <div class="teoria-body">
+
+      <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="card">
+          <h3 class="card-title">&#128161; &iquest;Qu&eacute; es el SUJETO?</h3>
+          <p>El SUJETO es el elemento de la cl&aacute;usula que <strong>concuerda con el verbo en n&uacute;mero y persona</strong>. Puede referirse a quien realiza la acci&oacute;n (<em>sujeto agente</em>), a quien la recibe en pasiva (<em>sujeto paciente</em>) o a quien se describe (<em>sujeto tema</em>).</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">&#128196; Formas en que aparece</h3>
+          <p>El SUJETO puede aparecer como:</p>
+          <ul style="margin-top:0.5rem;margin-left:1.2rem;font-size:14px;">
+            <li><strong>sust.</strong> o <strong>pron.</strong> &mdash; <em>Mar&iacute;a llora</em> / <em>Ella llora</em></li>
+            <li><strong>f. nom.</strong> (det. + sust.) &mdash; <em>La chica llora</em></li>
+            <li><strong>f. sust.</strong> (sust. + modificadores) &mdash; <em>El chico alto llora</em></li>
+            <li><strong>cl&aacute;us. sub. sust.</strong> &mdash; <em>Que llegues tarde me enfada</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prueba-box">
+        <h4>&#128270; C&oacute;mo identificar el SUJETO: las pruebas</h4>
+        <ul>
+          <li><strong>Prueba 1 &mdash; Concordancia:</strong> Cambia el verbo de singular a plural (o viceversa). La palabra que obliga a hacer ese cambio es el SUJETO. Si dices <em>&laquo;El perro ladra&raquo;</em>, al pluralizar debes decir <em>&laquo;Los perros ladran&raquo;</em>: el SUJETO es <em>el perro / los perros</em>.</li>
+          <li><strong>Prueba 2 &mdash; Pregunta orientativa:</strong> Pregunta al verbo <strong>&laquo;&iquest;Qui&eacute;n/Qui&eacute;nes + verbo?&raquo;</strong>. En <em>&laquo;Mi hermana bebe agua&raquo;</em>, la respuesta a <em>&laquo;&iquest;Qui&eacute;n bebe?&raquo;</em> es <em>mi hermana</em>.</li>
+        </ul>
+        <div class="aviso">&#9888;&#65039; <strong>Advertencia:</strong> La pregunta <em>&laquo;&iquest;Qui&eacute;n?&raquo;</em> es solo una ayuda orientativa. La prueba definitiva es siempre la <strong>concordancia con el verbo</strong>. En <em>&laquo;Me da miedo la oscuridad&raquo;</em>, podr&iacute;as pensar que el SUJETO es <em>me</em> (yo), pero al cambiar el n&uacute;mero: <em>&laquo;Me dan miedo las oscuridades&raquo;</em>: el SUJETO es <em>la oscuridad</em>. Usa siempre las dos pruebas.</div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--wine);margin:1.5rem 0 0.75rem;">El SUJETO IMPL&Iacute;CITO (o t&aacute;cito)</h3>
+      <p style="font-size:15px;margin-bottom:1rem;">A veces el SUJETO no aparece expresado en la oraci&oacute;n, pero se puede deducir por la desinencia verbal. Se llama <strong>SUJETO IMPL&Iacute;CITO</strong> o <strong>sujeto t&aacute;cito</strong>. En el an&aacute;lisis se indica entre par&eacute;ntesis.</p>
+      <div class="analisis">
+        <div class="analisis-sent">Comemos en casa. &mdash; SUJ: <strong>(nosotros)</strong>, impl&iacute;cito.</div>
+        <p style="font-size:13px;color:var(--muted);">La desinencia <em>-emos</em> indica primera persona del plural. No hay SUJETO expl&iacute;cito, pero se sobrentiende.</p>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--wine);margin:1.5rem 0 0.75rem;">Ejemplos analizados</h3>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 1</h4>
+        <div class="ejemplo-sent">&#171;<span>El viento</span> sacudi&oacute; las ramas.&#187;</div>
+        <div class="analisis-row">
+          <div class="analisis-item"><div class="analisis-word">El viento</div><div class="analisis-func">SUJ</div><div class="analisis-form">f. nom. (det. art. + sust.)</div></div>
+          <div class="analisis-item"><div class="analisis-word">sacudi&oacute;</div><div class="analisis-func">PRED</div><div class="analisis-form">verbo</div></div>
+          <div class="analisis-item"><div class="analisis-word">las ramas</div><div class="analisis-func cd">CD</div><div class="analisis-form">f. nom.</div></div>
+        </div>
+        <div class="ejemplo-nota" style="margin-top:0.75rem;">&#8226; Prueba concordancia: <em>&laquo;Los vientos sacudieron las ramas&raquo;</em> &rarr; el verbo cambia &rarr; <strong>El viento</strong> es el SUJ.</div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 2 &mdash; SUJETO oracional (cl&aacute;usula subordinada sustantiva)</h4>
+        <div class="ejemplo-sent">&#171;<span>Que estudies todos los d&iacute;as</span> es importante.&#187;</div>
+        <div class="ejemplo-nota">&#8226; El SUJ es <strong><em>Que estudies todos los d&iacute;as</em></strong>, una cl&aacute;usula subordinada sustantiva. El verbo principal es <em>es</em> (3.&ordf; pers. sing.).</div>
+        <div class="ejemplo-nota">&#8226; Prueba: *<em>&laquo;Que estudies todos los d&iacute;as son importantes&raquo;</em> &rarr; no es posible pluralizar (el SUJ oracional siempre rige singular). Confirmamos el SUJ por la funci&oacute;n: lo que <em>es</em> importante.</div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 3 &mdash; Cuidado con el CI que parece SUJ</h4>
+        <div class="ejemplo-sent">&#171;A <span>Juan</span> le gustan los gatos.&#187;</div>
+        <div class="ejemplo-nota">&#8226; Muchos alumnos piensan que <em>Juan</em> es el SUJ. Aplica la prueba: <em>&laquo;A Juan le gusta el gato&raquo;</em> &rarr; el verbo cambia porque el n&uacute;mero de <em>los gatos</em> / <em>el gato</em> cambia. Por tanto, <strong>SUJ = los gatos</strong>; <em>a Juan</em> = CI.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EJERCICIOS SUJETO -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin:2.5rem 0 1rem;">&#128221; Repaso: SUJETO</h3>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#9989; Verdadero o Falso</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Lee cada afirmaci&oacute;n y decide si es verdadera o falsa.</p>
+      <div class="vf-item">
+        <div class="vf-stmt">1. El SUJETO siempre aparece expl&iacute;cito (escrito) en la oraci&oacute;n.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="s1" data-val="V" onclick="ejVF('s1','V','F','Incorrecto. El SUJETO puede ser impl&iacute;cito o t&aacute;cito: &laquo;Cantamos&raquo; tiene SUJ (nosotros) impl&iacute;cito.')">Verdadero</button><button class="vf-btn f" data-vfid="s1" data-val="F" onclick="ejVF('s1','F','F','Correcto. El SUJETO puede ser impl&iacute;cito. Se deduce por la desinencia verbal.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-s1"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">2. La prueba definitiva para identificar el SUJETO es la concordancia con el verbo en n&uacute;mero y persona.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="s2" data-val="V" onclick="ejVF('s2','V','V','Correcto. La concordancia es la prueba principal. La pregunta &laquo;&iquest;qui&eacute;n?&raquo; es solo orientativa.')">Verdadero</button><button class="vf-btn f" data-vfid="s2" data-val="F" onclick="ejVF('s2','F','V','Incorrecto. La concordancia con el verbo es la prueba sint&aacute;ctica principal para el SUJETO.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-s2"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">3. En la oraci&oacute;n &laquo;A Luc&iacute;a le encantan las novelas&raquo;, el SUJETO es <em>Luc&iacute;a</em>.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="s3" data-val="V" onclick="ejVF('s3','V','F','Incorrecto. El SUJETO es &laquo;las novelas&raquo;: &laquo;A Luc&iacute;a le encanta la novela&raquo; &rarr; el verbo cambia al cambiar &laquo;las novelas&raquo;. &laquo;A Luc&iacute;a&raquo; es CI.')">Verdadero</button><button class="vf-btn f" data-vfid="s3" data-val="F" onclick="ejVF('s3','F','F','Correcto. El SUJETO es &laquo;las novelas&raquo; (concordancia: &laquo;le encanta la novela&raquo;). &laquo;A Luc&iacute;a&raquo; es CI.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-s3"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">4. Una cl&aacute;usula subordinada sustantiva puede ejercer la funci&oacute;n de SUJETO.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="s4" data-val="V" onclick="ejVF('s4','V','V','Correcto. Ej.: &laquo;Que llegues tarde me molesta&raquo;. La subordinada &laquo;que llegues tarde&raquo; es el SUJETO.')">Verdadero</button><button class="vf-btn f" data-vfid="s4" data-val="F" onclick="ejVF('s4','F','V','Incorrecto. S&iacute; puede serlo. Ej.: &laquo;Que estudies es necesario&raquo;: el SUJ es la cl&aacute;usula subordinada sustantiva.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-s4"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">5. El SUJETO puede aparecer en forma de frase nominal (det. + sust.) o de frase sustantiva (sust. + modificadores).</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="s5" data-val="V" onclick="ejVF('s5','V','V','Correcto. Ambas estructuras pueden funcionar como SUJETO: &laquo;La lluvia&raquo; (f. nom.) o &laquo;Una lluvia intensa&raquo; (f. sust.).')">Verdadero</button><button class="vf-btn f" data-vfid="s5" data-val="F" onclick="ejVF('s5','F','V','Incorrecto. S&iacute; puede aparecer en ambas formas.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-s5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#128270; Identifica el SUJETO</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">En cada oraci&oacute;n, selecciona cu&aacute;l es el SUJETO (SUJ).</p>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Los ni&ntilde;os corrieron por el parque.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('ss1',this,'ok')">los ni&ntilde;os</button>
+          <button class="sel-opt" onclick="ejSel('ss1',this,'fail')">corrieron</button>
+          <button class="sel-opt" onclick="ejSel('ss1',this,'fail')">por el parque</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-ss1"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Me duelen mucho las muelas.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('ss2',this,'fail')">me</button>
+          <button class="sel-opt" onclick="ejSel('ss2',this,'ok')">las muelas</button>
+          <button class="sel-opt" onclick="ejSel('ss2',this,'fail')">mucho</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-ss2"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Que aprueben todos es lo que desea el profesor.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('ss3',this,'ok')">Que aprueben todos</button>
+          <button class="sel-opt" onclick="ejSel('ss3',this,'fail')">el profesor</button>
+          <button class="sel-opt" onclick="ejSel('ss3',this,'fail')">lo que desea</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-ss3"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Salimos tarde del instituto.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('ss4',this,'ok')">(nosotros), impl&iacute;cito</button>
+          <button class="sel-opt" onclick="ejSel('ss4',this,'fail')">tarde</button>
+          <button class="sel-opt" onclick="ejSel('ss4',this,'fail')">del instituto</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-ss4"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#9997;&#65039; Completa con la forma correcta</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Escribe en el hueco la forma (unidad o estructura) en que aparece el SUJETO de cada oraci&oacute;n. Usa las abreviaturas: <em>sust.</em>, <em>pron.</em>, <em>f. nom.</em>, <em>f. sust.</em>, <em>impl&iacute;cito</em>.</p>
+      <div class="hueco-text">
+        1. <em>&laquo;La ciudad dorm&iacute;a.&raquo;</em> &mdash; El SUJ <em>la ciudad</em> aparece en forma de <input class="hueco-inp" id="hS1-h0" type="text" placeholder="..."> <br>
+        2. <em>&laquo;Ella rie a carcajadas.&raquo;</em> &mdash; El SUJ <em>ella</em> aparece en forma de <input class="hueco-inp" id="hS1-h1" type="text" placeholder="..."> <br>
+        3. <em>&laquo;Dormimos ocho horas.&raquo;</em> &mdash; El SUJ es <input class="hueco-inp" id="hS1-h2" type="text" placeholder="..."> <br>
+        4. <em>&laquo;Un f&iacute;o intenso azot&oacute; la costa.&raquo;</em> &mdash; El SUJ <em>un fr&iacute;o intenso</em> aparece en forma de <input class="hueco-inp" id="hS1-h3" type="text" placeholder="...">
+      </div>
+      <button class="ej-check-btn" onclick="ejHuecos('hS1',['f. nom.','pron.',['implícito','tácito'],'f. nom.'])">Comprobar</button>
+      <div class="ej-result" id="hS1-res"></div>
+    </div>
+  </div>
+
+
+  <div class="next-sec-bar">
+    <button class="btn-next-sec" onclick="show('cd');window.scrollTo({top:0,behavior:'smooth'})">Ir a Complemento Directo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== CD ===== -->
+<section class="section container" id="s-cd">
+  <h2 class="section-title">El Complemento Directo (CD)</h2>
+  <p class="section-lead">El CD es el elemento sobre el que recae directamente la acci&oacute;n del verbo. Complementa el significado verbal indicando qu&eacute; cosa o qu&eacute; persona recibe la acci&oacute;n.</p>
+
+  <div class="teoria-box">
+    <div class="teoria-header cd">
+      <div>
+        <span class="teoria-badge">FUNCI&Oacute;N</span>
+        <h2>COMPLEMENTO DIRECTO &mdash; CD</h2>
+      </div>
+    </div>
+    <div class="teoria-body">
+
+      <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="card">
+          <h3 class="card-title">&#128161; &iquest;Qu&eacute; es el CD?</h3>
+          <p>El CD completa el significado de los <strong>verbos transitivos</strong> indicando el elemento sobre el que recae directamente la acci&oacute;n. En la <strong>transformaci&oacute;n a pasiva</strong>, el CD se convierte en el SUJETO paciente.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">&#128196; Formas en que aparece</h3>
+          <ul style="margin-top:0.5rem;margin-left:1.2rem;font-size:14px;">
+            <li><strong>sust.</strong> o <strong>pron.</strong> &mdash; <em>Compro pan / Lo compro</em></li>
+            <li><strong>f. nom.</strong> &mdash; <em>Compro el pan</em></li>
+            <li><strong>f. sust.</strong> &mdash; <em>Compro un pan integral</em></li>
+            <li><strong>f. prep.</strong> (solo con prep. <strong>&laquo;a&raquo;</strong>) &mdash; <em>Veo a mar&iacute;a</em></li>
+            <li><strong>cl&aacute;us. sub. sust.</strong> &mdash; <em>Dijo que volver&iacute;a</em></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prueba-box">
+        <h4>&#128270; C&oacute;mo identificar el CD: las pruebas</h4>
+        <ul>
+          <li><strong>Prueba 1 &mdash; Sustituci&oacute;n por pronombre:</strong> Sustituye el posible CD por <strong>lo / la / los / las</strong>. Si la sustituci&oacute;n es posible y el significado se mantiene, es CD. <br>Ej.: <em>&laquo;Compro el libro&raquo;</em> &rarr; <em>&laquo;Lo compro&raquo;</em> &#10004; &rarr; <strong>CD</strong></li>
+          <li><strong>Prueba 2 &mdash; Pasivizaci&oacute;n:</strong> Transforma la oraci&oacute;n a pasiva. El CD se convierte en SUJETO paciente y el verbo adopta la forma <em>ser + participio</em>. <br>Ej.: <em>&laquo;Juan taló el árbol&raquo;</em> &rarr; <em>&laquo;El &aacute;rbol fue talado por Juan&raquo;</em> &#10004; &rarr; <em>el &aacute;rbol</em> era CD.</li>
+          <li><strong>Pregunta orientativa:</strong> <strong>&laquo;&iquest;Qu&eacute;/Qu&eacute; cosa/s + verbo?&raquo;</strong> Ej.: <em>&laquo;&iquest;Qu&eacute; compro?&raquo;</em> &rarr; <em>el libro</em>.</li>
+        </ul>
+        <div class="aviso">&#9888;&#65039; <strong>Advertencia:</strong> La pregunta es solo orientativa. Hazla siempre junto con la sustituci&oacute;n pronominal y la pasivizaci&oacute;n. <br>Recuerda tambi&eacute;n: cuando el CD es una persona, lleva la preposici&oacute;n <strong>&laquo;a&raquo;</strong> (<em>Veo a Luis</em>), pero esa &laquo;a&raquo; es solo un marcador, no preposici&oacute;n de CI. La prueba de sustituci&oacute;n confirma: <em>&laquo;Lo veo&raquo;</em> &rarr; CD.</div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--wine);margin:1.5rem 0 0.75rem;">Ejemplos analizados</h3>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 1 &mdash; CD sin preposici&oacute;n</h4>
+        <div class="ejemplo-sent">&#171;La abuela <span>cocin&oacute;</span> <span>una sopa deliciosa</span>.&#187;</div>
+        <div class="analisis-row">
+          <div class="analisis-item"><div class="analisis-word">La abuela</div><div class="analisis-func">SUJ</div><div class="analisis-form">f. nom.</div></div>
+          <div class="analisis-item"><div class="analisis-word">cocin&oacute;</div><div class="analisis-func">PRED</div><div class="analisis-form">verbo</div></div>
+          <div class="analisis-item"><div class="analisis-word">una sopa deliciosa</div><div class="analisis-func cd">CD</div><div class="analisis-form">f. sust.</div></div>
+        </div>
+        <div class="ejemplo-nota" style="margin-top:0.75rem;">
+          &#8226; Sustituci&oacute;n: <em>&laquo;La abuela <strong>la</strong> cocin&oacute;&raquo;</em> &#10004;<br>
+          &#8226; Pasiva: <em>&laquo;Una sopa deliciosa fue cocinada por la abuela&raquo;</em> &#10004;
+        </div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 2 &mdash; CD con preposici&oacute;n &laquo;a&raquo; (persona)</h4>
+        <div class="ejemplo-sent">&#171;El detective interrogó <span>a la testigo</span>.&#187;</div>
+        <div class="ejemplo-nota">&#8226; Sustituci&oacute;n: <em>&laquo;El detective <strong>la</strong> interrogó&raquo;</em> &#10004; &rarr; CD.<br>&#8226; Pasiva: <em>&laquo;La testigo fue interrogada por el detective&raquo;</em> &#10004;</div>
+        <div class="ejemplo-nota" style="margin-top:0.5rem;color:#8B1A1A;">&#9888; La &laquo;a&raquo; delante de persona NO convierte el CD en CI. El CD de persona lleva &laquo;a&raquo; en espa&ntilde;ol. Prueba siempre con la sustituci&oacute;n y la pasiva.</div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 3 &mdash; CD oracional (cl&aacute;usula subordinada sustantiva)</h4>
+        <div class="ejemplo-sent">&#171;El director anunci&oacute; <span>que habr&iacute;a vacaciones</span>.&#187;</div>
+        <div class="ejemplo-nota">&#8226; Sustituci&oacute;n: <em>&laquo;El director <strong>lo</strong> anunci&oacute;&raquo;</em> &#10004; &rarr; CD.<br>&#8226; La cl&aacute;usula subordinada sustantiva introducida por <em>&laquo;que&raquo;</em> funciona como CD.</div>
+      </div>
+
+      <div class="transf-box">
+        <div class="transf-label">&#8635; Transformaci&oacute;n a pasiva &mdash; resumen</div>
+        <div class="transf-sent"><strong>Activa:</strong> <em>El jardinero (SUJ) rega (PRED) las plantas (CD).</em></div>
+        <div class="transf-sent" style="margin-top:0.5rem;"><strong>Pasiva:</strong> <em>Las plantas (SUJ paciente) son regadas (PRED) por el jardinero (CAG).</em></div>
+        <p style="font-size:13px;color:var(--muted);margin-top:0.5rem;">El CD (<em>las plantas</em>) pasa a ser el SUJETO de la pasiva. Esto confirma que era CD.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EJERCICIOS CD -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin:2.5rem 0 1rem;">&#128221; Repaso: Complemento Directo</h3>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#9989; Verdadero o Falso</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Lee cada afirmaci&oacute;n y decide si es verdadera o falsa.</p>
+      <div class="vf-item">
+        <div class="vf-stmt">1. El CD puede sustituirse por los pronombres <em>lo, la, los, las</em>.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="cd1" data-val="V" onclick="ejVF('cd1','V','V','Correcto. Esta es la prueba principal del CD.')">Verdadero</button><button class="vf-btn f" data-vfid="cd1" data-val="F" onclick="ejVF('cd1','F','V','Incorrecto. S&iacute; se puede: es la prueba principal del CD.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-cd1"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">2. En &laquo;Busco a mi hermana&raquo;, <em>a mi hermana</em> es un CI porque lleva preposici&oacute;n &laquo;a&raquo;.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="cd2" data-val="V" onclick="ejVF('cd2','V','F','Incorrecto. Es un CD. La &laquo;a&raquo; es el marcador de persona. Prueba: &laquo;La busco&raquo; (lo/la = CD). La pasiva tambi&eacute;n lo confirma: &laquo;Mi hermana es buscada por m&iacute;&raquo;.')">Verdadero</button><button class="vf-btn f" data-vfid="cd2" data-val="F" onclick="ejVF('cd2','F','F','Correcto. Es CD. La &laquo;a&raquo; personal no lo convierte en CI. Prueba: &laquo;La busco&raquo; &#10004;')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-cd2"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">3. En la transformaci&oacute;n a pasiva, el CD se convierte en el SUJETO paciente.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="cd3" data-val="V" onclick="ejVF('cd3','V','V','Correcto. El CD pasa a SUJ paciente en la pasiva. Es una de las pruebas del CD.')">Verdadero</button><button class="vf-btn f" data-vfid="cd3" data-val="F" onclick="ejVF('cd3','F','V','Incorrecto. S&iacute; es as&iacute;: el CD pasa a ser el SUJ paciente de la pasiva.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-cd3"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">4. Una cl&aacute;usula subordinada sustantiva puede funcionar como CD.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="cd4" data-val="V" onclick="ejVF('cd4','V','V','Correcto. Ej.: &laquo;Dijo que llegaba tarde&raquo;. La subordinada es el CD (se puede sustituir por &laquo;lo&raquo;: &laquo;Lo dijo&raquo;).')">Verdadero</button><button class="vf-btn f" data-vfid="cd4" data-val="F" onclick="ejVF('cd4','F','V','Incorrecto. S&iacute; puede serlo. Ej.: &laquo;Dijo que llegaba tarde&raquo; &rarr; CD = &laquo;que llegaba tarde&raquo;.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-cd4"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">5. Todo verbo tiene necesariamente un CD.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="cd5" data-val="V" onclick="ejVF('cd5','V','F','Incorrecto. Solo los verbos transitivos pueden llevar CD. Los intransitivos (dormir, vivir, morir...) no admiten CD.')">Verdadero</button><button class="vf-btn f" data-vfid="cd5" data-val="F" onclick="ejVF('cd5','F','F','Correcto. Solo los verbos transitivos llevan CD. Los intransitivos no lo admiten.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-cd5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#128270; Identifica el CD</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Selecciona cu&aacute;l es el CD en cada oraci&oacute;n. Aplica siempre las pruebas antes de responder.</p>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;El carpintero construy&oacute; una mesa de madera.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('sc1',this,'fail')">el carpintero</button>
+          <button class="sel-opt" onclick="ejSel('sc1',this,'ok')">una mesa de madera</button>
+          <button class="sel-opt" onclick="ejSel('sc1',this,'fail')">construy&oacute;</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-sc1"></div>
+      </div>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Visitamos a nuestros abuelos cada domingo.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('sc2',this,'ok')">a nuestros abuelos</button>
+          <button class="sel-opt" onclick="ejSel('sc2',this,'fail')">cada domingo</button>
+          <button class="sel-opt" onclick="ejSel('sc2',this,'fail')">(nosotros), impl&iacute;cito</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-sc2"></div>
+      </div>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;El alcalde prometi&oacute; que bajar&iacute;an los impuestos.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('sc3',this,'fail')">el alcalde</button>
+          <button class="sel-opt" onclick="ejSel('sc3',this,'ok')">que bajar&iacute;an los impuestos</button>
+          <button class="sel-opt" onclick="ejSel('sc3',this,'fail')">los impuestos</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-sc3"></div>
+      </div>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;La profesora corrigi&oacute; los ex&aacute;menes.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('sc4',this,'fail')">la profesora</button>
+          <button class="sel-opt" onclick="ejSel('sc4',this,'ok')">los ex&aacute;menes</button>
+          <button class="sel-opt" onclick="ejSel('sc4',this,'fail')">corrigi&oacute;</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-sc4"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#8635; Transforma a pasiva</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Escribe en el hueco el elemento que se convierte en SUJETO paciente al transformar cada oraci&oacute;n a pasiva. Ese elemento era el CD.</p>
+      <div class="hueco-text">
+        1. <em>&laquo;El viento arranc&oacute; las ramas.&raquo;</em> &rarr; En pasiva, el SUJ paciente es: <input class="hueco-inp" id="hC1-h0" type="text" placeholder="..."><br>
+        2. <em>&laquo;Los bomberos sofocaron el incendio.&raquo;</em> &rarr; En pasiva, el SUJ paciente es: <input class="hueco-inp" id="hC1-h1" type="text" placeholder="..."><br>
+        3. <em>&laquo;Pablo escribi&oacute; la carta.&raquo;</em> &rarr; En pasiva, el SUJ paciente es: <input class="hueco-inp" id="hC1-h2" type="text" placeholder="...">
+      </div>
+      <button class="ej-check-btn" onclick="ejHuecos('hC1',['las ramas','el incendio','la carta'])">Comprobar</button>
+      <div class="ej-result" id="hC1-res"></div>
+    </div>
+  </div>
+
+
+  <div class="next-sec-bar">
+    <button class="btn-next-sec" onclick="show('ci');window.scrollTo({top:0,behavior:'smooth'})">Ir a Complemento Indirecto <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== CI ===== -->
+<section class="section container" id="s-ci">
+  <h2 class="section-title">El Complemento Indirecto (CI)</h2>
+  <p class="section-lead">El CI indica el beneficiario o destinatario (y a veces el perjudicado) de la acci&oacute;n verbal. La acci&oacute;n no recae sobre &eacute;l directamente, sino de forma indirecta.</p>
+
+  <div class="teoria-box">
+    <div class="teoria-header ci">
+      <div>
+        <span class="teoria-badge">FUNCI&Oacute;N</span>
+        <h2>COMPLEMENTO INDIRECTO &mdash; CI</h2>
+      </div>
+    </div>
+    <div class="teoria-body">
+
+      <div class="grid-2" style="gap:1.5rem;margin-bottom:1.5rem;">
+        <div class="card">
+          <h3 class="card-title">&#128161; &iquest;Qu&eacute; es el CI?</h3>
+          <p>El CI expresa el <strong>destinatario o beneficiario</strong> de la acci&oacute;n: la persona o entidad a quien va dirigida o para quien se hace algo. Aparece siempre en <strong>frase preposicional con &laquo;a&raquo;</strong>, aunque en muchos casos est&aacute; representado por un pronombre &aacute;tono (<em>le, les, se</em>).</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">&#128196; Formas en que aparece</h3>
+          <ul style="margin-top:0.5rem;margin-left:1.2rem;font-size:14px;">
+            <li><strong>f. prep.</strong> con preposici&oacute;n <strong>&laquo;a&raquo;</strong> &mdash; <em>Escribo <strong>a mi madre</strong></em></li>
+            <li><strong>pron. &aacute;tono</strong> <em>le / les</em> &mdash; <em><strong>Le</strong> escribo</em></li>
+            <li><strong>Doble: pron. + f. prep.</strong> &mdash; <em><strong>Le</strong> escribo <strong>a mi madre</strong></em> (muy frecuente en espa&ntilde;ol)</li>
+          </ul>
+          <p style="font-size:13px;color:var(--muted);margin-top:0.75rem;">El CI s&iacute;lo aparece con preposici&oacute;n &laquo;a&raquo; (nunca &laquo;de&raquo;, &laquo;en&raquo;, &laquo;con&raquo;...).</p>
+        </div>
+      </div>
+
+      <div class="prueba-box">
+        <h4>&#128270; C&oacute;mo identificar el CI: las pruebas</h4>
+        <ul>
+          <li><strong>Prueba 1 &mdash; Sustituci&oacute;n por pronombre:</strong> Sustituye el posible CI por <strong>le / les</strong> (o <em>se</em> cuando hay CD de 3.&ordf; persona). Si funciona, es CI. <br>Ej.: <em>&laquo;Cont&eacute; el secreto a Mar&iacute;a&raquo;</em> &rarr; <em>&laquo;<strong>Le</strong> cont&eacute; el secreto&raquo;</em> &#10004; &rarr; CI.</li>
+          <li><strong>Prueba 2 &mdash; No admite pasiva:</strong> El CI NO se convierte en SUJ paciente en una oraci&oacute;n pasiva. <br>Ej.: <em>&laquo;Cont&eacute; el secreto a Mar&iacute;a&raquo;</em> &rarr; *<em>&laquo;Mar&iacute;a fue contada el secreto por m&iacute;&raquo;</em> &#10008; &rarr; Imposible. Confirmamos que <em>a Mar&iacute;a</em> no era CD.</li>
+          <li><strong>Pregunta orientativa:</strong> <strong>&laquo;&iquest;A qui&eacute;n/A qui&eacute;nes + verbo?&raquo;</strong> Ej.: <em>&laquo;&iquest;A qui&eacute;n cont&eacute; el secreto?&raquo;</em> &rarr; <em>a Mar&iacute;a</em>.</li>
+        </ul>
+        <div class="aviso">&#9888;&#65039; <strong>Advertencia:</strong> La pregunta <em>&laquo;&iquest;A qui&eacute;n?&raquo;</em> es solo orientativa. &iexcl;Recuerda que el CD de persona tambi&eacute;n se pregunta <em>&laquo;&iquest;A qui&eacute;n?&raquo;</em>! La diferencia est&aacute; en la prueba de sustituci&oacute;n: el CD se sustituye por <em>lo/la</em>; el CI, por <em>le/les</em>. Usa siempre las dos pruebas para distinguirlos.</div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:18px;color:var(--wine);margin:1.5rem 0 0.75rem;">Ejemplos analizados</h3>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 1 &mdash; CI cl&aacute;sico</h4>
+        <div class="ejemplo-sent">&#171;Regalamos flores <span>a nuestra madre</span>.&#187;</div>
+        <div class="analisis-row">
+          <div class="analisis-item"><div class="analisis-word">(nosotros)</div><div class="analisis-func">SUJ</div><div class="analisis-form">impl&iacute;cito</div></div>
+          <div class="analisis-item"><div class="analisis-word">Regalamos</div><div class="analisis-func">PRED</div><div class="analisis-form">verbo</div></div>
+          <div class="analisis-item"><div class="analisis-word">flores</div><div class="analisis-func cd">CD</div><div class="analisis-form">sust.</div></div>
+          <div class="analisis-item"><div class="analisis-word">a nuestra madre</div><div class="analisis-func ci">CI</div><div class="analisis-form">f. prep.</div></div>
+        </div>
+        <div class="ejemplo-nota" style="margin-top:0.75rem;">
+          &#8226; Sustituci&oacute;n: <em>&laquo;Regalamos flores <strong>le</strong>&raquo;</em> &rarr; en realidad: <em>&laquo;<strong>Le</strong> regalamos flores&raquo;</em> &#10004;<br>
+          &#8226; No admite pasiva: *<em>&laquo;Nuestra madre fue regalada flores&raquo;</em> &#10008; &rarr; confirma que es CI.
+        </div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 2 &mdash; CI con doble construcci&oacute;n (pron. + f. prep.)</h4>
+        <div class="ejemplo-sent">&#171;<span>Le</span> ense&ntilde;amos el camino <span>al turista</span>.&#187;</div>
+        <div class="ejemplo-nota">&#8226; Aqu&iacute; el CI aparece dos veces: con el pronombre <em>&laquo;le&raquo;</em> y con la f. prep. <em>&laquo;al turista&raquo;</em>. Esta duplicaci&oacute;n es muy frecuente en espa&ntilde;ol.</div>
+        <div class="ejemplo-nota">&#8226; Ambos (<em>le</em> y <em>al turista</em>) son CI. Se analiza como CI.</div>
+      </div>
+
+      <div class="ejemplo">
+        <h4>Ejemplo 3 &mdash; CI perjudicado</h4>
+        <div class="ejemplo-sent">&#171;El ladr&oacute;n rob&oacute; la cartera <span>al anciano</span>.&#187;</div>
+        <div class="ejemplo-nota">&#8226; El CI no siempre es beneficiado: aqui el anciano es el perjudicado. En espa&ntilde;ol se habla de CI de inter&eacute;s o CI &eacute;tico. La prueba: <em>&laquo;El ladr&oacute;n <strong>le</strong> rob&oacute; la cartera&raquo;</em> &#10004; &rarr; CI.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EJERCICIOS CI -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin:2.5rem 0 1rem;">&#128221; Repaso: Complemento Indirecto</h3>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#9989; Verdadero o Falso</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Lee cada afirmaci&oacute;n y decide si es verdadera o falsa.</p>
+      <div class="vf-item">
+        <div class="vf-stmt">1. El CI siempre va introducido por la preposici&oacute;n &laquo;a&raquo;.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="ci1" data-val="V" onclick="ejVF('ci1','V','V','Correcto. El CI solo aparece con la preposici&oacute;n &laquo;a&raquo; (a veces tambi&eacute;n representado por el pronombre le/les).')">Verdadero</button><button class="vf-btn f" data-vfid="ci1" data-val="F" onclick="ejVF('ci1','F','V','Incorrecto. El CI siempre lleva la preposici&oacute;n &laquo;a&raquo; cuando aparece como frase preposicional.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-ci1"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">2. El CI puede sustituirse por los pronombres <em>le / les</em>.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="ci2" data-val="V" onclick="ejVF('ci2','V','V','Correcto. La sustituci&oacute;n por le/les es la prueba principal del CI.')">Verdadero</button><button class="vf-btn f" data-vfid="ci2" data-val="F" onclick="ejVF('ci2','F','V','Incorrecto. S&iacute; se sustituye por le/les. Es la prueba sint&aacute;ctica principal del CI.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-ci2"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">3. El CI puede convertirse en SUJETO paciente en la transformaci&oacute;n a pasiva.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="ci3" data-val="V" onclick="ejVF('ci3','V','F','Incorrecto. El CI NO puede convertirse en SUJ paciente. Solo el CD puede hacerlo. Esta es precisamente una prueba para distinguirlos.')">Verdadero</button><button class="vf-btn f" data-vfid="ci3" data-val="F" onclick="ejVF('ci3','F','F','Correcto. El CI NO puede convertirse en SUJ paciente. Esa transformaci&oacute;n solo es posible con el CD.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-ci3"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">4. En &laquo;Le presté el libro a Pablo&raquo;, tanto <em>le</em> como <em>a Pablo</em> son CI.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="ci4" data-val="V" onclick="ejVF('ci4','V','V','Correcto. Es una construcci&oacute;n de doble CI (duplicaci&oacute;n clítica), muy frecuente en espa&ntilde;ol. Ambos elementos remiten al mismo CI.')">Verdadero</button><button class="vf-btn f" data-vfid="ci4" data-val="F" onclick="ejVF('ci4','F','V','Incorrecto. Ambos son CI. La duplicaci&oacute;n pron. &aacute;tono + f. prep. es t&iacute;pica del CI en espa&ntilde;ol.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-ci4"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-stmt">5. El CI expresa siempre un beneficio: nunca puede ser el perjudicado de la acci&oacute;n.</div>
+        <div class="vf-btns"><button class="vf-btn v" data-vfid="ci5" data-val="V" onclick="ejVF('ci5','V','F','Incorrecto. El CI puede ser tambi&eacute;n el perjudicado. Ej.: &laquo;El ladr&oacute;n le rob&oacute; la cartera al anciano&raquo;: el anciano (CI) es el perjudicado.')">Verdadero</button><button class="vf-btn f" data-vfid="ci5" data-val="F" onclick="ejVF('ci5','F','F','Correcto. El CI puede ser beneficiado o perjudicado por la acci&oacute;n.')">Falso</button></div>
+        <div class="vf-fb" id="vf-fb-ci5"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#128270; Identifica el CI</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Selecciona cu&aacute;l es el CI en cada oraci&oacute;n.</p>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Mi madre envi&oacute; un paquete a mi hermano.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('si1',this,'fail')">mi madre</button>
+          <button class="sel-opt" onclick="ejSel('si1',this,'fail')">un paquete</button>
+          <button class="sel-opt" onclick="ejSel('si1',this,'ok')">a mi hermano</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-si1"></div>
+      </div>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Les compramos entradas a los ni&ntilde;os.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('si2',this,'ok')">les / a los ni&ntilde;os (CI doble)</button>
+          <button class="sel-opt" onclick="ejSel('si2',this,'fail')">entradas</button>
+          <button class="sel-opt" onclick="ejSel('si2',this,'fail')">(nosotros), impl&iacute;cito</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-si2"></div>
+      </div>
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;El veterinario cur&oacute; la herida al perro.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('si3',this,'fail')">el veterinario</button>
+          <button class="sel-opt" onclick="ejSel('si3',this,'fail')">la herida</button>
+          <button class="sel-opt" onclick="ejSel('si3',this,'ok')">al perro</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-si3"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="next-sec-bar">
+    <button class="btn-next-sec" onclick="show('distinciones');window.scrollTo({top:0,behavior:'smooth'})">Ir a CD vs CI <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== DISTINCIONES ===== -->
+<section class="section container" id="s-distinciones">
+  <h2 class="section-title">CD vs CI: c&oacute;mo no confundirlos</h2>
+  <p class="section-lead">La confusi&oacute;n entre CD y CI es uno de los errores m&aacute;s frecuentes en sint&aacute;xis. Aqu&iacute; tienes las claves para distinguirlos correctamente.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <h3 class="card-title" style="color:#B7470B;">CD &mdash; Complemento Directo</h3>
+      <ul style="margin-left:1.2rem;font-size:14px;margin-top:0.5rem;">
+        <li>Se sustituye por <strong>lo / la / los / las</strong></li>
+        <li>Puede ser SUJ paciente en la pasiva</li>
+        <li>No siempre lleva preposici&oacute;n (solo &laquo;a&raquo; cuando es persona)</li>
+        <li>Pregunta orientativa: <em>&laquo;&iquest;Qu&eacute; + verbo?&raquo;</em></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="card-title" style="color:#1A6B3A;">CI &mdash; Complemento Indirecto</h3>
+      <ul style="margin-left:1.2rem;font-size:14px;margin-top:0.5rem;">
+        <li>Se sustituye por <strong>le / les</strong></li>
+        <li>NO puede ser SUJ paciente en la pasiva</li>
+        <li>Siempre lleva preposici&oacute;n &laquo;a&raquo; (cuando es f. prep.)</li>
+        <li>Pregunta orientativa: <em>&laquo;&iquest;A qui&eacute;n/es + verbo?&raquo;</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="teoria-box">
+    <div class="teoria-header">
+      <h2>&#9888;&#65039; Casos que generan confusi&oacute;n</h2>
+    </div>
+    <div class="teoria-body">
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--wine);margin-bottom:0.75rem;">1. CD de persona vs CI</h3>
+      <p style="font-size:15px;margin-bottom:1rem;">Ambos llevan preposici&oacute;n &laquo;a&raquo; cuando hacen referencia a personas. La diferencia est&aacute; en la sustituci&oacute;n pronominal:</p>
+
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>CD de persona</h4>
+          <div class="ejemplo-sent">&#171;Llam&eacute; <span>a Laura</span>.&#187;</div>
+          <div class="ejemplo-nota">Sustituci&oacute;n: <em>&laquo;<strong>La</strong> llam&eacute;&raquo;</em> &#10004; &rarr; <strong>CD</strong></div>
+          <div class="ejemplo-nota">Pasiva: <em>&laquo;Laura fue llamada por m&iacute;&raquo;</em> &#10004;</div>
+        </div>
+        <div class="ejemplo">
+          <h4>CI</h4>
+          <div class="ejemplo-sent">&#171;Escrib&iacute; <span>a Laura</span>.&#187;</div>
+          <div class="ejemplo-nota">Sustituci&oacute;n: <em>&laquo;<strong>Le</strong> escrib&iacute;&raquo;</em> &#10004; &rarr; <strong>CI</strong></div>
+          <div class="ejemplo-nota">Pasiva: *<em>&laquo;Laura fue escrita por m&iacute;&raquo;</em> &#10008;</div>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--wine);margin:1.5rem 0 0.75rem;">2. Verbos que suelen llevar CD y CI a la vez</h3>
+      <p style="font-size:15px;margin-bottom:1rem;">Los verbos <em>dar, regalar, contar, enviar, ense&ntilde;ar, prestar, ofrecer...</em> suelen aparecer con ambos complementos:</p>
+      <div class="analisis">
+        <div class="analisis-sent">El profe explic&oacute; la lecci&oacute;n a los alumnos.</div>
+        <div class="analisis-row">
+          <div class="analisis-item"><div class="analisis-word">El profe</div><div class="analisis-func">SUJ</div></div>
+          <div class="analisis-item"><div class="analisis-word">explic&oacute;</div><div class="analisis-func">PRED</div></div>
+          <div class="analisis-item"><div class="analisis-word">la lecci&oacute;n</div><div class="analisis-func cd">CD</div><div class="analisis-form">(<em>&laquo;la explic&oacute;&raquo;</em> &#10004;)</div></div>
+          <div class="analisis-item"><div class="analisis-word">a los alumnos</div><div class="analisis-func ci">CI</div><div class="analisis-form">(<em>&laquo;les explic&oacute;&raquo;</em> &#10004;)</div></div>
+        </div>
+      </div>
+
+      <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--wine);margin:1.5rem 0 0.75rem;">3. Verbos de &laquo;gustar&raquo;: el CI que parece SUJ</h3>
+      <p style="font-size:15px;margin-bottom:1rem;">Con verbos como <em>gustar, encantar, doler, molestar, interesar...</em>, el sujeto suele posponerse y el CI va delante, lo que genera confusi&oacute;n:</p>
+      <div class="analisis">
+        <div class="analisis-sent">A Rodrigo le gustan los deportes de aventura.</div>
+        <div class="analisis-row">
+          <div class="analisis-item"><div class="analisis-word">A Rodrigo / le</div><div class="analisis-func ci">CI</div><div class="analisis-form">f. prep. + pron. &aacute;tono</div></div>
+          <div class="analisis-item"><div class="analisis-word">gustan</div><div class="analisis-func">PRED</div></div>
+          <div class="analisis-item"><div class="analisis-word">los deportes de aventura</div><div class="analisis-func">SUJ</div><div class="analisis-form">(concuerda: <em>gust<strong>an</strong></em>)</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJERCICIOS DISTINCIONES -->
+  <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin:2.5rem 0 1rem;">&#128221; Practica: CD o CI</h3>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>&#128270; &iquest;CD o CI? Identifica la funci&oacute;n</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Decide si el elemento subrayado es CD o CI. Aplica las pruebas antes de responder.</p>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Pedro llam&oacute; <u>a la polic&iacute;a</u>.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('mx1',this,'ok')">CD (<em>&laquo;La llam&oacute;&raquo;</em> &#10004;)</button>
+          <button class="sel-opt" onclick="ejSel('mx1',this,'fail')">CI (<em>&laquo;Le llam&oacute;&raquo;</em> &#10008;)</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-mx1"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;La abuela contó <u>un cuento</u> a los niños.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('mx2',this,'ok')">CD (<em>&laquo;Lo contó&raquo;</em> &#10004;)</button>
+          <button class="sel-opt" onclick="ejSel('mx2',this,'fail')">CI (<em>&laquo;Le contó&raquo;</em> &#10008;)</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-mx2"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;La abuela contó un cuento <u>a los niños</u>.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('mx3',this,'fail')">CD (<em>&laquo;Los contó&raquo;</em> &#10008;)</button>
+          <button class="sel-opt" onclick="ejSel('mx3',this,'ok')">CI (<em>&laquo;Les contó&raquo;</em> &#10004;)</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-mx3"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Env&iacute;a <u>los documentos</u> a tu jefe.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('mx4',this,'ok')">CD (<em>&laquo;Env&iacute;alos&raquo;</em> &#10004;)</button>
+          <button class="sel-opt" onclick="ejSel('mx4',this,'fail')">CI (<em>&laquo;Les env&iacute;a&raquo;</em> &#10008;)</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-mx4"></div>
+      </div>
+
+      <div class="sel-item">
+        <div class="sel-stmt">&#171;Env&iacute;a los documentos <u>a tu jefe</u>.&#187;</div>
+        <div class="sel-opts">
+          <button class="sel-opt" onclick="ejSel('mx5',this,'fail')">CD (<em>&laquo;Lo env&iacute;a&raquo;</em> &#10008;)</button>
+          <button class="sel-opt" onclick="ejSel('mx5',this,'ok')">CI (<em>&laquo;Le env&iacute;a&raquo;</em> &#10004;)</button>
+        </div>
+        <div class="sel-fb" id="sel-fb-mx5"></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="next-sec-bar">
+    <button class="btn-next-sec" onclick="show('test1');window.scrollTo({top:0,behavior:'smooth'})">Ir a Test 1 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== TEST 1 ===== -->
+<section class="section container" id="s-test1">
+  <h2 class="section-title">Test 1 &mdash; SUJETO y Complemento Directo</h2>
+  <p class="section-lead">Pon a prueba lo aprendido sobre el SUJETO y el CD. 10 preguntas de opci&oacute;n m&uacute;ltiple. Una vez respondida una pregunta, no podr&aacute;s cambiar tu respuesta.</p>
+
+  <div class="quiz-header">
+    <h3>&#9997;&#65039; Test 1: SUJETO y CD</h3>
+    <p>10 preguntas &middot; Sin l&iacute;mite de tiempo</p>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-score">
+      <span class="score-num" id="sc1">0 / 10</span>
+      <div class="score-bar-bg"><div class="score-bar" id="sb1"></div></div>
+    </div>
+    <div id="qbox1"></div>
+  </div>
+
+  <div class="next-sec-bar">
+    <button class="btn-next-sec" onclick="show('test2');window.scrollTo({top:0,behavior:'smooth'})">Ir a Test 2 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== TEST 2 ===== -->
+<section class="section container" id="s-test2">
+  <h2 class="section-title">Test 2 &mdash; Complemento Indirecto y distinciones</h2>
+  <p class="section-lead">Pon a prueba lo aprendido sobre el CI y la distinci&oacute;n entre CD y CI. 10 preguntas de opci&oacute;n m&uacute;ltiple. Una vez respondida una pregunta, no podr&aacute;s cambiar tu respuesta.</p>
+
+  <div class="quiz-header cd">
+    <h3>&#9997;&#65039; Test 2: CI y distinciones</h3>
+    <p>10 preguntas &middot; Sin l&iacute;mite de tiempo</p>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-score">
+      <span class="score-num" id="sc2">0 / 10</span>
+      <div class="score-bar-bg"><div class="score-bar" id="sb2"></div></div>
+    </div>
+    <div id="qbox2"></div>
+  </div>
+
+  <!-- RESUMEN FINAL -->
+  <div class="resumen-final" id="resumenFinal">
+    <h3>&#127942; Resultados finales &mdash; <span id="resumenNombreHead"></span></h3>
+    <div class="resumen-stats">
+      <div class="resumen-stat"><div class="val" id="res-t1">—</div><div class="lbl">Test 1</div></div>
+      <div class="resumen-stat"><div class="val" id="res-t2">—</div><div class="lbl">Test 2</div></div>
+      <div class="resumen-stat"><div class="val" id="res-total">—</div><div class="lbl">Total</div></div>
+    </div>
+    <div class="nota-final-wrap">
+      <div class="nota-num" id="res-nota">—</div>
+      <div class="nota-lbl">Nota sobre 10</div>
+      <div class="nota-num" id="res-nota025" style="font-size:2.2rem;margin-top:.4rem;color:var(--gold);">—</div>
+      <div class="nota-lbl">Nota sobre 0,25</div>
+      <div class="nota-msg" id="res-msg"></div>
+    </div>
+    <div id="resumenErroresWrap" class="resumen-errores" style="display:none;">
+      <h4>&#10060; Preguntas falladas</h4>
+      <div id="resumenErrores"></div>
+    </div>
+    <div class="tests-incompletos" id="testsIncompletos" style="display:none;"><span id="testsIncompletosMsg">⚠️ Debes completar los dos tests antes de enviar los resultados.</span></div>
+    <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">&#128228; Enviar resultados al profesor</button>
+    <div class="envio-ok" id="envioOk">&#9989; Resultados enviados correctamente. ¡Buen trabajo!</div>
+    <div class="envio-ok" id="yaEnviado" style="display:none;background:#FFF8E8;border-color:#C9972A;color:#7A5200;">&#9888;&#65039; <strong>Ya has enviado tus resultados.</strong> Solo se permite un env&iacute;o por sesi&oacute;n.</div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Unidad Did&aacute;ctica: Sintaxis &mdash; SUJETO, CD y CI &middot; Lengua Castellana y Literatura &middot; Secundaria / Bachillerato
+</footer>
+
+<script>
+const FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLSclZRUpelMRfTIIc0C2hPMevyNZU1smBQi9YHdQVAlF0d5b0Q/formResponse';
+const FIELD_NOMBRE='entry.1757143941',FIELD_CURSO='entry.317932223',FIELD_NOTA_10='entry.132138773',FIELD_NOTA_025='entry.1280615450';
+let ALUMNO='',CURSO='';
+function doLogin(){const n=document.getElementById('loginNombre').value.trim();const c=document.getElementById('loginCurso').value.trim();if(!n||!c){document.getElementById('loginError').style.display='block';return;}ALUMNO=n;CURSO=c;document.getElementById('loginOverlay').style.display='none';document.getElementById('navUser').style.display='flex';document.getElementById('navNombre').textContent=ALUMNO;}
+document.getElementById('loginCurso').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('loginNombre').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('loginCurso').focus();});
+
+const QS={
+  1:[
+    {q:"¿Cuál es la prueba definitiva para identificar el SUJETO?",opts:["Preguntar '¿Quién?' al verbo","Que el elemento esté al principio de la oración","La concordancia en número y persona con el verbo","Que no lleve preposición"],c:2,fb:"La concordancia con el verbo es la prueba principal. La pregunta '¿Quién?' es solo orientativa y puede llevar a error."},
+    {q:"En '¿A Pedro le gustan los videojuegos?', ¿cuál es el SUJETO?",opts:["Pedro","a Pedro","los videojuegos","le"],c:2,fb:"El SUJETO es 'los videojuegos': concuerda con el verbo ('gustan'). Al cambiar: 'le gusta un videojuego' → el verbo cambia. 'A Pedro' / 'le' es CI."},
+    {q:"¿Cuál de estas estructuras NO puede ser SUJETO?",opts:["Una frase nominal (det. + sust.)","Una cláusula subordinada sustantiva","Una frase preposicional (prep. + término)","Un pronombre"],c:2,fb:"El SUJETO nunca puede ser una frase preposicional. Puede ser sust., pron., f. nom., f. sust. o cláus. sub. sust."},
+    {q:"En 'Llovió toda la noche', ¿cuál es el SUJETO?",opts:["toda la noche","llovió","(meteorológico, no tiene SUJETO)","la noche"],c:2,fb:"Los verbos meteorológicos (llover, nevar, tronar…) son impersonales: no tienen SUJETO."},
+    {q:"¿Cuál es la prueba principal para identificar el CD?",opts:["Preguntar '¿Qué?' al verbo","Sustituirlo por lo/la/los/las y comprobar que funciona","Ver que lleva preposición 'a'","Transformar la oración a pasiva"],c:1,fb:"La sustitución por lo/la/los/las es la prueba principal. La pregunta y la pasiva son pruebas de apoyo."},
+    {q:"En 'Busco a mi perro', ¿cuál es la función de 'a mi perro'?",opts:["CI, porque lleva preposición 'a'","CD, porque se sustituye por 'lo': 'Lo busco'","SUJETO, porque se refiere a un ser animado","CC de compañía"],c:1,fb:"Es CD. La 'a' personal no convierte un CD en CI. Prueba: 'Lo busco' ✓. Pasiva: 'Mi perro es buscado por mí' ✓."},
+    {q:"¿Cuál de estas oraciones tiene CD?",opts:["El niño duerme plácidamente","La niña entregó los deberes a la profesora","Juan vive en Madrid","Ella llegó tarde"],c:1,fb:"'Los deberes' es el CD: 'La niña los entregó' ✓. Las demás oraciones tienen verbos intransitivos o solo CC."},
+    {q:"En 'El alcalde prometió que habría nuevas plazas', ¿qué función cumple 'que habría nuevas plazas'?",opts:["SUJ","CI","CD","CC"],c:2,fb:"Es CD. Se puede sustituir por 'lo': 'El alcalde lo prometió' ✓. Es una cláusula subordinada sustantiva en función de CD."},
+    {q:"¿Qué le ocurre al CD cuando transformamos la oración a pasiva?",opts:["Desaparece","Se convierte en el Complemento Agente","Se convierte en el SUJETO paciente","Se convierte en CI"],c:2,fb:"El CD pasa a ser el SUJETO paciente en la pasiva. Ej.: 'Juan taló el árbol' → 'El árbol fue talado por Juan'."},
+    {q:"En la oración 'Cayó una fuerte granizada', ¿cuál es el SUJETO?",opts:["(impl&iacute;cito, no hay SUJETO)","cayó","una fuerte granizada","fuerte"],c:2,fb:"El SUJETO es 'una fuerte granizada'. Concordancia: 'Cayeron unas fuertes granizadas' → el verbo cambia ✓. El SUJETO está pospuesto al verbo, lo cual es frecuente en español."}
+  ],
+  2:[
+    {q:"¿Cuál es la prueba principal para identificar el CI?",opts:["Que lleve preposición 'a'","Sustituirlo por 'le/les' y comprobar que funciona","Preguntar '¿A quién?' al verbo","Que pueda convertirse en SUJ paciente en la pasiva"],c:1,fb:"La prueba principal es la sustitución por le/les. La pregunta '¿a quién?' también la usan el CD de persona, así que no es definitiva por sí sola."},
+    {q:"En 'Escribí una carta a mi abuela', ¿cuál es el CI?",opts:["una carta","a mi abuela","(impl&iacute;cito, yo)","mi abuela"],c:1,fb:"El CI es 'a mi abuela': 'Le escribí una carta' ✓. No admite pasiva: *'Mi abuela fue escrita' ✗."},
+    {q:"¿Cuál de estas afirmaciones sobre el CI es CORRECTA?",opts:["El CI puede convertirse en SUJETO paciente en la pasiva","El CI solo puede aparecer como frase preposicional, nunca como pronombre","El CI siempre lleva la preposición 'a' cuando aparece como frase preposicional","El CI puede llevar las preposiciones 'a', 'de' o 'en'"],c:2,fb:"El CI solo aparece con la preposición 'a' (como f. prep.) o con los pronombres átonos le/les/se."},
+    {q:"En 'Le rompí el móvil a mi amigo', ¿qué función tiene 'a mi amigo'?",opts:["CD, porque lleva 'a' y es persona","CI, es el perjudicado de la acción","SUJETO, porque es el dueño del móvil","CC de compañía"],c:1,fb:"Es CI (perjudicado). 'Le rompí el móvil' ✓. El CI no siempre expresa beneficio: puede ser también perjudicado."},
+    {q:"En 'Llamé a María', ¿cuál es la función de 'a María'?",opts:["CI, porque lleva 'a' y es persona","CD, porque se sustituye por 'la': 'La llamé' ✓","SUJ impl&iacute;cito","CC de compañía"],c:1,fb:"Es CD. Prueba: 'La llamé' ✓. Pasiva: 'María fue llamada por mí' ✓. La 'a' personal no convierte el complemento en CI."},
+    {q:"¿En qué se diferencian CD y CI cuando el complemento es una persona y lleva 'a'?",opts:["No hay diferencia: ambos son CI","El CD de persona se sustituye por lo/la; el CI se sustituye por le/les","El CD de persona no admite 'a'; solo el CI la lleva","El CD de persona va siempre después del CI"],c:1,fb:"La diferencia está en el pronombre sustituto: CD → lo/la/los/las; CI → le/les. Es la prueba decisiva."},
+    {q:"En 'A Sara le encantan las novelas', ¿cuál es el SUJETO?",opts:["A Sara","le","las novelas","Sara"],c:2,fb:"El SUJETO es 'las novelas'. Concordancia: 'A Sara le encanta la novela' → el verbo cambia. 'A Sara / le' es CI."},
+    {q:"¿Cuál de estas oraciones tiene CI pero NO tiene CD?",opts:["El médico le recetó un tratamiento al paciente","Le enviamos un correo a Lucía","Le sonrió al bebé","Cuéntanos tu historia"],c:2,fb:"En 'Le sonrió al bebé' hay CI ('al bebé / le') pero el verbo 'sonreír' aquí es intransitivo (no hay objeto directo). Las otras tienen tanto CD como CI."},
+    {q:"En 'Les entregamos los diplomas a los alumnos', ¿qué función tiene 'los diplomas'?",opts:["CI, porque es lo que se entrega a alguien","CD, porque se sustituye por 'los': 'Se los entregamos' ✓","SUJ, porque concuerda con el verbo","CC"],c:1,fb:"'Los diplomas' es CD: 'Los entregamos' ✓. 'A los alumnos / les' es CI."},
+    {q:"¿Cuál de estas pruebas NO sirve para identificar el CI?",opts:["Sustituir por le/les","Comprobar que no se puede hacer la transformación a pasiva","Preguntar '¿a quién?' al verbo (como apoyo)","Sustituir por lo/la y comprobar que funciona"],c:3,fb:"Sustituir por lo/la es la prueba del CD, no del CI. El CI se sustituye por le/les."}
+  ]
+};
+
+const ST={1:{sc:0,ans:{}},2:{sc:0,ans:{}}};
+function buildQ(n){const box=document.getElementById('qbox'+n);box.innerHTML='';QS[n].forEach((q,i)=>{const L=['A','B','C','D'];const opts=q.opts.map((o,j)=>`<button class="q-opt" onclick="answer(${n},${i},${j})"><span class="opt-letter">${L[j]}</span>${o}</button>`).join('');const d=document.createElement('div');d.innerHTML=`${i>0?'<div class="q-divider"></div>':''}<div class="q-item"><div class="q-num">Pregunta ${i+1} de ${QS[n].length}</div><div class="q-text">${q.q}</div><div class="q-opts" id="opts-${n}-${i}">${opts}</div><div class="q-fb" id="fb-${n}-${i}"></div></div>`;box.appendChild(d);});}
+
+function answer(n,qi,oi){if(ST[n].ans[qi]!==undefined)return;ST[n].ans[qi]=oi;const q=QS[n][qi],ok=oi===q.c;document.getElementById('opts-'+n+'-'+qi).querySelectorAll('.q-opt').forEach((el,j)=>{el.classList.add('revealed');if(j===q.c)el.classList.add('correct');else if(j===oi&&!ok)el.classList.add('wrong');});const fb=document.getElementById('fb-'+n+'-'+qi);fb.textContent=(ok?'✓ Correcto. ':'✗ Incorrecto. ')+q.fb;fb.className='q-fb '+(ok?'correct':'wrong');if(ok)ST[n].sc++;document.getElementById('sc'+n).textContent=ST[n].sc+' / '+QS[n].length;document.getElementById('sb'+n).style.width=(ST[n].sc/QS[n].length*100)+'%';if(document.getElementById('resumenFinal').style.display!=='none'){mostrarResumen();}else if(n===2&&Object.keys(ST[2].ans).length===QS[2].length){mostrarResumen();}}
+
+function mostrarResumen(){const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;const nota=(Math.round(tot/20*100)/10).toFixed(1);const nota025=(parseFloat(nota)/10*0.25).toFixed(2).replace('.',',');document.getElementById('res-t1').textContent=t1+'/10';document.getElementById('res-t2').textContent=t2+'/10';document.getElementById('res-total').textContent=tot+'/20';document.getElementById('res-nota').textContent=nota;document.getElementById('res-nota025').textContent=nota025;document.getElementById('resumenNombreHead').textContent=ALUMNO;const msgs=[[0,4,'Necesitas repasar los contenidos con más atención. Vuelve a los apuntes y repite los ejercicios.'],[4,6,'Vas por buen camino, pero hay aspectos que repasar. Repasa las pruebas sintácticas.'],[6,8,'Buen trabajo. Repasa los puntos en los que has fallado, especialmente la distinción CD/CI.'],[8,9,'¡Muy bien! Tienes un buen dominio de las funciones sintácticas.'],[9,11,'¡Excelente! Dominas perfectamente el SUJETO, el CD y el CI. 🎉']];document.getElementById('res-msg').textContent=(msgs.find(([a,b])=>parseFloat(nota)>=a&&parseFloat(nota)<b)||msgs[4])[2];const errores=[];[1,2].forEach(n=>QS[n].forEach((q,i)=>{if(ST[n].ans[i]!==undefined&&ST[n].ans[i]!==q.c)errores.push(`Test ${n} – P${i+1}: ${q.q}`);}));const w=document.getElementById('resumenErroresWrap');if(!errores.length){w.style.display='none';}else{w.style.display='block';document.getElementById('resumenErrores').innerHTML=errores.map(e=>`<div class="error-item">❌ ${e}</div>`).join('');}const t1done=Object.keys(ST[1].ans).length===QS[1].length;const t2done=Object.keys(ST[2].ans).length===QS[2].length;const allDone=t1done&&t2done;
+  function missingList(n){var miss=[];QS[n].forEach(function(_,i){if(ST[n].ans[i]===undefined)miss.push('P'+(i+1));});return miss;}
+  var m1=missingList(1),m2=missingList(2);var msgParts=[];
+  if(m1.length)msgParts.push('Test 1: faltan las preguntas '+m1.join(', '));
+  if(m2.length)msgParts.push('Test 2: faltan las preguntas '+m2.join(', '));
+  document.getElementById('testsIncompletos').style.display=allDone?'none':'block';
+  document.getElementById('testsIncompletosMsg').textContent='⚠️ '+msgParts.join(' · ')+'. Completa todos los tests antes de enviar.';
+  document.getElementById('btnEnviar').disabled=!allDone;const yaEnvio=sessionStorage.getItem('sintaxis_enviado_'+ALUMNO.toLowerCase().trim());if(yaEnvio){document.getElementById('btnEnviar').style.display='none';document.getElementById('testsIncompletos').style.display='none';document.getElementById('yaEnviado').style.display='block';}document.getElementById('resumenFinal').style.display='block';if(allDone)setTimeout(()=>document.getElementById('resumenFinal').scrollIntoView({behavior:'smooth',block:'start'}),300);}
+
+function enviarResultados(){const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;const nota=(Math.round(tot/20*100)/10).toFixed(1);const nota025=(parseFloat(nota)/10*0.25).toFixed(2).replace('.',',');const iframe=document.createElement('iframe');iframe.style.display='none';iframe.name='hf';document.body.appendChild(iframe);const form=document.createElement('form');form.method='POST';form.action=FORM_ACTION;form.target='hf';[[FIELD_NOMBRE,ALUMNO],[FIELD_CURSO,CURSO],[FIELD_NOTA_10,nota],[FIELD_NOTA_025,nota025]].forEach(([k,v])=>{const inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=v;form.appendChild(inp);});document.body.appendChild(form);form.submit();sessionStorage.setItem('sintaxis_enviado_'+ALUMNO.toLowerCase().trim(),'1');document.getElementById('btnEnviar').disabled=true;document.getElementById('btnEnviar').innerHTML='✅ Resultados enviados';document.getElementById('envioOk').style.display='block';}
+
+function show(k){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));var sec=document.getElementById('s-'+k);if(sec)sec.classList.add('active');document.querySelectorAll('.nav-btn').forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf("'"+k+"'")>-1)b.classList.add('active');});window.scrollTo({top:0,behavior:'smooth'});}
+
+function ejVF(id,resp,correcto,fb){var btns=document.querySelectorAll('[data-vfid="'+id+'"]');btns.forEach(function(b){b.classList.add('disabled');});var btn=document.querySelector('[data-vfid="'+id+'"][data-val="'+resp+'"]');var fbEl=document.getElementById('vf-fb-'+id);if(resp===correcto){btn.classList.add('ok');if(fbEl){fbEl.textContent='✓ '+fb;fbEl.className='vf-fb ok';}}else{btn.classList.add('fail');var corrBtn=document.querySelector('[data-vfid="'+id+'"][data-val="'+correcto+'"]');if(corrBtn)corrBtn.classList.add('ok');if(fbEl){fbEl.textContent='✗ '+fb;fbEl.className='vf-fb fail';}}}
+
+function ejSel(id,el,tipo){var grp=document.querySelectorAll('[onclick*="\''+id+'\'"]');grp.forEach(function(b){b.classList.add('disabled');});if(tipo==='ok'){el.classList.add('ok');var fbEl=document.getElementById('sel-fb-'+id);if(fbEl){fbEl.textContent='✓ ¡Correcto!';fbEl.className='sel-fb ok';}}else{el.classList.add('fail');var fbEl=document.getElementById('sel-fb-'+id);if(fbEl){fbEl.textContent='✗ Incorrecto. Aplica las pruebas sintácticas.';fbEl.className='sel-fb fail';}}}
+
+function ejHuecos(gid,respuestas){function norm(s){return s.toLowerCase().replace(/\./g,'').replace(/\s+/g,' ').trim();}var ok=0;respuestas.forEach(function(r,i){var inp=document.getElementById(gid+'-h'+i);if(!inp)return;var val=norm(inp.value);var corrArr=Array.isArray(r)?r:[r];var correcto=corrArr.some(function(c){return norm(val)===norm(c);});inp.classList.remove('ok','fail');inp.classList.add(correcto?'ok':'fail');if(correcto)ok++;});var res=document.getElementById(gid+'-res');if(res){res.textContent=ok+'/'+respuestas.length+' correctas'+(ok===respuestas.length?' ¡Perfecto! 🎉':'');res.className='ej-result '+(ok===respuestas.length?'ok':'parcial');}}
+
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+shuffle(QS[1]);shuffle(QS[2]);
+buildQ(1);buildQ(2);
+</script>
+</body>
+</html>

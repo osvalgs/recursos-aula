@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Radio: del hilo musical a tu móvil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Oswald:wght@400;500;600&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fondo:#f3e8d2;
+    --fondo-panel:#fffdf6;
+    --madera:#3b2a1e;
+    --madera-clara:#6b4a32;
+    --laton:#c9a227;
+    --laton-claro:#e8c766;
+    --rojo:#a63a32;
+    --verde-ojo:#4f6b4a;
+    --texto:#2a1f16;
+    --texto-suave:#6b5b47;
+    --sombra: 0 10px 30px rgba(43,30,18,0.25);
+    --radio-borde: 18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    font-family:'Vollkorn', Georgia, serif;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(201,162,39,0.10), transparent 45%),
+      radial-gradient(ellipse at 85% 85%, rgba(166,58,50,0.08), transparent 50%),
+      var(--fondo);
+    color:var(--texto);
+    overflow:hidden;
+    height:100vh;
+  }
+  h1,h2,h3{font-family:'Abril Fatface', serif; font-weight:400; margin:0 0 .3em 0; color:var(--madera);}
+  .freq-label{
+    font-family:'Oswald', sans-serif;
+    font-size:0.78rem;
+    letter-spacing:0.04em;
+    color:var(--rojo);
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .freq-label::before{
+    content:"";
+    width:10px;height:10px;border-radius:50%;
+    background:var(--rojo);
+    box-shadow:0 0 8px var(--rojo);
+  }
+  p{line-height:1.55; font-size:1.05rem; color:var(--texto);}
+  a{color:var(--rojo);}
+  button{font-family:'Oswald',sans-serif; cursor:pointer;}
+
+  /* ---------- ESTRUCTURA GENERAL ---------- */
+  #app{
+    position:relative;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* Barra superior estilo dial de sintonía */
+  #topbar{
+    flex:0 0 auto;
+    background:var(--madera);
+    color:var(--laton-claro);
+    padding:10px 22px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.25);
+    z-index:20;
+  }
+  #topbar .marca{
+    font-family:'Abril Fatface', serif;
+    font-size:1.05rem;
+    white-space:nowrap;
+    color:var(--laton-claro);
+  }
+  #dial-track{
+    flex:1;
+    position:relative;
+    height:10px;
+    background:repeating-linear-gradient(90deg, rgba(232,199,102,0.25) 0 1px, transparent 1px 18px);
+    border-radius:6px;
+    border:1px solid rgba(232,199,102,0.4);
+    overflow:visible;
+  }
+  #dial-fill{
+    position:absolute; left:0; top:0; bottom:0;
+    background:linear-gradient(90deg, var(--rojo), var(--laton));
+    border-radius:6px;
+    width:0%;
+    transition:width .45s ease;
+  }
+  #dial-needle{
+    position:absolute; top:-6px;
+    width:2px; height:22px;
+    background:var(--laton-claro);
+    box-shadow:0 0 6px var(--laton-claro);
+    transition:left .45s ease;
+    left:0%;
+  }
+  #contador{
+    font-family:'Oswald',sans-serif;
+    font-size:0.85rem;
+    white-space:nowrap;
+    color:var(--laton-claro);
+    min-width:52px;
+    text-align:right;
+  }
+
+  /* Escenario de diapositivas */
+  #escenario{
+    flex:1 1 auto;
+    position:relative;
+    overflow:hidden;
+  }
+  .slide{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:26px 6vw 90px 6vw;
+    opacity:0;
+    transform:translateX(40px);
+    pointer-events:none;
+    transition:opacity .5s ease, transform .5s ease;
+    overflow-y:auto;
+  }
+  .slide.activa{
+    opacity:1;
+    transform:translateX(0);
+    pointer-events:auto;
+  }
+  .slide.saliendo-izq{ transform:translateX(-40px); }
+
+  .contenido{
+    max-width:1080px;
+    width:100%;
+    margin:auto;
+    display:grid;
+    gap:26px;
+  }
+  .dos-columnas{
+    grid-template-columns:1.05fr 0.95fr;
+    align-items:center;
+  }
+  @media (max-width:820px){
+    .dos-columnas{grid-template-columns:1fr;}
+  }
+
+  .panel{
+    background:var(--fondo-panel);
+    border-radius:var(--radio-borde);
+    padding:22px 26px;
+    box-shadow:var(--sombra);
+    border:1px solid rgba(59,42,30,0.08);
+  }
+
+  /* Navegación inferior */
+  #navinf{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:22px;
+    padding:14px 20px;
+    background:linear-gradient(180deg, transparent, rgba(59,42,30,0.06) 30%);
+    z-index:15;
+  }
+  .btn-perilla{
+    width:52px;height:52px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--laton-claro), var(--laton) 60%, var(--madera-clara) 100%);
+    border:3px solid var(--madera);
+    box-shadow:0 4px 10px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; color:var(--madera);
+    transition:transform .15s ease;
+    flex:0 0 auto;
+  }
+  .btn-perilla:hover{transform:scale(1.07);}
+  .btn-perilla:active{transform:scale(0.94);}
+  .btn-perilla:disabled{opacity:0.35; cursor:default; transform:none;}
+
+  #puntos{
+    display:flex; gap:7px; flex-wrap:wrap; justify-content:center; max-width:52vw;
+  }
+  .punto{
+    width:9px;height:9px;border-radius:50%;
+    background:rgba(59,42,30,0.25);
+    border:none; padding:0;
+  }
+  .punto.activo{background:var(--rojo); box-shadow:0 0 5px var(--rojo);}
+
+  /* ---------- PORTADA ---------- */
+  .portada{
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .portada h1{font-size:clamp(2.1rem, 5vw, 3.4rem); max-width:820px;}
+  .portada .subt{font-size:1.15rem; color:var(--texto-suave); max-width:640px; margin-bottom:8px;}
+  .radio-vintage{width:min(300px, 60vw); height:auto; margin:6px auto 4px;}
+  .btn-empezar{
+    margin-top:14px;
+    background:var(--rojo);
+    color:#fff5e6;
+    border:none;
+    padding:14px 34px;
+    border-radius:40px;
+    font-size:1rem;
+    letter-spacing:0.03em;
+    box-shadow:0 6px 16px rgba(166,58,50,0.35);
+  }
+  .btn-empezar:hover{background:#8c2f28;}
+
+  /* ---------- TARJETAS / TIMELINE ---------- */
+  .fila-tarjetas{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
+    gap:16px;
+  }
+  .tarjeta{
+    background:var(--fondo-panel);
+    border-radius:12px;
+    padding:16px 18px;
+    box-shadow:0 4px 14px rgba(43,30,18,0.14);
+    border-left:5px solid var(--laton);
+  }
+  .tarjeta .anio{
+    font-family:'Oswald',sans-serif;
+    color:var(--rojo);
+    font-size:1.5rem;
+    font-weight:600;
+  }
+  .tarjeta p{margin:6px 0 0; font-size:0.96rem;}
+
+  /* pestañas de personajes */
+  .pestanas{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .pestana{
+    background:transparent;
+    border:2px solid var(--madera-clara);
+    color:var(--madera);
+    padding:8px 16px;
+    border-radius:24px;
+    font-size:0.92rem;
+  }
+  .pestana.activa{background:var(--madera); color:var(--laton-claro); border-color:var(--madera);}
+  .panel-personaje{display:none;}
+  .panel-personaje.activo{display:block; animation:aparecer .35s ease;}
+  @keyframes aparecer{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  /* vídeo: tarjeta con enlace a YouTube (no incrustado) */
+  .video-enlace{
+    display:block;
+    position:relative;
+    width:100%;
+    padding-top:56.25%;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:var(--sombra);
+    border:4px solid var(--madera);
+    background:#1b140d;
+    text-decoration:none;
+  }
+  .video-enlace img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0.75;
+  }
+  .video-enlace .capa-play{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px;
+    background:linear-gradient(180deg, rgba(27,20,13,0.15), rgba(27,20,13,0.75));
+  }
+  .video-enlace .circulo-play{
+    width:64px; height:64px; border-radius:50%;
+    background:var(--rojo);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 16px rgba(0,0,0,0.4);
+    transition:transform .15s ease;
+  }
+  .video-enlace:hover .circulo-play{transform:scale(1.08);}
+  .video-enlace .circulo-play::after{
+    content:"";
+    border-style:solid;
+    border-width:11px 0 11px 18px;
+    border-color:transparent transparent transparent #fff5e6;
+    margin-left:4px;
+  }
+  .video-enlace .texto-play{
+    font-family:'Oswald',sans-serif;
+    color:#fff5e6;
+    font-size:0.95rem;
+    letter-spacing:0.03em;
+    background:rgba(43,30,18,0.55);
+    padding:5px 14px;
+    border-radius:20px;
+  }
+  .nota-video{font-size:0.85rem; color:var(--texto-suave); margin-top:8px; text-align:center;}
+
+  /* ---------- ACTIVIDADES ---------- */
+  .pregunta{margin-bottom:18px;}
+  .pregunta p.enunciado{font-weight:600; margin-bottom:10px;}
+  .opciones{display:flex; gap:10px; flex-wrap:wrap;}
+  .opciones.vf{gap:14px;}
+  .opcion{
+    background:var(--fondo-panel);
+    border:2px solid var(--madera-clara);
+    padding:10px 18px;
+    border-radius:10px;
+    font-family:'Vollkorn', serif;
+    font-size:0.98rem;
+    color:var(--texto);
+  }
+  .opcion:hover{border-color:var(--rojo);}
+  .opcion.correcta{background:#e5efe0; border-color:var(--verde-ojo); color:#2f4a2a;}
+  .opcion.incorrecta{background:#f6e2df; border-color:var(--rojo); color:#7a2a24;}
+  .opcion:disabled{cursor:default;}
+  .retro{font-size:0.9rem; margin-top:6px; min-height:1.2em; color:var(--texto-suave);}
+
+  .marcador{
+    position:sticky; top:0;
+    display:flex; justify-content:space-between; align-items:center;
+    background:var(--madera); color:var(--laton-claro);
+    padding:8px 16px; border-radius:10px; margin-bottom:16px;
+    font-family:'Oswald',sans-serif; font-size:0.9rem;
+  }
+
+  /* orden cronologico */
+  .eventos-para-ordenar{display:flex; flex-direction:column; gap:10px;}
+  .evento-click{
+    background:var(--fondo-panel);
+    border:2px solid var(--madera-clara);
+    border-radius:10px;
+    padding:12px 16px;
+    display:flex; align-items:center; gap:14px;
+    font-size:0.98rem;
+  }
+  .evento-click .num{
+    width:30px;height:30px;border-radius:50%;
+    background:transparent; border:2px solid var(--madera-clara);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Oswald',sans-serif; font-weight:600; color:var(--madera-clara);
+    flex:0 0 auto;
+  }
+  .evento-click.marcado .num{background:var(--laton); border-color:var(--laton); color:var(--madera);}
+  .evento-click.correcto{border-color:var(--verde-ojo); background:#e5efe0;}
+  .evento-click.fallido{border-color:var(--rojo); background:#f6e2df;}
+  .btn-accion{
+    margin-top:14px;
+    background:var(--madera); color:var(--laton-claro);
+    border:none; padding:11px 24px; border-radius:30px; font-size:0.95rem;
+  }
+  .btn-accion:hover{background:var(--madera-clara);}
+  .btn-accion.secundario{background:transparent; color:var(--madera); border:2px solid var(--madera-clara);}
+
+  /* AM/FM visual */
+  .toggle-onda{display:flex; gap:10px; margin-bottom:12px;}
+  .toggle-onda button{
+    flex:1; padding:10px; border-radius:8px; border:2px solid var(--madera-clara);
+    background:var(--fondo-panel); font-family:'Oswald',sans-serif; font-size:0.95rem; color:var(--texto);
+  }
+  .toggle-onda button.activo{background:var(--rojo); color:#fff5e6; border-color:var(--rojo);}
+  #lienzo-onda{width:100%; height:130px; display:block; background:var(--fondo-panel); border-radius:10px; border:1px solid rgba(59,42,30,0.15);}
+
+  .cierre{text-align:center;}
+  .cierre .radio-vintage{width:min(220px,50vw);}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--madera-clara); border-radius:4px;}
+
+  @media (max-width:600px){
+    .slide{padding:16px 5vw 100px 5vw;}
+    #topbar .marca{display:none;}
+    .panel{padding:16px 18px;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="topbar">
+    <span class="marca">📻 Proyecto de Radio · 3º ESO</span>
+    <div id="dial-track">
+      <div id="dial-fill"></div>
+      <div id="dial-needle"></div>
+    </div>
+    <span id="contador">1 / 17</span>
+  </div>
+
+  <div id="escenario">
+
+    <!-- 0. PORTADA -->
+    <section class="slide activa" data-index="0">
+      <div class="contenido portada">
+        <span class="freq-label">EN ANTENA · 98.6 FM</span>
+        <svg class="radio-vintage" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Radio antigua de baquelita">
+          <rect x="10" y="30" width="200" height="110" rx="16" fill="#3b2a1e"/>
+          <rect x="10" y="30" width="200" height="110" rx="16" fill="none" stroke="#c9a227" stroke-width="2"/>
+          <circle cx="60" cy="85" r="34" fill="#1f1712"/>
+          <circle cx="60" cy="85" r="34" fill="none" stroke="#e8c766" stroke-width="2"/>
+          <circle cx="60" cy="85" r="4" fill="#e8c766" id="ojo-magico"/>
+          <g stroke="#4f6b4a" stroke-width="2" fill="none" opacity="0.85">
+            <path d="M40 85 a20 20 0 0 1 40 0"/>
+            <path d="M46 85 a14 14 0 0 1 28 0"/>
+          </g>
+          <rect x="112" y="55" width="80" height="18" rx="3" fill="#f3e8d2"/>
+          <line x1="150" y1="55" x2="150" y2="73" stroke="#a63a32" stroke-width="2">
+            <animate attributeName="x1" values="118;186;118" dur="6s" repeatCount="indefinite"/>
+            <animate attributeName="x2" values="118;186;118" dur="6s" repeatCount="indefinite"/>
+          </line>
+          <circle cx="168" cy="100" r="16" fill="#c9a227"/>
+          <circle cx="168" cy="100" r="16" fill="none" stroke="#3b2a1e" stroke-width="2"/>
+          <line x1="168" y1="100" x2="178" y2="90" stroke="#3b2a1e" stroke-width="2"/>
+          <g fill="#3b2a1e">
+            <circle cx="30" cy="115" r="4"/><circle cx="45" cy="115" r="4"/>
+          </g>
+          <rect x="0" y="140" width="220" height="10" rx="4" fill="#6b4a32"/>
+        </svg>
+        <h1>La Radio: del telégrafo sin hilos al podcast de tu móvil</h1>
+        <p class="subt">Historia, evolución y curiosidades de un invento que cambió la forma de escuchar el mundo. Hoy sintonizamos sus 130 años de historia antes de entrar, este curso, en nuestro propio estudio de radio.</p>
+        <button class="btn-empezar" onclick="irA(1)">Sintonizar ▸</button>
+      </div>
+    </section>
+
+    <!-- 1. ANTES DE LA RADIO -->
+    <section class="slide" data-index="1">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CAPÍTULO 1</span>
+          <h2>Antes de que existiera la radio</h2>
+          <p>La radio no la inventó una sola persona de la noche a la mañana. Fue el resultado de décadas de descubrimientos sobre algo invisible: las <strong>ondas electromagnéticas</strong>.</p>
+          <p>Todo empezó como una idea matemática... y acabó metida dentro de un mueble de madera en el salón de millones de casas.</p>
+        </div>
+        <div class="fila-tarjetas">
+          <div class="tarjeta">
+            <div class="anio">1864</div>
+            <p><strong>James Clerk Maxwell</strong> predice, solo con ecuaciones, que deben existir ondas electromagnéticas que viajan a la velocidad de la luz.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1887</div>
+            <p><strong>Heinrich Hertz</strong> logra generar y detectar esas ondas en su laboratorio, demostrando que Maxwell tenía razón. Por eso hoy medimos la frecuencia en "hercios".</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1895</div>
+            <p><strong>Alexander Popov</strong>, en Rusia, y varios inventores más empiezan a usar esas ondas para detectar tormentas y enviar señales sin cables.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. LA CARRERA POR LA RADIO -->
+    <section class="slide" data-index="2">
+      <div class="contenido">
+        <span class="freq-label">CAPÍTULO 2</span>
+        <h2>La carrera por "domar" las ondas</h2>
+        <p>A finales del siglo XIX varios inventores compitieron por convertir esas ondas invisibles en un aparato útil para comunicarse a distancia, sin cables. Toca un nombre para descubrir su papel en la historia:</p>
+        <div class="pestanas" id="pestanas-inventores">
+          <button class="pestana activa" data-p="marconi">Guglielmo Marconi</button>
+          <button class="pestana" data-p="tesla">Nikola Tesla</button>
+          <button class="pestana" data-p="fessenden">Reginald Fessenden</button>
+        </div>
+        <div class="panel">
+          <div class="panel-personaje activo" data-panel="marconi">
+            <p>El italiano <strong>Marconi</strong> fue quien convirtió el invento en negocio: en 1901 logró enviar una señal de radio cruzando el océano Atlántico, de Inglaterra a Canadá. En 1909 recibió el Premio Nobel de Física. Se le considera el "padre" de la radio por ser quien la llevó de laboratorio a producto comercial.</p>
+          </div>
+          <div class="panel-personaje" data-panel="tesla">
+            <p><strong>Tesla</strong> había patentado años antes varios de los principios técnicos que hacían posible la transmisión sin hilos, y siempre reclamó ser el verdadero inventor de la radio. En 1943, meses después de su muerte, un tribunal de EE. UU. le dio la razón y anuló varias patentes de Marconi. Aun así, en la memoria popular el "padre de la radio" sigue siendo Marconi.</p>
+          </div>
+          <div class="panel-personaje" data-panel="fessenden">
+            <p>Hasta ese momento la radio solo transmitía puntos y rayas en código Morse. El canadiense <strong>Fessenden</strong> dio el salto definitivo: en la Nochebuena de 1906 emitió, por primera vez en la historia, voz humana y música por radio, incluyendo un fragmento de violín interpretado por él mismo. Los marineros que lo escucharon por casualidad pensaron que era un milagro.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. VIDEO 1 -->
+    <section class="slide" data-index="3">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">EN VÍDEO</span>
+          <h2>Repasamos el origen de la radio</h2>
+          <p>Este vídeo resume, en pocos minutos, el camino desde los primeros experimentos hasta la radio que conocemos. Pulsa la imagen para verlo en YouTube.</p>
+          <p class="nota-video">Comprueba antes de la clase que el vídeo sigue disponible y que su duración encaja con tu sesión.</p>
+        </div>
+        <div>
+          <a class="video-enlace" href="https://www.youtube.com/watch?v=2ygkgOfUUzY" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/2ygkgOfUUzY/hqdefault.jpg" alt="Miniatura del vídeo: Historia de la radio" loading="lazy">
+            <span class="capa-play">
+              <span class="circulo-play"></span>
+              <span class="texto-play">Ver en YouTube ▸</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. LA RADIO LLEGA A ESPAÑA -->
+    <section class="slide" data-index="4">
+      <div class="contenido">
+        <span class="freq-label">CAPÍTULO 3 · MÁS CERCA</span>
+        <h2>Cuando la radio llegó a España</h2>
+        <p>En España, la radio tardó unos años más en llegar que en Estados Unidos, pero cuando lo hizo, en 1924, cambió por completo la forma en que las familias se informaban y se entretenían.</p>
+        <div class="fila-tarjetas">
+          <div class="tarjeta">
+            <div class="anio">1924</div>
+            <p><strong>Radio España (EAJ-2)</strong>, en Madrid, y <strong>Radio Barcelona (EAJ-1)</strong> inauguran sus emisiones. Las letras "EAJ" identificaban a las estaciones españolas de telegrafía sin hilos.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1925</div>
+            <p>Nace <strong>Unión Radio</strong> en Madrid, que se convertiría con el tiempo en la actual <strong>Cadena SER</strong>, y agrupaba a varias emisoras locales bajo una misma programación.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1937</div>
+            <p>En plena Guerra Civil se crea <strong>Radio Nacional de España (RNE)</strong>, que sigue emitiendo hoy como la radio pública estatal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. EDAD DE ORO -->
+    <section class="slide" data-index="5">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CAPÍTULO 4</span>
+          <h2>La Edad de Oro de la radio</h2>
+          <p>Entre los años 30 y 50, antes de que la televisión entrara en los hogares, la radio era el gran espectáculo familiar. Toda la familia se reunía alrededor del aparato por la noche.</p>
+        </div>
+        <div class="fila-tarjetas">
+          <div class="tarjeta">
+            <div class="anio">🎭</div>
+            <p><strong>Radionovelas y radioteatro:</strong> historias por capítulos, con actores, música y efectos de sonido creados en directo, que mantenían en vilo a miles de oyentes cada tarde.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">⚽</div>
+            <p><strong>Retransmisiones deportivas:</strong> narrar un partido de fútbol o un combate de boxeo en directo, solo con la voz, se convirtió en todo un arte.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">📣</div>
+            <p><strong>Publicidad:</strong> nacen los primeros anuncios sonoros y los "jingles", músicas pegadizas creadas para vender un producto.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. LA NOVELA: LA GUERRA DE LOS MUNDOS -->
+    <section class="slide" data-index="6">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CURIOSIDAD HISTÓRICA · 1/3</span>
+          <h2>Una novela que acabó sembrando el pánico</h2>
+          <p><em>La guerra de los mundos</em> es una novela de ciencia ficción escrita en 1898 por el británico <strong>H. G. Wells</strong>, considerada una de las primeras grandes historias de invasión extraterrestre.</p>
+          <p>Cuenta cómo unos marcianos llegan a la Tierra a bordo de cilindros metálicos y se desplazan en enormes máquinas de guerra con forma de trípode, armadas con un "rayo calorífico" capaz de arrasar ciudades enteras. Los ejércitos humanos son incapaces de detenerlos.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:1.1rem;">¿Cómo termina?</h3>
+          <p>Al final, no es la humanidad quien vence a los invasores: los marcianos mueren por culpa de las bacterias terrestres, unos microorganismos tan sencillos como las gripes o los resfriados, contra los que su cuerpo no tenía ninguna defensa.</p>
+          <p>Cuarenta años después, esa misma historia saltaría de las páginas de un libro a las ondas de radio, con consecuencias que su autor nunca imaginó.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. EL PANICO DE 1938 Y ECUADOR 1949 -->
+    <section class="slide" data-index="7">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CURIOSIDAD HISTÓRICA · 2/3</span>
+          <h2>Cuando la ficción sonó a noticia real</h2>
+          <p>El 30 de octubre de 1938, la cadena CBS emitió una adaptación radiofónica de la novela, dirigida por un joven <strong>Orson Welles</strong>, con forma de boletín informativo urgente que interrumpía un programa de música.</p>
+          <p>Quienes sintonizaron desde el principio sabían que era ficción. Pero muchos oyentes que se engancharon a mitad de programa creyeron que se estaba produciendo de verdad una invasión marciana: hubo llamadas de pánico a la policía y gente que salió corriendo de sus casas.</p>
+          <p class="freq-label" style="margin-top:14px;">CURIOSIDAD HISTÓRICA · 3/3</p>
+          <h3 style="font-size:1.15rem; margin-top:0;">El eco en Ecuador, once años después</h3>
+          <p>El 12 de febrero de 1949, <strong>Radio Quito</strong> repitió, sin imaginar las consecuencias, el mismo experimento con una versión propia. El pánico y la posterior furia de la población fueron todavía mayores: hubo disturbios y un incendio en el edificio de la emisora. El episodio se sigue estudiando hoy para entender el enorme poder que puede tener un medio de comunicación sobre la audiencia.</p>
+        </div>
+        <div class="panel">
+          <h3 style="font-size:1.1rem;">Para investigar en el aula</h3>
+          <p>No se ha incluido aquí ningún vídeo sobre el caso de Ecuador: los disponibles duran varios minutos y no encajan con el formato breve del resto de la presentación. Si quieres tratarlo en clase, puede ser un buen punto de partida para que los alumnos investiguen el episodio por su cuenta como pequeño trabajo de búsqueda.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ACTIVIDAD 1: VERDADERO/FALSO -->
+    <section class="slide" data-index="8">
+      <div class="contenido">
+        <span class="freq-label">ACTIVIDAD 1</span>
+        <h2>¿Verdadero o falso?</h2>
+        <div class="panel">
+          <div class="marcador"><span>Comprueba lo que recuerdas</span><span id="marcador-vf">0 / 5</span></div>
+          <div id="contenedor-vf"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. COMO FUNCIONA: AM/FM + VIDEO 2 -->
+    <section class="slide" data-index="9">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CAPÍTULO 5 · POR DENTRO</span>
+          <h2>¿Cómo "viaja" el sonido por el aire?</h2>
+          <p>La voz se convierte en una señal eléctrica que se "monta" sobre una onda de radio. Hay dos formas principales de hacerlo:</p>
+          <div class="toggle-onda">
+            <button id="btn-am" class="activo" onclick="mostrarOnda('am')">AM · Amplitud Modulada</button>
+            <button id="btn-fm" onclick="mostrarOnda('fm')">FM · Frecuencia Modulada</button>
+          </div>
+          <canvas id="lienzo-onda" width="600" height="130"></canvas>
+          <p id="texto-onda" style="margin-top:10px; font-size:0.95rem;"></p>
+        </div>
+        <div>
+          <a class="video-enlace" href="https://www.youtube.com/watch?v=hfICD-FVYe0" target="_blank" rel="noopener">
+            <img src="https://img.youtube.com/vi/hfICD-FVYe0/hqdefault.jpg" alt="Miniatura del vídeo: Ondas de radio AM y FM" loading="lazy">
+            <span class="capa-play">
+              <span class="circulo-play"></span>
+              <span class="texto-play">Ver en YouTube ▸</span>
+            </span>
+          </a>
+          <p class="nota-video">Comprueba antes de la clase que el vídeo sigue disponible y que su duración encaja con tu sesión.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. RADIO EN TIEMPOS DIFICILES -->
+    <section class="slide" data-index="10">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CAPÍTULO 6</span>
+          <h2>Una voz en tiempos de guerra</h2>
+          <p>Durante la Guerra Civil española (1936-1939), ambos bandos usaron la radio como arma de propaganda: cada emisora contaba la guerra a su manera, y escuchar "la radio equivocada" podía ser peligroso.</p>
+        </div>
+        <div class="panel">
+          <p>Durante la Segunda Guerra Mundial ocurrió algo parecido en toda Europa: millones de personas escuchaban en secreto emisoras extranjeras, como la BBC en Londres, para conocer noticias que la censura de su propio país no permitía contar.</p>
+          <p>La radio demostró entonces algo que sigue siendo cierto: quien controla las ondas, controla en parte la información que recibe la gente.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. ACTIVIDAD 2: ORDENAR LA LINEA DEL TIEMPO -->
+    <section class="slide" data-index="11">
+      <div class="contenido">
+        <span class="freq-label">ACTIVIDAD 2</span>
+        <h2>Ordena la línea del tiempo</h2>
+        <p>Toca los siguientes hechos en el orden en el que ocurrieron, del más antiguo al más reciente.</p>
+        <div id="contenedor-orden" class="eventos-para-ordenar"></div>
+        <div style="display:flex; gap:12px; margin-top:14px;">
+          <button class="btn-accion" onclick="comprobarOrden()">Comprobar orden</button>
+          <button class="btn-accion secundario" onclick="reiniciarOrden()">Reiniciar</button>
+        </div>
+        <p class="retro" id="retro-orden"></p>
+      </div>
+    </section>
+
+    <!-- 11. DE LA VALVULA AL TRANSISTOR -->
+    <section class="slide" data-index="12">
+      <div class="contenido">
+        <span class="freq-label">CAPÍTULO 7</span>
+        <h2>De la válvula al streaming</h2>
+        <div class="fila-tarjetas">
+          <div class="tarjeta">
+            <div class="anio">1920s</div>
+            <p>Las radios funcionan con <strong>válvulas de vacío</strong>: grandes, frágiles y que consumían mucha energía. Eran muebles enormes, casi otro mueble más del salón.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1954</div>
+            <p>Llega el <strong>transistor</strong>: la radio se vuelve pequeña, resistente y barata. Por primera vez cabe en un bolsillo y se puede llevar a la playa o de excursión.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">1990s</div>
+            <p>Aparece la <strong>radio digital (DAB)</strong> y la señal se limpia de ruidos e interferencias.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">Hoy</div>
+            <p>La radio convive con internet: <strong>streaming</strong>, aplicaciones móviles y <strong>podcasts</strong> que se pueden escuchar cuando y donde se quiera, no solo en directo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. LA RADIO HOY / CURIOSIDADES -->
+    <section class="slide" data-index="13">
+      <div class="contenido dos-columnas">
+        <div class="panel">
+          <span class="freq-label">CAPÍTULO 8</span>
+          <h2>La radio no ha muerto: se ha transformado</h2>
+          <p>Cada 13 de febrero se celebra el <strong>Día Mundial de la Radio</strong>, declarado por la UNESCO, precisamente para recordar la vigencia de este medio.</p>
+          <p>Hoy la radio se escucha en el coche, en altavoces inteligentes, en el móvil y a través de podcasts, pero su esencia sigue siendo la misma: una voz que llega a mucha gente a la vez, en directo.</p>
+        </div>
+        <div class="fila-tarjetas">
+          <div class="tarjeta">
+            <div class="anio">🎙️</div>
+            <p>El término <strong>"podcast"</strong> mezcla "iPod" (el reproductor de música) y "broadcast" (emisión), aunque hoy se escuchan desde cualquier dispositivo.</p>
+          </div>
+          <div class="tarjeta">
+            <div class="anio">🌍</div>
+            <p>Sigue siendo, junto a internet, uno de los medios más baratos y accesibles del planeta: solo hace falta un receptor, sin necesidad de electricidad de red ni conexión a datos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. ACTIVIDAD 3: TRIVIA CURIOSIDADES -->
+    <section class="slide" data-index="14">
+      <div class="contenido">
+        <span class="freq-label">ACTIVIDAD 3</span>
+        <h2>Trivia de curiosidades</h2>
+        <div class="panel">
+          <div class="marcador"><span>Elige la respuesta correcta</span><span id="marcador-trivia">0 / 5</span></div>
+          <div id="contenedor-trivia"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. RESUMEN LINEA DEL TIEMPO GENERAL -->
+    <section class="slide" data-index="15">
+      <div class="contenido">
+        <span class="freq-label">RESUMEN</span>
+        <h2>130 años en un solo vistazo</h2>
+        <div class="fila-tarjetas">
+          <div class="tarjeta"><div class="anio">1887</div><p>Hertz demuestra la existencia de las ondas electromagnéticas.</p></div>
+          <div class="tarjeta"><div class="anio">1901</div><p>Marconi cruza el Atlántico con una señal de radio.</p></div>
+          <div class="tarjeta"><div class="anio">1906</div><p>Fessenden emite la primera voz y música por radio.</p></div>
+          <div class="tarjeta"><div class="anio">1924</div><p>Nace la radio en España.</p></div>
+          <div class="tarjeta"><div class="anio">1938</div><p><em>La guerra de los mundos</em> siembra el pánico.</p></div>
+          <div class="tarjeta"><div class="anio">1949</div><p>Radio Quito repite el pánico en Ecuador.</p></div>
+          <div class="tarjeta"><div class="anio">1954</div><p>El transistor hace portátil la radio.</p></div>
+          <div class="tarjeta"><div class="anio">Hoy</div><p>Streaming, podcasts y radio a la carta.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. CIERRE -->
+    <section class="slide" data-index="16">
+      <div class="contenido cierre">
+        <span class="freq-label">FUERA DE ANTENA</span>
+        <svg class="radio-vintage" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Micrófono de radio">
+          <rect x="95" y="20" width="30" height="70" rx="15" fill="#3b2a1e"/>
+          <rect x="95" y="20" width="30" height="70" rx="15" fill="none" stroke="#c9a227" stroke-width="2"/>
+          <g stroke="#c9a227" stroke-width="2">
+            <line x1="90" y1="35" x2="90" y2="75"/><line x1="130" y1="35" x2="130" y2="75"/>
+          </g>
+          <rect x="105" y="90" width="10" height="30" fill="#6b4a32"/>
+          <rect x="80" y="120" width="60" height="10" rx="4" fill="#3b2a1e"/>
+        </svg>
+        <h2>Y ahora, os toca a vosotros</h2>
+        <p style="max-width:640px; margin:0 auto;">Esta es solo la introducción. Durante el curso aprenderéis a manejar el equipo del aula de radio, a preparar guiones, a hacer entrevistas y a producir vuestros propios programas.</p>
+        <p style="max-width:640px; margin:10px auto 0; font-weight:600;">La próxima voz que suene en la radio... puede ser la vuestra.</p>
+        <button class="btn-empezar" onclick="irA(0)">Volver al principio ▸</button>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="navinf">
+    <button class="btn-perilla" id="btn-prev" onclick="anterior()" aria-label="Anterior">◂</button>
+    <div id="puntos"></div>
+    <button class="btn-perilla" id="btn-next" onclick="siguiente()" aria-label="Siguiente">▸</button>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const TOTAL = 17;
+  let actual = 0;
+
+  const puntosCont = document.getElementById('puntos');
+  for(let i=0;i<TOTAL;i++){
+    const b = document.createElement('button');
+    b.className = 'punto' + (i===0?' activo':'');
+    b.setAttribute('aria-label','Ir a la diapositiva '+(i+1));
+    b.onclick = () => irA(i);
+    puntosCont.appendChild(b);
+  }
+
+  function actualizarUI(){
+    document.querySelectorAll('.slide').forEach(s=>{
+      const idx = parseInt(s.dataset.index,10);
+      s.classList.toggle('activa', idx===actual);
+    });
+    document.querySelectorAll('.punto').forEach((p,i)=>p.classList.toggle('activo', i===actual));
+    document.getElementById('contador').textContent = (actual+1)+' / '+TOTAL;
+    const pct = (actual/(TOTAL-1))*100;
+    document.getElementById('dial-fill').style.width = pct+'%';
+    document.getElementById('dial-needle').style.left = 'calc('+pct+'% - 1px)';
+    document.getElementById('btn-prev').disabled = actual===0;
+    document.getElementById('btn-next').disabled = actual===TOTAL-1;
+    window.scrollTo(0,0);
+  }
+
+  window.irA = function(i){
+    actual = Math.max(0, Math.min(TOTAL-1, i));
+    actualizarUI();
+  };
+  window.siguiente = function(){ irA(actual+1); };
+  window.anterior = function(){ irA(actual-1); };
+
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='ArrowRight') siguiente();
+    if(e.key==='ArrowLeft') anterior();
+  });
+
+  actualizarUI();
+
+  // --- pestañas de inventores ---
+  document.querySelectorAll('#pestanas-inventores .pestana').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#pestanas-inventores .pestana').forEach(b=>b.classList.remove('activa'));
+      btn.classList.add('activa');
+      const clave = btn.dataset.p;
+      document.querySelectorAll('.panel-personaje').forEach(p=>{
+        p.classList.toggle('activo', p.dataset.panel===clave);
+      });
+    });
+  });
+
+  // --- ojo mágico animado ---
+  const ojo = document.getElementById('ojo-magico');
+  if(ojo){
+    let r = 4, dir=1;
+    setInterval(()=>{
+      r += dir*0.4;
+      if(r>7||r<3) dir*=-1;
+      ojo.setAttribute('r', r.toFixed(1));
+    }, 200);
+  }
+
+  // ============ ACTIVIDAD 1: VERDADERO/FALSO ============
+  const preguntasVF = [
+    {t:"Marconi fue la única persona que inventó la radio, sin ayuda de nadie más.", r:false, exp:"Falso. La radio fue el resultado del trabajo de Maxwell, Hertz, Tesla, Marconi, Fessenden y muchos otros a lo largo de varias décadas."},
+    {t:"La primera vez que se transmitió voz y música por radio fue en 1906, gracias a Fessenden.", r:true, exp:"Verdadero. Antes de esa fecha la radio solo transmitía código Morse."},
+    {t:"La radio llegó a España en 1924.", r:true, exp:"Verdadero. Radio España y Radio Barcelona comenzaron a emitir ese año."},
+    {t:"Durante la Edad de Oro de la radio, la televisión ya existía en la mayoría de los hogares.", r:false, exp:"Falso. La Edad de Oro de la radio fue precisamente antes de que la televisión se extendiera por los hogares."},
+    {t:"El pánico de \"La guerra de los mundos\" ocurrió una única vez, solo en Estados Unidos.", r:false, exp:"Falso. Once años después se repitió un episodio muy parecido en Ecuador, con la emisión de Radio Quito."}
+  ];
+  let aciertosVF = 0, respondidasVF = 0;
+  const contVF = document.getElementById('contenedor-vf');
+  preguntasVF.forEach((p, i)=>{
+    const div = document.createElement('div');
+    div.className = 'pregunta';
+    div.innerHTML = `<p class="enunciado">${i+1}. ${p.t}</p>
+      <div class="opciones vf">
+        <button class="opcion" data-val="true">Verdadero</button>
+        <button class="opcion" data-val="false">Falso</button>
+      </div>
+      <p class="retro"></p>`;
+    contVF.appendChild(div);
+    const botones = div.querySelectorAll('.opcion');
+    const retro = div.querySelector('.retro');
+    botones.forEach(b=>{
+      b.addEventListener('click', ()=>{
+        if(b.dataset.bloqueado) return;
+        botones.forEach(x=>x.dataset.bloqueado='1');
+        const eligeVerdadero = b.dataset.val === 'true';
+        const acierto = eligeVerdadero === p.r;
+        b.classList.add(acierto?'correcta':'incorrecta');
+        if(!acierto){
+          botones.forEach(x=>{ if((x.dataset.val==='true')===p.r) x.classList.add('correcta'); });
+        }
+        retro.textContent = (acierto? '✔ ' : '✘ ') + p.exp;
+        if(acierto) aciertosVF++;
+        respondidasVF++;
+        document.getElementById('marcador-vf').textContent = aciertosVF+' / '+preguntasVF.length;
+      });
+    });
+  });
+
+  // ============ ACTIVIDAD 2: ORDENAR LA LÍNEA DEL TIEMPO ============
+  const eventosOrdenBase = [
+    {a:1887, t:"Hertz demuestra la existencia de las ondas electromagnéticas"},
+    {a:1906, t:"Fessenden emite por primera vez voz y música por radio"},
+    {a:1924, t:"Nace la radio en España (Radio España y Radio Barcelona)"},
+    {a:1938, t:"\"La guerra de los mundos\" siembra el pánico en EE. UU."},
+    {a:1949, t:"Radio Quito (Ecuador) repite el pánico marciano"},
+    {a:1954, t:"El transistor hace la radio pequeña y portátil"},
+  ];
+  let eventosMezclados = [];
+  let seleccionOrden = [];
+  const contOrden = document.getElementById('contenedor-orden');
+  const retroOrden = document.getElementById('retro-orden');
+
+  function barajar(arr){
+    const copia = [...arr];
+    for(let i=copia.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [copia[i],copia[j]] = [copia[j],copia[i]];
+    }
+    return copia;
+  }
+
+  function pintarOrden(){
+    contOrden.innerHTML = '';
+    seleccionOrden = [];
+    eventosMezclados.forEach((ev, idx)=>{
+      const div = document.createElement('div');
+      div.className = 'evento-click';
+      div.dataset.idx = idx;
+      div.innerHTML = `<span class="num"></span><span>${ev.t}</span>`;
+      div.addEventListener('click', ()=>{
+        if(div.classList.contains('marcado')) return;
+        seleccionOrden.push(idx);
+        div.classList.add('marcado');
+        div.querySelector('.num').textContent = seleccionOrden.length;
+      });
+      contOrden.appendChild(div);
+    });
+    retroOrden.textContent = '';
+  }
+
+  function reiniciarOrden(){
+    eventosMezclados = barajar(eventosOrdenBase);
+    pintarOrden();
+  }
+  window.reiniciarOrden = reiniciarOrden;
+
+  window.comprobarOrden = function(){
+    if(seleccionOrden.length < eventosMezclados.length){
+      retroOrden.textContent = 'Toca todos los sucesos para marcar tu orden antes de comprobar.';
+      return;
+    }
+    const ordenElegido = seleccionOrden.map(i=>eventosMezclados[i]);
+    const ordenCorrecto = [...eventosOrdenBase].sort((a,b)=>a.a-b.a);
+    let todoBien = true;
+    const tarjetas = contOrden.querySelectorAll('.evento-click');
+    seleccionOrden.forEach((idxOriginal, posicion)=>{
+      const el = tarjetas[idxOriginal];
+      const bien = ordenElegido[posicion].a === ordenCorrecto[posicion].a;
+      el.classList.add(bien?'correcto':'fallido');
+      if(!bien) todoBien = false;
+    });
+    retroOrden.textContent = todoBien
+      ? '✔ ¡Orden correcto! Buen dominio de la cronología.'
+      : '✘ Alguna fecha no está en su sitio. Los eventos en verde están bien colocados; revisa los que aparecen en rojo.';
+  };
+
+  reiniciarOrden();
+
+  // ============ ACTIVIDAD 3: TRIVIA ============
+  const trivia = [
+    {p:"¿Qué significa la palabra \"podcast\"?", ops:["Emisión policial", "Mezcla de \"iPod\" y \"broadcast\" (emisión)", "Un tipo de antena", "Código Morse moderno"], correcta:1, exp:"\"Podcast\" nace de mezclar el reproductor iPod con la palabra inglesa \"broadcast\" (emisión)."},
+    {p:"¿Qué día se celebra el Día Mundial de la Radio, según la UNESCO?", ops:["1 de enero", "13 de febrero", "30 de octubre", "24 de diciembre"], correcta:1, exp:"La UNESCO declaró el 13 de febrero como Día Mundial de la Radio."},
+    {p:"¿Qué avance tecnológico hizo que la radio se pudiera llevar en el bolsillo?", ops:["La válvula de vacío", "El transistor", "La fibra óptica", "El código Morse"], correcta:1, exp:"El transistor (1954) sustituyó a las grandes válvulas y permitió radios pequeñas y baratas."},
+    {p:"¿Qué emisora se considera el origen de la actual Cadena SER?", ops:["Radio Nacional de España", "Unión Radio", "Radio Quito", "CBS"], correcta:1, exp:"Unión Radio, nacida en 1925, es el antecedente directo de la Cadena SER."},
+    {p:"¿Cuál era la única forma de transmitir información por radio antes de 1906?", ops:["Música grabada", "Voz en directo", "Código Morse", "Publicidad sonora"], correcta:2, exp:"Hasta que Fessenden transmitió voz y música en 1906, la radio solo enviaba señales en código Morse."}
+  ];
+  let aciertosTrivia = 0;
+  const contTrivia = document.getElementById('contenedor-trivia');
+  trivia.forEach((p,i)=>{
+    const div = document.createElement('div');
+    div.className = 'pregunta';
+    let opcionesHTML = p.ops.map((o,j)=>`<button class="opcion" data-j="${j}">${o}</button>`).join('');
+    div.innerHTML = `<p class="enunciado">${i+1}. ${p.p}</p><div class="opciones">${opcionesHTML}</div><p class="retro"></p>`;
+    contTrivia.appendChild(div);
+    const botones = div.querySelectorAll('.opcion');
+    const retro = div.querySelector('.retro');
+    botones.forEach(b=>{
+      b.addEventListener('click', ()=>{
+        if(b.dataset.bloqueado) return;
+        botones.forEach(x=>x.dataset.bloqueado='1');
+        const j = parseInt(b.dataset.j,10);
+        const acierto = j===p.correcta;
+        b.classList.add(acierto?'correcta':'incorrecta');
+        if(!acierto) botones[p.correcta].classList.add('correcta');
+        retro.textContent = (acierto?'✔ ':'✘ ') + p.exp;
+        if(acierto){ aciertosTrivia++; document.getElementById('marcador-trivia').textContent = aciertosTrivia+' / '+trivia.length; }
+      });
+    });
+  });
+
+  // ============ ONDA AM / FM ============
+  const lienzo = document.getElementById('lienzo-onda');
+  const ctx = lienzo.getContext('2d');
+  let modoOnda = 'am';
+  let t0 = performance.now();
+
+  const textos = {
+    am: 'En AM (Amplitud Modulada) el sonido se codifica variando la ALTURA (amplitud) de la onda. Es una técnica sencilla, pero más sensible a interferencias.',
+    fm: 'En FM (Frecuencia Modulada) el sonido se codifica variando la FRECUENCIA de la onda, no su altura. Da un sonido más limpio y de mayor calidad, ideal para música.'
+  };
+
+  window.mostrarOnda = function(m){
+    modoOnda = m;
+    document.getElementById('btn-am').classList.toggle('activo', m==='am');
+    document.getElementById('btn-fm').classList.toggle('activo', m==='fm');
+    document.getElementById('texto-onda').textContent = textos[m];
+  };
+  mostrarOnda('am');
+
+  function dibujarOnda(ts){
+    const w = lienzo.width, h = lienzo.height, mid = h/2;
+    ctx.clearRect(0,0,w,h);
+    ctx.strokeStyle = '#a63a32';
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    const tiempo = (ts-t0)/700;
+    for(let x=0; x<w; x++){
+      let y;
+      if(modoOnda==='am'){
+        const envolvente = 1 + 0.55*Math.sin(x*0.03 + tiempo);
+        y = mid + Math.sin(x*0.35)*22*envolvente;
+      } else {
+        const freqMod = 0.35 + 0.18*Math.sin(x*0.02 + tiempo);
+        y = mid + Math.sin(x*freqMod)*26;
+      }
+      if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    requestAnimationFrame(dibujarOnda);
+  }
+  requestAnimationFrame(dibujarOnda);
+
+})();
+</script>
+</body>
+</html>

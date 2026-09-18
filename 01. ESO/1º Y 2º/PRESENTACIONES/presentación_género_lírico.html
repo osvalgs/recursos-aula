@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Género Lírico · 2.º ESO</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --parch:#faf4e1; --parch2:#f0e6c8; --parch3:#e8d8b0;
+  --ink:#1c1208; --ink2:#4a3620; --muted:#9a8a70;
+  --gold:#9b6b10; --goldl:#c48a0e; --goldbg:rgba(155,107,16,.1);
+  --pur:#5a1a90; --purbg:rgba(90,26,144,.08);
+  --teal:#166878; --tealbg:rgba(22,104,120,.08);
+  --wine:#8b1a3a; --winebg:rgba(139,26,58,.08);
+  --rose:#b03060;
+  --brd:#d8c5a0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Lora',serif}
+
+/* ── SLIDE SYSTEM ─── */
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  padding:2.8rem 5rem 3.5rem;
+  opacity:0;transform:translateX(30px) scale(.98);
+  pointer-events:none;transition:opacity .38s ease,transform .38s ease;
+}
+.slide.active{opacity:1;transform:none;pointer-events:all}
+
+/* DARK slides: portada + video */
+.dark{background:radial-gradient(ellipse 80% 65% at 50% 35%,#1b1050 0%,#08091a 70%);color:#f0e4c4}
+/* LIGHT slides: everything else */
+.light{background:var(--parch);color:var(--ink)}
+
+/* ── NAV ─── */
+.nbtn{
+  position:fixed;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.92);border:2px solid var(--brd);
+  color:var(--ink2);width:52px;height:74px;font-size:2.2rem;
+  cursor:pointer;z-index:200;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;transition:all .2s;box-shadow:0 2px 12px rgba(0,0,0,.12);
+}
+.nbtn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.nbtn:disabled{opacity:.15;cursor:default}
+#pb{left:.5rem}#nb{right:.5rem}
+#dots{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.45rem;z-index:200}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(155,107,16,.3);cursor:pointer;transition:all .2s}
+.dot.on{background:var(--gold);transform:scale(1.4)}
+#ctr{position:fixed;top:.85rem;right:1.4rem;font-size:.8rem;color:var(--muted);z-index:200;letter-spacing:.08em;font-family:'Lora',serif}
+#prog{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--gold),var(--goldl));transition:width .35s ease;z-index:300}
+
+/* ── SHARED ELEMENTS ─── */
+.tag-line{font-size:.85rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem}
+.stitle{font-family:'Playfair Display',serif;font-weight:700;color:var(--gold);margin-bottom:1.6rem;line-height:1.1}
+.rule-h{width:5rem;height:2px;background:var(--gold);opacity:.4;margin:.6rem 0 1.4rem}
+.badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.82rem;padding:.3rem .8rem;border-radius:12px;border:1px solid;letter-spacing:.04em;font-family:'Lora',serif}
+.badge-g{color:var(--gold);border-color:var(--gold);background:var(--goldbg)}
+.badge-t{color:var(--teal);border-color:var(--teal);background:var(--tealbg)}
+.badge-p{color:var(--pur);border-color:var(--pur);background:var(--purbg)}
+.badge-w{color:var(--wine);border-color:var(--wine);background:var(--winebg)}
+
+/* ══════════════════════════
+   S0 PORTADA
+══════════════════════════ */
+#s0{padding:3.5rem 5rem;justify-content:space-between}
+.p-top{text-align:center}
+.p-mid{flex:1;display:flex;align-items:center;justify-content:center}
+.p-inner{text-align:center;position:relative;z-index:2}
+.p-label{font-size:1rem;letter-spacing:.5em;text-transform:uppercase;color:#c9a435;opacity:.8;margin-bottom:0}
+.p-h1{font-family:'Playfair Display',serif;font-size:clamp(5rem,13vw,10rem);font-weight:900;color:#f0e4c4;line-height:.9}
+.p-h1 em{font-style:italic;color:#c9a435}
+.p-rule{width:8rem;height:1px;background:#c9a435;opacity:.3;margin:2.5rem auto}
+.p-sub{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1rem,1.8vw,1.4rem);color:#b8a880;max-width:640px;margin:0 auto;line-height:1.8}
+.p-attr{font-size:.78rem;color:#6a6050;letter-spacing:.18em;margin-top:.6rem}
+.p-bot{text-align:center}
+.stars,.floats{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:0;animation:tw var(--d) ease-in-out var(--dl) infinite}
+@keyframes tw{0%,100%{opacity:0}50%{opacity:.45}}
+.fw{position:absolute;font-family:'Playfair Display',serif;font-style:italic;color:#c9a435;opacity:0;animation:fl var(--d) ease-in-out var(--dl) infinite}
+@keyframes fl{0%{opacity:0;transform:translateY(10px)}20%{opacity:.12}50%{opacity:.05;transform:translateY(-8px)}100%{opacity:0;transform:translateY(-18px)}}
+
+/* ══════════════════════════
+   S1 QUÉ ES
+══════════════════════════ */
+#s1 .stitle{font-size:clamp(2rem,3.5vw,2.8rem)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:3rem;flex:1;align-items:center}
+.cbox{border-left:4px solid var(--gold);background:var(--goldbg);padding:1.4rem 1.8rem;margin-bottom:1.4rem}
+.cbox p{font-size:1.25rem;line-height:1.85;color:var(--ink2)}
+.cbox strong{color:var(--ink)}
+.kl{display:flex;flex-direction:column;gap:.9rem}
+.ki{display:flex;align-items:flex-start;gap:.75rem;font-size:1.1rem;color:var(--ink2);line-height:1.65}
+.kd{width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:.55rem}
+.pcard{background:var(--parch2);border:1px solid var(--brd);border-radius:6px;padding:2rem 2.2rem}
+.pcard .pv{font-family:'Playfair Display',serif;font-style:italic;font-size:1.6rem;line-height:2.1;color:var(--ink)}
+.pcard .pa{font-size:.78rem;color:var(--muted);letter-spacing:.12em;margin-top:.9rem;text-transform:uppercase}
+
+/* ══════════════════════════
+   S2 VERSO Y MEDIDA
+══════════════════════════ */
+#s2 .stitle{font-size:clamp(2rem,3.5vw,2.8rem)}
+.vgrid{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;flex:1;align-items:start}
+.vrules{display:flex;flex-direction:column;gap:1rem}
+.vr{background:var(--parch2);border:1px solid var(--brd);border-left:4px solid var(--gold);padding:1.1rem 1.4rem;border-radius:0 5px 5px 0}
+.vr.t{border-left-color:var(--teal)}.vr.p{border-left-color:var(--pur)}
+.vr h3{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--gold);margin-bottom:.35rem}
+.vr.t h3{color:var(--teal)}.vr.p h3{color:var(--pur)}
+.vr p{font-size:1rem;color:var(--ink2);line-height:1.7}
+.vr .ex{display:inline-block;margin-top:.4rem;font-style:italic;background:var(--parch3);padding:.25rem .6rem;border-radius:3px;font-size:.93rem;color:var(--ink)}
+.nomen{background:var(--goldbg);border:1px solid var(--brd);padding:.75rem 1.1rem;border-radius:5px;font-size:.98rem;color:var(--ink2)}
+.nomen strong{color:var(--ink)}
+/* Counter tool */
+.ctool{background:#fff;border:2px solid var(--brd);border-radius:8px;padding:1.6rem;display:flex;flex-direction:column;gap:1rem;box-shadow:0 2px 16px rgba(0,0,0,.06)}
+.ctool h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold)}
+.vi{width:100%;background:var(--parch);border:1px solid var(--brd);border-radius:5px;padding:.85rem;color:var(--ink);font-family:'Lora',serif;font-size:1.15rem;font-style:italic;outline:none;resize:none}
+.vi::placeholder{color:var(--muted)}
+.vi:focus{border-color:var(--gold)}
+.tr{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap}
+.cb{background:var(--gold);color:#fff;border:none;padding:.6rem 1.5rem;font-family:'Playfair Display',serif;font-weight:700;font-size:.95rem;cursor:pointer;border-radius:4px;letter-spacing:.04em;transition:background .2s}
+.cb:hover{background:var(--goldl)}
+.fs{background:var(--parch);border:1px solid var(--brd);color:var(--ink2);padding:.35rem .6rem;border-radius:4px;font-size:.88rem;font-family:'Lora',serif}
+.adj{width:34px;height:34px;background:var(--parch2);border:1px solid var(--brd);color:var(--gold);font-size:1.15rem;cursor:pointer;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.adj:hover{background:var(--goldbg)}
+#cr{min-height:80px}
+.ssw{display:flex;flex-wrap:wrap;gap:.2rem;align-items:center;font-size:1rem;line-height:2.5;font-style:italic}
+.ws{display:inline-flex;gap:0;margin-right:.1rem}
+.s0{background:rgba(155,107,16,.18);color:var(--ink);padding:0 .12rem;border-radius:2px}
+.s1{background:rgba(155,107,16,.06);color:var(--ink2);padding:0 .12rem;border-radius:2px}
+.sd{opacity:.35;font-size:.65rem;margin:0 1px}
+.si{color:var(--goldl);font-size:.68rem;vertical-align:super;margin:0 .1rem}
+.cnum{font-family:'Playfair Display',serif;font-size:3.8rem;color:var(--gold);line-height:1}
+.cinfo{font-size:.95rem;color:var(--ink2);line-height:1.6}
+.crow{display:flex;align-items:center;gap:.9rem;margin-top:.5rem}
+
+/* ══════════════════════════
+   S3-S5 RIMA SLIDES
+══════════════════════════ */
+.rslide{padding:0}
+.rslide .rtop{padding:2rem 5rem 1.8rem;border-bottom:2px solid var(--brd)}
+.rslide .rtop .rtag{font-size:.82rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem}
+.rslide .rbody{padding:2.5rem 5rem;display:flex;flex-direction:column;gap:1.5rem;flex:1}
+.r-icon{font-size:3rem}
+.r-name{font-family:'Playfair Display',serif;font-weight:900;line-height:1;margin-top:.3rem}
+.r-def{font-size:1.4rem;color:var(--ink2);line-height:1.75;max-width:780px}
+.r-def strong{color:var(--ink)}
+.r-ex{background:var(--parch2);border-left:5px solid;padding:1.8rem 2.2rem;border-radius:0 8px 8px 0}
+.r-ex p{font-family:'Playfair Display',serif;font-style:italic;font-size:2rem;line-height:1.9;color:var(--ink)}
+.r-ex .note{font-size:.9rem;color:var(--muted);margin-top:.8rem;font-style:normal;font-family:'Lora',serif}
+
+#s4 .r-name{color:var(--gold);font-size:clamp(3rem,6vw,5rem)}
+#s4 .r-ex{border-color:var(--gold);background:var(--goldbg)}
+#s5 .r-name{color:var(--teal);font-size:clamp(3rem,6vw,5rem)}
+#s5 .r-ex{border-color:var(--teal);background:var(--tealbg)}
+#s6 .r-name{color:var(--pur);font-size:clamp(3rem,6vw,4.5rem)}
+#s6 .r-ex{border-color:var(--pur);background:var(--purbg)}
+
+.hm{font-weight:700;text-decoration:underline;text-decoration-style:wavy;text-underline-offset:4px}
+#s4 .hm{color:var(--gold);text-decoration-color:var(--gold)}
+#s5 .hm{color:var(--teal);text-decoration-color:var(--teal)}
+#s6 .hm{color:var(--pur);text-decoration-color:var(--pur)}
+
+/* ══════════════════════════
+   S6-S10 FIGURAS LITERARIAS
+══════════════════════════ */
+.fslide{padding:0}
+.fslide .ftop{padding:1.5rem 5rem 1.2rem;border-bottom:2px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.ftag{font-size:.82rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.fnum{font-size:.82rem;color:var(--muted);letter-spacing:.1em}
+.fslide .fbody{padding:2.2rem 5rem;display:flex;flex-direction:column;gap:1.4rem;flex:1;justify-content:center}
+.f-row{display:flex;align-items:center;gap:1.2rem}
+.f-icon{font-size:3.5rem;line-height:1}
+.f-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(3rem,6vw,4.8rem);line-height:1}
+.f-def{font-size:1.4rem;color:var(--ink2);line-height:1.75;max-width:820px}
+.f-def strong{color:var(--ink)}
+.f-ex{border-left:5px solid;padding:1.6rem 2.2rem;border-radius:0 8px 8px 0;display:flex;flex-direction:column;gap:.6rem}
+.f-ex p{font-family:'Playfair Display',serif;font-style:italic;font-size:1.9rem;line-height:1.85;color:var(--ink)}
+.f-ex .ex2{font-size:1.35rem;color:var(--ink2)}
+.f-ex .note{font-size:.9rem;color:var(--muted);font-style:normal;font-family:'Lora',serif}
+.f-key{font-weight:700;font-style:normal}
+
+/* Figuras s7-s12: aliteración, anáfora, hipérbaton, metáfora, comparación, personificación */
+#s8  .f-name{color:var(--gold)}  #s8  .f-ex{border-color:var(--gold);background:var(--goldbg)}
+#s9  .f-name{color:var(--wine)}  #s9  .f-ex{border-color:var(--wine);background:var(--winebg)}
+#s10  .f-name{color:var(--teal)}  #s10  .f-ex{border-color:var(--teal);background:var(--tealbg)}
+#s11 .f-name{color:var(--pur)}   #s11 .f-ex{border-color:var(--pur);background:var(--purbg)}
+#s12 .f-name{color:var(--rose)}  #s12 .f-ex{border-color:var(--rose);background:rgba(176,48,96,.08)}
+#s13 .f-name{color:#1a6575}      #s13 .f-ex{border-color:#1a6575;background:rgba(26,101,117,.07)}
+#s8 .f-key{color:var(--gold)}  #s9 .f-key{color:var(--wine)}   #s10 .f-key{color:var(--teal)}
+#s11 .f-key{color:var(--pur)}  #s12 .f-key{color:var(--rose)}  #s13 .f-key{color:#1a6575}
+
+/* ══════════════════════════
+   S11-S13 POEMAS
+══════════════════════════ */
+.pslide .stitle{font-size:clamp(1.8rem,3vw,2.5rem)}
+.playout{display:grid;grid-template-columns:220px 1fr;gap:3rem;flex:1;align-items:center}
+.pp{display:flex;flex-direction:column;align-items:center;gap:.9rem}
+.portrait{width:175px;height:215px;object-fit:cover;object-position:top;border-radius:5px;border:2px solid var(--brd);filter:sepia(20%) contrast(1.08)}
+.portrait-ph{width:175px;height:215px;background:var(--parch2);border:2px solid var(--brd);border-radius:5px;display:none;align-items:center;justify-content:center;font-size:3.5rem}
+.pname{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--ink);text-align:center}
+.pdates{font-size:.75rem;color:var(--muted);text-align:center}
+.pbio{font-size:.8rem;color:var(--ink2);line-height:1.65;font-style:italic;text-align:center;max-width:195px}
+.qp{display:flex;flex-direction:column;justify-content:center;gap:1.2rem}
+.qtitle{font-family:'Playfair Display',serif;font-size:1.6rem;font-style:italic;color:var(--gold)}
+.qsub{font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:-.5rem}
+.qtext{font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.4rem,2.3vw,1.9rem);line-height:2.1;color:var(--ink)}
+.vl{display:block}
+.rbtn{background:transparent;border:2px solid var(--gold);color:var(--gold);padding:.6rem 1.5rem;font-family:'Lora',serif;font-size:.9rem;cursor:pointer;border-radius:4px;align-self:flex-start;transition:all .2s;letter-spacing:.07em}
+.rbtn:hover{background:var(--gold);color:#fff}
+.apanel{background:var(--goldbg);border-left:4px solid var(--gold);padding:1.2rem 1.5rem;border-radius:0 5px 5px 0;max-height:0;overflow:hidden;opacity:0;transition:max-height .5s ease,opacity .4s ease}
+.apanel.show{max-height:200px;opacity:1}
+.apanel p{font-size:1rem;color:var(--ink2);line-height:1.85}
+.apanel strong{color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.8rem}
+.tag{font-size:.73rem;padding:.2rem .6rem;border-radius:12px;border:1px solid;letter-spacing:.03em}
+.tg{color:var(--gold);border-color:var(--gold);background:var(--goldbg)}
+.tp{color:var(--pur);border-color:var(--pur);background:var(--purbg)}
+.tt{color:var(--teal);border-color:var(--teal);background:var(--tealbg)}
+.tw{color:var(--wine);border-color:var(--wine);background:var(--winebg)}
+
+/* ══════════════════════════
+   S14 VIDEO
+══════════════════════════ */
+#s14{align-items:center;justify-content:center;gap:1.5rem}
+#s15 .stitle{font-size:clamp(1.8rem,3vw,2.5rem);color:#c9a435;margin-bottom:0;align-self:flex-start;width:100%}
+.vwrap{position:relative;width:min(840px,84vw);aspect-ratio:16/9;border:2px solid rgba(201,164,53,.35);border-radius:6px;overflow:hidden;box-shadow:0 0 50px rgba(201,164,53,.1)}
+.vwrap iframe{width:100%;height:100%;border:none}
+
+/* ══════════════════════════
+   S17 ACTIVIDADES
+══════════════════════════ */
+#s16 .stitle{font-size:clamp(2rem,3.5vw,2.8rem)}
+.acards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;flex:1;align-items:center;max-width:960px;margin:0 auto}
+.ac{border-radius:8px;padding:2.2rem 1.8rem;text-align:center;display:flex;flex-direction:column;gap:1rem;align-items:center;border:2px solid var(--brd)}
+.ac.a1{background:var(--goldbg);border-color:var(--gold)}
+.ac.a2{background:var(--tealbg);border-color:var(--teal)}
+.ac.a3{background:var(--purbg);border-color:var(--pur)}
+.anum{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700}
+.a1 .anum{background:var(--gold);color:#fff}
+.a2 .anum{background:var(--teal);color:#fff}
+.a3 .anum{background:var(--pur);color:#fff}
+.ac-icon{font-size:1.8rem}
+.ac h3{font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--ink)}
+.ac p{font-size:.97rem;color:var(--ink2);line-height:1.7}
+.cita{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:1.05rem;color:var(--muted);margin-top:.5rem}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+<button class="nbtn" id="pb" onclick="go(-1)">‹</button>
+<button class="nbtn" id="nb" onclick="go(1)">›</button>
+<div id="dots"></div>
+<div id="ctr"></div>
+
+<!-- ══════ S0 PORTADA ══════ -->
+<section class="slide dark active" id="s0">
+  <div class="stars" id="stars"></div>
+  <div class="floats" id="floats"></div>
+  <div class="p-top">
+    <p class="p-label">2.º ESO &nbsp;·&nbsp; Lengua Castellana y Literatura</p>
+  </div>
+  <div class="p-mid">
+    <div class="p-inner">
+      <h1 class="p-h1">El género<br><em>lírico</em></h1>
+    </div>
+  </div>
+  <div class="p-bot">
+    <div class="p-rule"></div>
+    <p class="p-sub">«La poesía es la unión de dos palabras que uno nunca supuso que pudieran juntarse.»</p>
+    <p class="p-attr">— Federico García Lorca</p>
+  </div>
+</section>
+
+<!-- ══════ S1 QUÉ ES ══════ -->
+<section class="slide light" id="s1">
+  <p class="tag-line">El género lírico</p>
+  <h2 class="stitle" style="font-size:clamp(2rem,3.5vw,2.8rem)">¿Qué es el género lírico?</h2>
+  <div class="two">
+    <div>
+      <div class="cbox">
+        <p style="font-size:1.2rem;line-height:1.75">El <strong>género lírico</strong> reúne los textos en los que el autor expresa sus <strong>sentimientos, emociones o reflexiones personales</strong>. El poeta habla desde su mundo interior.</p>
+      </div>
+      <div class="kl" style="margin-top:1.2rem">
+        <div class="ki"><div class="kd"></div><span style="font-size:1.3rem;line-height:1.7">Habla en <strong>primera persona</strong>: expresa lo que siente.</span></div>
+        <div class="ki"><div class="kd"></div><span style="font-size:1.3rem;line-height:1.7">Se dirige a un <strong>«tú»</strong>: la persona amada, la naturaleza, Dios, la muerte…</span></div>
+        <div class="ki"><div class="kd"></div><span style="font-size:1.3rem;line-height:1.7">Se organiza en <strong>versos</strong> agrupados en <strong>estrofas</strong>.</span></div>
+        <div class="ki"><div class="kd"></div><span style="font-size:1.3rem;line-height:1.7">Temas: <strong>amor, muerte, naturaleza, tiempo, soledad</strong>.</span></div>
+        <div class="ki"><div class="kd"></div><span style="font-size:1.3rem;line-height:1.7">La musicalidad es esencial: <strong>ritmo, rima, repetición</strong>.</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.4rem;justify-content:center">
+      <div class="pcard">
+        <div class="pv">
+          «¿Qué es poesía? —dices mientras clavas<br>
+          en mi pupila tu pupila azul.<br>
+          ¡Qué es poesía! ¿Y tú me lo preguntas?<br>
+          <span style="color:var(--gold)">Poesía... eres tú.»</span>
+        </div>
+        <div class="pa">G. A. Bécquer · Rima XXI</div>
+      </div>
+      <p style="font-size:1.05rem;color:var(--ink2);font-style:italic;text-align:center;line-height:1.7">La música que escucháis a diario<br>es poesía lírica: versos, rima, metáforas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S2 VERSO Y MEDIDA ══════ -->
+<section class="slide light" id="s2">
+  <p class="tag-line">El género lírico · Métrica</p>
+  <h2 class="stitle" style="font-size:clamp(2rem,3.5vw,2.8rem)">El verso y la medida (I)</h2>
+  <div class="vgrid">
+    <div class="vrules">
+      <div class="vr" style="padding:.9rem 1.4rem">
+        <h3 style="font-size:1.2rem">¿Qué es medir un verso?</h3>
+        <p style="font-size:1.05rem">Contar las <strong>sílabas métricas</strong>. El ritmo nace de esa regularidad.</p>
+      </div>
+      <div class="vr t" style="padding:.9rem 1.4rem">
+        <h3 style="font-size:1.2rem">① Sinalefa</h3>
+        <p style="font-size:1.05rem">Vocal final + vocal inicial siguiente = <strong>una sola sílaba</strong>.</p>
+        <span class="ex" style="font-size:.95rem">«mi_al-ma» → 3 sílabas · «cor-ta_el mar» ↴</span>
+      </div>
+      <div class="vr" style="padding:.9rem 1.4rem;border-left-color:var(--wine)">
+        <h3 style="font-size:1.2rem;color:var(--wine)">② Dialefa</h3>
+        <p style="font-size:1.05rem">Se <strong>impide</strong> la sinalefa: cada vocal conserva su propia sílaba.</p>
+        <span class="ex" style="font-size:.95rem">«lo / ‿ imposible» → pronunciadas separadas</span>
+      </div>
+      <div class="vr" style="padding:.9rem 1.4rem;border-left-color:var(--goldl)">
+        <h3 style="font-size:1.2rem;color:var(--goldl)">③ Sinéresis</h3>
+        <p style="font-size:1.05rem">Dos vocales en hiato dentro de una palabra se unen en <strong>una sola sílaba</strong>.</p>
+        <span class="ex" style="font-size:.95rem">«po-e-ta» (3) → con sinéresis: «poe-ta» (2)</span>
+      </div>
+      <div class="vr" style="padding:.9rem 1.4rem;border-left-color:#4a80a0">
+        <h3 style="font-size:1.2rem;color:#4a80a0">④ Diéresis</h3>
+        <p style="font-size:1.05rem">Se rompe un diptongo para crear <strong>dos sílabas distintas</strong>. Se marca con ¨ sobre la vocal.</p>
+        <span class="ex" style="font-size:.95rem">«güi-sar» → gü-i-sar (3 síl.) · «su-a-ve» ← suäve</span>
+      </div>
+    </div>
+    <div class="ctool">
+      <h3>🎯 Conta-versos interactivo</h3>
+      <textarea class="vi" id="vi" rows="2" placeholder="Escribe un verso… Ej: «Con diez cañones por banda,»"></textarea>
+      <div class="tr">
+        <button class="cb" onclick="analiza()">Analizar</button>
+        <select class="fs" id="ft" onchange="analiza()">
+          <option value="llana">Final llana</option>
+          <option value="aguda">Final aguda (+1)</option>
+          <option value="esdrujula">Final esdrújula (−1)</option>
+        </select>
+        <button class="adj" onclick="ajustar(-1)">−</button>
+        <button class="adj" onclick="ajustar(+1)">+</button>
+      </div>
+      <div id="cr"></div>
+      <p style="font-size:.78rem;color:var(--muted);font-style:italic">Enter o clic en «Analizar». Usa −/+ para ajustar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S3 EL VERSO MEDIDA 2 ══════ -->
+<section class="slide light" id="s3">
+  <p class="tag-line">El género lírico · Métrica</p>
+  <h2 class="stitle" style="font-size:clamp(2rem,3.5vw,2.8rem)">El verso y la medida (II)</h2>
+  <div class="vgrid" style="grid-template-columns:1.2fr 1fr">
+    <div class="vrules">
+      <div class="vr" style="padding:.9rem 1.4rem">
+        <h3 style="font-size:1.2rem">⑤ Aguda al final (+1)</h3>
+        <p style="font-size:1.05rem">Si el verso acaba en <strong>palabra aguda</strong>, suma 1 sílaba al recuento.</p>
+        <span class="ex" style="font-size:.95rem">«ber-gan-tín» = 3 → +1 = <strong>4 sílabas métricas</strong></span>
+      </div>
+      <div class="vr p" style="padding:.9rem 1.4rem">
+        <h3 style="font-size:1.2rem">⑥ Esdrújula al final (−1)</h3>
+        <p style="font-size:1.05rem">Si acaba en <strong>palabra esdrújula</strong>, resta 1 sílaba al recuento.</p>
+        <span class="ex" style="font-size:.95rem">«mé-di-co» = 3 → −1 = <strong>2 sílabas métricas</strong></span>
+      </div>
+      <div class="nomen" style="font-size:1rem;padding:.9rem 1.2rem">
+        <strong>Nomenclatura:</strong> 7 = heptasílabo &nbsp;·&nbsp; <strong>8 = octosílabo</strong> &nbsp;·&nbsp; 11 = endecasílabo &nbsp;·&nbsp; 14 = alejandrino
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1.2rem;justify-content:center;padding:1rem 0">
+      <div style="background:var(--goldbg);border-left:5px solid var(--gold);padding:1.4rem 1.8rem;border-radius:0 8px 8px 0">
+        <p style="font-size:1.4rem;color:var(--gold);font-weight:700;margin-bottom:.6rem">Arte menor</p>
+        <p style="font-size:1.15rem;color:var(--ink2)">Versos de <strong style="color:var(--ink)">2 a 8 sílabas</strong></p>
+      </div>
+      <div style="background:var(--purbg);border-left:5px solid var(--pur);padding:1.4rem 1.8rem;border-radius:0 8px 8px 0">
+        <p style="font-size:1.4rem;color:var(--pur);font-weight:700;margin-bottom:.6rem">Arte mayor</p>
+        <p style="font-size:1.15rem;color:var(--ink2)">Versos de <strong style="color:var(--ink)">9 o más sílabas</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══════ S3 RIMA CONSONANTE ══════ -->
+<section class="slide light rslide" id="s4">
+  <div class="rtop">
+    <p class="rtag">La rima · 1 de 3</p>
+    <div class="r-icon">🎼</div>
+    <div class="r-name">Rima consonante</div>
+  </div>
+  <div class="rbody">
+    <p class="r-def">Coinciden <strong>vocales Y consonantes</strong> a partir de la última vocal acentuada. Es la rima más completa y musical.</p>
+    <div class="r-ex">
+      <p>
+        «ci<span class="hm">elo</span> / su<span class="hm">elo</span>» &nbsp;&nbsp; «am<span class="hm">or</span> / dol<span class="hm">or</span>»<br>
+        «can<span class="hm">ción</span> / coraz<span class="hm">ón</span>»
+      </p>
+      <div class="note">Consonantes y vocales coinciden desde la última vocal tónica: <em>c<strong>ielo</strong></em> → i-e-l-o = <em>su<strong>elo</strong></em> → i-e-l-o ✓</div>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <span class="badge badge-g">Rima más frecuente en poesía clásica</span>
+      <span class="badge badge-g">Soneto, redondilla, lira…</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S4 RIMA ASONANTE ══════ -->
+<section class="slide light rslide" id="s5">
+  <div class="rtop">
+    <p class="rtag">La rima · 2 de 3</p>
+    <div class="r-icon">🎵</div>
+    <div class="r-name">Rima asonante</div>
+  </div>
+  <div class="rbody">
+    <p class="r-def">Solo coinciden <strong>las vocales</strong> a partir de la última vocal acentuada. Es más libre y muy usada en la poesía popular española.</p>
+    <div class="r-ex">
+      <p>
+        «Caminante, son tus hu<span class="hm">ellas</span>&nbsp;&nbsp; [e-a]»<br>
+        «el camino y nada m<span class="hm">ás</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [a]»<br>
+        «caminante, no hay cam<span class="hm">ino</span>&nbsp;&nbsp;&nbsp; [i-o]»<br>
+        «se hace camino al and<span class="hm">ar</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [a]»
+      </p>
+      <div class="note">Solo riman los versos <strong>pares</strong> (2.º y 4.º). Esquema: –a–a. «más» / «andar» → solo vocales: a ✓</div>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <span class="badge badge-t">Típica del romance español</span>
+      <span class="badge badge-t">Machado, Lorca, Romancero…</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S5 VERSO LIBRE ══════ -->
+<section class="slide light rslide" id="s6">
+  <div class="rtop">
+    <p class="rtag">La rima · 3 de 3</p>
+    <div class="r-icon">🌊</div>
+    <div class="r-name">Verso libre</div>
+  </div>
+  <div class="rbody">
+    <p class="r-def">Sin rima fija ni medida regular. El poeta busca la musicalidad a través del <strong>ritmo interno</strong>: repeticiones, pausas, imágenes y figuras literarias.</p>
+    <div class="r-ex">
+      <p>
+        «Puedo escribir los versos más tristes esta noche.<br>
+        Escribir, por ejemplo: la noche está estrellada,<br>
+        y tiritan, azules, los astros, a lo lejos.»
+      </p>
+      <div class="note">Pablo Neruda, <em>Veinte poemas de amor</em>. Sin rima, pero con un ritmo fluido e imágenes muy visuales.</div>
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <span class="badge badge-p">Predomina en la poesía del siglo XX</span>
+      <span class="badge badge-p">Neruda, Paz, Cernuda, Valente…</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S6 ESQUEMA MÉTRICO ══════ -->
+<section class="slide light" id="s7">
+  <p class="tag-line">La rima · Representación</p>
+  <h2 class="stitle" style="font-size:clamp(2rem,3.5vw,2.8rem)">El esquema métrico</h2>
+  <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;flex:1;align-items:start;padding-top:.3rem">
+    <div style="display:flex;flex-direction:column;gap:1.1rem">
+      <p style="font-size:1.35rem;color:var(--ink2);line-height:1.8">Para representar la <strong style="color:var(--ink)">estructura de un poema</strong> usamos letras del alfabeto. Cada terminación diferente recibe una <strong style="color:var(--ink)">letra nueva</strong>.</p>
+      <div style="background:var(--goldbg);border-left:5px solid var(--gold);padding:1.3rem 1.6rem;border-radius:0 6px 6px 0">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--gold);font-weight:700;margin-bottom:.5rem">1 &nbsp;·&nbsp; Arte menor</p>
+        <p style="font-size:1.3rem;color:var(--ink2);line-height:1.7">Versos de <strong style="color:var(--ink)">2 a 8 sílabas</strong>.<br>Letras <strong style="color:var(--gold)">minúsculas</strong>: <em style="font-size:1.4rem;color:var(--gold)">a, b, c, d…</em></p>
+      </div>
+      <div style="background:var(--purbg);border-left:5px solid var(--pur);padding:1.3rem 1.6rem;border-radius:0 6px 6px 0">
+        <p style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--pur);font-weight:700;margin-bottom:.5rem">2 &nbsp;·&nbsp; Arte mayor</p>
+        <p style="font-size:1.3rem;color:var(--ink2);line-height:1.7">Versos de <strong style="color:var(--ink)">9 sílabas o más</strong>.<br>Letras <strong style="color:var(--pur)">MAYÚSCULAS</strong>: <em style="font-size:1.4rem;color:var(--pur)">A, B, C, D…</em></p>
+      </div>
+      <p style="font-size:1.05rem;color:var(--muted);font-style:italic">Los versos sin rima se marcan con <strong style="color:var(--ink2);font-style:normal">–</strong> (guión).</p>
+    </div>
+    <div style="background:#fff;border:2px solid var(--brd);border-radius:8px;padding:1.8rem 2rem;box-shadow:0 2px 16px rgba(0,0,0,.06)">
+      <p style="font-size:.8rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem">Ejemplo · Machado (octosílabos = arte menor)</p>
+      <table style="width:100%;border-collapse:collapse;font-family:'Lora',serif;font-size:1.25rem">
+        <tbody>
+          <tr style="border-bottom:1px solid var(--brd)">
+            <td style="padding:.7rem .5rem;font-style:italic;color:var(--ink)">Caminante, son tus huellas</td>
+            <td style="padding:.7rem .4rem;text-align:center;color:var(--muted);font-size:.88rem">8 síl.</td>
+            <td style="padding:.7rem .8rem;text-align:center;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--muted)">–</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--brd);background:var(--goldbg)">
+            <td style="padding:.7rem .5rem;font-style:italic;color:var(--ink)">el camino y nada <u>más</u>;</td>
+            <td style="padding:.7rem .4rem;text-align:center;color:var(--muted);font-size:.88rem">8 síl.</td>
+            <td style="padding:.7rem .8rem;text-align:center;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold)">a</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--brd)">
+            <td style="padding:.7rem .5rem;font-style:italic;color:var(--ink)">caminante, no hay camino,</td>
+            <td style="padding:.7rem .4rem;text-align:center;color:var(--muted);font-size:.88rem">8 síl.</td>
+            <td style="padding:.7rem .8rem;text-align:center;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--muted)">–</td>
+          </tr>
+          <tr style="background:var(--goldbg)">
+            <td style="padding:.7rem .5rem;font-style:italic;color:var(--ink)">se hace camino al and<u>ar</u>.</td>
+            <td style="padding:.7rem .4rem;text-align:center;color:var(--muted);font-size:.88rem">8 síl.</td>
+            <td style="padding:.7rem .8rem;text-align:center;font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold)">a</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:1.2rem;padding:1rem 1.2rem;background:var(--parch2);border-radius:5px;display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap">
+        <div style="font-size:.88rem;color:var(--ink2)">Esquema:</div>
+        <div style="font-family:'Playfair Display',serif;font-size:2rem;letter-spacing:.35em;color:var(--gold);font-weight:700">– a – a</div>
+        <div style="font-size:.82rem;color:var(--muted);font-style:italic;line-height:1.5">Rima asonante en –á<br>(más / andar). Arte menor → minúsculas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S7 ALITERACIÓN ══════ -->
+<section class="slide light fslide" id="s8">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">1 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">🔊</div>
+      <div class="f-name">Aliteración</div>
+    </div>
+    <p class="f-def">Repetición del mismo <strong>sonido o grupo de sonidos</strong> en varios versos. Crea un efecto musical o expresivo que imita lo que describe.</p>
+    <div class="f-ex">
+      <p>«En el <span class="f-key">s</span>ilencio <span class="f-key">s</span>olo <span class="f-key">s</span>e e<span class="f-key">s</span>cuchaba / un <span class="f-key">s</span>u<span class="f-key">s</span>urro de abeja<span class="f-key">s</span> que <span class="f-key">s</span>onaba.»</p>
+      <p class="ex2">«Con el ala aleve del leve <span class="f-key">abanico</span>.» — Rubén Darío</p>
+      <div class="note">En el primer ejemplo, el sonido /s/ repetido imita el susurro de las abejas (Garcilaso de la Vega).</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S8 ANÁFORA ══════ -->
+<section class="slide light fslide" id="s9">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">2 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">🔁</div>
+      <div class="f-name">Anáfora</div>
+    </div>
+    <p class="f-def">Repite <strong>una o varias palabras al comienzo</strong> de versos consecutivos. Crea ritmo y enfatiza la idea repetida.</p>
+    <div class="f-ex">
+      <p>«<span class="f-key">Verde</span> que te quiero verde.<br>Verde viento. <span class="f-key">Verdes</span> ramas.»</p>
+      <p class="ex2">«<span class="f-key">Caminante,</span> son tus huellas… &nbsp;·&nbsp; <span class="f-key">Caminante,</span> no hay camino…»</p>
+      <div class="note">La repetición de «verde» / «caminante» crea un efecto hipnótico y musical. (Lorca y Machado)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S9 HIPÉRBATON ══════ -->
+<section class="slide light fslide" id="s10">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">3 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">🔀</div>
+      <div class="f-name">Hipérbaton</div>
+    </div>
+    <p class="f-def">Alteración del <strong>orden sintáctico natural</strong> de la frase para lograr un efecto rítmico o expresivo. Muy frecuente en la poesía clásica.</p>
+    <div class="f-ex">
+      <p>«Del salón en el <span class="f-key">ángulo oscuro</span>,<br>de su dueña tal vez olvidada,<br>silenciosa y cubierta de polvo<br><span class="f-key">veíase el arpa</span>.»</p>
+      <p class="ex2">Orden natural: «<em>El arpa veíase</em> silenciosa en el ángulo oscuro del salón…»</p>
+      <div class="note">Bécquer, Rima VII. El verbo («veíase el arpa») se coloca al final para crear tensión y sorpresa.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S10 METÁFORA ══════ -->
+<section class="slide light fslide" id="s11">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">4 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">🌟</div>
+      <div class="f-name">Metáfora</div>
+    </div>
+    <p class="f-def">Identifica una cosa con otra de forma <strong>directa, sin «como»</strong>. Sustituye la realidad por una imagen más expresiva y poética.</p>
+    <div class="f-ex">
+      <p>«Tus ojos son <span class="f-key">dos luceros</span>.»</p>
+      <p class="ex2">«La vida es un <span class="f-key">sueño</span> del que no queremos despertar.»</p>
+      <div class="note">Ojos → luceros · Vida → sueño. Sin «como». Esa ausencia la diferencia de la comparación.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S11 COMPARACIÓN ══════ -->
+<section class="slide light fslide" id="s12">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">5 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">⚖️</div>
+      <div class="f-name">Comparación</div>
+    </div>
+    <p class="f-def">Compara dos realidades usando <strong>«como»</strong> o <strong>«cual»</strong>. También llamada <em>símil</em>. El nexo comparativo es siempre visible.</p>
+    <div class="f-ex">
+      <p>«Sus brazos, <span class="f-key">como</span> ramas al viento.»</p>
+      <p class="ex2">«Valiente <span class="f-key">como</span> un león.» &nbsp;·&nbsp; «Blanca <span class="f-key">cual</span> la nieve.»</p>
+      <div class="note">La presencia de «como» o «cual» es la clave. Si no aparece, la figura sería una metáfora.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S12 PERSONIFICACIÓN ══════ -->
+<section class="slide light fslide" id="s13">
+  <div class="ftop">
+    <span class="ftag">Las figuras literarias</span>
+    <span class="fnum">6 de 6</span>
+  </div>
+  <div class="fbody">
+    <div class="f-row">
+      <div class="f-icon">🌙</div>
+      <div class="f-name">Personificación</div>
+    </div>
+    <p class="f-def">Atribuye <strong>cualidades humanas</strong> —sentimientos, acciones, pensamientos— a seres o cosas que no son personas.</p>
+    <div class="f-ex">
+      <p>«La luna <span class="f-key">vino a la fragua</span> / con su <span class="f-key">polisón de nardos</span>.»</p>
+      <p class="ex2">«El viento me <span class="f-key">susurró</span> tu nombre.» &nbsp;·&nbsp; «El mar <span class="f-key">rugía</span> de rabia.»</p>
+      <div class="note">Lorca, <em>Romance de la luna, luna</em>. La luna «viene» y «lleva ropa»: acciones y atributos humanos.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S13 BÉCQUER ══════ -->
+<section class="slide light pslide" id="s14">
+  <p class="tag-line">Poemas comentados · 1 de 3</p>
+  <h2 class="stitle" style="font-size:2.2rem">Gustavo Adolfo Bécquer &nbsp;·&nbsp; <em style="font-weight:400">Rima XXI</em></h2>
+  <div class="playout">
+    <div class="pp">
+      <img class="portrait" id="imgB"
+           src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Gustavo_Adolfo_B%C3%A9cquer.jpg/200px-Gustavo_Adolfo_B%C3%A9cquer.jpg"
+           alt="Retrato de Bécquer"
+           onerror="this.style.display='none';document.getElementById('phB').style.display='flex'">
+      <div class="portrait-ph" id="phB">✍️</div>
+      <div class="pname">Gustavo Adolfo Bécquer</div>
+      <div class="pdates">Sevilla, 1836 – Madrid, 1870</div>
+      <p class="pbio">Máximo representante del Romanticismo español. Sus <em>Rimas</em> son poemas breves de gran intensidad lírica.</p>
+    </div>
+    <div class="qp">
+      <div class="qtext">
+        <span class="vl">«¿Qué es poesía? —dices mientras clavas</span>
+        <span class="vl">en mi pupila tu pupila azul.</span>
+        <span class="vl">¡Qué es poesía! ¿Y tú me lo preguntas?</span>
+        <span class="vl" style="color:var(--gold)">Poesía... eres tú.»</span>
+      </div>
+      <button class="rbtn" onclick="rev('a1',this)">▶ Ver análisis</button>
+      <div class="apanel" id="a1">
+        <p>El poeta <strong>reflexiona sobre qué es la poesía</strong>. La respuesta final es sorprendente: la poesía está en la persona amada. Tono amoroso e íntimo.</p>
+        <div class="tags">
+          <span class="tag tw">Tema: el amor</span>
+          <span class="tag tg">Pregunta retórica</span>
+          <span class="tag tp">Apóstrofe (habla a un «tú»)</span>
+          <span class="tag tt">Rima consonante (–avas/–as; –úl/–ú)</span>
+          <span class="tag tg">Endecasílabos + heptasílabo final</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S14 MACHADO ══════ -->
+<section class="slide light pslide" id="s15">
+  <p class="tag-line">Poemas comentados · 2 de 3</p>
+  <h2 class="stitle" style="font-size:2.2rem">Antonio Machado &nbsp;·&nbsp; <em style="font-weight:400">Caminante, no hay camino</em></h2>
+  <div class="playout">
+    <div class="pp">
+      <img class="portrait" id="imgM"
+           src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Antonio_Machado_%281875-1939%29.jpg/200px-Antonio_Machado_%281875-1939%29.jpg"
+           alt="Retrato de Antonio Machado"
+           onerror="this.style.display='none';document.getElementById('phM').style.display='flex'">
+      <div class="portrait-ph" id="phM">✍️</div>
+      <div class="pname">Antonio Machado</div>
+      <div class="pdates">Sevilla, 1875 – Collioure, 1939</div>
+      <p class="pbio">Generación del 98. Poesía filosófica y melancólica, cercana a la tradición popular castellana.</p>
+    </div>
+    <div class="qp">
+      <div class="qsub">Proverbios y cantares, XXIX</div>
+      <div class="qtext">
+        <span class="vl">«Caminante, son tus huellas</span>
+        <span class="vl">el camino y nada más;</span>
+        <span class="vl">caminante, no hay camino,</span>
+        <span class="vl" style="color:var(--gold)">se hace camino al andar.»</span>
+      </div>
+      <button class="rbtn" onclick="rev('a2',this)">▶ Ver análisis</button>
+      <div class="apanel" id="a2">
+        <p>El <strong>camino es una metáfora de la vida</strong>: no hay destino marcado; cada persona construye el suyo con sus decisiones. Mensaje filosófico y vital.</p>
+        <div class="tags">
+          <span class="tag tw">Tema: la vida / el destino</span>
+          <span class="tag tg">Metáfora (camino = vida)</span>
+          <span class="tag tp">Anáfora («caminante»)</span>
+          <span class="tag tt">Rima asonante (a-a en versos pares)</span>
+          <span class="tag tg">Octosílabos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S15 LORCA ══════ -->
+<section class="slide light pslide" id="s16">
+  <p class="tag-line">Poemas comentados · 3 de 3</p>
+  <h2 class="stitle" style="font-size:2.2rem">Federico García Lorca &nbsp;·&nbsp; <em style="font-weight:400">Romance sonámbulo</em></h2>
+  <div class="playout">
+    <div class="pp">
+      <img class="portrait" id="imgL"
+           src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Federico_Garcia_Lorca_%281914%29.jpg/200px-Federico_Garcia_Lorca_%281914%29.jpg"
+           alt="Retrato de García Lorca"
+           onerror="this.style.display='none';document.getElementById('phL').style.display='flex'">
+      <div class="portrait-ph" id="phL">✍️</div>
+      <div class="pname">Federico García Lorca</div>
+      <div class="pdates">Granada, 1898 – 1936</div>
+      <p class="pbio">Generación del 27. Poesía de gran fuerza visual y simbólica, enraizada en lo popular andaluz.</p>
+    </div>
+    <div class="qp">
+      <div class="qsub">Romancero gitano, 1928</div>
+      <div class="qtext">
+        <span class="vl" style="color:var(--gold)">«Verde que te quiero verde.</span>
+        <span class="vl" style="color:var(--gold)">Verde viento. Verdes ramas.</span>
+        <span class="vl">El barco sobre la mar</span>
+        <span class="vl">y el caballo en la montaña.»</span>
+      </div>
+      <button class="rbtn" onclick="rev('a3',this)">▶ Ver análisis</button>
+      <div class="apanel" id="a3">
+        <p>La <strong>anáfora del verde</strong> crea atmósfera misteriosa y onírica. Las imágenes son <strong>surrealistas</strong>. El verde simboliza el deseo y la muerte.</p>
+        <div class="tags">
+          <span class="tag tw">Tema: deseo / misterio / muerte</span>
+          <span class="tag tp">Anáfora («verde»)</span>
+          <span class="tag tg">Personificación implícita</span>
+          <span class="tag tt">Rima asonante (–ar / –añ-a)</span>
+          <span class="tag tg">Octosílabos · imágenes surrealistas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ S17 ACTIVIDADES ══════ -->
+<section class="slide light" id="s17">
+  <p class="tag-line">Para practicar</p>
+  <h2 class="stitle" style="font-size:clamp(2rem,3.5vw,2.8rem)">¡A practicar con la ficha!</h2>
+  <div style="display:flex;flex-direction:column;gap:2rem;flex:1;justify-content:center">
+    <div class="acards">
+      <div class="ac a1">
+        <div class="anum">1</div>
+        <div class="ac-icon">📏</div>
+        <h3>Mide los versos</h3>
+        <p>Divide en sílabas los 4 versos de la <em>Canción del pirata</em> de Espronceda. Aplica sinalefa y la regla de la aguda.</p>
+      </div>
+      <div class="ac a2">
+        <div class="anum">2</div>
+        <div class="ac-icon">🔍</div>
+        <h3>Figuras literarias</h3>
+        <p>Lee de nuevo el fragmento de Lorca y localiza las figuras literarias. ¿Qué efecto producen?</p>
+      </div>
+      <div class="ac a3">
+        <div class="anum">3</div>
+        <div class="ac-icon">✍️</div>
+        <h3>El tema</h3>
+        <p>Elige uno de los tres poemas comentados y escribe su tema principal en dos o tres líneas.</p>
+      </div>
+    </div>
+    <p class="cita">«El que no ha sentido la tentación de escribir un poema, que tire la primera piedra.»</p>
+  </div>
+</section>
+
+<script>
+// ── NAVEGACIÓN ──────────────────────
+const TOTAL=18, slides=document.querySelectorAll('.slide');
+let cur=0;
+function go(d){toSlide(cur+d)}
+function toSlide(n){
+  if(n<0||n>=TOTAL)return;
+  slides[cur].classList.remove('active');
+  cur=n; slides[cur].classList.add('active');
+  upNav();
+}
+function upNav(){
+  document.getElementById('pb').disabled=cur===0;
+  document.getElementById('nb').disabled=cur===TOTAL-1;
+  document.getElementById('ctr').textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('prog').style.width=(cur/(TOTAL-1)*100)+'%';
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+}
+const de=document.getElementById('dots');
+for(let i=0;i<TOTAL;i++){
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' on':'');
+  d.onclick=()=>toSlide(i); de.appendChild(d);
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='SELECT')return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(1)}
+  if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}
+});
+upNav();
+
+// ── PORTADA ANIMACIONES ─────────────
+const se=document.getElementById('stars');
+for(let i=0;i<65;i++){
+  const s=document.createElement('div');s.className='star';
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*2.5}s;--dl:${Math.random()*3}s`;
+  se.appendChild(s);
+}
+const WS=['verso','rima','metáfora','emoción','estrofa','sílaba','poema','ritmo','lírica','amor','alma','belleza','sentimiento'];
+const fe=document.getElementById('floats');
+WS.forEach((w,i)=>{
+  const el=document.createElement('span');el.className='fw';el.textContent=w;
+  el.style.cssText=`left:${4+Math.random()*88}%;top:${4+Math.random()*88}%;font-size:${.7+Math.random()*1.1}rem;--d:${5+Math.random()*4}s;--dl:${i*.65}s`;
+  fe.appendChild(el);
+});
+
+// ── ANÁLISIS POEMAS ─────────────────
+function rev(id,btn){
+  const p=document.getElementById(id);
+  p.classList.toggle('show');
+  btn.textContent=p.classList.contains('show')?'▼ Ocultar análisis':'▶ Ver análisis';
+}
+
+// ── CONTA-VERSOS ────────────────────
+const VW='aeiouáéíóúü',ST='aeoáéó',WK='iuü';
+const isV=c=>VW.includes(c);
+const isSt=c=>ST.includes(c);
+const isWk=c=>WK.includes(c);
+function cntW(w){
+  w=w.toLowerCase().replace(/h/g,'');
+  let c=0,i=0;
+  while(i<w.length){
+    if(isV(w[i])){
+      c++;
+      if(i+1<w.length&&isV(w[i+1])){
+        const v2=w[i+1];
+        if((isSt(w[i])&&isWk(v2))||(isWk(w[i])&&isSt(v2))||(isWk(w[i])&&isWk(v2))){
+          i++;if(i+1<w.length&&isWk(w[i+1]))i++;
+        }
+      }
+    }i++;
+  }return Math.max(1,c);
+}
+let base=0,man=0;
+function analiza(){
+  man=0;
+  const raw=document.getElementById('vi').value.trim();
+  if(!raw){document.getElementById('cr').innerHTML='';return}
+  const ft=document.getElementById('ft').value;
+  const wds=raw.toLowerCase().replace(/[¡¿!?.,;:«»""'']/g,'').trim().split(/\s+/).filter(x=>x);
+  const wd=wds.map(w=>({w,c:cntW(w)}));
+  let tot=wd.reduce((s,x)=>s+x.c,0);
+  const sns=[];
+  for(let i=0;i<wd.length-1;i++){
+    const a=wd[i].w,b=wd[i+1].w;
+    if(isV(a[a.length-1])&&isV(b[0])){sns.push(i);tot--}
+  }
+  if(ft==='aguda')tot++;if(ft==='esdrujula')tot--;
+  base=tot;renderRes(wd,sns,tot,ft);
+}
+function ajustar(d){
+  man+=d;
+  const el=document.querySelector('#cr .cnum');
+  if(el){el.textContent=base+man;el.style.color=man?'var(--goldl)':'var(--gold)'}
+}
+function renderRes(wd,sns,tot,ft){
+  let h='<div class="ssw">';
+  wd.forEach((o,wi)=>{
+    h+='<span class="ws">';
+    const ps=vsplit(o.w,o.c);
+    ps.forEach((p,pi)=>{
+      h+=`<span class="${pi%2===0?'s0':'s1'}">${p}</span>`;
+      if(pi<ps.length-1)h+='<span class="sd">·</span>';
+    });
+    h+='</span>';
+    if(sns.includes(wi))h+='<span class="si" title="sinalefa">⌢</span>';
+    else if(wi<wd.length-1)h+=' ';
+  });
+  h+='</div>';
+  let aj='';
+  if(ft==='aguda')aj='<span style="color:var(--teal);font-size:.78rem"> (+1 aguda)</span>';
+  if(ft==='esdrujula')aj='<span style="color:var(--pur);font-size:.78rem"> (−1 esdrújula)</span>';
+  const nm=mName(tot);
+  h+=`<div class="crow"><div class="cnum">${tot}</div><div class="cinfo">sílabas${aj}<br><strong>${nm}</strong></div><button class="adj" onclick="ajustar(-1)">−</button><button class="adj" onclick="ajustar(+1)">+</button></div>`;
+  if(sns.length)h+=`<div style="font-size:.72rem;color:var(--muted);margin-top:.2rem">⌢ = sinalefa (${sns.length})</div>`;
+  document.getElementById('cr').innerHTML=h;
+}
+function vsplit(word,n){
+  if(n<=1)return[word];
+  const ps=[]; let c='',i=0,f=0;
+  const wl=word.toLowerCase().replace(/h/g,'');
+  while(i<word.length){
+    c+=word[i];
+    if(i<wl.length&&isV(wl[i])){
+      f++;
+      if(i+1<wl.length&&isV(wl[i+1])){
+        const d=(isSt(wl[i])&&isWk(wl[i+1]))||(isWk(wl[i])&&isSt(wl[i+1]))||(isWk(wl[i])&&isWk(wl[i+1]));
+        if(d){i++;c+=word[i]}
+      }
+      while(i+1<word.length&&!isV(wl[i+1])){
+        if(i+2<wl.length&&isV(wl[i+2]))break;
+        i++;c+=word[i];
+      }
+      if(f<n){ps.push(c);c=''}
+    }i++;
+  }
+  if(c)ps.length?ps[ps.length-1]+=c:ps.push(c);
+  return ps.filter(x=>x);
+}
+function mName(n){
+  return({4:'tetrasílabo',5:'pentasílabo',6:'hexasílabo',7:'heptasílabo',8:'octosílabo',9:'eneasílabo',10:'decasílabo',11:'endecasílabo',12:'dodecasílabo',14:'alejandrino'})[n]||(n+' sílabas');
+}
+document.getElementById('vi').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){e.preventDefault();analiza()}
+});
+</script>
+</body>
+</html>

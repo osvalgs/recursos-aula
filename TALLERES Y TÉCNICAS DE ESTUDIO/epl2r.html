@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aprender a aprender · El método EPL2R</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#efeee1;
+    --paper-2:#e7e5d4;
+    --ink:#1f2b28;
+    --ink-soft:#4a5651;
+    --teal:#3f6f66;
+    --teal-dark:#2b4d46;
+    --amber:#dd9f34;
+    --brick:#b04a34;
+    --line:#cfc9b2;
+    --white:#faf9f2;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Atkinson Hyperlegible', sans-serif;
+    font-size:clamp(18px, 3.4vh, 29px);
+    line-height:1.5;
+  }
+  p{margin:0 0 0.55em;}
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    color:var(--teal-dark);
+    margin:0;
+  }
+  a{color:inherit;}
+  b{color:var(--ink);}
+
+  /* ---- estructura de la baraja ---- */
+  .deck{height:100vh; height:100dvh; display:flex; flex-direction:column;}
+  .slides{flex:1; position:relative; overflow:hidden; min-height:0;}
+  .slide{
+    position:absolute; inset:0;
+    display:none;
+    flex-direction:column;
+    justify-content:center;
+    overflow-y:auto;
+    padding:clamp(12px,3.5vh,32px) 0;
+  }
+  .slide.active{display:flex;}
+  .wrap{max-width:920px; width:100%; margin:0 auto; padding:0 clamp(18px,4vw,32px);}
+
+  .deckbar{
+    flex:0 0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px;
+    padding:12px 24px;
+    border-top:1px solid var(--line);
+    background:var(--paper);
+  }
+  .deckbar .navbtn{
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--teal-dark);
+    font-family:'Atkinson Hyperlegible', sans-serif;
+    font-weight:700; font-size:15px;
+    padding:9px 18px;
+    border-radius:999px;
+    cursor:pointer;
+    display:flex; align-items:center; gap:8px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .deckbar .navbtn:hover{background:var(--teal); color:var(--white); border-color:var(--teal);}
+  .deckbar .navbtn:disabled{opacity:.35; cursor:default; background:var(--white); color:var(--teal-dark);}
+  .dots{display:flex; gap:7px; flex-wrap:wrap; justify-content:center;}
+  .dots button{width:10px; height:10px; border-radius:50%; border:none; background:var(--line); cursor:pointer; padding:0;}
+  .dots button.on{background:var(--teal);}
+  .counter{font-size:13px; color:var(--ink-soft); min-width:52px; text-align:center;}
+
+  /* ---- ilustraciones ---- */
+  .illus{display:flex; justify-content:center; margin:0 0 clamp(8px,2vh,18px);}
+  .illus svg{width:clamp(64px,11vh,124px); height:clamp(64px,11vh,124px);}
+
+  /* ---- vídeo ---- */
+  .video-wrap{
+    position:relative; width:100%; max-width:480px;
+    aspect-ratio:16/9; margin-top:clamp(10px,2vh,18px);
+    border-radius:12px; overflow:hidden; border:1px solid var(--line);
+    background:#000;
+  }
+  .video-wrap img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; cursor:pointer;}
+  .video-wrap iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .play-btn{
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:56px; height:56px; border-radius:50%;
+    background:rgba(250,249,244,.94); border:none;
+    color:var(--teal-dark); font-size:20px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.28);
+  }
+  .play-btn:hover{background:var(--white);}
+
+  /* ---- portada ---- */
+  .eyebrow{font-size:clamp(16px,2.6vh,21px); color:var(--teal); font-weight:700; margin-bottom:clamp(8px,1.6vh,16px);}
+  h1{font-size:clamp(38px,8.5vh,64px); line-height:1.08;}
+  .subt{margin-top:clamp(10px,2vh,20px); font-size:clamp(18px,3.4vh,28px); color:var(--ink-soft);}
+
+  .kicker{
+    font-size:clamp(16px,2.5vh,20px); font-weight:700; color:var(--ink-soft); margin-bottom:clamp(8px,1.5vh,14px);
+  }
+  .highlight{
+    background:var(--white);
+    border-left:4px solid var(--amber);
+    padding:clamp(12px,2.2vh,22px) clamp(16px,2.4vw,26px);
+    margin:clamp(12px,2.2vh,24px) 0;
+  }
+
+  /* ---- pasos EPL2R ---- */
+  .step-head{display:flex; align-items:flex-start; gap:clamp(12px,2.4vw,20px); margin-bottom:clamp(10px,2vh,20px);}
+  .step-head .letter{
+    flex:0 0 auto;
+    width:clamp(48px,8vh,70px); height:clamp(48px,8vh,70px); border-radius:14px;
+    background:var(--teal); color:var(--white);
+    font-family:'Fraunces', serif; font-weight:700; font-size:clamp(22px,4.2vh,36px);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step-head h2{font-size:clamp(28px,5.6vh,46px); margin-bottom:4px;}
+  .step-head .verb{color:var(--ink-soft); font-size:clamp(16px,2.6vh,23px); font-style:italic;}
+  .pregunta{
+    font-family:'Fraunces', serif; font-style:italic; font-size:clamp(19px,3.8vh,30px);
+    color:var(--teal-dark); margin:clamp(10px,2vh,18px) 0;
+  }
+  .tip{
+    background:var(--paper-2); border-radius:10px;
+    padding:clamp(12px,2vh,18px) clamp(16px,2.4vw,22px);
+    margin-top:clamp(10px,2vh,18px);
+    font-size:clamp(16px,2.8vh,23px);
+  }
+  .tip b{color:var(--brick);}
+
+  /* ---- resumen visual ---- */
+  .summary-row{display:flex; flex-wrap:wrap; gap:12px; margin:clamp(12px,2.4vh,24px) 0 6px;}
+  .summary-row .chip{
+    display:flex; align-items:center; gap:10px;
+    background:var(--white); border:1px solid var(--line);
+    border-radius:12px; padding:clamp(10px,1.8vh,16px) 18px;
+    flex:1 1 150px;
+  }
+  .summary-row .chip .n{font-family:'Fraunces', serif; font-weight:700; color:var(--teal); font-size:clamp(20px,3.6vh,28px);}
+  .summary-row .chip span.word{font-weight:700; font-size:clamp(18px,3vh,24px);}
+
+  /* ---- actividad ---- */
+  .activity-text{
+    background:var(--white); border:1px solid var(--line); border-radius:12px;
+    padding:clamp(14px,2.4vh,24px) clamp(16px,2.4vw,26px);
+    font-size:clamp(16px,2.8vh,22px);
+  }
+  .activity-text h3{font-size:clamp(20px,3.2vh,26px); margin-bottom:8px;}
+  .activity-text h4{
+    font-family:'Fraunces', serif; font-weight:600; color:var(--teal-dark);
+    font-size:clamp(17px,2.6vh,21px); margin:16px 0 4px;
+  }
+  .activity-step{margin:clamp(12px,2.4vh,22px) 0;}
+  .activity-step .step-label{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Fraunces', serif; font-weight:700; color:var(--teal-dark);
+    font-size:clamp(19px,3vh,25px); margin-bottom:10px;
+  }
+  .activity-step .step-label .dot{
+    width:24px; height:24px; border-radius:50%; background:var(--teal); color:var(--white);
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .activity-step textarea{
+    width:100%; min-height:clamp(44px,7vh,66px); margin-top:8px;
+    font-family:'Atkinson Hyperlegible', sans-serif; font-size:clamp(17px,2.6vh,21px);
+    padding:10px 12px; border-radius:8px; border:1px solid var(--line);
+    background:var(--white); resize:vertical; color:var(--ink);
+  }
+  .checklist{display:flex; flex-direction:column; gap:6px; margin-top:6px;}
+  .checklist label{display:flex; align-items:center; gap:10px; font-size:clamp(17px,2.8vh,22px);}
+  .checklist input{width:17px; height:17px; accent-color:var(--teal); flex:0 0 auto;}
+
+  /* ---- cierre ---- */
+  .next-list{margin-top:clamp(12px,2.4vh,22px); padding:0; list-style:none; display:flex; flex-direction:column; gap:clamp(8px,1.8vh,14px);}
+  .next-list li{display:flex; align-items:center; gap:12px; font-size:clamp(18px,3vh,25px); color:var(--ink-soft);}
+  .next-list li .b{width:8px; height:8px; border-radius:50%; background:var(--amber); flex:0 0 auto;}
+
+  @media (max-width:600px){
+    .step-head .letter{width:44px; height:44px; font-size:22px;}
+  }
+</style>
+</head>
+<body>
+<div class="deck">
+<div class="slides" id="slides">
+
+  <section class="slide" id="s0">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="22" y="18" width="60" height="82" rx="4" fill="var(--white)"/>
+          <line x1="22" y1="34" x2="82" y2="34"/>
+          <line x1="34" y1="48" x2="70" y2="48"/>
+          <line x1="34" y1="58" x2="70" y2="58"/>
+          <line x1="34" y1="68" x2="58" y2="68"/>
+          <path d="M74 74 L100 74 M100 74 L92 66 M100 74 L92 82" stroke="var(--amber)"/>
+          <circle cx="30" cy="26" r="2" fill="var(--brick)" stroke="none"/>
+        </svg>
+      </div>
+      <div class="eyebrow" style="text-align:center;">Técnicas de estudio · 3º ESO PDC</div>
+      <h1 style="text-align:center; margin:0 auto;">Aprender a aprender</h1>
+      <p class="subt" style="text-align:center; margin-left:auto; margin-right:auto;">El método EPL2R: una forma ordenada de leer, entender y recordar cualquier texto, paso a paso.</p>
+    </div>
+  </section>
+
+  <section class="slide" id="s1">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M60 18 a27 27 0 0 1 15 49 c-4 4 -5 7 -5 12 h-20 c0 -5 -1 -8 -5 -12 a27 27 0 0 1 15 -49 z" fill="var(--white)"/>
+          <line x1="48" y1="90" x2="72" y2="90"/>
+          <line x1="51" y1="98" x2="69" y2="98"/>
+          <line x1="60" y1="6" x2="60" y2="14" stroke="var(--amber)"/>
+          <line x1="27" y1="26" x2="34" y2="32" stroke="var(--amber)"/>
+          <line x1="93" y1="26" x2="86" y2="32" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="kicker">Por qué merece la pena</div>
+      <p>Estudiar no depende solo de las horas que le dediques, sino de <b>cómo</b> las usas. Leer un tema tres veces seguidas sin más plan casi nunca funciona: a los diez minutos ya no recuerdas ni la primera línea.</p>
+      <div class="highlight">Cuando tienes un método, todo cambia: sabes qué hacer en cada momento, notas que vas entendiendo de verdad y, al llegar al examen, la información ya está ahí. Menos horas, menos agobio, mucha menos frustración.</div>
+      <p>Eso es lo que vamos a trabajar este curso: técnicas de estudio, una a una, con textos reales del ámbito lingüístico y social. Empezamos por el <b>EPL2R</b>, un método clásico que sirve para cualquier asignatura el resto de tu vida académica.</p>
+    </div>
+  </section>
+
+  <section class="slide" id="s2">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="52" cy="52" r="30" fill="var(--white)"/>
+          <line x1="74" y1="74" x2="98" y2="98"/>
+          <circle cx="52" cy="52" r="16" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="kicker">Un poco de historia</div>
+      <h2 style="font-size:clamp(27px,5.2vh,42px); margin-bottom:14px;">¿Quién inventó este método?</h2>
+      <p>El EPL2R lo creó <b>Francis P. Robinson</b>, psicólogo educativo estadounidense, y lo publicó en 1946 en su libro <i>Effective Study</i> — por eso también se le llama "método Robinson". Lo pensó para estudiantes universitarios, pero funciona igual de bien a cualquier edad.</p>
+      <div class="video-wrap" id="videoFacade">
+        <img src="https://img.youtube.com/vi/w90up7J1cxQ/hqdefault.jpg" alt="Miniatura del vídeo sobre el método EPL2R" onclick="playVideo()">
+        <button class="play-btn" onclick="playVideo()" aria-label="Reproducir vídeo">▶</button>
+      </div>
+      <a class="navbtn" style="display:inline-flex; margin-top:10px; text-decoration:none;" href="https://youtu.be/w90up7J1cxQ" target="_blank" rel="noopener">Ver en YouTube</a>
+    </div>
+  </section>
+
+  <section class="slide" id="s3">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 100" fill="none">
+          <rect x="8" y="80" width="16" height="16" fill="var(--teal)"/>
+          <rect x="30" y="64" width="16" height="32" fill="var(--teal)"/>
+          <rect x="52" y="48" width="16" height="48" fill="var(--teal)"/>
+          <rect x="74" y="32" width="16" height="64" fill="var(--teal)"/>
+          <rect x="96" y="16" width="16" height="80" fill="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="kicker">Qué significan las siglas</div>
+      <p>EPL2R son las iniciales de cinco pasos que se hacen siempre en el mismo orden. Cada letra es una acción concreta:</p>
+      <div class="summary-row">
+        <div class="chip"><span class="n">E</span><span class="word">Explorar</span></div>
+        <div class="chip"><span class="n">P</span><span class="word">Preguntar</span></div>
+        <div class="chip"><span class="n">L</span><span class="word">Leer</span></div>
+        <div class="chip"><span class="n">R</span><span class="word">Recitar</span></div>
+        <div class="chip"><span class="n">R</span><span class="word">Repasar</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s4">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="50" cy="50" r="26" fill="var(--white)"/>
+          <line x1="69" y1="69" x2="94" y2="94" stroke-width="5"/>
+          <path d="M40 50 h20 M50 40 v20" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="step-head">
+        <div class="letter">E</div>
+        <div>
+          <h2>Explorar</h2>
+          <div class="verb">Antes de leer nada en profundidad</div>
+        </div>
+      </div>
+      <p>Echa un primer vistazo rápido al texto entero, sin leer todavía frase a frase: el título, los subtítulos, las negritas, las imágenes, y el primer y último párrafo.</p>
+      <p class="pregunta">¿De qué va a tratar esto, más o menos?</p>
+      <div class="tip"><b>Truco:</b> este paso dura 1–2 minutos. Solo quieres una idea general antes de entrar en detalle.</div>
+    </div>
+  </section>
+
+  <section class="slide" id="s5">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M45 30 a15 15 0 1 1 15 22 v6" />
+          <circle cx="60" cy="82" r="2" fill="var(--teal)" stroke="none"/>
+          <circle cx="60" cy="60" r="40" stroke="var(--amber)" stroke-dasharray="4 6"/>
+        </svg>
+      </div>
+      <div class="step-head">
+        <div class="letter">P</div>
+        <div>
+          <h2>Preguntar</h2>
+          <div class="verb">Convierte cada título en una pregunta</div>
+        </div>
+      </div>
+      <p>Coge cada título o subtítulo y transfórmalo en una pregunta. Si un apartado se llama "El bilingüismo en Galicia", la pregunta sería "¿Qué es el bilingüismo en Galicia?".</p>
+      <p class="pregunta">¿Qué necesito averiguar en esta parte?</p>
+      <div class="tip">Este paso da a la lectura un objetivo claro. Ya no lees "porque toca", lees para <b>responder</b> a algo.</div>
+    </div>
+  </section>
+
+  <section class="slide" id="s6">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 30 q20 -10 40 0 q20 -10 40 0 v58 q-20 -10 -40 0 q-20 -10 -40 0 z" fill="var(--white)"/>
+          <line x1="60" y1="30" x2="60" y2="88"/>
+          <line x1="30" y1="42" x2="48" y2="40" stroke="var(--amber)"/>
+          <line x1="30" y1="52" x2="48" y2="50" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="step-head">
+        <div class="letter">L</div>
+        <div>
+          <h2>Leer</h2>
+          <div class="verb">Ahora sí, con atención</div>
+        </div>
+      </div>
+      <p>Lee el texto completo, a tu ritmo, buscando la respuesta a tus preguntas. Busca en el diccionario lo que no entiendas. Este es el momento de subrayar ideas importantes y anotar al margen.</p>
+      <p class="pregunta">¿Esto responde a mi pregunta? ¿Es una idea principal o un detalle?</p>
+      <div class="tip"><b>Truco:</b> subraya poco. Si subrayas media página, no has separado lo importante de lo secundario.</div>
+    </div>
+  </section>
+
+  <section class="slide" id="s7">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M25 40 q0 -14 14 -14 h42 q14 0 14 14 v18 q0 14 -14 14 h-30 l-12 12 v-12 h-0 q-14 0 -14 -14 z" fill="var(--white)"/>
+          <line x1="42" y1="46" x2="70" y2="46" stroke="var(--amber)"/>
+          <line x1="42" y1="56" x2="60" y2="56" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="step-head">
+        <div class="letter">R</div>
+        <div>
+          <h2>Recitar</h2>
+          <div class="verb">Sin mirar el texto</div>
+        </div>
+      </div>
+      <p>Aparta el texto y responde en voz alta o por escrito, con tus propias palabras, a las preguntas que te hiciste. Si no puedes, es la señal de releer esa parte.</p>
+      <p class="pregunta">¿Sería capaz de explicárselo a alguien ahora mismo?</p>
+      <div class="tip">Recordar cuesta, y ese esfuerzo es lo que hace que se te quede. Algunos materiales llaman a este paso "Responder" — es la misma idea.</div>
+    </div>
+  </section>
+
+  <section class="slide" id="s8">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="28" y="26" width="64" height="64" rx="8" fill="var(--white)"/>
+          <line x1="28" y1="42" x2="92" y2="42"/>
+          <line x1="42" y1="18" x2="42" y2="30"/>
+          <line x1="78" y1="18" x2="78" y2="30"/>
+          <path d="M50 62 a10 10 0 1 1 3 7" stroke="var(--amber)"/>
+          <path d="M53 69 l-4 6 -6 -3" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <div class="step-head">
+        <div class="letter">R</div>
+        <div>
+          <h2>Repasar</h2>
+          <div class="verb">Días después, no el mismo día</div>
+        </div>
+      </div>
+      <p>Vuelve sobre tus notas pasado un tiempo (al día siguiente, a la semana) con una lectura rápida, para comprobar que recuerdas el contenido. Aquí conviertes tus notas en un resumen o esquema.</p>
+      <p class="pregunta">¿Sigo sabiendo esto una semana después?</p>
+      <div class="tip">Repasar espaciado en el tiempo funciona mucho mejor que repasar todo la noche antes del examen.</div>
+    </div>
+  </section>
+
+  <section class="slide" id="s9">
+    <div class="wrap">
+      <div class="kicker">Actividad (1/4) · lee el texto</div>
+      <div class="activity-text">
+        <h3>El envejecimiento del rural gallego</h3>
+        <p>Galicia es una de las comunidades españolas donde más está notándose el paso del tiempo en el campo. Cada vez hay menos gente joven en las aldeas, y eso está cambiando por completo la vida en los pueblos del interior.</p>
+        <h4>Una despoblación que no para de crecer</h4>
+        <p>En muchas aldeas del interior, la mayoría de los vecinos que quedan tienen más de sesenta y cinco años. Los jóvenes se marchan a las ciudades o al extranjero buscando trabajo y estudios, y las escuelas y comercios de los pueblos van cerrando poco a poco. A este fenómeno se le llama despoblación rural, y lleva décadas produciéndose sin que se haya conseguido frenar del todo.</p>
+        <h4>Más que un problema económico</h4>
+        <p>El problema no afecta solo a la economía de estas zonas: también pone en riesgo tradiciones, formas de hablar y oficios antiguos que se transmitían de padres a hijos, como la cestería, la ganadería a pequeña escala o determinadas fiestas populares. Cuando un pueblo se queda sin gente, esa memoria colectiva corre el riesgo de perderse para siempre.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s9b">
+    <div class="wrap">
+      <div class="kicker">Actividad (2/4) · sigue leyendo</div>
+      <div class="activity-text">
+        <h4>Iniciativas para revertir la tendencia</h4>
+        <p>Algunos ayuntamientos intentan frenar esta situación ofreciendo ayudas a las familias que se instalan en pueblos pequeños, como vivienda gratuita o ventajas fiscales, y muchos apuestan por el turismo rural como fuente de ingresos alternativa. Aun así, los resultados todavía son limitados y el problema sigue muy presente en buena parte de Galicia.</p>
+        <h4>Un reto para el futuro</h4>
+        <p>Frenar la despoblación no depende solo de una medida aislada, sino de mejorar los servicios básicos del rural: transporte, internet, sanidad y educación. Sin esas condiciones, es difícil que los jóvenes decidan quedarse o volver, por mucho que quieran a su tierra.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s10p">
+    <div class="wrap">
+      <div class="kicker">Actividad (3/4) · aplica el método</div>
+      <div class="activity-step">
+        <div class="step-label"><span class="dot">E</span> Explorar</div>
+        <div class="checklist">
+          <label><input type="checkbox"> He leído el título y los cuatro subtítulos</label>
+          <label><input type="checkbox"> Me hago una idea general del tema</label>
+        </div>
+      </div>
+      <div class="activity-step">
+        <div class="step-label"><span class="dot">P</span> Preguntar</div>
+        <textarea placeholder="Convierte uno de los subtítulos en una pregunta..."></textarea>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s10">
+    <div class="wrap">
+      <div class="kicker">Actividad (4/4) · sigue con el mismo texto</div>
+      <div class="activity-step" style="margin-top:0;">
+        <div class="step-label"><span class="dot">L</span> Leer</div>
+        <p style="margin:0 0 6px;">Escribe la idea principal de cada apartado, con tus palabras:</p>
+        <textarea placeholder="Una despoblación que no para de crecer..."></textarea>
+        <textarea placeholder="Más que un problema económico..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Iniciativas para revertir la tendencia..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Un reto para el futuro..." style="margin-top:8px;"></textarea>
+      </div>
+      <div class="activity-step">
+        <div class="step-label"><span class="dot">R</span> Recitar</div>
+        <textarea placeholder="Sin mirar el texto, responde a tu propia pregunta..."></textarea>
+      </div>
+      <div class="activity-step">
+        <div class="step-label"><span class="dot">R</span> Repasar</div>
+        <p style="margin:0;">Dentro de tres días, intenta responder de nuevo sin mirar. Si te cuesta, repasa el texto otra vez.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" id="s11">
+    <div class="wrap">
+      <div class="illus">
+        <svg viewBox="0 0 120 120" fill="none" stroke="var(--teal)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="60" y1="98" x2="60" y2="58"/>
+          <path d="M60 58 c-18 0 -26 -14 -26 -30 c16 0 26 10 26 22" fill="var(--white)"/>
+          <path d="M60 68 c18 0 26 -14 26 -30 c-16 0 -26 10 -26 22" fill="var(--white)"/>
+          <line x1="40" y1="98" x2="80" y2="98" stroke="var(--amber)"/>
+        </svg>
+      </div>
+      <h2 style="font-size:clamp(27px,5.2vh,42px); margin-bottom:14px;">Y a partir de aquí...</h2>
+      <p style="color:var(--ink-soft);">El EPL2R es la base. A lo largo del curso iremos sumando más técnicas, siempre con textos del ámbito lingüístico y social para practicarlas de verdad.</p>
+      <ul class="next-list">
+        <li><span class="b"></span> Cómo hacer un subrayado útil (y no subrayarlo todo)</li>
+        <li><span class="b"></span> Esquemas y mapas conceptuales</li>
+        <li><span class="b"></span> Resúmenes: decir lo mismo con menos palabras</li>
+        <li><span class="b"></span> Organización del tiempo de estudio</li>
+      </ul>
+    </div>
+  </section>
+
+</div>
+
+<div class="deckbar">
+  <button class="navbtn" id="prevBtn" onclick="go(-1)">← Anterior</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter"></span>
+  <button class="navbtn" id="nextBtn" onclick="go(1)">Siguiente →</button>
+</div>
+</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsWrap = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var current = 0;
+
+  slides.forEach(function(_, i){
+    var d = document.createElement('button');
+    d.addEventListener('click', function(){ show(i); });
+    dotsWrap.appendChild(d);
+  });
+
+  function show(i){
+    current = Math.max(0, Math.min(slides.length - 1, i));
+    slides.forEach(function(s, idx){ s.classList.toggle('active', idx === current); });
+    Array.prototype.forEach.call(dotsWrap.children, function(d, idx){ d.classList.toggle('on', idx === current); });
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === slides.length - 1;
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    document.getElementById('slides').scrollTop = 0;
+  }
+  function go(delta){ show(current + delta); }
+
+  function playVideo(){
+    var wrap = document.getElementById('videoFacade');
+    wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/w90up7J1cxQ?autoplay=1" title="Método EPL2R" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight') go(1);
+    if(e.key === 'ArrowLeft') go(-1);
+  });
+
+  show(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subordinadas Adjetivas · Presentación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0B1929; --bg2:#0F2133;
+  --card:rgba(255,255,255,.06); --card2:rgba(255,255,255,.10);
+  --border:rgba(255,255,255,.11);
+  --cream:#EDE5D0; --muted:#8DA3BB;
+  --red:#E8394A;   --red-soft:rgba(232,57,74,.14);
+  --blue:#4DAAFF;  --blue-soft:rgba(77,170,255,.11);
+  --amber:#F4A846; --amber-soft:rgba(244,168,70,.14);
+  --teal:#1DDBA4;  --teal-soft:rgba(29,219,164,.11);
+  --purple:#A78BFA;--purple-soft:rgba(167,139,250,.11);
+  --gold:#FFD166;
+  --fh:'Playfair Display',Georgia,serif;
+  --fb:'DM Sans',system-ui,sans-serif;
+  --fm:'DM Mono',monospace;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:var(--fb);color:var(--cream);}
+
+/* ── DECK ── */
+#deck{width:100vw;height:100vh;position:relative;overflow:hidden;}
+
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s cubic-bezier(.4,0,.2,1),transform .4s cubic-bezier(.4,0,.2,1);
+  transform:translateX(55px);
+  padding:32px 60px 38px;
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0);}
+.slide.leaving{opacity:0;transform:translateX(-55px);}
+
+/* ── HEADER ── */
+.slide-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:6px;}
+.slide-title{font-family:var(--fh);font-size:clamp(26px,3.2vw,42px);line-height:1.1;color:var(--cream);margin-bottom:12px;}
+.slide-title span{color:var(--red);}
+.accent-bar{width:52px;height:4px;border-radius:2px;background:var(--red);margin-bottom:16px;}
+
+/* ── STEPS ── */
+.step{opacity:0;transform:translateY(12px);transition:opacity .35s ease,transform .35s ease;}
+.step.shown{opacity:1;transform:translateY(0);}
+
+/* ── LAYOUT ── */
+.col{display:flex;flex-direction:column;gap:10px;flex:1;}
+.row{display:flex;gap:14px;align-items:stretch;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.gap6{gap:6px!important;}
+.gap8{gap:8px!important;}
+.gap12{gap:12px!important;}
+.gap14{gap:14px!important;}
+.gap16{gap:16px!important;}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;}
+.card.red   {border-color:rgba(232,57,74,.4);  background:var(--red-soft);}
+.card.blue  {border-color:rgba(77,170,255,.35); background:var(--blue-soft);}
+.card.amber {border-color:rgba(244,168,70,.4);  background:var(--amber-soft);}
+.card.teal  {border-color:rgba(29,219,164,.4);  background:var(--teal-soft);}
+.card.purple{border-color:rgba(167,139,250,.4); background:var(--purple-soft);}
+
+/* ── TYPE ── */
+.big{font-size:clamp(17px,1.85vw,24px);line-height:1.45;}
+.med{font-size:clamp(15px,1.65vw,21px);line-height:1.5;}
+.sm {font-size:clamp(13px,1.35vw,17px);line-height:1.5;}
+.xs {font-size:clamp(11px,1.1vw,14px); line-height:1.45;}
+
+em.hl {font-style:normal;color:var(--red);   font-weight:700;}
+em.hlb{font-style:normal;color:var(--blue);  font-weight:700;}
+em.hla{font-style:normal;color:var(--amber); font-weight:700;}
+em.hlt{font-style:normal;color:var(--teal);  font-weight:700;}
+em.hlp{font-style:normal;color:var(--purple);font-weight:700;}
+em.ex {font-style:italic;color:var(--muted);}
+
+.tag{display:inline-block;font-family:var(--fm);font-size:.82em;font-weight:500;padding:2px 8px;border-radius:5px;background:rgba(255,255,255,.1);color:var(--cream);vertical-align:middle;}
+.tag.red   {background:var(--red-soft);   color:var(--red);   border:1px solid rgba(232,57,74,.4);}
+.tag.blue  {background:var(--blue-soft);  color:var(--blue);  border:1px solid rgba(77,170,255,.35);}
+.tag.amber {background:var(--amber-soft); color:var(--amber); border:1px solid rgba(244,168,70,.4);}
+.tag.teal  {background:var(--teal-soft);  color:var(--teal);  border:1px solid rgba(29,219,164,.4);}
+.tag.purple{background:var(--purple-soft);color:var(--purple);border:1px solid rgba(167,139,250,.4);}
+
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-weight:700;font-size:clamp(12px,1.3vw,16px);}
+.badge.red   {background:var(--red-soft);   color:var(--red);   border:2px solid rgba(232,57,74,.5);}
+.badge.blue  {background:var(--blue-soft);  color:var(--blue);  border:2px solid rgba(77,170,255,.4);}
+.badge.amber {background:var(--amber-soft); color:var(--amber); border:2px solid rgba(244,168,70,.5);}
+.badge.teal  {background:var(--teal-soft);  color:var(--teal);  border:2px solid rgba(29,219,164,.4);}
+.badge.purple{background:var(--purple-soft);color:var(--purple);border:2px solid rgba(167,139,250,.5);}
+
+/* ── EXAMPLE ── */
+.ex-box{background:rgba(0,0,0,.25);border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:9px 14px;font-size:clamp(14px,1.55vw,20px);line-height:1.5;}
+.ex-box.blue  {border-left-color:var(--blue);}
+.ex-box.amber {border-left-color:var(--amber);}
+.ex-box.teal  {border-left-color:var(--teal);}
+.ex-box.purple{border-left-color:var(--purple);}
+.ex-box.cream {border-left-color:var(--cream);}
+
+.u-red   {border-bottom:2px solid var(--red);   padding-bottom:1px;}
+.u-blue  {border-bottom:2px solid var(--blue);  padding-bottom:1px;}
+.u-amber {border-bottom:2px solid var(--amber); padding-bottom:1px;}
+.u-teal  {border-bottom:2px solid var(--teal);  padding-bottom:1px;}
+.u-purple{border-bottom:2px solid var(--purple);padding-bottom:1px;}
+.u-n     {border-bottom:2px solid rgba(255,255,255,.42);padding-bottom:1px;}
+
+/* ── TABLE ── */
+table{border-collapse:collapse;width:100%;}
+th{background:rgba(255,255,255,.08);color:var(--cream);font-size:clamp(11px,1.2vw,14px);font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:7px 12px;text-align:left;}
+td{padding:7px 12px;border-top:1px solid var(--border);font-size:clamp(12px,1.35vw,17px);line-height:1.4;vertical-align:top;}
+.td-ok{color:var(--teal);font-weight:700;}
+.td-no{color:var(--red); font-weight:700;}
+
+/* ── QUIZ ── */
+.q-box{background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:clamp(14px,1.55vw,20px);line-height:1.5;margin-bottom:8px;}
+.btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btn{font-family:var(--fb);font-size:clamp(12px,1.25vw,15px);font-weight:600;padding:6px 16px;border-radius:20px;border:2px solid;cursor:pointer;transition:all .18s ease;background:transparent;}
+.btn.blue  {border-color:var(--blue);  color:var(--blue);}
+.btn.red   {border-color:var(--red);   color:var(--red);}
+.btn.amber {border-color:var(--amber); color:var(--amber);}
+.btn.teal  {border-color:var(--teal);  color:var(--teal);}
+.btn.purple{border-color:var(--purple);color:var(--purple);}
+.btn.blue:hover  {background:var(--blue);  color:var(--bg);}
+.btn.red:hover   {background:var(--red);   color:var(--bg);}
+.btn.amber:hover {background:var(--amber); color:var(--bg);}
+.btn.teal:hover  {background:var(--teal);  color:var(--bg);}
+.btn.purple:hover{background:var(--purple);color:var(--bg);}
+.fb{display:none;margin-top:6px;font-size:clamp(12px,1.3vw,15px);font-weight:600;padding:6px 14px;border-radius:8px;animation:pop .25s ease;}
+.fb.ok {background:rgba(29,219,164,.18);color:var(--teal);  border:1px solid rgba(29,219,164,.4);display:block;}
+.fb.no {background:rgba(232,57,74,.18); color:var(--red);   border:1px solid rgba(232,57,74,.4); display:block;}
+
+/* ── NAV ── */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--red),var(--amber));transition:width .4s ease;z-index:100;}
+#slide-counter{position:fixed;bottom:18px;right:28px;font-size:12px;color:var(--muted);letter-spacing:.1em;font-family:var(--fm);z-index:100;}
+#nav-hint{position:fixed;bottom:18px;left:28px;font-size:11px;color:rgba(141,163,187,.55);letter-spacing:.04em;z-index:100;}
+.nav-arrow{position:fixed;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .18s;z-index:100;}
+.nav-arrow:hover{background:rgba(255,255,255,.14);color:var(--cream);}
+#nav-prev{left:16px;}#nav-next{right:16px;}
+.click-hint{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);font-size:11px;color:rgba(141,163,187,.5);letter-spacing:.06em;z-index:100;animation:pulse 2s ease infinite;}
+
+/* ── PORTADA ── */
+#slide-0{justify-content:center;align-items:flex-start;background:radial-gradient(ellipse at 70% 40%,rgba(232,57,74,.16) 0%,transparent 60%),radial-gradient(ellipse at 10% 80%,rgba(77,170,255,.09) 0%,transparent 50%),var(--bg);}
+.portada-deco{position:absolute;right:72px;top:50%;transform:translateY(-50%);font-family:var(--fh);font-size:280px;color:rgba(232,57,74,.05);line-height:1;pointer-events:none;font-weight:900;user-select:none;}
+.portada-label{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;font-weight:500;}
+.portada-title{font-family:var(--fh);font-size:clamp(46px,6.5vw,86px);line-height:1;color:var(--cream);margin-bottom:8px;}
+.portada-subtitle{font-family:var(--fh);font-size:clamp(32px,4vw,58px);color:var(--red);margin-bottom:24px;}
+.portada-tags{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;}
+.portada-info{font-size:clamp(12px,1.3vw,15px);color:var(--muted);line-height:2;}
+
+/* ── SLIDE SUBTITLE (para slides divididas) ── */
+.slide-sub{font-size:clamp(11px,1.15vw,14px);color:var(--muted);font-style:italic;margin-bottom:4px;margin-top:-8px;}
+
+@keyframes pop{from{transform:scale(.92);}to{transform:scale(1);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="slide-counter"></div>
+<div id="nav-hint">← → Flechas · Espacio · Clic</div>
+<div class="click-hint" id="click-hint">▶ Clic o Espacio para avanzar</div>
+<button class="nav-arrow" id="nav-prev" onclick="prevSlide()">&#8249;</button>
+<button class="nav-arrow" id="nav-next" onclick="advanceSlide()">&#8250;</button>
+
+<div id="deck">
+
+<!-- ══ 0 · PORTADA ══════════════════════════════════════════════════════════ -->
+<section class="slide active" id="slide-0" data-steps="0">
+  <div class="portada-deco">A</div>
+  <div class="portada-label">Sintaxis · Lengua Castellana y Literatura</div>
+  <div class="portada-title">Cláusulas<br>subordinadas</div>
+  <div class="portada-subtitle">Adjetivas</div>
+  <div class="portada-tags">
+    <span class="badge red">Pronombres relativos</span>
+    <span class="badge blue">que SUJ / CD</span>
+    <span class="badge amber">cuyo</span>
+    <span class="badge teal">Adverbios relativos</span>
+  </div>
+  <div class="portada-info">Clic o Espacio para avanzar &nbsp;·&nbsp; ← → para navegar</div>
+</section>
+
+<!-- ══ 1 · ¿QUÉ SON? ════════════════════════════════════════════════════════ -->
+<section class="slide" id="slide-1" data-steps="3">
+  <div class="slide-label">Bloque 1</div>
+  <div class="slide-title">¿Qué son las subordinadas <span>adjetivas</span>?</div>
+  <div class="accent-bar"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="ex-box cream" style="font-size:clamp(17px,2vw,26px);">
+      Los <em class="hla">alumnos</em> <span class="u-red"><em class="hl">que</em> estudian</span> aprueban.
+      &nbsp;→&nbsp; <span class="tag red">que estudian</span> = MOD de <span class="tag amber">alumnos</span>
+    </div>
+
+    <div class="step big card red">
+      Son cláusulas que equivalen a un <em class="hl">ADJETIVO</em>.
+    </div>
+
+    <div class="step col gap8">
+      <div class="med">Su función es siempre:</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <span class="badge red" style="font-size:clamp(15px,1.7vw,21px);padding:8px 20px;">MODIFICADOR (MOD)</span>
+        <span class="med" style="color:var(--muted);">del sustantivo llamado…</span>
+        <span class="badge amber" style="font-size:clamp(15px,1.7vw,21px);padding:8px 20px;">ANTECEDENTE</span>
+      </div>
+    </div>
+
+    <div class="step col gap8">
+      <div class="med">El nexo que las introduce:</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <span class="badge blue">que · quien · quienes</span>
+        <span class="badge amber">cuyo / cuya / cuyos / cuyas</span>
+        <span class="badge teal">donde · cuando · como</span>
+        <span class="sm" style="color:var(--muted);">(siempre con antecedente)</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 2 · PRUEBA DE IDENTIFICACIÓN ════════════════════════════════════════ -->
+<section class="slide" id="slide-2" data-steps="3">
+  <div class="slide-label">Bloque 1</div>
+  <div class="slide-title">Prueba de <span>identificación</span></div>
+  <div class="accent-bar"></div>
+  <div class="col gap12" style="flex:1;">
+
+    <div class="ex-box cream" style="font-size:clamp(17px,2vw,25px);">
+      Los <em class="hla">alumnos</em> <span class="u-red">que estudian</span> aprueban.
+    </div>
+
+    <div class="step col gap8">
+      <div class="card blue col gap6">
+        <div class="xs" style="color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Prueba 1</div>
+        <div class="med">Sustituir el <em class="hlb">nexo</em> por: <span class="tag blue">"el cual / la cual / los cuales / las cuales"</span></div>
+      </div>
+      <div class="ex-box blue">
+        → Los <em class="hla">alumnos</em> <span class="u-blue"><em class="hlb">los cuales</em> estudian</span> aprueban. ✓ &nbsp; [<em class="hl">MOD</em> de <span class="tag amber">alumnos</span>]
+      </div>
+    </div>
+
+    <div class="step col gap8">
+      <div class="card teal col gap6">
+        <div class="xs" style="color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.08em;">Prueba 2</div>
+        <div class="med">Sustituir la <em class="hlt">cláusula</em> por un <em class="hlt">adjetivo</em>: <span class="tag teal">"estudiosos" / "premiado"…</span></div>
+      </div>
+      <div class="ex-box teal">
+        → Los <em class="hla">alumnos</em> <span class="u-teal"><em class="hlt">estudiosos</em></span> aprueban. ✓ &nbsp; [<em class="hl">MOD</em> de <span class="tag amber">alumnos</span>]
+      </div>
+    </div>
+
+    <div class="step card amber">
+      <div class="med">⚠ &nbsp;Si <em class="hla">ninguna prueba</em> funciona → <em class="hl">no es adjetiva</em>.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 3 · TIPOS ════════════════════════════════════════════════════════════ -->
+<section class="slide" id="slide-3" data-steps="3">
+  <div class="slide-label">Bloque 1</div>
+  <div class="slide-title">Tipos de subordinadas <span>adjetivas</span></div>
+  <div class="accent-bar"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="step g2">
+      <div class="card red col gap8">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="tag red">Especificativas</span>
+          <span class="xs" style="color:var(--muted);">sin comas</span>
+        </div>
+        <div class="med">Restringen / delimitan el significado del antecedente.</div>
+        <div class="sm" style="color:var(--muted);">Son imprescindibles: identifican a quién nos referimos.</div>
+      </div>
+      <div class="card blue col gap8">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="tag blue">Explicativas</span>
+          <span class="xs" style="color:var(--muted);">entre comas</span>
+        </div>
+        <div class="med">Añaden información accesoria sobre un antecedente ya identificado.</div>
+        <div class="sm" style="color:var(--muted);">Se pueden suprimir sin cambiar la identificación.</div>
+      </div>
+    </div>
+
+    <div class="step g2">
+      <div class="ex-box col gap6">
+        <div class="xs" style="color:var(--muted);">Especificativa:</div>
+        <div>Los <em class="hla">estudiantes</em> <span class="u-red">que no entregaron la tarea</span> serán penalizados.</div>
+        <div class="xs" style="color:var(--muted);">→ Solo los que no entregaron, no todos.</div>
+      </div>
+      <div class="ex-box blue col gap6">
+        <div class="xs" style="color:var(--muted);">Explicativa:</div>
+        <div><em class="hla">María</em>, <span class="u-blue">que vive en Bilbao</span>, vendrá mañana.</div>
+        <div class="xs" style="color:var(--muted);">→ María ya está identificada; la cláusula añade info.</div>
+      </div>
+    </div>
+
+    <div class="step card amber">
+      <div class="med">💡 &nbsp;Las <em class="hla">explicativas</em> equivalen a un inciso o paréntesis: se pueden eliminar.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 4 · QUE: CONJUNCIÓN VS PRONOMBRE RELATIVO ════════════════════════════ -->
+<section class="slide" id="slide-4" data-steps="3">
+  <div class="slide-label">Bloque 2</div>
+  <div class="slide-title">El <span>que</span>: conjunción vs. pronombre relativo</div>
+  <div class="accent-bar"></div>
+  <div class="col gap12" style="flex:1;">
+
+    <div class="step">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50%;">🔵 <em class="hlp">QUE</em> pronombre relativo → <span class="tag red">Sub. adjetiva</span></th>
+            <th style="width:50%;">⚪ <em class="hlb">QUE</em> conjunción → <span class="tag blue">Sub. sustantiva</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-ok">✔ Tiene <em class="hl">antecedente</em> (sustantivo anterior)</td>
+            <td class="td-no">✘ No tiene antecedente</td>
+          </tr>
+          <tr>
+            <td class="td-ok">✔ Se sustituye por <em class="hlp">el cual / la cual</em></td>
+            <td class="td-no">✘ No se sustituye</td>
+          </tr>
+          <tr>
+            <td class="td-ok">✔ Tiene función sintáctica propia (SUJ, CD…)</td>
+            <td class="td-no">✘ Solo es nexo, sin función propia</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step g2">
+      <div class="ex-box purple col gap6">
+        <div class="xs" style="color:var(--muted);">Pronombre relativo → adjetiva</div>
+        <div>El <em class="hla">libro</em> <span class="u-purple"><em class="hlp">que</em> leí</span> era largo.</div>
+        <div class="xs">→ El <em class="hla">libro</em> <em class="hlp">el cual</em> leí era largo. ✓</div>
+        <div class="xs" style="color:var(--muted);">Antecedente: <span class="tag amber">libro</span></div>
+      </div>
+      <div class="ex-box blue col gap6">
+        <div class="xs" style="color:var(--muted);">Conjunción → sustantiva</div>
+        <div>Sé <span class="u-blue"><em class="hlb">que</em> vendrás</span>.</div>
+        <div class="xs">→ Sé <em class="hlb">el cual</em> vendrás. ✗</div>
+        <div class="xs" style="color:var(--muted);">Sin antecedente</div>
+      </div>
+    </div>
+
+    <div class="step card amber">
+      <div class="med">⚡ &nbsp;La prueba clave: <em class="hla">¿tiene antecedente + se sustituye por el cual?</em></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 5 · FUNCIÓN DEL QUE: SUJ ════════════════════════════════════════════ -->
+<section class="slide" id="slide-5" data-steps="2">
+  <div class="slide-label">Bloque 2 · 1 de 2</div>
+  <div class="slide-title">Función del <span>que</span> pronombre relativo</div>
+  <div class="accent-bar" style="background:var(--purple);"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="step med" style="color:var(--muted);">
+      Dentro de la cláusula adjetiva, el pronombre <em class="hlp">que</em> ocupa el lugar del antecedente y desempeña una función sintáctica propia:
+    </div>
+
+    <div class="step card purple col gap10">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="badge purple" style="font-size:clamp(17px,1.9vw,24px);padding:10px 22px;">SUJ</span>
+        <span class="med">Si el verbo de la adjetiva <em class="hlp">no tiene otro sujeto expreso</em></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="tag">🔧 Prueba:</span>
+        <span class="med" style="color:var(--muted);">Cambiar el número del verbo. Si concuerda con <em class="hlp">que</em> → SUJ</span>
+      </div>
+      <div class="ex-box purple" style="font-size:clamp(15px,1.7vw,21px);">
+        Los <em class="hla">científicos</em> <span class="u-purple"><em class="hlp">que</em> descubrieron el virus</span> fueron premiados.
+        <br>
+        <span class="xs">→ El científico que <em class="hlp">descubrió</em> … → concuerda ✓ &nbsp; <strong>que = SUJ</strong></span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 6 · FUNCIÓN DEL QUE: CD ════════════════════════════════════════════ -->
+<section class="slide" id="slide-6" data-steps="2">
+  <div class="slide-label">Bloque 2 · 2 de 2</div>
+  <div class="slide-title">Función del <span>que</span> pronombre relativo</div>
+  <div class="accent-bar" style="background:var(--purple);"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="step card blue col gap10">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="badge blue" style="font-size:clamp(17px,1.9vw,24px);padding:10px 22px;">CD</span>
+        <span class="med">Si el antecedente puede <em class="hlb">pronominalizarse por lo / la / los / las</em></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <span class="tag">🔧 Prueba:</span>
+        <span class="med" style="color:var(--muted);">Sustituir el antecedente por lo/la/los/las en la cláusula</span>
+      </div>
+      <div class="ex-box blue" style="font-size:clamp(15px,1.7vw,21px);">
+        El <em class="hla">libro</em> <span class="u-blue"><em class="hlp">que</em> leí</span> era largo.
+        <br>
+        <span class="xs">→ <em class="hlb">lo</em> leí ✓ &nbsp; <strong>que = CD</strong></span>
+      </div>
+    </div>
+
+    <div class="step card amber col gap8">
+      <div class="med">💡 &nbsp;Si hay <em class="hla">sujeto expreso</em> en la adjetiva → <em class="hlp">que</em> no puede ser SUJ → comprueba si es CD.</div>
+      <div class="ex-box amber" style="font-size:clamp(14px,1.55vw,19px);">
+        Las <em class="hla">medidas</em> <span class="u-purple"><em class="hlp">que</em> el gobierno adoptó</span> generaron polémica.
+        <br>
+        <span class="xs">Sujeto expreso: <em>el gobierno</em> → <em class="hlp">que</em> ≠ SUJ &nbsp;|&nbsp; el gobierno <em class="hlb">las</em> adoptó → <em class="hlp">que</em> = CD ✓</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 7 · CUYO: DEFINICIÓN Y REGLAS ════════════════════════════════════════ -->
+<section class="slide" id="slide-7" data-steps="2">
+  <div class="slide-label">Bloque 3 · 1 de 2</div>
+  <div class="slide-title"><span>Cuyo</span>: determinante relativo posesivo</div>
+  <div class="accent-bar" style="background:var(--amber);"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="step card amber">
+      <div class="big"><em class="hla">cuyo / cuya / cuyos / cuyas</em> es un <em class="hl">DETERMINANTE RELATIVO POSESIVO</em></div>
+    </div>
+
+    <div class="step g3">
+      <div class="card col gap6">
+        <span class="tag amber">Regla 1</span>
+        <div class="med">Siempre <em class="hla">acompaña a un sustantivo</em> (como <em class="ex">mi, tu, su…</em>). Nunca es pronombre.</div>
+      </div>
+      <div class="card col gap6">
+        <span class="tag amber">Regla 2</span>
+        <div class="med">Su función dentro de la cláusula es siempre <em class="hla">DET</em> (determinante).</div>
+      </div>
+      <div class="card col gap6">
+        <span class="tag amber">Regla 3</span>
+        <div class="med">Concuerda con el <em class="hla">sustantivo que le sigue</em>, no con el antecedente.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 8 · CUYO: EJEMPLOS Y AVISO ══════════════════════════════════════════ -->
+<section class="slide" id="slide-8" data-steps="2">
+  <div class="slide-label">Bloque 3 · 2 de 2</div>
+  <div class="slide-title"><span>Cuyo</span>: ejemplos</div>
+  <div class="accent-bar" style="background:var(--amber);"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div class="step col gap10">
+      <div class="ex-box amber" style="font-size:clamp(15px,1.7vw,21px);">
+        El <em class="hla">autor</em> <span class="u-amber"><em class="hla">cuya</em> novela ganó el premio</span> es famoso.
+        <br>
+        <span class="xs">→ Valor posesivo: <em class="ex">la novela del autor</em></span>
+        <br>
+        <span class="xs">→ <em class="hla">cuya</em> concuerda con <span class="tag amber">novela</span> (fem. sg.), no con <em>autor</em></span>
+      </div>
+      <div class="ex-box amber" style="font-size:clamp(15px,1.7vw,21px);">
+        El <em class="hla">director</em> <span class="u-amber"><em class="hla">cuyos</em> films se conocen mundialmente</span>…
+        <br>
+        <span class="xs">→ <em class="hla">cuyos</em> concuerda con <span class="tag amber">films</span> (masc. pl.), no con <em>director</em></span>
+      </div>
+    </div>
+
+    <div class="step card red">
+      <div class="med">⚠ &nbsp;Nunca <em class="hl">*cuyo el libro</em> (cuyo + artículo). Siempre: <em class="hl">cuyo + sustantivo directo</em>.</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 9 · ADVERBIOS RELATIVOS ══════════════════════════════════════════════ -->
+<section class="slide" id="slide-9" data-steps="4">
+  <div class="slide-label">Bloque 4</div>
+  <div class="slide-title">Adverbios relativos: <span>donde, cuando, como</span></div>
+  <div class="accent-bar" style="background:var(--teal);"></div>
+  <div class="col gap12" style="flex:1;">
+
+    <div class="step med" style="color:var(--muted);">
+      <em class="hlt">donde</em>, <em class="hlt">cuando</em>, <em class="hlt">como</em> pueden introducir una adjetiva (con antecedente) <strong>o</strong> una adverbial (sin antecedente):
+    </div>
+
+    <div class="step">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:10%;">Nexo</th>
+            <th style="width:45%;border-left:2px solid var(--teal);">🟢 CON antecedente → ADJETIVA (MOD)</th>
+            <th style="width:45%;border-left:2px solid var(--blue);">🔵 SIN antecedente → ADVERBIAL (CC)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><em class="hlt">donde</em></td>
+            <td>Vive en el <em class="hla">pueblo</em> <span class="u-teal">donde nació</span>. (MOD de <em>pueblo</em>)</td>
+            <td>Vive <span class="u-blue">donde nació</span>. (CCL → <em>allí</em>)</td>
+          </tr>
+          <tr>
+            <td><em class="hlt">cuando</em></td>
+            <td>Recuerdo el <em class="hla">día</em> <span class="u-teal">cuando nos conocimos</span>. (MOD de <em>día</em>)</td>
+            <td>Llámame <span class="u-blue">cuando llegues</span>. (CCT → <em>entonces</em>)</td>
+          </tr>
+          <tr>
+            <td><em class="hlt">como</em></td>
+            <td>No me gusta la <em class="hla">forma</em> <span class="u-teal">como te expresas</span>. (MOD de <em>forma</em>)</td>
+            <td>Hazlo <span class="u-blue">como quieras</span>. (CCM → <em>así</em>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="step card teal">
+      <div class="med">🔑 &nbsp;Clave: ¿hay un <em class="hlt">sustantivo antecedente</em> justo antes? Sí → adjetiva · No → adverbial</div>
+    </div>
+
+    <div class="step card amber">
+      <div class="sm">⚠ &nbsp;<em class="hla">dónde / cuándo / cómo</em> <strong>con tilde</strong> = interrogativos → introducen sustantivas: <em class="ex">No sé <strong>dónde</strong> está.</em></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 10 · PRÁCTICA ¿ADJETIVA? Q1-Q2 ══════════════════════════════════════ -->
+<section class="slide" id="slide-10" data-steps="0">
+  <div class="slide-label">Práctica rápida · 1 de 2</div>
+  <div class="slide-title">¿Adjetiva o <span>no</span>?</div>
+  <div class="accent-bar"></div>
+  <div class="col gap16" style="flex:1;">
+
+    <div>
+      <div class="q-box">El libro <span class="u-n">que leí</span> me encantó.</div>
+      <div class="btns">
+        <button class="btn red"  onclick="checkQ('q1','adjetiva')">Sub. adjetiva (MOD de <em>libro</em>)</button>
+        <button class="btn blue" onclick="checkQ('q1','sustantiva')">Sub. sustantiva</button>
+        <button class="btn teal" onclick="checkQ('q1','adverbial')">Sub. adverbial</button>
+      </div>
+      <div class="fb" id="q1-fb"></div>
+    </div>
+
+    <div>
+      <div class="q-box">Quiero <span class="u-n">que me ayudes</span>.</div>
+      <div class="btns">
+        <button class="btn red"  onclick="checkQ('q2','adjetiva')">Sub. adjetiva</button>
+        <button class="btn blue" onclick="checkQ('q2','sustantiva')">Sub. sustantiva (CD)</button>
+        <button class="btn teal" onclick="checkQ('q2','adverbial')">Sub. adverbial</button>
+      </div>
+      <div class="fb" id="q2-fb"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 11 · PRÁCTICA ¿ADJETIVA? Q3-Q4 ══════════════════════════════════════ -->
+<section class="slide" id="slide-11" data-steps="0">
+  <div class="slide-label">Práctica rápida · 2 de 2</div>
+  <div class="slide-title">¿Adjetiva o <span>no</span>?</div>
+  <div class="accent-bar"></div>
+  <div class="col gap16" style="flex:1;">
+
+    <div>
+      <div class="q-box">El físico <span class="u-n">cuyos experimentos cambiaron la ciencia</span> es Nobel.</div>
+      <div class="btns">
+        <button class="btn red"   onclick="checkQ('q3','adjetiva')">Sub. adjetiva con <em>cuyo</em></button>
+        <button class="btn blue"  onclick="checkQ('q3','sustantiva')">Sub. sustantiva</button>
+        <button class="btn amber" onclick="checkQ('q3','det')">Solo un DET, no hay subordinada</button>
+      </div>
+      <div class="fb" id="q3-fb"></div>
+    </div>
+
+    <div>
+      <div class="q-box">Trabaja <span class="u-n">donde siempre soñó hacerlo</span>.</div>
+      <div class="btns">
+        <button class="btn red"  onclick="checkQ('q4','adjetiva')">Sub. adjetiva (hay antecedente)</button>
+        <button class="btn teal" onclick="checkQ('q4','adverbial')">Sub. adverbial CCL (sin antecedente)</button>
+        <button class="btn blue" onclick="checkQ('q4','sustantiva')">Sub. sustantiva</button>
+      </div>
+      <div class="fb" id="q4-fb"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 12 · PRÁCTICA FUNCIÓN DEL QUE ════════════════════════════════════════ -->
+<section class="slide" id="slide-12" data-steps="0">
+  <div class="slide-label">Práctica rápida · Función del que</div>
+  <div class="slide-title">Función del <span>que</span>: SUJ o CD</div>
+  <div class="accent-bar" style="background:var(--purple);"></div>
+  <div class="col gap14" style="flex:1;">
+
+    <div>
+      <div class="q-box">La empresa <span class="u-n">que firmó el contrato</span> es alemana.
+        <br><span style="font-size:.78em;color:var(--muted);">Prueba: La empresa firmó → Las empresas firmaron</span>
+      </div>
+      <div class="btns">
+        <button class="btn purple" onclick="checkQ('q5','suj')">que = SUJ</button>
+        <button class="btn blue"   onclick="checkQ('q5','cd')">que = CD</button>
+      </div>
+      <div class="fb" id="q5-fb"></div>
+    </div>
+
+    <div>
+      <div class="q-box">Las medidas <span class="u-n">que el gobierno adoptó</span> generaron polémica.
+        <br><span style="font-size:.78em;color:var(--muted);">Prueba: el gobierno las adoptó → <em>las</em> adoptó</span>
+      </div>
+      <div class="btns">
+        <button class="btn purple" onclick="checkQ('q6','suj')">que = SUJ</button>
+        <button class="btn blue"   onclick="checkQ('q6','cd')">que = CD</button>
+      </div>
+      <div class="fb" id="q6-fb"></div>
+    </div>
+
+    <div>
+      <div class="q-box">El equipo <span class="u-n">que ganó la competición</span> celebró el triunfo.
+        <br><span style="font-size:.78em;color:var(--muted);">Prueba: Los equipos ganaron → concuerda</span>
+      </div>
+      <div class="btns">
+        <button class="btn purple" onclick="checkQ('q7','suj')">que = SUJ</button>
+        <button class="btn blue"   onclick="checkQ('q7','cd')">que = CD</button>
+      </div>
+      <div class="fb" id="q7-fb"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ 13 · RESUMEN ══════════════════════════════════════════════════════════ -->
+<section class="slide" id="slide-13" data-steps="5">
+  <div class="slide-label">Resumen</div>
+  <div class="slide-title">Todo de un <span>vistazo</span></div>
+  <div class="accent-bar"></div>
+  <div class="col gap10" style="flex:1;">
+
+    <div class="step ex-box cream">
+      <strong>Definición:</strong> Cláusula = <em class="hl">ADJETIVO</em> · Función = siempre <em class="hl">MOD</em> del <em class="hla">ANTECEDENTE</em> · Prueba → <em class="hlp">el cual / la cual</em>
+    </div>
+
+    <div class="step g2">
+      <div class="card red sm">
+        <strong>Nexos:</strong>&nbsp; <span class="tag red">que · quien</span>&nbsp; <span class="tag amber">cuyo</span>&nbsp; <span class="tag teal">donde · cuando · como</span>
+      </div>
+      <div class="card blue sm">
+        <strong>Tipos:</strong>&nbsp; <span class="tag red">Especificativas</span> sin comas &nbsp;·&nbsp; <span class="tag blue">Explicativas</span> entre comas
+      </div>
+    </div>
+
+    <div class="step g2">
+      <div class="card purple sm col gap6">
+        <strong><em class="hlp">QUE</em> pronombre relativo:</strong>
+        Con antecedente · sustituible por <em class="hlp">el cual</em>
+        <br>Función: <em class="hlp">SUJ</em> (cambia nº) · <em class="hlb">CD</em> (pronominalizarlo)
+      </div>
+      <div class="card amber sm col gap6">
+        <strong><em class="hla">CUYO</em>:</strong> Siempre <em class="hla">DET</em> · Valor posesivo
+        <br>Concuerda con el sustantivo que le sigue
+      </div>
+    </div>
+
+    <div class="step card teal sm">
+      <strong><em class="hlt">donde / cuando / como</em>:</strong>&nbsp;
+      Con antecedente → <em class="hl">adjetiva</em> (MOD) &nbsp;·&nbsp; Sin antecedente → <em class="hlb">adverbial</em> (CC)
+    </div>
+
+    <div class="step card sm" style="background:rgba(255,209,102,.08);border-color:rgba(255,209,102,.3);">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:4px;">⚠ Confusiones frecuentes</div>
+      <div>· <em class="hlp">que</em> pron. relativo vs. conjunción → ¿tiene antecedente?</div>
+      <div>· <em class="hla">cuyo</em> siempre seguido de sustantivo, nunca de artículo.</div>
+      <div>· <em class="hlt">donde</em> con antecedente = adjetiva; sin él = adverbial CCL.</div>
+    </div>
+
+  </div>
+</section>
+
+</div><!-- #deck -->
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total  = slides.length;
+let current = 0, stepsDone = 0;
+
+function getSteps(idx){ return parseInt(slides[idx].dataset.steps)||0; }
+
+function showStep(el,n){
+  el.querySelectorAll('.step').forEach((s,i)=>{
+    i<n ? s.classList.add('shown') : s.classList.remove('shown');
+  });
+}
+
+function updateUI(){
+  const pct=((current/(total-1))*100).toFixed(1);
+  document.getElementById('progress-bar').style.width=pct+'%';
+  document.getElementById('slide-counter').textContent=
+    (current+1).toString().padStart(2,'0')+' / '+total.toString().padStart(2,'0');
+}
+
+function goTo(idx,dir=1){
+  if(idx<0||idx>=total)return;
+  const prev=slides[current];
+  prev.classList.remove('active');
+  prev.classList.add('leaving');
+  setTimeout(()=>prev.classList.remove('leaving'),420);
+  current=idx;
+  stepsDone=dir>0?0:getSteps(current);
+  const next=slides[current];
+  next.style.transform=dir>0?'translateX(55px)':'translateX(-55px)';
+  next.classList.add('active');
+  setTimeout(()=>next.style.transform='',10);
+  showStep(next,stepsDone);
+  updateUI();
+}
+
+function advanceSlide(){
+  const max=getSteps(current);
+  if(stepsDone<max){ stepsDone++; showStep(slides[current],stepsDone); }
+  else goTo(current+1,1);
+}
+function prevSlide(){
+  if(stepsDone>0){ stepsDone--; showStep(slides[current],stepsDone); }
+  else goTo(current-1,-1);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='ArrowDown'){e.preventDefault();advanceSlide();}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();prevSlide();}
+});
+document.getElementById('deck').addEventListener('click',e=>{
+  if(e.target.closest('button,.btn')) return;
+  advanceSlide();
+});
+document.addEventListener('click',()=>{
+  document.getElementById('click-hint').style.opacity='0';
+},{once:true});
+
+/* QUIZ */
+const A={
+  q1:{c:'adjetiva',ok:'✔ Correcto: <em>que leí</em> → sub. adjetiva, MOD de <em>libro</em>. "El libro <strong>el cual</strong> leí" ✓',no:'✘ <em>libro</em> es el antecedente. <em>que</em> = el cual → adjetiva MOD.'},
+  q2:{c:'sustantiva',ok:'✔ Correcto: <em>que me ayudes</em> → sub. sustantiva CD de <em>quiero</em>. Sin antecedente.',no:'✘ No hay antecedente antes de <em>que</em>. No admite <em>el cual</em> → sustantiva.'},
+  q3:{c:'adjetiva',ok:'✔ Correcto: <em>cuyos experimentos cambiaron la ciencia</em> → sub. adjetiva MOD de <em>físico</em>. <em>cuyos</em> = DET dentro de ella.',no:'✘ Toda la cláusula <em>cuyos experimentos…</em> es adjetiva MOD de <em>físico</em>. <em>cuyos</em> actúa como DET dentro de ella.'},
+  q4:{c:'adverbial',ok:'✔ Correcto: no hay antecedente antes de <em>donde</em> → sub. adverbial CCL. "Trabaja <strong>allí</strong>" ✓',no:'✘ No hay sustantivo antecedente antes de <em>donde</em> → adverbial CCL.'},
+  q5:{c:'suj',ok:'✔ Correcto: <em>que</em> = SUJ. "La empresa firmó → Las empresas firmaron" → concuerda.',no:'✘ El verbo no tiene otro sujeto. "Las empresas firmaron" concuerda → que = SUJ.'},
+  q6:{c:'cd',ok:'✔ Correcto: <em>que</em> = CD. Sujeto expreso: <em>el gobierno</em>. "Las adoptó" → pronominalizació → que = CD.',no:'✘ <em>el gobierno</em> es el sujeto. Prueba: "las adoptó" → que = CD.'},
+  q7:{c:'suj',ok:'✔ Correcto: <em>que</em> = SUJ. "Los equipos ganaron" concuerda → que = SUJ.',no:'✘ No hay sujeto expreso. "Los equipos ganaron" concuerda → que = SUJ.'},
+};
+
+function checkQ(id,choice){
+  const a=A[id], fb=document.getElementById(id+'-fb');
+  if(!fb)return;
+  fb.className='fb '+(choice===a.c?'ok':'no');
+  fb.innerHTML=choice===a.c?a.ok:a.no;
+}
+
+updateUI();
+showStep(slides[0],0);
+</script>
+</body>
+</html>

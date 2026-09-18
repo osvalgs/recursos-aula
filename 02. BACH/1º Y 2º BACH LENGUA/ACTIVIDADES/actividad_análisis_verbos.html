@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis de Verbos · PAU Galicia</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1A1A2E;--paper:#FAFAF7;--paper2:#F3F2EC;--accent:#7A1C2E;--accent2:#C9973A;--teal:#1A6B6B;--teal-l:#E6F4F4;--violet:#4A2C7A;--violet-l:#F0EAF8;--green:#1A5C2A;--green-l:#E6F4E8;--border:rgba(26,26,46,.12);--sh:0 2px 20px rgba(26,26,46,.08);--shL:0 8px 40px rgba(26,26,46,.14)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6}
+.login-ov{position:fixed;inset:0;background:rgba(26,26,46,.85);backdrop-filter:blur(6px);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:var(--paper);border-radius:16px;padding:2.5rem 2rem;max-width:420px;width:100%;text-align:center;box-shadow:var(--shL);border:1px solid var(--border)}
+.login-box h2{font-family:'Lora',serif;font-size:22px;margin-bottom:.3rem}
+.login-box p{font-size:13px;color:#888;margin-bottom:1.5rem}
+.li{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;margin-bottom:1rem;transition:border-color .15s}
+.li:focus{outline:none;border-color:var(--accent)}
+.lb{width:100%;background:var(--accent);color:#fff;border:none;padding:13px;border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer}
+.lb:hover{background:#5a1020}
+.le{font-size:12px;color:var(--accent);margin-top:-.5rem;margin-bottom:.75rem;display:none}
+.hdr{background:var(--ink);color:#fff;padding:2.5rem 2rem 2rem;text-align:center;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.015) 40px,rgba(255,255,255,.015) 80px)}
+.hdr-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--accent2);text-transform:uppercase;margin-bottom:.75rem;position:relative}
+.hdr h1{font-family:'Lora',serif;font-size:clamp(22px,4vw,34px);font-weight:700;position:relative;margin-bottom:.4rem}
+.hdr .sub{font-size:14px;opacity:.65;position:relative;margin-bottom:1.25rem}
+.hdr-usr{position:relative;font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.5)}
+.hdr-usr span{color:var(--accent2)}
+.tabs-w{background:#fff;border-bottom:2px solid var(--paper2);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.tabs{display:flex;overflow-x:auto;max-width:1000px;margin:0 auto}
+.tb{padding:14px 18px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#888;background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+.tb:hover{color:var(--ink)}.tb.on{color:var(--accent);border-bottom-color:var(--accent)}
+.main{max-width:1000px;margin:0 auto;padding:0 1.5rem}
+.sec{display:none;padding:2.5rem 0 3rem}.sec.on{display:block}
+.sec-t{font-family:'Lora',serif;font-size:26px;color:var(--ink);margin-bottom:.4rem}
+.sec-l{font-size:14px;color:#888;margin-bottom:2rem;border-left:3px solid var(--accent);padding-left:.75rem}
+.th-intro{background:var(--ink);color:#fff;border-radius:12px;padding:1.5rem 2rem;margin-bottom:2rem}
+.th-intro h2{font-family:'Lora',serif;font-size:20px;margin-bottom:.4rem}
+.th-intro p{font-size:13px;opacity:.75;line-height:1.6}
+.th-bl{margin-bottom:2rem}
+.th-t{font-family:'Lora',serif;font-size:17px;color:var(--ink);margin-bottom:.75rem;display:flex;align-items:center;gap:.6rem}
+.th-t::before{content:'';width:4px;height:20px;background:var(--accent);border-radius:2px;display:block;flex-shrink:0}
+.th-note{background:var(--paper2);border-left:3px solid var(--accent2);border-radius:0 6px 6px 0;padding:.75rem 1rem;font-size:13px;margin-bottom:1rem;line-height:1.6}
+table.teo{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:1rem;border-radius:8px;overflow:hidden}
+table.teo thead th{background:var(--ink);color:#fff;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;text-align:left}
+table.teo tbody tr:nth-child(even){background:var(--paper2)}
+table.teo tbody tr:nth-child(odd){background:#fff}
+table.teo td{padding:10px 14px;vertical-align:top;border-bottom:1px solid var(--border);line-height:1.5}
+table.teo td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+table.teo td em{color:#888;font-style:italic;font-size:12px}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-family:'DM Mono',monospace;font-weight:500}
+.bi{background:var(--teal-l);color:var(--teal)}.bs{background:var(--violet-l);color:var(--violet)}.bim{background:#FFF8E8;color:#7A5200}.bp{background:var(--green-l);color:var(--green)}.bip{background:#FEF0EF;color:var(--accent)}
+.go-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:13px 28px;border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;margin-top:1rem}
+.go-btn:hover{background:#5a1020}
+.block-card{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:2.5rem;box-shadow:var(--sh)}
+.block-hdr{background:var(--ink);color:#fff;padding:1rem 1.5rem}
+.block-num{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:2px}
+.block-hdr h3{font-family:'Lora',serif;font-size:18px;margin:0}
+.block-body{padding:1.5rem}
+.verb-item{margin-bottom:1.75rem;padding-bottom:1.75rem;border-bottom:1px solid var(--paper2)}
+.verb-item:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.verb-sent{background:var(--paper2);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:.85rem 1.25rem;font-family:'Lora',serif;font-size:15px;line-height:1.8;margin-bottom:.85rem}
+.verb-sent strong{color:var(--accent);background:rgba(122,28,46,.1);padding:1px 5px;border-radius:3px;font-style:italic}
+.verb-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem;margin-bottom:.4rem}
+@media(max-width:700px){.verb-grid{grid-template-columns:1fr 1fr}}
+.vg-cell label{display:block;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#aaa;margin-bottom:3px}
+select.vs{width:100%;padding:7px 6px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--ink);background:#fff;cursor:pointer}
+select.vs:focus{outline:none;border-color:var(--teal)}
+select.vs.ok{border-color:var(--green);background:var(--green-l)}
+select.vs.fail{border-color:var(--accent);background:#FEF0EF}
+.verb-fb{display:none;margin-top:.6rem;border-radius:7px;overflow:hidden;font-size:13px;border:1px solid var(--border)}
+.verb-fb.show{display:block}
+.vfb-row{display:flex;align-items:flex-start;gap:8px;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,.05);line-height:1.45}
+.vfb-row:last-child{border-bottom:none}
+.vfb-ok{background:var(--green-l);color:var(--green)}.vfb-fail{background:#FEF0EF;color:var(--accent)}
+.vfb-icon{flex-shrink:0;font-weight:700;font-size:14px}
+.vfb-exp{font-size:11px;color:#777;margin-top:2px}
+.block-foot{margin-top:1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+.btn-check{background:var(--teal);color:#fff;border:none;padding:11px 24px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer}
+.btn-check:hover{background:#145555}
+.block-score{font-family:'DM Mono',monospace;font-size:13px;padding:8px 14px;border-radius:20px;background:var(--paper2);display:none}
+.block-score.show{display:inline-block}
+.score-panel{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--sh);display:none}
+.score-panel.show{display:block}
+.sp-hdr{background:var(--ink);color:#fff;padding:1.5rem 2rem}
+.sp-hdr h3{font-family:'Lora',serif;font-size:22px;margin-bottom:.3rem}
+.sp-hdr p{font-size:13px;opacity:.7}
+.sp-body{padding:1.5rem 2rem}
+.nota-box{background:var(--ink);border-radius:10px;padding:1.5rem;text-align:center;color:#fff;margin-bottom:1.5rem}
+.nota-box .nota{font-family:'Lora',serif;font-size:58px;line-height:1;color:var(--accent2)}
+.nota-box .nlbl{font-size:13px;opacity:.7;margin-top:4px}
+.nota-box .nmsg{font-size:14px;margin-top:.5rem;opacity:.9}
+.blk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem}
+@media(max-width:500px){.blk-grid{grid-template-columns:1fr}}
+.blk-cell{background:var(--paper2);border-radius:8px;padding:1rem;text-align:center;border:1px solid var(--border)}
+.blk-cell .v{font-family:'Lora',serif;font-size:24px;line-height:1}
+.blk-cell .l{font-size:11px;color:#888;margin-top:4px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+.btn-enviar{width:100%;background:var(--green);color:#fff;border:none;padding:14px;border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-enviar:hover{background:#145522}
+.btn-enviar:disabled{background:#999;cursor:not-allowed}
+.envio-ok{background:var(--green-l);border:1.5px solid var(--green);border-radius:8px;padding:1rem;text-align:center;color:var(--green);font-size:14px;display:none;margin-top:.75rem;font-weight:600}
+.pending-msg{background:var(--paper2);border:1px dashed var(--border);border-radius:8px;padding:2rem;text-align:center;font-size:14px;color:#aaa}
+</style>
+</head>
+<body>
+<div class="login-ov" id="loginOv">
+  <div class="login-box">
+    <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem">PAU Galicia · Lengua Castellana y Literatura</div>
+    <h2>Análisis de<br>formas verbales</h2>
+    <p>Rellena tus datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
+    <input class="li" type="text" id="lNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
+    <input class="li" type="text" id="lCurso" placeholder="Curso (ej.: 2º Bach A)" maxlength="30">
+    <div class="le" id="lErr">Por favor, rellena todos los campos.</div>
+    <button class="lb" onclick="doLogin()">Empezar →</button>
+  </div>
+</div>
+<header class="hdr">
+  <div class="hdr-tag">PAU Galicia · Apartado 2.2</div>
+  <h1>Análisis de formas verbales</h1>
+  <p class="sub">Tiempo · modo · aspecto · voz · valor</p>
+  <div class="hdr-usr">Alumno/a: <span id="navN">—</span></div>
+</header>
+<div class="tabs-w"><div class="tabs">
+  <button class="tb on" onclick="showTab('teoria',this)">📖 Teoría</button>
+  <button class="tb" onclick="showTab('ejercicio',this)">✏️ Ejercicio</button>
+  <button class="tb" onclick="showTab('resultados',this)">📊 Resultados</button>
+</div></div>
+<div class="main">
+
+<div class="sec on" id="sec-teoria">
+  <h2 class="sec-t">Teoría: el verbo</h2>
+  <p class="sec-l">Repaso de los accidentes verbales y los valores más frecuentes en el examen PAU.</p>
+  <div class="th-intro"><h2>¿Qué analizamos en un verbo?</h2><p>Para cada forma verbal debes indicar: <strong>tiempo</strong>, <strong>modo</strong>, <strong>aspecto</strong>, <strong>voz</strong> y <strong>valor</strong>. Los cuatro primeros son categorías gramaticales; el valor indica el uso concreto del tiempo en ese contexto.</p></div>
+
+  <div class="th-bl"><div class="th-t">Los modos verbales</div>
+  <table class="teo"><thead><tr><th>Modo</th><th>Cuándo se usa</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td><span class="badge bi">Indicativo</span></td><td>Acciones <strong>reales o ciertas</strong>. <em>"Seguro que…", "Es evidente que…"</em></td><td><em>Ella <u>corre</u> cada mañana.</em></td></tr>
+    <tr><td><span class="badge bs">Subjuntivo</span></td><td>Acciones <strong>posibles, dudosas, deseadas</strong>. Tras verbos de deseo, duda, emoción o mandato. También en mandatos negativos.</td><td><em>Espero que <u>vengas</u>. No <u>digas</u> eso.</em></td></tr>
+    <tr><td><span class="badge bim">Imperativo</span></td><td><strong>Ruego, mandato, orden</strong> (solo formas afirmativas para tú y vosotros).</td><td><em><u>Ven</u> aquí. <u>Salid</u> ya.</em></td></tr>
+  </tbody></table></div>
+
+  <div class="th-bl"><div class="th-t">Los tiempos verbales (los más usados)</div>
+  <div class="th-note">💡 Los tiempos <strong>compuestos</strong> (haber + participio) tienen aspecto <strong>perfectivo</strong>. Los <strong>simples</strong>, excepto el pret. perf. simple, tienen aspecto <strong>imperfectivo</strong>.</div>
+  <table class="teo"><thead><tr><th>Tiempo</th><th>Modo</th><th>Término alternativo (Bello)</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td>Presente</td><td><span class="badge bi">Ind.</span></td><td>Presente</td><td><em>Yo <u>canto</u></em></td></tr>
+    <tr><td>Pretérito imperfecto</td><td><span class="badge bi">Ind.</span></td><td>Copretérito</td><td><em>Yo <u>cantaba</u></em></td></tr>
+    <tr><td>Pretérito perfecto simple</td><td><span class="badge bi">Ind.</span></td><td>Pretérito</td><td><em>Yo <u>canté</u></em></td></tr>
+    <tr><td>Pretérito perfecto compuesto</td><td><span class="badge bi">Ind.</span></td><td>Antepresente</td><td><em>Yo <u>he cantado</u></em></td></tr>
+    <tr><td>Pretérito pluscuamperfecto</td><td><span class="badge bi">Ind.</span></td><td>Antecopretérito</td><td><em>Yo <u>había cantado</u></em></td></tr>
+    <tr><td>Futuro simple</td><td><span class="badge bi">Ind.</span></td><td>Futuro</td><td><em>Yo <u>cantaré</u></em></td></tr>
+    <tr><td>Condicional simple</td><td><span class="badge bi">Ind.</span></td><td>Pospretérito</td><td><em>Yo <u>cantaría</u></em></td></tr>
+    <tr><td>Presente de subjuntivo</td><td><span class="badge bs">Subj.</span></td><td>Presente</td><td><em>Que yo <u>cante</u></em></td></tr>
+    <tr><td>Pretérito imperfecto de subjuntivo</td><td><span class="badge bs">Subj.</span></td><td>Pretérito</td><td><em>Que yo <u>cantara/cantase</u></em></td></tr>
+  </tbody></table></div>
+
+  <div class="th-bl"><div class="th-t">El aspecto verbal</div>
+  <table class="teo"><thead><tr><th>Aspecto</th><th>Qué indica</th><th>Tiempos</th></tr></thead><tbody>
+    <tr><td><span class="badge bp">Perfectivo</span></td><td>Acción <strong>acabada, completa</strong>. <em>«Construí la casa» → terminada.</em></td><td>Pret. perf. simple + todos los <strong>compuestos</strong>.</td></tr>
+    <tr><td><span class="badge bip">Imperfectivo</span></td><td>Acción <strong>en curso, no concluida</strong>. <em>«Construía la casa» → en proceso.</em></td><td>Todos los <strong>simples</strong> excepto el pret. perf. simple.</td></tr>
+  </tbody></table></div>
+
+  <div class="th-bl"><div class="th-t">La voz verbal</div>
+  <table class="teo"><thead><tr><th>Voz</th><th>Descripción</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td>Activa</td><td>El sujeto <strong>realiza</strong> la acción.</td><td><em>El corredor <u>ingirió</u> carbohidratos.</em></td></tr>
+    <tr><td>Pasiva</td><td>El sujeto <strong>recibe</strong> la acción. Formas: <em>ser + participio</em> (perifrástica) o <em>se + verbo</em> (refleja).</td><td><em>El puente <u>fue construido</u> en 1890.</em></td></tr>
+  </tbody></table></div>
+
+  <div class="th-bl"><div class="th-t">Valores verbales: rectos y desplazados</div>
+  <div class="th-note">🎯 <strong>Valor recto</strong>: el tiempo se usa con su significado habitual. <strong>Valor desplazado</strong>: el tiempo expresa algo distinto a su significado gramatical básico. El valor recto es el más frecuente.</div>
+  <table class="teo"><thead><tr><th>Tiempo</th><th>Valor</th><th>Ejemplo</th></tr></thead><tbody>
+    <tr><td>Presente</td><td><strong>Recto</strong>: actual</td><td><em>Ahora mismo <u>leo</u> el periódico.</em></td></tr>
+    <tr><td>Presente</td><td><strong>Recto</strong>: habitual</td><td><em>Me <u>levanto</u> a las ocho todos los días.</em></td></tr>
+    <tr><td>Presente</td><td><strong>Recto</strong>: atemporal/gnómico</td><td><em>Dos y dos <u>son</u> cuatro.</em></td></tr>
+    <tr><td>Presente</td><td><em>Desplazado</em>: <strong>histórico o narrativo</strong></td><td><em>En 1492 Colón <u>llega</u> a América.</em></td></tr>
+    <tr><td>Presente</td><td><em>Desplazado</em>: <strong>pro futuro</strong></td><td><em>Mañana <u>salgo</u> de viaje.</em></td></tr>
+    <tr><td>Presente</td><td><em>Desplazado</em>: <strong>obligación</strong></td><td><em>Tú <u>presentas</u> el trabajo el lunes, sin excusas.</em></td></tr>
+    <tr><td>Pret. imperfecto</td><td><strong>Recto</strong>: habitual/descriptivo</td><td><em>De joven <u>corría</u> cada tarde.</em></td></tr>
+    <tr><td>Pret. imperfecto</td><td><em>Desplazado</em>: <strong>cortesía</strong></td><td><em>¿Qué <u>deseaba</u> usted?</em></td></tr>
+    <tr><td>Pret. perf. simple</td><td><strong>Recto</strong>: narrativo</td><td><em>Colón <u>llegó</u> a América en 1492.</em></td></tr>
+    <tr><td>Pret. perf. compuesto</td><td><strong>Recto</strong>: pasado con relevancia presente</td><td><em>Este año <u>he aprobado</u> todo.</em></td></tr>
+    <tr><td>Pret. pluscuamperfecto</td><td><strong>Recto</strong>: anterioridad en el pasado</td><td><em>Cuando llegué, ella ya <u>había salido</u>.</em></td></tr>
+    <tr><td>Futuro simple</td><td><strong>Recto</strong>: predictivo</td><td><em>Mañana <u>lloverá</u>.</em></td></tr>
+    <tr><td>Futuro simple</td><td><em>Desplazado</em>: <strong>probabilidad</strong></td><td><em>¿Dónde <u>estará</u> mi móvil?</em></td></tr>
+    <tr><td>Futuro simple</td><td><em>Desplazado</em>: <strong>obligación</strong></td><td><em>No <u>matarás</u>. <u>Honrarás</u> a tu padre.</em></td></tr>
+    <tr><td>Pres. de subjuntivo</td><td><strong>Recto</strong>: en subordinada</td><td><em>Espero que <u>llegue</u> pronto.</em></td></tr>
+    <tr><td>Pres. de subjuntivo</td><td><em>Desplazado</em>: <strong>imperativo</strong></td><td><em>No <u>hables</u> en clase. (mandato negativo)</em></td></tr>
+    <tr><td>Pret. imperf. de subj.</td><td><strong>Recto</strong>: en subordinada</td><td><em>Le pidieron que <u>callara</u>.</em></td></tr>
+  </tbody></table></div>
+
+  <div style="text-align:center;padding:1.5rem 0 0">
+    <button class="go-btn" onclick="showTab('ejercicio',document.querySelectorAll('.tb')[1])">✏️ Ir al ejercicio →</button>
+  </div>
+</div>
+
+<div class="sec" id="sec-ejercicio">
+  <h2 class="sec-t">Ejercicio: análisis verbal</h2>
+  <p class="sec-l">Lee cada oración, identifica la forma verbal en negrita y selecciona sus propiedades. Corrige cada bloque al terminar.</p>
+  <div id="bloques-wrap"></div>
+</div>
+
+<div class="sec" id="sec-resultados">
+  <h2 class="sec-t">Resultados</h2>
+  <p class="sec-l">Completa y corrige los tres bloques para ver tu puntuación total.</p>
+  <div class="pending-msg" id="pendingMsg">Todavía no has corregido todos los bloques. Completa el ejercicio primero.</div>
+  <div class="score-panel" id="scorePanel">
+    <div class="sp-hdr"><h3>Tu puntuación</h3><p id="scoreAlumno">—</p></div>
+    <div class="sp-body">
+      <div class="nota-box"><div class="nota" id="notaFinal">—</div><div class="nlbl">correctas sobre 75</div><div class="nmsg" id="notaMsg">—</div></div>
+      <div class="blk-grid" id="blkGrid"></div>
+      <button class="btn-enviar" id="btnEnviar" onclick="enviar()">📤 Enviar al profesor</button>
+      <div class="envio-ok" id="envioOk">✓ Nota enviada correctamente al profesor.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const TIEMPO_OPTS=['Presente','Pretérito imperfecto','Pretérito perfecto simple','Pretérito perfecto compuesto','Pretérito pluscuamperfecto','Futuro simple','Condicional simple','Presente de subjuntivo','Pretérito imperfecto de subjuntivo'];
+const MODO_OPTS=['Indicativo','Subjuntivo','Imperativo'];
+const ASPECTO_OPTS=['Perfectivo','Imperfectivo'];
+const VOZ_OPTS=['Activa','Pasiva'];
+const VALOR_OPTS=[
+  {v:'recto',       l:'Recto'},
+  {v:'profuturo',   l:'Desplazado: pro futuro (presente con valor de futuro)'},
+  {v:'historico',   l:'Desplazado: histórico o narrativo'},
+  {v:'probabilidad',l:'Desplazado: probabilidad o suposición'},
+  {v:'cortesia',    l:'Desplazado: cortesía (suaviza una petición de presente)'},
+  {v:'obligacion',  l:'Desplazado: obligación (equivale a un mandato)'},
+  {v:'imperativo',  l:'Desplazado: imperativo (mandato negativo con subjuntivo)'},
+];
+
+/* 15 verbos: BLOQUE 1 todo recto (5), BLOQUE 2 (3 recto + 2 desplazado), BLOQUE 3 (2 recto + 3 desplazado) → 10 rectos : 5 desplazados */
+const BLOCKS=[
+  {id:1,title:'Bloque 1',sub:'Tiempos del pasado y presente (valores rectos)',verbs:[
+    {sent:'Cada tarde, el anciano <strong>salía</strong> al jardín y regaba las flores en silencio.',forma:'salía',tiempo:'Pretérito imperfecto',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito imperfecto: acción pasada repetida o en curso.',modo:'Indicativo: acción real.',aspecto:'Imperfectivo: todos los tiempos simples (excepto pret. perf. simple) son imperfectivos.',voz:'Activa: el sujeto (el anciano) realiza la acción.',valor:'Recto habitual/descriptivo: describe una acción que se repetía en el pasado.'}},
+    {sent:'El volcán <strong>ha entrado</strong> en erupción esta semana y sigue arrojando lava.',forma:'ha entrado',tiempo:'Pretérito perfecto compuesto',modo:'Indicativo',aspecto:'Perfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito perfecto compuesto (haber + participio).',modo:'Indicativo: hecho real.',aspecto:'Perfectivo: todos los tiempos compuestos son perfectivos.',voz:'Activa.',valor:'Recto: pasado con relevancia en el presente (ocurrió esta semana, con consecuencias actuales).'}},
+    {sent:'Cuando llegamos al teatro, la función ya <strong>había comenzado</strong>.',forma:'había comenzado',tiempo:'Pretérito pluscuamperfecto',modo:'Indicativo',aspecto:'Perfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito pluscuamperfecto (había/habías… + participio).',modo:'Indicativo.',aspecto:'Perfectivo: tiempo compuesto.',voz:'Activa.',valor:'Recto: anterioridad respecto a otra acción pasada (la función comenzó antes de que llegáramos).'}},
+    {sent:'Napoleón <strong>invadió</strong> Rusia en 1812 con más de seiscientos mil soldados.',forma:'invadió',tiempo:'Pretérito perfecto simple',modo:'Indicativo',aspecto:'Perfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito perfecto simple.',modo:'Indicativo: hecho histórico real.',aspecto:'Perfectivo: el único tiempo simple perfectivo.',voz:'Activa.',valor:'Recto narrativo: acción pasada puntual y concluida.'}},
+    {sent:'El agua <strong>hierve</strong> a cien grados centígrados a nivel del mar.',forma:'hierve',tiempo:'Presente',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Presente de indicativo.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Recto atemporal o gnómico: enuncia una verdad científica universalmente válida.'}}
+  ]},
+  {id:2,title:'Bloque 2',sub:'Voz pasiva, subjuntivo y dos valores desplazados',verbs:[
+    {sent:'La empresa <strong>había perdido</strong> la mitad de sus clientes antes de que intervinieran.',forma:'había perdido',tiempo:'Pretérito pluscuamperfecto',modo:'Indicativo',aspecto:'Perfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito pluscuamperfecto (había + participio).',modo:'Indicativo.',aspecto:'Perfectivo: tiempo compuesto.',voz:'Activa.',valor:'Recto: anterioridad respecto a otra acción pasada (las pérdidas se produjeron antes de la intervención).'}},
+    {sent:'El acuerdo de paz <strong>fue firmado</strong> por los representantes de ambas naciones.',forma:'fue firmado',tiempo:'Pretérito perfecto simple',modo:'Indicativo',aspecto:'Perfectivo',voz:'Pasiva',valor:'recto',exp:{tiempo:'Pretérito perfecto simple.',modo:'Indicativo.',aspecto:'Perfectivo.',voz:'Voz pasiva perifrástica (ser + participio): el sujeto (el acuerdo) recibe la acción; el agente es "los representantes".',valor:'Recto narrativo: acción pasada puntual y concluida, en voz pasiva.'}},
+    {sent:'El médico le pidió que <strong>guardara</strong> reposo durante al menos una semana.',forma:'guardara',tiempo:'Pretérito imperfecto de subjuntivo',modo:'Subjuntivo',aspecto:'Imperfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Pretérito imperfecto de subjuntivo (forma en -ra o -se).',modo:'Subjuntivo: subordinada sustantiva dependiente de verbo de mandato (pedir).',aspecto:'Imperfectivo: tiempo simple.',voz:'Activa.',valor:'Recto en subordinada: en cláusula dependiente de un verbo de recomendación en pasado.'}},
+    {sent:'¿Cuántos años <strong>tendrá</strong> ese señor? No aparenta su edad en absoluto.',forma:'tendrá',tiempo:'Futuro simple',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'probabilidad',exp:{tiempo:'Futuro simple.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Desplazado de probabilidad: el futuro expresa una suposición o conjetura sobre el presente (= "debe de tener…").'}},
+    {sent:'— ¿Qué <strong>deseaba</strong> usted? ¿En qué puedo ayudarle?',forma:'deseaba',tiempo:'Pretérito imperfecto',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'cortesia',exp:{tiempo:'Pretérito imperfecto de indicativo.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Desplazado de cortesía: el imperfecto suaviza una pregunta del presente (= "¿qué desea usted?"), haciéndola más educada.'}}
+  ]},
+  {id:3,title:'Bloque 3',sub:'Valores rectos (predictivo, subordinada) y desplazados (histórico, obligación, imperativo)',verbs:[
+    {sent:'El sol <strong>saldrá</strong> mañana a las siete y cuarto de la mañana.',forma:'saldrá',tiempo:'Futuro simple',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Futuro simple.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Recto predictivo: anuncia un hecho que ocurrirá en el futuro.'}},
+    {sent:'Espero que el equipo <strong>gane</strong> el campeonato este año.',forma:'gane',tiempo:'Presente de subjuntivo',modo:'Subjuntivo',aspecto:'Imperfectivo',voz:'Activa',valor:'recto',exp:{tiempo:'Presente de subjuntivo.',modo:'Subjuntivo: subordinada sustantiva dependiente de verbo de deseo (esperar).',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Recto en subordinada: expresa el deseo del hablante en la cláusula dependiente.'}},
+    {sent:'En 1605, Cervantes <strong>publica</strong> el Quijote y transforma para siempre la literatura en español.',forma:'publica',tiempo:'Presente',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'historico',exp:{tiempo:'Presente de indicativo.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Desplazado histórico o narrativo: el presente narra un hecho pasado de forma más vívida y dramática.'}},
+    {sent:'<strong>No toques</strong> esas flores; algunas son muy venenosas.',forma:'No toques',tiempo:'Presente de subjuntivo',modo:'Subjuntivo',aspecto:'Imperfectivo',voz:'Activa',valor:'imperativo',exp:{tiempo:'Presente de subjuntivo.',modo:'Subjuntivo: los mandatos negativos usan el subjuntivo porque el imperativo no tiene forma negativa.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Desplazado imperativo: el subjuntivo funciona como mandato negativo.'}},
+    {sent:'<strong>Honrarás</strong> a tu padre y a tu madre sobre todas las cosas.',forma:'Honrarás',tiempo:'Futuro simple',modo:'Indicativo',aspecto:'Imperfectivo',voz:'Activa',valor:'obligacion',exp:{tiempo:'Futuro simple.',modo:'Indicativo.',aspecto:'Imperfectivo.',voz:'Activa.',valor:'Desplazado de obligación (futuro imperativo): el futuro expresa un mandato categórico o norma moral.'}}
+  ]}
+];
+
+let G={nombre:'',curso:'',corregidos:[false,false,false],scores:[0,0,0]};
+
+function doLogin(){
+  const n=document.getElementById('lNombre').value.trim();
+  const c=document.getElementById('lCurso').value.trim();
+  if(!n||!c){document.getElementById('lErr').style.display='block';return;}
+  G.nombre=n;G.curso=c;
+  document.getElementById('navN').textContent=n;
+  document.getElementById('loginOv').style.display='none';
+}
+function showTab(id,btn){
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  if(btn)btn.classList.add('on');
+}
+function buildUI(){
+  const wrap=document.getElementById('bloques-wrap');
+  BLOCKS.forEach(blk=>{
+    const card=document.createElement('div');card.className='block-card';
+    let html=`<div class="block-hdr"><h3>${blk.title}</h3></div><div class="block-body">`;
+    blk.verbs.forEach((v,vi)=>{
+      const pid=`b${blk.id}v${vi+1}`;
+      const tO=TIEMPO_OPTS.map(t=>`<option value="${t}">${t}</option>`).join('');
+      const mO=MODO_OPTS.map(m=>`<option value="${m}">${m}</option>`).join('');
+      const aO=ASPECTO_OPTS.map(a=>`<option value="${a}">${a}</option>`).join('');
+      const vO=VOZ_OPTS.map(x=>`<option value="${x}">${x}</option>`).join('');
+      const valO=VALOR_OPTS.map(o=>`<option value="${o.v}">${o.l}</option>`).join('');
+      html+=`<div class="verb-item" id="${pid}">
+        <div class="verb-sent">${v.sent}</div>
+        <div class="verb-grid">
+          <div class="vg-cell"><label>Tiempo</label><select class="vs" id="${pid}-t"><option value="">— elige —</option>${tO}</select></div>
+          <div class="vg-cell"><label>Modo</label><select class="vs" id="${pid}-m"><option value="">— elige —</option>${mO}</select></div>
+          <div class="vg-cell"><label>Aspecto</label><select class="vs" id="${pid}-a"><option value="">— elige —</option>${aO}</select></div>
+          <div class="vg-cell"><label>Voz</label><select class="vs" id="${pid}-vo"><option value="">— elige —</option>${vO}</select></div>
+          <div class="vg-cell"><label>Valor</label><select class="vs" id="${pid}-val"><option value="">— elige —</option>${valO}</select></div>
+        </div>
+        <div class="verb-fb" id="${pid}-fb"></div>
+      </div>`;
+    });
+    html+=`<div class="block-foot">
+      <button class="btn-check" onclick="checkBlock(${blk.id})">✓ Comprobar bloque ${blk.id}</button>
+      <span class="block-score" id="b${blk.id}-score"></span>
+    </div></div>`;
+    card.innerHTML=html;wrap.appendChild(card);
+  });
+}
+function checkBlock(bid){
+  const blk=BLOCKS[bid-1];let correct=0,total=0;
+  blk.verbs.forEach((v,vi)=>{
+    const pid=`b${bid}v${vi+1}`;
+    const fields=[
+      {id:`${pid}-t`,correct:v.tiempo,label:'Tiempo',exp:v.exp.tiempo},
+      {id:`${pid}-m`,correct:v.modo,label:'Modo',exp:v.exp.modo},
+      {id:`${pid}-a`,correct:v.aspecto,label:'Aspecto',exp:v.exp.aspecto},
+      {id:`${pid}-vo`,correct:v.voz,label:'Voz',exp:v.exp.voz},
+      {id:`${pid}-val`,correct:v.valor,label:'Valor',exp:v.exp.valor},
+    ];
+    let fbHTML='';
+    fields.forEach(f=>{
+      const el=document.getElementById(f.id);const val=el.value;const ok=val===f.correct;
+      el.className='vs '+(ok?'ok':'fail');total++;
+      if(ok){correct++;fbHTML+=`<div class="vfb-row vfb-ok"><span class="vfb-icon">✓</span><span><strong>${f.label}:</strong> correcto.</span></div>`;}
+      else{
+        const cL=f.id.endsWith('-val')?(VALOR_OPTS.find(o=>o.v===f.correct)||{l:f.correct}).l:f.correct;
+        fbHTML+=`<div class="vfb-row vfb-fail"><span class="vfb-icon">✗</span><div><strong>${f.label}:</strong> incorrecto → correcto: <em>${cL}</em><div class="vfb-exp">${f.exp}</div></div></div>`;
+      }
+    });
+    const fb=document.getElementById(`${pid}-fb`);fb.innerHTML=fbHTML;fb.classList.add('show');
+  });
+  G.corregidos[bid-1]=true;G.scores[bid-1]=correct;
+  const scoreEl=document.getElementById(`b${bid}-score`);
+  const pct=Math.round(correct/total*100);
+  scoreEl.innerHTML=`<span style="color:${pct>=70?'var(--green)':'var(--accent)'}">${correct}/${total} (${pct}%)</span>`;
+  scoreEl.classList.add('show');actualizarResultados();
+}
+function actualizarResultados(){
+  if(!G.corregidos.every(c=>c)){document.getElementById('pendingMsg').style.display='block';document.getElementById('scorePanel').classList.remove('show');return;}
+  document.getElementById('pendingMsg').style.display='none';document.getElementById('scorePanel').classList.add('show');
+  document.getElementById('scoreAlumno').textContent=G.nombre+' · '+G.curso;
+  const total=G.scores.reduce((a,b)=>a+b,0);const pct=Math.round(total/75*100);
+  document.getElementById('notaFinal').textContent=total+'/75';
+  document.getElementById('notaMsg').textContent=pct>=80?'¡Excelente dominio del análisis verbal!':pct>=60?'Buen trabajo, repasa los errores.':'Revisa la teoría y vuelve a practicar.';
+  document.getElementById('blkGrid').innerHTML=BLOCKS.map((b,i)=>{
+    const s=G.scores[i];const p=Math.round(s/25*100);
+    return `<div class="blk-cell"><div class="v" style="color:${p>=70?'var(--green)':p>=40?'var(--accent2)':'var(--accent)'}">${s}/25</div><div class="l">${b.title}</div></div>`;
+  }).join('');
+}
+function enviar(){
+  const total=G.scores.reduce((a,b)=>a+b,0);
+  const FORM='https://docs.google.com/forms/d/e/1FAIpQLSeMa_BjFfICyCAf4inG1vPPwaemLax_DhZnddwRHDlPMwpttw/formResponse';
+  fetch(FORM+'?'+new URLSearchParams({'entry.965384595':G.nombre,'entry.2013791434':G.curso,'entry.591257558':total+'/75'}).toString(),{method:'POST',mode:'no-cors'});
+  const f=document.createElement('iframe');f.style.display='none';
+  f.src=`https://docs.google.com/forms/d/e/1FAIpQLSeMa_BjFfICyCAf4inG1vPPwaemLax_DhZnddwRHDlPMwpttw/viewform?usp=pp_url&entry.965384595=${encodeURIComponent(G.nombre)}&entry.2013791434=${encodeURIComponent(G.curso)}&entry.591257558=${encodeURIComponent(total+'/75')}`;
+  document.body.appendChild(f);
+  document.getElementById('btnEnviar').disabled=true;document.getElementById('envioOk').style.display='block';
+}
+buildUI();
+</script>
+</body>
+</html>

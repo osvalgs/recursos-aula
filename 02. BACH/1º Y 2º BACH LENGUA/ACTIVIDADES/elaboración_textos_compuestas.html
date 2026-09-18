@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oraciones Compuestas · Taller de Escritura</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1A1A2E;
+  --paper: #FAFAF7;
+  --paper2: #F3F2EC;
+  --accent: #C0392B;
+  --accent2: #E8A838;
+  --teal: #1A6B6B;
+  --teal-light: #E6F4F4;
+  --violet: #4A2C7A;
+  --violet-light: #F0EAF8;
+  --green: #1A5C2A;
+  --green-light: #E6F4E8;
+  --border: rgba(26,26,46,0.12);
+  --shadow: 0 2px 20px rgba(26,26,46,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,26,46,0.14);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* ── LOGIN ── */
+.login-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,26,46,0.82);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  display: flex; align-items: center; justify-content: center; padding: 1rem;
+}
+.login-box {
+  background: var(--paper);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  max-width: 420px; width: 100%;
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+}
+.login-box .logo { font-family: 'Lora', serif; font-size: 13px; letter-spacing: 0.15em; color: var(--accent); text-transform: uppercase; margin-bottom: 1rem; }
+.login-box h2 { font-family: 'Lora', serif; font-size: 22px; color: var(--ink); margin-bottom: 0.3rem; }
+.login-box p { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+.login-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--ink); background: white; margin-bottom: 1rem; transition: border-color 0.15s; }
+.login-input:focus { outline: none; border-color: var(--accent); }
+.login-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; letter-spacing: 0.02em; }
+.login-btn:hover { background: #A93226; }
+.login-error { font-size: 12px; color: var(--accent); margin-top: 0.5rem; display: none; }
+
+/* ── HEADER ── */
+.site-header {
+  background: var(--ink);
+  color: white;
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.site-header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 80px);
+}
+.header-tag { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--accent2); text-transform: uppercase; margin-bottom: 0.75rem; position: relative; }
+.site-header h1 { font-family: 'Lora', serif; font-size: clamp(22px,4vw,36px); font-weight: 700; position: relative; margin-bottom: 0.4rem; }
+.site-header .sub { font-size: 14px; opacity: 0.65; position: relative; margin-bottom: 1.25rem; }
+.nav-user { position: relative; font-family: 'DM Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+.nav-user span { color: var(--accent2); }
+
+/* ── NAV TABS ── */
+.tabs-wrap { background: white; border-bottom: 2px solid var(--paper2); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+.tabs { display: flex; overflow-x: auto; max-width: 1000px; margin: 0 auto; }
+.tab-btn { padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; color: #888; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; letter-spacing: 0.04em; text-transform: uppercase; flex-shrink: 0; }
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── MAIN LAYOUT ── */
+.main { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+.section { display: none; padding: 2.5rem 0 3rem; }
+.section.active { display: block; }
+
+/* ── THEORY ── */
+.theory-intro { background: var(--ink); color: white; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2rem; }
+.theory-intro h2 { font-family: 'Lora', serif; font-size: 20px; margin-bottom: 0.4rem; }
+.theory-intro p { font-size: 13px; opacity: 0.75; line-height: 1.6; }
+
+.th-block { margin-bottom: 2rem; }
+.th-block-title { font-family: 'Lora', serif; font-size: 17px; color: var(--ink); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem; }
+.th-block-title::before { content: ''; width: 4px; height: 20px; background: var(--accent); border-radius: 2px; display: block; flex-shrink: 0; }
+.th-note { background: var(--paper2); border-left: 3px solid var(--accent2); border-radius: 0 6px 6px 0; padding: 0.75rem 1rem; font-size: 13px; color: var(--ink); margin-bottom: 1rem; line-height: 1.6; }
+
+table.teoria { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; }
+table.teoria thead th { background: var(--ink); color: white; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 14px; text-align: left; }
+table.teoria tbody tr:nth-child(even) { background: var(--paper2); }
+table.teoria tbody tr:nth-child(odd) { background: white; }
+table.teoria td { padding: 10px 14px; vertical-align: top; border-bottom: 1px solid var(--border); line-height: 1.5; }
+table.teoria td:first-child { font-weight: 600; color: var(--teal); white-space: nowrap; }
+table.teoria td em { color: #888; font-style: normal; font-size: 12px; }
+table.teoria td code { background: var(--paper2); border-radius: 3px; padding: 1px 5px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--violet); }
+
+/* ── EXERCISE CARDS ── */
+.ex-card { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2rem; box-shadow: var(--shadow); }
+.ex-header { padding: 1.25rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; border-bottom: 1px solid var(--paper2); }
+.ex-num { width: 36px; height: 36px; flex-shrink: 0; background: var(--accent); color: white; border-radius: 8px; font-family: 'Lora', serif; font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.ex-header-text h3 { font-family: 'Lora', serif; font-size: 17px; margin-bottom: 0.2rem; }
+.ex-header-text p { font-size: 13px; color: #777; }
+.ex-body { padding: 1.5rem; }
+
+/* Enunciado destacado */
+.enunciado { background: var(--paper2); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; }
+.enunciado strong { color: var(--accent); }
+
+/* Tags de tipos pedidos */
+.tipos-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+.tipo-tag { display: inline-flex; align-items: center; gap: 5px; background: var(--ink); color: white; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 11px; padding: 4px 12px; letter-spacing: 0.04em; }
+.tipo-tag.coordinada { background: var(--teal); }
+.tipo-tag.bipolar { background: var(--violet); }
+.tipo-tag.mixto { background: var(--accent); }
+
+/* Método de identificación */
+.metodo-box { background: #FFFBF0; border: 1px solid var(--accent2); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; font-size: 13px; }
+.metodo-box h4 { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent2); margin-bottom: 0.5rem; }
+.metodo-leyenda { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
+.leyenda-item { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.leyenda-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+/* Textarea */
+.textarea-wrap { position: relative; margin-bottom: 1rem; }
+.texto-input {
+  width: 100%; min-height: 160px;
+  border: 2px solid var(--border); border-radius: 8px;
+  padding: 14px 16px; font-size: 15px; font-family: 'Lora', serif;
+  color: var(--ink); background: white; resize: vertical; line-height: 1.8;
+  transition: border-color 0.15s;
+}
+.texto-input:focus { outline: none; border-color: var(--teal); }
+.char-count { font-family: 'DM Mono', monospace; font-size: 11px; color: #aaa; text-align: right; margin-top: 4px; }
+.char-count.warn { color: var(--accent); }
+
+/* Marcado de oraciones */
+.marcado-instruc { font-size: 13px; color: #666; margin-bottom: 0.75rem; }
+.marcado-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+@media(max-width:600px){.marcado-grid{grid-template-columns:1fr;}}
+.marcado-item { display: flex; align-items: center; gap: 8px; }
+.marcado-label { font-size: 13px; flex-shrink: 0; min-width: 160px; }
+.marcado-select {
+  flex: 1; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--ink);
+  background: white; cursor: pointer; transition: border-color 0.15s;
+}
+.marcado-select:focus { outline: none; border-color: var(--teal); }
+
+.btn-corregir { background: var(--teal); color: white; border: none; padding: 11px 24px; border-radius: 8px; font-size: 14px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; transition: background 0.15s; margin-top: 1rem; display: inline-flex; align-items: center; gap: 7px; }
+.btn-corregir:hover { background: #145555; }
+
+/* Feedback corrección */
+.feedback-box { display: none; margin-top: 1.25rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+.feedback-box.visible { display: block; }
+.feedback-header { padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+.feedback-header.ok { background: var(--green-light); color: var(--green); }
+.feedback-header.parcial { background: #FFF8E8; color: #7A5200; }
+.feedback-header.mal { background: #FEF0EF; color: var(--accent); }
+.feedback-body { padding: 1rem 1.25rem; background: white; }
+.feedback-item { font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--paper2); display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+.feedback-item:last-child { border-bottom: none; }
+.fi-icon { flex-shrink: 0; margin-top: 1px; }
+.nota-ex { display: inline-flex; align-items: center; gap:6px; background: var(--ink); color: white; border-radius: 20px; padding: 5px 14px; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; margin-top: 0.75rem; }
+.nota-ex .pts { color: var(--accent2); font-size: 16px; font-weight: 700; }
+
+/* ── SCORE PANEL ── */
+.score-panel { background: white; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); margin-top: 2rem; display: none; }
+.score-panel.visible { display: block; }
+.score-header { background: var(--ink); color: white; padding: 1.5rem 2rem; }
+.score-header h3 { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 0.3rem; }
+.score-header p { font-size: 13px; opacity: 0.7; }
+.score-body { padding: 1.5rem 2rem; }
+.score-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 1.5rem; }
+@media(max-width:600px){.score-grid{grid-template-columns:1fr 1fr;}}
+.score-cell { background: var(--paper2); border-radius: 8px; padding: 1rem; text-align: center; border: 1px solid var(--border); }
+.score-cell .val { font-family: 'Lora', serif; font-size: 28px; color: var(--ink); line-height: 1; }
+.score-cell .lbl { font-size: 11px; color: #888; margin-top: 4px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
+.nota-final-box { background: var(--ink); border-radius: 10px; padding: 1.5rem; text-align: center; color: white; margin-bottom: 1.25rem; }
+.nota-final-box .nota { font-family: 'Lora', serif; font-size: 58px; line-height: 1; color: var(--accent2); }
+.nota-final-box .nota-lbl { font-size: 13px; opacity: 0.7; margin-top: 4px; }
+.nota-final-box .nota-msg { font-size: 14px; margin-top: 0.5rem; opacity: 0.9; }
+.errores-wrap { background: var(--paper2); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.errores-wrap h4 { font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #888; margin-bottom: 8px; }
+.error-item { font-size: 13px; color: var(--accent); padding: 3px 0; }
+.btn-enviar { width: 100%; background: var(--green); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 15px; font-family: 'DM Sans', sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.15s; margin-top: 0.5rem; }
+.btn-enviar:hover { background: #145522; }
+.btn-enviar:disabled { background: #999; cursor: not-allowed; }
+.envio-ok { background: var(--green-light); border: 1.5px solid var(--green); border-radius: 8px; padding: 1rem; text-align: center; color: var(--green); font-size: 14px; display: none; margin-top: 0.75rem; }
+.incompleto-msg { background: #FFF8E8; border: 1.5px solid var(--accent2); border-radius: 8px; padding: 0.75rem 1rem; text-align: center; color: #7A5200; font-size: 13px; margin-bottom: 0.75rem; display: none; }
+
+/* ── DESTACADOS en el texto ── */
+.hl-cop   { background: #D5F0E8; border-radius: 3px; padding: 0 3px; }
+.hl-dis   { background: #D5E8F8; border-radius: 3px; padding: 0 3px; }
+.hl-dis2  { background: #E8D5F8; border-radius: 3px; padding: 0 3px; }
+.hl-exp   { background: #F8EBD5; border-radius: 3px; padding: 0 3px; }
+.hl-bip   { background: #F8D5D5; border-radius: 3px; padding: 0 3px; }
+
+/* ── MISC ── */
+.mb-2 { margin-bottom: 2rem; }
+.section-title { font-family: 'Lora', serif; font-size: 26px; color: var(--ink); margin-bottom: 0.4rem; }
+.section-lead { font-size: 14px; color: #888; margin-bottom: 2rem; border-left: 3px solid var(--accent); padding-left: 0.75rem; }
+
+/* Colores leyenda */
+.c1 { background: #2E8B6A; }  /* copulativa */
+.c2 { background: #2E5E8B; }  /* disyuntiva */
+.c3 { background: #7A2E8B; }  /* distributiva */
+.c4 { background: #8B6A2E; }  /* explicativa */
+.c5 { background: #8B2E2E; }  /* causal */
+.c6 { background: #2E4A8B; }  /* condicional */
+.c7 { background: #5A2E8B; }  /* concesiva */
+.c8 { background: #8B2E5A; }  /* adversativa */
+.c9 { background: #3A7A3A; }  /* consecutiva */
+.c10{ background: #7A6A20; }  /* comparativa */
+
+.pending-msg { background: var(--paper2); border: 1px dashed var(--border); border-radius: 8px; padding: 1.5rem; text-align: center; font-size: 14px; color: #aaa; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="hero-tag" style="display:inline-block;margin-bottom:.9rem;">ESO / Bachillerato · Lengua Castellana y Literatura</div>
+    <h2>Taller de escritura <br> de oraciones compuestas</h2>
+    <p>Rellena los datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
+    <input class="login-input" type="text" id="loginNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
+    <input class="login-input" type="text" id="loginCurso" placeholder="Curso" maxlength="30">
+    </select>
+    <div class="login-err" id="loginErr">Por favor, rellena todos los campos antes de continuar.</div>
+    <button class="login-btn" onclick="doLogin()">Empezar →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-tag">Sintaxis · Oraciones compuestas</div>
+  <h1>Taller de escritura</h1>
+  <p class="sub">Crea textos coherentes e identifica las oraciones según su tipo</p>
+  <div class="nav-user">Alumno: <span id="navNombre">—</span></div>
+</header>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="show('teoria')">📖 Teoría</button>
+    <button class="tab-btn" onclick="show('ej1')">✏️ Ejercicio 1</button>
+    <button class="tab-btn" onclick="show('ej2')">✏️ Ejercicio 2</button>
+    <button class="tab-btn" onclick="show('ej3')">✏️ Ejercicio 3</button>
+    <button class="tab-btn" onclick="show('resultados')">📊 Resultados</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- TEORÍA                                                             -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main active" id="s-teoria">
+  <div class="theory-intro">
+    <h2>Oraciones compuestas</h2>
+    <p>Las oraciones compuestas contienen dos o más verbos. Según cómo se relacionan entre sí, se clasifican en <strong style="color:var(--accent2)">subordinadas</strong>, <strong style="color:var(--accent2)">coordinadas</strong> o <strong style="color:var(--accent2)">bipolares</strong>. Lee con atención la teoría antes de pasar a los ejercicios.</p>
+  </div>
+
+  <!-- SUBORDINADAS -->
+  <div class="th-block">
+    <h3 class="th-block-title">1. Oraciones subordinadas</h3>
+    <div class="th-note">Dependen de un verbo principal y desempeñan una función sintáctica. Suelen ir introducidas por un nexo (<em>que, cuyo, donde, como, cuando…</em>). Sin nexo, el verbo de la subordinada aparece en <strong>forma no personal</strong>: infinitivo, participio o gerundio.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Definición y función</th><th>Criterio / Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Sustantiva</td><td>Equivale a un sustantivo. Funciones: SUJ, CD, AT, TÉRM.</td><td>Sustituir por <code>eso</code>. Nexos: <em>que, si, dónde, cuándo…</em></td><td><em>«No se propicia que el pensamiento…»</em></td></tr>
+        <tr><td>Adjetiva</td><td>Modifica a un núcleo sustantivo. Función: MOD.</td><td>Sustituir nexo por <code>el/la cual</code>. Nexos: <em>que, cuyo/a…</em></td><td><em>«Ese es el muchacho que ha sido detenido»</em></td></tr>
+        <tr><td>Adverbial de lugar</td><td>Expresa circunstancia de lugar. Función: CCL.</td><td>Sustituir por <code>allí</code>. Nexo: <em>donde</em></td><td><em>«Lo encontró donde lo habías dejado»</em></td></tr>
+        <tr><td>Adverbial de tiempo</td><td>Expresa circunstancia temporal. Función: CCT.</td><td>Sustituir por <code>entonces</code>. Nexo: <em>cuando</em></td><td><em>«Me duele cuando hablo demasiado»</em></td></tr>
+        <tr><td>Adverbial de modo</td><td>Expresa circunstancia de modo. Función: CCM.</td><td>Sustituir por <code>así</code>. Nexo: <em>como</em></td><td><em>«Disparó como había aprendido»</em></td></tr>
+        <tr><td>Adverbial de cantidad</td><td>Expresa grado o cantidad. Función: CCCANT.</td><td>Sustituir por <code>mucho/bastante</code>. Nexo: <em>cuanto</em></td><td><em>«Mi hermano estudia cuanto puede»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COORDINADAS -->
+  <div class="th-block">
+    <h3 class="th-block-title">2. Oraciones coordinadas</h3>
+    <div class="th-note">Son oraciones simples relacionadas por conjunciones. Cada una tiene sentido completo y podría aparecer de forma independiente.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Significado</th><th>Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Copulativa</td><td>Suma o adición de significados.</td><td><code>y, e, ni</code></td><td><em>«Bebe mucho y habla incansablemente»</em></td></tr>
+        <tr><td>Disyuntiva</td><td>Los significados se excluyen.</td><td><code>o, u, o bien</code></td><td><em>«¿Te quedas en casa o te unes a nosotros?»</em></td></tr>
+        <tr><td>Distributiva</td><td>Acciones alternantes no excluyentes.</td><td><code>ya…ya, unos…otros</code></td><td><em>«Unos días sonríe, otros llora»</em></td></tr>
+        <tr><td>Explicativa</td><td>La segunda aclara a la primera.</td><td><code>es decir, o sea, esto es</code></td><td><em>«Son actrices, o sea, no tienen experiencia»</em></td></tr>
+        <tr><td>Yuxtapuesta</td><td>Ausencia de conjunción.</td><td>Coma o punto y coma</td><td><em>«No se cayó; lo has empujado tú»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- BIPOLARES -->
+  <div class="th-block">
+    <h3 class="th-block-title">3. Oraciones bipolares</h3>
+    <div class="th-note">Relacionadas por interordinación e interdependencia lógica entre las dos cláusulas.</div>
+    <table class="teoria">
+      <thead><tr><th>Tipo</th><th>Relación lógica</th><th>Nexos</th><th>Ejemplo</th></tr></thead>
+      <tbody>
+        <tr><td>Causal</td><td>Efecto y causa.</td><td><code>porque, puesto que, ya que</code></td><td><em>«Cena después porque tiene que estudiar»</em></td></tr>
+        <tr><td>Condicional</td><td>Condicionante y condicionado.</td><td><code>si, como, siempre que</code></td><td><em>«Si me lo hubieras explicado, no…»</em></td></tr>
+        <tr><td>Concesiva</td><td>Objeción y concesión.</td><td><code>aunque, a pesar de que</code></td><td><em>«Aunque me lo hubieras explicado, …»</em></td></tr>
+        <tr><td>Adversativa</td><td>Tesis y antítesis (contraposición).</td><td><code>pero, mas, sino, sin embargo</code></td><td><em>«Le expliqué el ejercicio pero no lo ha entendido»</em></td></tr>
+        <tr><td>Consecutiva</td><td>Antecedente y consecuente.</td><td><code>por tanto, así que, luego</code></td><td><em>«Se ha estropeado, por tanto, iremos…»</em></td></tr>
+        <tr><td>Comparativa</td><td>Comparando y comparado.</td><td><code>más/menos que, tan…como</code></td><td><em>«Inspira más confianza que los anteriores»</em></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin-top:1.5rem;">
+    <button class="btn-corregir" onclick="show('ej1')">Ir al Ejercicio 1 →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 1 — Solo coordinadas                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej1">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">1</div>
+      <div class="ex-header-text">
+        <h3>Solo coordinadas</h3>
+        <p>Copulativa · Disyuntiva · Distributiva · Explicativa</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas las siguientes oraciones coordinadas:<br>
+        una <strong>copulativa</strong>, una <strong>disyuntiva</strong>, una <strong>distributiva</strong> y una <strong>explicativa</strong>.<br>
+        Identifícalas correctamente utilizando el sistema de marcas de color indicado a continuación.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag coordinada">COORDINADAS</span>
+        <span class="tipo-tag" style="background:var(--teal)">Copulativa</span>
+        <span class="tipo-tag" style="background:#2E5E8B">Disyuntiva</span>
+        <span class="tipo-tag" style="background:#7A2E8B">Distributiva</span>
+        <span class="tipo-tag" style="background:#8B6A2E">Explicativa</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;margin-bottom:6px;">Escribe el texto en el cuadro de abajo. Luego, en cada desplegable, copia literalmente la oración de tu texto que corresponde a cada tipo. Así quedará identificada.</p>
+        <div class="metodo-leyenda">
+          <div class="leyenda-item"><div class="leyenda-dot c1"></div><span>Copulativa (verde oscuro)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c2"></div><span>Disyuntiva (azul)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c3"></div><span>Distributiva (violeta)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c4"></div><span>Explicativa (ocre)</span></div>
+        </div>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex1" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(1)"></textarea>
+        <div class="char-count" id="cc1">0 palabras</div>
+      </div>
+
+      <p class="marcado-instruc">Ahora indica qué oración de tu texto cumple cada función:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:var(--teal);font-weight:600;">🟢 Copulativa:</label>
+          <input class="marcado-select" id="m1_cop" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E5E8B;font-weight:600;">🔵 Disyuntiva:</label>
+          <input class="marcado-select" id="m1_dis" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#7A2E8B;font-weight:600;">🟣 Distributiva:</label>
+          <input class="marcado-select" id="m1_dst" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B6A2E;font-weight:600;">🟡 Explicativa:</label>
+          <input class="marcado-select" id="m1_exp" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+
+      <button class="btn-corregir" onclick="corregir(1)">✓ Corregir ejercicio 1</button>
+
+      <div class="feedback-box" id="fb1">
+        <div class="feedback-header" id="fb1-head"></div>
+        <div class="feedback-body" id="fb1-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 2 — Solo bipolares                                       -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej2">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">2</div>
+      <div class="ex-header-text">
+        <h3>Solo bipolares</h3>
+        <p>Condicional · Concesiva · Adversativa · Consecutiva</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas las siguientes oraciones bipolares:<br>
+        una <strong>condicional</strong>, una <strong>concesiva</strong>, una <strong>adversativa</strong> y una <strong>consecutiva</strong>.<br>
+        Identifícalas correctamente utilizando el sistema de marcas indicado.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag bipolar">BIPOLARES</span>
+        <span class="tipo-tag" style="background:#2E4A8B">Condicional</span>
+        <span class="tipo-tag" style="background:#5A2E8B">Concesiva</span>
+        <span class="tipo-tag" style="background:#8B2E5A">Adversativa</span>
+        <span class="tipo-tag" style="background:#3A7A3A">Consecutiva</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;margin-bottom:6px;">Escribe el texto en el cuadro. Luego, copia en cada campo la oración exacta de tu texto que cumple esa función.</p>
+        <div class="metodo-leyenda">
+          <div class="leyenda-item"><div class="leyenda-dot c6"></div><span>Condicional (azul oscuro)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c7"></div><span>Concesiva (violeta oscuro)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c8"></div><span>Adversativa (rosa-rojo)</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c9"></div><span>Consecutiva (verde)</span></div>
+        </div>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex2" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(2)"></textarea>
+        <div class="char-count" id="cc2">0 palabras</div>
+      </div>
+
+      <p class="marcado-instruc">Indica qué oración de tu texto cumple cada función:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E4A8B;font-weight:600;">🔷 Condicional:</label>
+          <input class="marcado-select" id="m2_con" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#5A2E8B;font-weight:600;">🟣 Concesiva:</label>
+          <input class="marcado-select" id="m2_cnc" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E5A;font-weight:600;">🔴 Adversativa:</label>
+          <input class="marcado-select" id="m2_adv" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#3A7A3A;font-weight:600;">🟢 Consecutiva:</label>
+          <input class="marcado-select" id="m2_cns" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+
+      <button class="btn-corregir" onclick="corregir(2)">✓ Corregir ejercicio 2</button>
+      <div class="feedback-box" id="fb2">
+        <div class="feedback-header" id="fb2-head"></div>
+        <div class="feedback-body" id="fb2-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- EJERCICIO 3 — Mezcla 1                                            -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-ej3">
+  <div class="ex-card">
+    <div class="ex-header">
+      <div class="ex-num">3</div>
+      <div class="ex-header-text">
+        <h3>Mezcla I</h3>
+        <p>Copulativa · Causal · Condicional · Comparativa</p>
+      </div>
+    </div>
+    <div class="ex-body">
+      <div class="enunciado">
+        Elabora un texto de <strong>5-6 líneas con sentido</strong> en el que incluyas:<br>
+        una coordinada <strong>copulativa</strong>, una bipolar <strong>causal</strong>, una bipolar <strong>condicional</strong> y una bipolar <strong>comparativa</strong>.<br>
+        Identifícalas correctamente.
+      </div>
+      <div class="tipos-wrap">
+        <span class="tipo-tag mixto">MEZCLA</span>
+        <span class="tipo-tag" style="background:var(--teal)">Copulativa</span>
+        <span class="tipo-tag" style="background:#8B2E2E">Causal</span>
+        <span class="tipo-tag" style="background:#2E4A8B">Condicional</span>
+        <span class="tipo-tag" style="background:#7A6A20">Comparativa</span>
+      </div>
+      <div class="metodo-box">
+        <h4>📌 Método de identificación</h4>
+        <p style="font-size:13px;margin-bottom:6px;">Escribe el texto y copia en cada campo la oración que corresponde a cada tipo.</p>
+        <div class="metodo-leyenda">
+          <div class="leyenda-item"><div class="leyenda-dot c1"></div><span>Copulativa</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c5"></div><span>Causal</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c6"></div><span>Condicional</span></div>
+          <div class="leyenda-item"><div class="leyenda-dot c10"></div><span>Comparativa</span></div>
+        </div>
+      </div>
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex3" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(3)"></textarea>
+        <div class="char-count" id="cc3">0 palabras</div>
+      </div>
+
+      <p class="marcado-instruc">Indica qué oración de tu texto cumple cada función:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:var(--teal);font-weight:600;">🟢 Copulativa:</label>
+          <input class="marcado-select" id="m3_cop" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E2E;font-weight:600;">🔴 Causal:</label>
+          <input class="marcado-select" id="m3_cau" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E4A8B;font-weight:600;">🔷 Condicional:</label>
+          <input class="marcado-select" id="m3_con" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#7A6A20;font-weight:600;">🟡 Comparativa:</label>
+          <input class="marcado-select" id="m3_cmp" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+
+      <button class="btn-corregir" onclick="corregir(3)">✓ Corregir ejercicio 3</button>
+      <div class="feedback-box" id="fb3">
+        <div class="feedback-header" id="fb3-head"></div>
+        <div class="feedback-body" id="fb3-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <div class="textarea-wrap">
+        <textarea class="texto-input" id="tex4" placeholder="Escribe aquí tu texto (5-6 líneas)…" oninput="countChars(4)"></textarea>
+        <div class="char-count" id="cc4">0 palabras</div>
+      </div>
+
+      <p class="marcado-instruc">Indica qué oración de tu texto cumple cada función:</p>
+      <div class="marcado-grid">
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#2E5E8B;font-weight:600;">🔵 Disyuntiva:</label>
+          <input class="marcado-select" id="m4_dis" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#5A2E8B;font-weight:600;">🟣 Concesiva:</label>
+          <input class="marcado-select" id="m4_cnc" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E5A;font-weight:600;">🔴 Adversativa:</label>
+          <input class="marcado-select" id="m4_adv" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+        <div class="marcado-item">
+          <label class="marcado-label" style="color:#8B2E2E;font-weight:600;">🟥 Causal:</label>
+          <input class="marcado-select" id="m4_cau" type="text" placeholder="Copia aquí esa oración…" style="border-radius:6px;padding:7px 10px;">
+        </div>
+      </div>
+
+      <button class="btn-corregir" onclick="corregir(4)">✓ Corregir ejercicio 4</button>
+      <div class="feedback-box" id="fb4">
+        <div class="feedback-header" id="fb4-head"></div>
+        <div class="feedback-body" id="fb4-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- RESULTADOS                                                          -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<div class="section main" id="s-resultados">
+  <h2 class="section-title">Resultados</h2>
+  <p class="section-lead">Aquí verás tu nota final cuando hayas completado y corregido los tres ejercicios.</p>
+
+  <div class="pending-msg" id="pendingMsg">⏳ Aún no has corregido todos los ejercicios. Completa los tres para ver tu nota.</div>
+
+  <div class="score-panel" id="scorePanel">
+    <div class="score-header">
+      <h3>📊 Resultados de <span id="scoreNombre">—</span></h3>
+      <p>Taller de escritura · Oraciones compuestas</p>
+    </div>
+    <div class="score-body">
+      <div class="score-grid">
+        <div class="score-cell"><div class="val" id="r1">—</div><div class="lbl">Ejercicio 1</div></div>
+        <div class="score-cell"><div class="val" id="r2">—</div><div class="lbl">Ejercicio 2</div></div>
+        <div class="score-cell"><div class="val" id="r3">—</div><div class="lbl">Ejercicio 3</div></div>
+        
+      </div>
+      <div class="nota-final-box">
+        <div class="nota" id="notaFinal">—</div>
+        <div class="nota-lbl">Nota final sobre 10</div>
+        <div class="nota-msg" id="notaMsg"></div>
+      </div>
+      <div class="errores-wrap" id="erroresWrap" style="display:none">
+        <h4>Aspectos a mejorar</h4>
+        <div id="erroresList"></div>
+      </div>
+      <div class="incompleto-msg" id="incompletoMsg"></div>
+      <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
+      <div class="envio-ok" id="envioOk">✅ Resultados enviados correctamente. ¡Buen trabajo!</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                                          -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────
+var ALUMNO = '';
+var NOTAS = {1: null, 2: null, 3: null};
+var TEXTOS = {1:'',2:'',3:'',4:''};
+
+var FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSdgLMcWESuwo5NrtUY6uGTTuBWFI0S-B0eZkffra6B9GkJQwg/formResponse';
+var FIELDS = {
+  nombre:  'entry.2013791434',
+  nota1:   'entry.591257558',
+  nota2:   'entry.1891682145',
+  nota3:   'entry.1018044959',
+  nota4:   'entry.1089617851',
+  total:   'entry.1310682522',
+};
+
+// ── LOGIN ──────────────────────────────────────────────────────────
+function doLogin() {
+  var n = document.getElementById('loginNombre').value.trim();
+  if (!n) { document.getElementById('loginError').style.display = 'block'; return; }
+  ALUMNO = n;
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('navNombre').textContent = n;
+}
+document.getElementById('loginNombre').addEventListener('keydown', function(e){ if(e.key==='Enter') doLogin(); });
+
+// ── NAVEGACIÓN ──────────────────────────────────────────────────────
+var SECTIONS = ['teoria','ej1','ej2','ej3','resultados'];
+function show(k) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-'+k).classList.add('active');
+  var idx = SECTIONS.indexOf(k);
+  if (idx >= 0) document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (k === 'resultados') actualizarResultados();
+}
+
+// ── CONTEO PALABRAS ─────────────────────────────────────────────────
+function countChars(n) {
+  var t = document.getElementById('tex'+n).value.trim();
+  var words = t ? t.split(/\s+/).length : 0;
+  var el = document.getElementById('cc'+n);
+  el.textContent = words + ' palabras';
+  el.className = 'char-count' + (words < 30 || words > 120 ? ' warn' : '');
+}
+
+// ── DEFINICIONES DE TIPOS ───────────────────────────────────────────
+// Para cada tipo: array de nexos ampliados. La comparativa usa detección especial.
+var TIPOS = {
+  cop: { nombre: 'Copulativa',
+    nexos: [' y ',' e ',' ni ','y ','e ','ni '], patron: null,
+    desc: 'Debe contener un nexo copulativo: y, e, ni.' },
+  dis: { nombre: 'Disyuntiva',
+    nexos: [' o ',' u ',' o bien ','o ','u '], patron: null,
+    desc: 'Debe contener un nexo disyuntivo: o, u, o bien.' },
+  dst: { nombre: 'Distributiva',
+    nexos: ['ya ','unos ','otros ','unas ','uno ','unas veces','otras veces','a veces','en otras','por momentos'], patron: null,
+    desc: 'Debe contener nexos distributivos: ya…ya, unos…otros, a veces…otras…' },
+  exp: { nombre: 'Explicativa (coordinada)',
+    nexos: ['es decir','o sea','esto es','o lo que es lo mismo','en otras palabras','es más'], patron: null,
+    desc: 'Debe contener un nexo explicativo: es decir, o sea, esto es, o lo que es lo mismo…' },
+  cau: { nombre: 'Causal',
+    nexos: ['porque','puesto que','ya que','debido a que',' pues ','pues,','dado que','como quiera que','por cuanto','a causa de que','visto que'], patron: null,
+    desc: 'Debe contener un nexo causal: porque, ya que, puesto que, dado que, pues…' },
+  con: { nombre: 'Condicional',
+    nexos: [' si ',' si,','como ','siempre que','siempre y cuando','a condición de que','con tal de que','en caso de que','salvo que','siempre y cuando','a no ser que','con que ','a menos que'], patron: null,
+    desc: 'Debe contener un nexo condicional: si, como, siempre que, en caso de que…' },
+  cnc: { nombre: 'Concesiva',
+    nexos: ['aunque','a pesar de que','a pesar de ','si bien','por más que','por mucho que','aun cuando','aun si','aun a riesgo de','por mucho que','bien que','pese a que','pese a '], patron: null,
+    desc: 'Debe contener un nexo concesivo: aunque, a pesar de (que), si bien, por más que…' },
+  adv: { nombre: 'Adversativa',
+    nexos: ['pero','mas ','sino','sin embargo','no obstante','ahora bien','con todo','a pesar de ello','empero','ahora bien'], patron: null,
+    desc: 'Debe contener un nexo adversativo: pero, sin embargo, sino, no obstante, mas…' },
+  cns: { nombre: 'Consecutiva',
+    nexos: ['por tanto','por lo tanto','así que','así pues','luego','por ello','por eso','de modo que','de manera que','conque','en consecuencia','por consiguiente','de ahí que','de forma que','de suerte que','tanto que','tan que'], patron: null,
+    desc: 'Debe contener un nexo consecutivo: por tanto, por lo tanto, así que, luego, en consecuencia…' },
+  cmp: { nombre: 'Comparativa',
+    nexos: [], patron: 'comparativa',
+    desc: 'Debe contener nexos comparativos: más…que, menos…que, tan…como, tanto…como, igual que…' },
+};
+
+// ── DETECCIÓN COMPARATIVA (patrón flexible) ──────────────────────────
+// Acepta "más ... que", "menos ... que", "tan ... como", "tanto ... como", "igual que", "mejor que", "peor que"
+function tieneNexoComparativa(texto) {
+  var t = texto.toLowerCase();
+  // más ... que (con cualquier texto entre medias)
+  if (/más\s+\S[\s\S]{0,60}?\bque\b/.test(t)) return true;
+  if (/mas\s+\S[\s\S]{0,60}?\bque\b/.test(t)) return true;
+  // menos ... que
+  if (/menos\s+\S[\s\S]{0,60}?\bque\b/.test(t)) return true;
+  // tan ... como
+  if (/tan\s+\S[\s\S]{0,60}?\bcomo\b/.test(t)) return true;
+  // tanto/a/os/as ... como
+  if (/tanto[as]?\s[\s\S]{0,60}?\bcomo\b/.test(t)) return true;
+  // igual (de) ... que/como
+  if (/igual\s+(de\s+)?\S[\s\S]{0,40}?\b(que|como)\b/.test(t)) return true;
+  // mejor que / peor que
+  if (/mejor\s+[\s\S]{0,40}?\bque\b/.test(t)) return true;
+  if (/peor\s+[\s\S]{0,40}?\bque\b/.test(t)) return true;
+  return false;
+}
+
+function tieneNexo(tipo, texto) {
+  var t = texto.toLowerCase();
+  var info = TIPOS[tipo];
+  if (info.patron === 'comparativa') return tieneNexoComparativa(t);
+  return info.nexos.some(function(nx) { return t.includes(nx.toLowerCase()); });
+}
+
+// ── CORRECCIÓN ORTOGRÁFICA ───────────────────────────────────────────
+// Detecta: b/v, ll/y confusiones comunes, h mudas, mayúsculas post-punto,
+// tildes en palabras monosílabas frecuentes mal acentuadas, y errores léxicos habituales.
+
+var ERRORES_LEXICOS = [
+  // b/v confusiones más comunes
+  [/\btubo\b(?!\s+(de|agua|escape|ensayo|fluorescente|digestivo))/gi,'tubo→tuvo (pretérito de tener) o viceversa'],
+  [/\btuvo\b(?=\s+(agua|de|escape|ensayo|fluorescente))/gi,'tuvo→tubo (objeto cilíndrico)'],
+  [/\bvaca\b(?=\s+(vacía|el\s+campo))/gi,'posible confusión vaca/baca'],
+  [/\bacer\b/gi,'acer→hacer (verbo)'],
+  [/\baber\b/gi,'aber→haber (verbo auxiliar)'],
+  [/\balla\b/gi,'alla→allá (adverbio con tilde) o halla (de hallar)'],
+  [/\becho(?!\s+(de\s+menos|a\s+perder|en\s+falta))\b/gi,'posible confusión echo/hecho'],
+  [/\bvien\b/gi,'vien→bien (adverbio)'],
+  [/\bbien\b(?=\s+venido)/gi,''],  // bienvenido es correcto
+  [/\berrar\b/gi,''],  // errar es correcto
+  [/\bhechar\b/gi,'hechar→echar (verbo)'],
+  [/\bpor\s+que\b(?!\s+\?)/gi,'por que → ¿es "porque" (causal) o "por qué" (interrogativo)?'],
+  [/\bporque\s*\?/gi,'porque→por qué (en interrogativa)'],
+  [/\basi\b(?!\s*que)/gi,'asi→así (con tilde)'],
+  [/\bmas\b(?!\s+(que|de|o\s+menos))/gi,'mas→más (con tilde) o mas (conjunción adversativa)'],
+];
+
+var PALABRAS_TILDE = [
+  // Palabras que frecuentemente se escriben sin tilde cuando deben llevarla
+  { re: /\bel\b(?=\s+(que|cual|libro|dia|año|momento|hombre|niño|problema|trabajo|tiempo))/gi, correcto: 'él', descripcion: 'él (pronombre) vs el (artículo)' },
+  { re: /\btu\b(?=\s+(eres|tienes|sabes|puedes|debes|quieres|vas|has|dices|haces|crees))/gi, correcto: 'tú', descripcion: 'tú (pronombre) vs tu (posesivo)' },
+  { re: /\bmi\b(?=\s+(creo|pienso|soy|tengo|voy|quiero|puedo|debo|sé|hago))/gi, correcto: 'mí', descripcion: 'mí (pronombre) vs mi (posesivo)' },
+  { re: /\bsi\b(?=\s+(lo|la|los|las|le|les|me|te|se|nos|os|hubiera|fuera|tuviera|pudiera|quisiera|estuviera|supiera))/gi, correcto: 'sí', descripcion: 'sí (afirmación/reflexivo) vs si (condicional)' },
+  { re: /\bse\b(?=\s+(lo|la|los|las)\s)/gi, correcto: 'sé/se', descripcion: 'sé (verbo saber) vs se (pronombre)' },
+  { re: /\bmas\b(?!\s+(que|de|tarde|o\s+menos))\b/gi, correcto: 'más', descripcion: 'más (adverbio) vs mas (conjunción adversativa)' },
+  { re: /\bcomo\b(?=\s*\?)/gi, correcto: 'cómo', descripcion: 'cómo (interrogativo) vs como (comparativo)' },
+  { re: /\bcuando\b(?=\s*\?)/gi, correcto: 'cuándo', descripcion: 'cuándo (interrogativo)' },
+  { re: /\bdonde\b(?=\s*\?)/gi, correcto: 'dónde', descripcion: 'dónde (interrogativo)' },
+  { re: /\bque\b(?=\s*\?)/gi, correcto: 'qué', descripcion: 'qué (interrogativo) vs que (relativo)' },
+  { re: /\bpor que\b(?=\s*\?)/gi, correcto: 'por qué', descripcion: 'por qué (interrogativo)' },
+  { re: /\bquien\b/gi, correcto: 'quien/quién', descripcion: 'quién lleva tilde en interrogativa o exclamativa' },
+  { re: /\bcual\b/gi, correcto: 'cual/cuál', descripcion: 'cuál lleva tilde en interrogativa o exclamativa' },
+  { re: /\baun\b(?=\s+(cuando|si|así|siendo|sabiendo|a\s+riesgo))/gi, correcto: 'aun', descripcion: 'aun (incluso) vs aún (todavía)' },
+  { re: /\baun\b(?=\s+no\b)/gi, correcto: 'aún', descripcion: 'aún (todavía) requiere tilde cuando equivale a "todavía"' },
+];
+
+function analizarOrtografia(texto) {
+  var erroresLexico = [];
+  var erroresTilde = [];
+  var t = texto;
+
+  // 1. Detectar errores léxicos (b/v, h, etc.)
+  var errorLex = [
+    { re: /\bhechar\b/gi, sug: 'echar' },
+    { re: /\baber\b/gi, sug: 'haber' },
+    { re: /\bacer\b(?!\s*ia)/gi, sug: 'hacer' },
+    { re: /\bbien\s*venido\b/gi, sug: '' },  // bienvenido OK
+    { re: /\bbien(?!\s*venido)\s+\bvenido\b/gi, sug: 'bienvenido' },
+    { re: /\bvien\b/gi, sug: 'bien' },
+    { re: /\bsaver\b/gi, sug: 'saber' },
+    { re: /\btampoco\b/gi, sug: '' }, // OK
+    { re: /\btenber\b/gi, sug: 'tener' },
+    { re: /\bsalio\b/gi, sug: 'salió (falta tilde)' },
+    { re: /\bllego\b/gi, sug: 'llegó (falta tilde)' },
+    { re: /\bcomio\b/gi, sug: 'comió (falta tilde)' },
+    { re: /\bestudio\b(?=\s)/gi, sug: 'estudió (falta tilde en pretérito)' },
+    { re: /\bcorrio\b/gi, sug: 'corrió (falta tilde)' },
+    { re: /\bvivio\b/gi, sug: 'vivió (falta tilde)' },
+    { re: /\bdecio\b/gi, sug: 'decidió (falta tilde)' },
+    { re: /\bnecesita\b/gi, sug: '' }, // OK
+    { re: /\bpor\s+que\b(?![?])/gi, sug: '¿"porque" (causal) o "por qué" (interrogativo)?' },
+    { re: /\bporque\b(?=\s*[?])/gi, sug: 'por qué (en interrogativa)' },
+    { re: /\basi\b(?!\s*que\b|\s*pues\b)/gi, sug: 'así (falta tilde)' },
+    { re: /\btambien\b/gi, sug: 'también (falta tilde)' },
+    { re: /\btambin\b/gi, sug: 'también' },
+    { re: /\bdespues\b/gi, sug: 'después (falta tilde)' },
+    { re: /\bmas\s+(?!que\b|de\b|o\b)/gi, sug: 'más (falta tilde si es adverbio)' },
+    { re: /\bademás\b/gi, sug: '' }, // OK
+    { re: /\bademas\b/gi, sug: 'además (falta tilde)' },
+    { re: /\baqui\b/gi, sug: 'aquí (falta tilde)' },
+    { re: /\balli\b/gi, sug: 'allí (falta tilde)' },
+    { re: /\bahi\b/gi, sug: 'ahí (falta tilde)' },
+    { re: /\bdía\b/gi, sug: '' }, // OK
+    { re: /\bdia\b/gi, sug: 'día (falta tilde)' },
+    { re: /\baño\b/gi, sug: '' }, // OK
+    { re: /\banio\b/gi, sug: 'año' },
+    { re: /\bfacil\b/gi, sug: 'fácil (falta tilde)' },
+    { re: /\bdificil\b/gi, sug: 'difícil (falta tilde)' },
+    { re: /\butil\b/gi, sug: 'útil (falta tilde)' },
+    { re: /\bexamen\b/gi, sug: '' }, // OK
+    { re: /\bjoven\b/gi, sug: '' }, // OK
+    { re: /\bimagen\b/gi, sug: '' }, // OK
+    { re: /\bovio\b/gi, sug: 'obvio' },
+  ];
+
+  var encontradosLex = {};
+  var encontradosTilde = {};
+
+  errorLex.forEach(function(e) {
+    if (!e.sug) return; // palabra correcta, skip
+    var matches = t.match(e.re);
+    if (matches) {
+      matches.forEach(function(m) {
+        var key = m.toLowerCase();
+        if (!encontradosLex[key]) {
+          encontradosLex[key] = true;
+          erroresLexico.push({ original: m, sugerencia: e.sug });
+        }
+      });
+    }
+  });
+
+  return { erroresLexico: erroresLexico, erroresTilde: erroresTilde };
+}
+
+// Cuenta errores de tilde (formas sin tilde obligatoria detectadas)
+function contarFaltasTilde(texto) {
+  var count = 0;
+  var t = texto;
+  var patronesTilde = [
+    /\bsalio\b/gi, /\bllego\b/gi, /\bcomio\b/gi, /\bvivio\b/gi,
+    /\bcorrio\b/gi, /\bastudio\b(?=\s)/gi,
+    /\btambien\b/gi, /\bdespues\b/gi, /\bademas\b/gi,
+    /\baquí\b/gi,  // si falta → aqui
+    /\baqui\b/gi, /\balli\b/gi, /\bahi\b/gi,
+    /\basi\b(?!\s*que|\s*pues)/gi,
+    /\bdia\b(?!\s*rio|\s*blo|\s*na)/gi,
+    /\bfacil\b/gi, /\bdificil\b/gi, /\butil\b/gi,
+    /\btambien\b/gi, /\bmas\b(?!\s+que|\s+de|\s+o\s+menos)/gi,
+  ];
+  patronesTilde.forEach(function(p) {
+    var m = t.match(p);
+    if (m) count += m.length;
+  });
+  return count;
+}
+
+function contarErroresLexicos(texto) {
+  var count = 0;
+  var patronesLex = [
+    /\bhechar\b/gi, /\baber\b/gi, /\bacer\b(?!\s*ia)/gi,
+    /\bvien\b/gi, /\bsaver\b/gi, /\bporque\b(?=\s*[?])/gi,
+    /\btambien\b/gi, /\bdespues\b/gi, /\bademas\b/gi,
+    /\baqui\b/gi, /\balli\b/gi, /\bahi\b/gi,
+    /\bfacil\b/gi, /\bdificil\b/gi, /\butil\b/gi,
+  ];
+  patronesLex.forEach(function(p) {
+    var m = texto.match(p);
+    if (m) count += m.length;
+  });
+  return count;
+}
+
+// Configuración de cada ejercicio
+var EJ_CONFIG = {
+  1: {
+    campos: [
+      {id:'m1_cop', tipo:'cop'},
+      {id:'m1_dis', tipo:'dis'},
+      {id:'m1_dst', tipo:'dst'},
+      {id:'m1_exp', tipo:'exp'},
+    ]
+  },
+  2: {
+    campos: [
+      {id:'m2_con', tipo:'con'},
+      {id:'m2_cnc', tipo:'cnc'},
+      {id:'m2_adv', tipo:'adv'},
+      {id:'m2_cns', tipo:'cns'},
+    ]
+  },
+  3: {
+    campos: [
+      {id:'m3_cop', tipo:'cop'},
+      {id:'m3_cau', tipo:'cau'},
+      {id:'m3_con', tipo:'con'},
+      {id:'m3_cmp', tipo:'cmp'},
+    ]
+  },
+};
+
+// ── CORRECCIÓN ──────────────────────────────────────────────────────
+function corregir(n) {
+  var config = EJ_CONFIG[n];
+  var texto = document.getElementById('tex'+n).value.trim();
+  var palabras = texto ? texto.split(/\s+/).length : 0;
+  var items = [];
+  var puntosOraciones = 0;
+
+  // Validar texto vacío
+  if (!texto) {
+    items.push({ ok: false, msg: 'No has escrito ningún texto. Completa el ejercicio.' });
+    mostrarFeedback(n, items, 0, 0, 0, 0, 0);
+    return;
+  }
+
+  // Validar longitud
+  var coherenciaOk = true;
+  var coherenciaMsg = '';
+  if (palabras < 28) {
+    coherenciaOk = false;
+    coherenciaMsg = 'El texto es demasiado corto (menos de 5 líneas aproximadas). Se descuenta la coherencia.';
+  } else if (palabras > 130) {
+    coherenciaOk = false;
+    coherenciaMsg = 'El texto es demasiado largo (más de 6 líneas aproximadas). Se descuenta la coherencia.';
+  }
+
+  // Revisar cada campo
+  config.campos.forEach(function(c) {
+    var val = document.getElementById(c.id).value.trim();
+    var valL = val.toLowerCase();
+    var tipoInfo = TIPOS[c.tipo];
+    var textoL = texto.toLowerCase();
+
+    if (!val) {
+      items.push({ ok: false, msg: '❌ <strong>' + tipoInfo.nombre + '</strong>: no has indicado ninguna oración.' });
+      return;
+    }
+
+    // Verificar nexo en el campo marcado O en el texto completo (por si copian solo parte)
+    var okNexo = tieneNexo(c.tipo, valL) || tieneNexo(c.tipo, textoL);
+
+    if (!okNexo) {
+      items.push({ ok: false, msg: '❌ <strong>' + tipoInfo.nombre + '</strong>: la oración no contiene el nexo adecuado. ' + tipoInfo.desc });
+    } else {
+      items.push({ ok: true, msg: '✅ <strong>' + tipoInfo.nombre + '</strong>: oración correctamente identificada.' });
+      puntosOraciones += 0.25;
+    }
+  });
+
+  // Coherencia / extensión
+  var puntosCoherencia = coherenciaOk ? 0.25 : 0;
+  if (coherenciaOk) {
+    items.push({ ok: true, msg: '✅ Coherencia y extensión del texto: correctas (+0,25 pt).' });
+  } else {
+    items.push({ ok: false, msg: '❌ ' + coherenciaMsg });
+  }
+
+  // ── ORTOGRAFÍA ──────────────────────────────────────────────────
+  var nFaltasTilde = contarFaltasTilde(texto);
+  var nErroresLex  = contarErroresLexicos(texto);
+  var ortResult    = analizarOrtografia(texto);
+
+  // Descuento: -0,10 por cada 2 faltas de tilde; -0,10 por cada error léxico
+  var descuentoTilde = Math.floor(nFaltasTilde / 2) * 0.10;
+  var descuentoLex   = nErroresLex * 0.10;
+  var totalDescuento = Math.min(descuentoTilde + descuentoLex, 1.25); // no baja de 0
+
+  // Mostrar info ortografía
+  if (nFaltasTilde === 0 && nErroresLex === 0) {
+    items.push({ ok: true, msg: '✅ <strong>Ortografía</strong>: no se detectan errores ortográficos. ¡Bien!' });
+  } else {
+    var ortMsg = '⚠️ <strong>Ortografía</strong>: ';
+    var partes = [];
+    if (nFaltasTilde > 0) partes.push(nFaltasTilde + ' posible' + (nFaltasTilde>1?'s':'') + ' falta' + (nFaltasTilde>1?'s':'') + ' de tilde (descuento: −' + descuentoTilde.toFixed(2) + ' pt)');
+    if (nErroresLex > 0)  partes.push(nErroresLex + ' posible' + (nErroresLex>1?'s':'') + ' error' + (nErroresLex>1?'es':'') + ' léxico' + (nErroresLex>1?'s':'') + ' (descuento: −' + descuentoLex.toFixed(2) + ' pt)');
+    ortMsg += partes.join('; ') + '.';
+    if (ortResult.erroresLexico.length > 0) {
+      ortMsg += '<ul style="margin:4px 0 0 16px;font-size:12px;color:#888;">';
+      ortResult.erroresLexico.forEach(function(e) {
+        ortMsg += '<li><code>' + e.original + '</code> → ' + e.sugerencia + '</li>';
+      });
+      ortMsg += '</ul>';
+    }
+    items.push({ ok: false, msg: ortMsg });
+  }
+
+  var subtotal = puntosOraciones + puntosCoherencia;
+  var total = Math.max(0, Math.round((subtotal - totalDescuento) * 100) / 100);
+
+  NOTAS[n] = total;
+  TEXTOS[n] = texto;
+  mostrarFeedback(n, items, total, puntosOraciones, puntosCoherencia, descuentoTilde, descuentoLex);
+}
+
+function mostrarFeedback(n, items, total, ptsOr, ptsCoh, dTilde, dLex) {
+  var fb   = document.getElementById('fb'+n);
+  var head = document.getElementById('fb'+n+'-head');
+  var body = document.getElementById('fb'+n+'-body');
+
+  var pct = total / 1.25;
+  var cls   = pct >= 0.8 ? 'ok' : (pct >= 0.5 ? 'parcial' : 'mal');
+  var emoji = pct >= 0.8 ? '🎉' : (pct >= 0.5 ? '👍' : '📝');
+  var msg   = pct >= 0.8 ? 'Muy bien hecho' : (pct >= 0.5 ? 'Bien, pero revisa algunos puntos' : 'Hay varios aspectos que mejorar');
+
+  head.className  = 'feedback-header ' + cls;
+  head.innerHTML  = emoji + ' ' + msg;
+
+  var html = items.map(function(i) {
+    return '<div class="feedback-item">' + i.msg + '</div>';
+  }).join('');
+
+  html += '<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--paper2);font-size:13px;">';
+  html += '<strong>Desglose:</strong><br>';
+  html += '&nbsp;&nbsp;Oraciones identificadas: ' + (ptsOr !== undefined ? ptsOr.toFixed(2) : '—') + ' / 1,00 pt<br>';
+  html += '&nbsp;&nbsp;Coherencia y extensión: ' + (ptsCoh !== undefined ? ptsCoh.toFixed(2) : '—') + ' / 0,25 pt<br>';
+  if ((dTilde + dLex) > 0) {
+    html += '&nbsp;&nbsp;Descuento ortografía: −' + (dTilde !== undefined ? (dTilde + dLex).toFixed(2) : '0,00') + ' pt';
+  }
+  html += '</div>';
+  html += '<div style="margin-top:0.5rem;"><span class="nota-ex">Nota ejercicio ' + n + ': <span class="pts">' + (total !== undefined ? total.toFixed(2) : '—') + '</span> / 1,25</span></div>';
+
+  body.innerHTML = html;
+  fb.classList.add('visible');
+  fb.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+// ── RESULTADOS FINALES ───────────────────────────────────────────────
+function actualizarResultados() {
+  var todos = NOTAS[1]!==null && NOTAS[2]!==null && NOTAS[3]!==null;
+  document.getElementById('pendingMsg').style.display = todos ? 'none' : 'block';
+  document.getElementById('scorePanel').classList.toggle('visible', todos);
+  if (!todos) return;
+
+  document.getElementById('scoreNombre').textContent = ALUMNO;
+  [1,2,3].forEach(function(n) {
+    document.getElementById('r'+n).textContent = NOTAS[n].toFixed(2);
+  });
+
+  var sumRaw = NOTAS[1] + NOTAS[2] + NOTAS[3]; // máx 3.75
+  var nota10 = Math.round(sumRaw / 3.75 * 100) / 10; // sobre 10
+  nota10 = Math.min(10, Math.max(0, nota10));
+
+  document.getElementById('notaFinal').textContent = nota10.toFixed(1);
+  var msgs = [
+    [0,4,'Necesitas revisar los conceptos. Lee de nuevo la teoría.'],
+    [4,6,'Bien encaminado, pero hay varios tipos que conviene repasar.'],
+    [6,8,'Buen trabajo. Revisa los nexos de los tipos que has fallado.'],
+    [8,9.5,'¡Muy bien! Dominas la mayor parte de los tipos.'],
+    [9.5,11,'¡Excelente! Has identificado perfectamente todos los tipos. 🎉']
+  ];
+  var msg = msgs.find(function(m){return nota10>=m[0]&&nota10<m[1];});
+  document.getElementById('notaMsg').textContent = msg ? msg[2] : '';
+
+  var errWrap = document.getElementById('erroresWrap');
+  var errList = document.getElementById('erroresList');
+  var errItems = [];
+  [1,2,3].forEach(function(n){
+    if(NOTAS[n] < 1.25) errItems.push('Ejercicio '+n+': '+NOTAS[n].toFixed(2)+' / 1,25');
+  });
+  if(errItems.length > 0) {
+    errWrap.style.display = 'block';
+    errList.innerHTML = errItems.map(function(e){return '<div class="error-item">• '+e+'</div>';}).join('');
+  } else {
+    errWrap.style.display = 'none';
+  }
+}
+
+// ── ENVÍO ───────────────────────────────────────────────────────────
+function enviarResultados() {
+  var todos = NOTAS[1]!==null && NOTAS[2]!==null && NOTAS[3]!==null;
+  if (!todos) { document.getElementById('incompletoMsg').style.display='block'; return; }
+
+  var sumRaw = NOTAS[1] + NOTAS[2] + NOTAS[3];
+  var nota10 = Math.round(sumRaw / 3.75 * 100) / 10;
+  nota10 = Math.min(10, Math.max(0, nota10));
+
+  var iframe = document.createElement('iframe');
+  iframe.style.display = 'none'; iframe.name = 'hf_frame';
+  document.body.appendChild(iframe);
+
+  var form = document.createElement('form');
+  form.method = 'POST'; form.action = FORM_ACTION; form.target = 'hf_frame';
+
+  var data = [
+    [FIELDS.nombre, ALUMNO],
+    [FIELDS.nota1,  NOTAS[1].toFixed(2)],
+    [FIELDS.nota2,  NOTAS[2].toFixed(2)],
+    [FIELDS.nota3,  NOTAS[3].toFixed(2)],
+    [FIELDS.nota4,  '—'],
+    [FIELDS.total,  nota10.toFixed(1)],
+  ];
+
+  data.forEach(function(d) {
+    var inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = d[0]; inp.value = d[1];
+    form.appendChild(inp);
+  });
+
+  document.body.appendChild(form); form.submit();
+
+  document.getElementById('btnEnviar').disabled = true;
+  document.getElementById('btnEnviar').innerHTML = '✅ Resultados enviados';
+  document.getElementById('envioOk').style.display = 'block';
+  sessionStorage.setItem('oraciones_enviado_'+ALUMNO.toLowerCase(),'1');
+}
+</script>
+</body>
+</html>

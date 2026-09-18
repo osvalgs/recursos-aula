@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sintaxis · Funciones en la Frase y la Cláusula</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#2D3A8C;--indigo-light:#4A5BC7;--amber:#D4820A;
+  --cream:#F8F7FF;--parchment:#EEEEFF;--dark:#141A4A;--text:#1C2240;
+  --muted:#5A6080;--border:rgba(45,58,140,0.15);--shadow:0 4px 24px rgba(20,26,74,0.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text);font-size:16px;line-height:1.75;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:rgba(14,20,60,0.90);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.login-box{background:white;border-radius:12px;padding:2.5rem 2rem;max-width:430px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.login-box h2{font-family:'Playfair Display',serif;font-size:21px;color:var(--indigo);margin-bottom:0.4rem;}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:1.5rem;}
+.login-input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;color:var(--text);margin-bottom:0.85rem;transition:border-color .15s;}
+.login-input:focus{outline:none;border-color:var(--indigo);}
+.login-btn{width:100%;background:var(--indigo);color:white;border:none;padding:12px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;}
+.login-btn:hover{background:var(--indigo-light);}
+.login-err{font-size:13px;color:#C0392B;display:none;margin-bottom:0.5rem;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--indigo) 0%,#1A2570 60%,#0D1545 100%);color:white;min-height:240px;display:flex;align-items:stretch;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(212,130,10,.18) 0%,transparent 60%);}
+.hero-inner{position:relative;max-width:1100px;margin:0 auto;padding:2.5rem 2rem;width:100%;}
+.hero-tag{display:inline-block;background:var(--amber);color:white;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:2px;margin-bottom:1rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,38px);font-weight:700;line-height:1.2;margin-bottom:.75rem;}
+.hero h1 em{color:#F0C060;font-style:italic;}
+.hero-sub{font-size:15px;opacity:.85;max-width:660px;margin-bottom:1.25rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;font-size:12px;padding:4px 12px;border-radius:20px;cursor:pointer;transition:background .2s;font-family:'Source Sans 3',sans-serif;}
+.hero-pill:hover{background:rgba(255,255,255,.28);}
+
+/* NAV */
+.main-nav{background:white;border-bottom:2px solid var(--parchment);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;overflow-x:auto;}
+.nav-btn{padding:12px 13px;font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.03em;text-transform:uppercase;}
+.nav-btn:hover{color:var(--indigo);}
+.nav-btn.active{color:var(--indigo);border-bottom-color:var(--indigo);}
+.nav-user{margin-left:auto;padding:0 .5rem;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap;}
+.nav-user strong{color:var(--indigo);}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.section{display:none;padding:2.5rem 0;}
+.section.active{display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:27px;color:var(--indigo);margin-bottom:.4rem;}
+.section-lead{font-size:15px;color:var(--muted);margin-bottom:1.75rem;max-width:700px;border-left:3px solid var(--amber);padding-left:1rem;}
+.sub-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--indigo);margin:2rem 0 .75rem;padding-bottom:6px;border-bottom:2px solid var(--parchment);}
+
+/* TEORIA BOXES */
+.teoria-recap{background:white;border:1.5px solid var(--border);border-radius:10px;padding:1.5rem 1.75rem;margin-bottom:2rem;box-shadow:var(--shadow);}
+.teoria-recap h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--indigo);margin-bottom:.75rem;}
+.teoria-recap p{font-size:14px;color:var(--text);margin-bottom:.4rem;line-height:1.65;}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:1.1rem;}
+@media(max-width:800px){.grid-2{grid-template-columns:1fr;}}
+
+/* TYPE CARDS */
+.tipo-frase{border-radius:8px;padding:1rem 1.2rem;border:1px solid var(--border);background:white;}
+.tipo-frase.nom{border-left:5px solid #2D3A8C;}
+.tipo-frase.prep{border-left:5px solid #7B2ECA;}
+.tipo-frase.sust{border-left:5px solid #27AE60;}
+.tipo-frase.adj{border-left:5px solid #D4820A;}
+.tipo-frase.adv{border-left:5px solid #C0392B;}
+.tipo-titulo{font-family:'Playfair Display',serif;font-size:14.5px;font-weight:700;margin-bottom:.25rem;}
+.tipo-struct{font-size:12.5px;color:var(--muted);margin-bottom:.3rem;}
+.tipo-ej{background:var(--parchment);border-radius:5px;padding:5px 10px;font-size:13px;font-style:italic;margin-top:.35rem;}
+
+/* BADGES */
+.fb{display:inline-block;padding:2px 9px;border-radius:10px;font-size:12px;font-weight:700;margin:2px;}
+.fb-i{background:var(--parchment);color:var(--indigo);border:1px solid var(--border);}
+.fb-r{background:#FEF0F0;color:#C0392B;border:1px solid #FBBBB9;}
+.fb-g{background:#EDFAF3;color:#27AE60;border:1px solid #A9DFBF;}
+.fb-b{background:#EFF6FF;color:#2D7DD2;border:1px solid #BEE3F8;}
+.fb-y{background:#FEF9E7;color:#D4820A;border:1px solid #F9E4A0;}
+.fb-p{background:#F5F0FF;color:#7B2ECA;border:1px solid #D7C4F7;}
+
+/* FUNCTION TABLE */
+.ftable{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1.2rem;border-radius:8px;overflow:hidden;}
+.ftable thead{background:var(--indigo);}
+.ftable th{color:white;padding:9px 11px;text-align:left;font-weight:600;font-size:12px;}
+.ftable td{padding:9px 11px;border-bottom:1px solid var(--parchment);vertical-align:top;line-height:1.5;}
+.ftable tr:nth-child(even) td{background:#F4F4FF;}
+
+/* PISTA */
+.pista{background:#FEF9E7;border:1px solid var(--amber);border-radius:8px;padding:.8rem 1.1rem;margin:.75rem 0;font-size:13.5px;}
+.pista strong{color:var(--amber);}
+
+/* EJ BOXES */
+.ej-box{background:white;border:2px solid var(--amber);border-radius:10px;overflow:hidden;margin-top:1.5rem;}
+.ej-header{background:var(--indigo);color:white;padding:.8rem 1.2rem;}
+.ej-header h3{font-family:'Playfair Display',serif;font-size:16px;margin:0;}
+.ej-body{padding:1.2rem 1.4rem;}
+.ej-instruc{font-size:13.5px;color:var(--muted);margin-bottom:1rem;font-style:italic;}
+
+/* MATCHING */
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:650px){.rel-grid{grid-template-columns:1fr;}}
+.rel-col{display:flex;flex-direction:column;gap:6px;}
+.rel-btn{padding:9px 11px;border-radius:6px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;text-align:left;background:white;transition:all .15s;font-family:'Source Sans 3',sans-serif;line-height:1.4;}
+.rel-btn:hover:not(.matched):not(.sel){border-color:var(--indigo);}
+.rel-btn.sel{border-color:var(--amber);background:#FEF9E7;}
+.rel-btn.matched{border-color:#4CAF50;background:#E8F5E9;pointer-events:none;}
+.rel-btn.fail{border-color:#C0392B;background:#FDEAEA;}
+.rel-success{display:none;margin-top:.75rem;font-size:13px;color:#1B5E20;font-weight:600;background:#E8F5E9;padding:6px 10px;border-radius:6px;}
+
+/* V/F */
+.vf-item{margin-bottom:.85rem;padding:.75rem 1rem;background:var(--parchment);border-radius:8px;border:1px solid var(--border);}
+.vf-frase{font-size:14px;margin-bottom:7px;line-height:1.55;}
+.vf-btns{display:flex;gap:6px;}
+.vf-btn{padding:5px 18px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:white;font-family:'Source Sans 3',sans-serif;font-weight:600;transition:all .15s;}
+.vf-btn.ok{background:#4CAF50;color:white;border-color:#4CAF50;pointer-events:none;}
+.vf-btn.fail{background:#C0392B;color:white;border-color:#C0392B;}
+.vf-btn.nt{pointer-events:none;opacity:.5;}
+.vf-fb{font-size:12.5px;margin-top:6px;display:none;padding:5px 9px;border-radius:5px;line-height:1.5;}
+.vf-fb.ok{display:block;color:#1B5E20;background:#E8F5E9;}
+.vf-fb.fail{display:block;color:#8B1A1A;background:#FDEAEA;}
+
+/* DROPDOWNS */
+.analisis-item{margin-bottom:.85rem;padding:.85rem 1rem;background:var(--parchment);border-radius:8px;border:1px solid var(--border);}
+.analisis-frase{font-size:15px;margin-bottom:.5rem;}
+.analisis-row{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;font-size:13.5px;}
+.wlabel{font-weight:700;font-size:13.5px;color:var(--dark);background:white;border:1.5px solid var(--border);border-radius:5px;padding:3px 10px;}
+.wselect{padding:5px 8px;border-radius:5px;border:1.5px solid var(--border);font-size:12.5px;font-family:'Source Sans 3',sans-serif;background:white;cursor:pointer;color:var(--text);}
+.wselect.ok{border-color:#4CAF50;background:#E8F5E9;color:#1B5E20;}
+.wselect.fail{border-color:#C0392B;background:#FDEAEA;color:#8B1A1A;}
+.btn-ej{background:var(--indigo);color:white;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;margin-top:.75rem;}
+.btn-ej:hover{background:var(--amber);color:var(--dark);}
+.ej-res{font-size:13px;font-weight:600;margin-top:.6rem;padding:7px 11px;border-radius:6px;display:none;}
+.ej-res.ok{display:block;color:#1B5E20;background:#E8F5E9;}
+.ej-res.parcial{display:block;color:#7A4F00;background:#FFF8E1;}
+.ej-res.fail{display:block;color:#8B1A1A;background:#FDEAEA;}
+
+/* QUIZ */
+.score-wrap{background:var(--parchment);border-radius:8px;padding:1rem 1.2rem;display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;border:1px solid var(--border);}
+.score-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--indigo);min-width:66px;}
+.score-bar-wrap{flex:1;height:8px;background:rgba(45,58,140,.12);border-radius:4px;overflow:hidden;}
+.score-bar-fill{height:100%;background:var(--indigo);border-radius:4px;transition:width .4s;}
+.q-item{margin-bottom:1.5rem;}
+.q-num{font-size:11px;font-weight:600;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.q-text{font-size:15.5px;font-weight:600;color:var(--dark);margin-bottom:.7rem;line-height:1.5;}
+.q-opts{display:flex;flex-direction:column;gap:6px;}
+.q-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;font-size:14.5px;color:var(--text);background:white;transition:all .15s;text-align:left;font-family:'Source Sans 3',sans-serif;}
+.q-opt:hover:not(.revealed){border-color:var(--indigo);background:var(--parchment);}
+.q-opt.correct{background:#E8F5E9;border-color:#4CAF50;color:#1B5E20;}
+.q-opt.wrong{background:#FDEAEA;border-color:#C0392B;color:#8B1A1A;}
+.q-opt.revealed{pointer-events:none;}
+.opt-l{width:24px;height:24px;flex-shrink:0;border-radius:50%;background:var(--parchment);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+.q-opt.correct .opt-l{background:#4CAF50;color:white;}
+.q-opt.wrong .opt-l{background:#C0392B;color:white;}
+.q-fb{font-size:13.5px;padding:8px 12px;border-radius:6px;margin-top:8px;display:none;line-height:1.5;}
+.q-fb.correct{display:block;background:#E8F5E9;color:#1B5E20;border-left:3px solid #4CAF50;}
+.q-fb.wrong{display:block;background:#FDEAEA;color:#8B1A1A;border-left:3px solid #C0392B;}
+.q-divider{height:1px;background:var(--parchment);margin-bottom:1.5rem;}
+.test-go{display:none;background:#EFF6FF;border:1px solid #BEE3F8;border-radius:8px;padding:1rem;margin-top:1.5rem;text-align:center;font-size:14px;color:#1E40AF;}
+.test-go button{margin-top:.5rem;background:#2D7DD2;color:white;border:none;padding:8px 22px;border-radius:6px;font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;}
+
+/* RESUMEN */
+.res-outer{max-width:1100px;margin:0 auto;padding:2rem;}
+.res-box{background:white;border:2px solid var(--indigo);border-radius:10px;overflow:hidden;}
+.res-hdr{background:var(--indigo);color:white;padding:1.2rem 1.5rem;}
+.res-hdr h3{font-family:'Playfair Display',serif;font-size:19px;}
+.res-body{padding:1.5rem;}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.2rem;}
+@media(max-width:640px){.res-grid{grid-template-columns:1fr 1fr;}}
+.res-stat{background:var(--parchment);border-radius:8px;padding:1rem;text-align:center;border:1px solid var(--border);}
+.res-stat .val{font-family:'Playfair Display',serif;font-size:30px;color:var(--indigo);line-height:1;}
+.res-stat .lbl{font-size:11.5px;color:var(--muted);margin-top:4px;}
+.nota-wrap{background:var(--indigo);border-radius:8px;padding:1.25rem;text-align:center;color:white;margin-bottom:1.2rem;}
+.nota-wrap .nota-num{font-family:'Playfair Display',serif;font-size:54px;line-height:1;}
+.nota-msg{font-size:14px;margin-top:.4rem;opacity:.9;}
+.res-errs{background:#F5F5FF;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1.2rem;}
+.res-errs h4{font-size:12px;font-weight:600;color:var(--indigo);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;}
+.err-item{font-size:12.5px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--parchment);line-height:1.4;}
+.btn-send{width:100%;background:var(--indigo);color:white;border:none;padding:13px;border-radius:8px;font-size:14.5px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;margin-top:1rem;}
+.btn-send:hover{background:var(--indigo-light);}
+.btn-send:disabled{background:#888;cursor:not-allowed;}
+.send-ok{background:#E8F5E9;border:1.5px solid #4CAF50;border-radius:8px;padding:1rem;text-align:center;color:#1B5E20;font-size:14px;display:none;margin-top:.75rem;}
+.ya-env{background:#FFF8E8;border:1.5px solid var(--amber);border-radius:8px;padding:1rem;text-align:center;color:#7A4200;font-size:14px;display:none;margin-top:.75rem;}
+em{font-style:italic;}strong{font-weight:700;}u{text-decoration:underline;}
+footer{background:var(--indigo);color:rgba(255,255,255,.8);text-align:center;padding:1.5rem;margin-top:3rem;font-size:12.5px;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="hero-tag" style="display:inline-block;margin-bottom:.9rem;">ESO / Bachillerato · Lengua Castellana y Literatura</div>
+    <h2>Funciones Sintácticas<br>en la Frase y la Cláusula</h2>
+    <p>Rellena los datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
+    <input class="login-input" type="text" id="loginNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
+    <input class="login-input" type="text" id="loginCurso" placeholder="Escribe tu curso" maxlength="30">
+    </select>
+    <div class="login-err" id="loginErr">Por favor, rellena todos los campos antes de continuar.</div>
+    <button class="login-btn" onclick="doLogin()">Empezar →</button>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">ESO / Bachillerato · Lengua Castellana y Literatura · Sintaxis</div>
+    <h1>Funciones Sintácticas<br>en la <em>Frase</em> y la <em>Cláusula</em></h1>
+    <p class="hero-sub">Identifica las funciones (DET, NOM, NÚC, SUJ, CD, CI…) y la forma en que aparecen en frases y cláusulas simples.</p>
+    <div class="hero-pills">
+      <button class="hero-pill" onclick="show('frases')">📚 Bloque 1: Funciones en la Frase</button>
+      <button class="hero-pill" onclick="show('clausulas')">📖 Bloque 2: Funciones en la Cláusula</button>
+      <button class="hero-pill" onclick="show('test1')">✏️ Test 1</button>
+      <button class="hero-pill" onclick="show('test2')">✏️ Test 2</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ NAV ══ -->
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('frases')">1. Funciones en la Frase</button>
+    <button class="nav-btn" onclick="show('clausulas')">2. Funciones en la Cláusula</button>
+    <button class="nav-btn" onclick="show('test1')">Test 1 · Frases</button>
+    <button class="nav-btn" onclick="show('test2')">Test 2 · Cláusulas</button>
+    <div class="nav-user" id="navUser"></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     BLOQUE 1 · FUNCIONES EN LA FRASE
+══════════════════════════════════════════ -->
+<section class="section active container" id="s-frases">
+
+  <h2 class="section-title">Bloque 1 · Funciones Sintácticas dentro de la Frase</h2>
+  <p class="section-lead">La <strong>frase</strong> es un conjunto de palabras <em>sin verbo</em>. Según la categoría de su núcleo, distinguimos cinco tipos. En este bloque aprenderás a identificar el tipo de frase y la función de cada elemento.</p>
+
+  <!-- ─── TEORÍA ─── -->
+  <h3 class="sub-title">Teoría: tipos de frase y funciones</h3>
+
+  <div class="pista"><strong>⚠️ Recuerda:</strong> Las <strong>funciones</strong> se escriben en MAYÚSCULAS (DET, NOM, NÚC…) y la <strong>forma</strong> en que aparecen, en minúsculas (det. art., sust., adv., f. prep…).</div>
+
+  <div class="grid-2">
+    <div class="tipo-frase nom">
+      <div class="tipo-titulo">📘 Frase nominal</div>
+      <div class="tipo-struct">Estructura: <strong>DET + NOM</strong></div>
+      <p style="font-size:13px;">El DETERMINANTE puede ser: art., demostrativo, posesivo, numeral, indefinido, interrogativo o exclamativo.<br>El NOMINAL puede ser: sust., pron., f. sust., f. nom.</p>
+      <div class="tipo-ej">«<u>Mi</u> <u>amigo</u>» → <span class="fb fb-i">DET</span> mi · <span class="fb fb-i">NOM</span> amigo</div>
+    </div>
+    <div class="tipo-frase prep">
+      <div class="tipo-titulo">📗 Frase preposicional</div>
+      <div class="tipo-struct">Estructura: <strong>ENL + TÉRM</strong></div>
+      <p style="font-size:13px;">El ENLACE es <strong>siempre</strong> una preposición.<br>El TÉRMINO puede ser: sust., pron., adv., f. sust., f. nom.</p>
+      <div class="tipo-ej">«<u>Desde</u> <u>allí</u>» → <span class="fb fb-i">ENL</span> desde · <span class="fb fb-i">TÉRM</span> allí</div>
+    </div>
+    <div class="tipo-frase sust">
+      <div class="tipo-titulo">📙 Frase sustantiva</div>
+      <div class="tipo-struct">Estructura: <strong>NÚC (sust./pron.) + MOD</strong> o <strong>MOD + NÚC</strong></div>
+      <p style="font-size:13px;">El MODIFICADOR puede ser: adj., adv., frase prep.</p>
+      <div class="tipo-ej">«<u>Días</u> <u>alegres</u>» → <span class="fb fb-i">NÚC</span> días · <span class="fb fb-i">MOD</span> alegres<br>«<u>Verdes</u> <u>prados</u>» → <span class="fb fb-i">MOD</span> verdes · <span class="fb fb-i">NÚC</span> prados</div>
+    </div>
+    <div class="tipo-frase adj">
+      <div class="tipo-titulo">📒 Frase adjetiva</div>
+      <div class="tipo-struct">Estructura: <strong>NÚC (adj.) + MOD</strong> o <strong>MOD + NÚC</strong></div>
+      <p style="font-size:13px;">El MODIFICADOR puede ser: adv., frase prep.</p>
+      <div class="tipo-ej">«<u>Muy</u> <u>bello</u>» → <span class="fb fb-i">MOD</span> muy · <span class="fb fb-i">NÚC</span> bello<br>«<u>Amarillo</u> <u>chillón</u>» → <span class="fb fb-i">NÚC</span> amarillo · <span class="fb fb-i">MOD</span> chillón</div>
+    </div>
+  </div>
+  <div class="tipo-frase adv" style="margin-bottom:1.2rem;">
+    <div class="tipo-titulo">📕 Frase adverbial</div>
+    <div class="tipo-struct">Estructura: <strong>NÚC (adv.) + MOD</strong> o <strong>MOD + NÚC</strong></div>
+    <p style="font-size:13px;">El MODIFICADOR puede ser: adv., frase preposicional.</p>
+    <div class="tipo-ej">«<u>Demasiado</u> <u>lejos</u>» → <span class="fb fb-i">MOD</span> demasiado · <span class="fb fb-i">NÚC</span> lejos &nbsp;|&nbsp; «<u>Cerca</u> <u>de aquí</u>» → <span class="fb fb-i">NÚC</span> cerca · <span class="fb fb-i">MOD</span> [de aquí] (f. prep.)</div>
+  </div>
+
+  <table class="ftable">
+    <thead><tr><th>FUNCIÓN</th><th>FORMA (cómo aparece)</th><th>En qué tipo de frase</th></tr></thead>
+    <tbody>
+      <tr><td><span class="fb fb-i">DET</span> DETERMINANTE</td><td>art., demostrativo, posesivo, numeral, indefinido, interrogativo, exclamativo</td><td>Frase nominal</td></tr>
+      <tr><td><span class="fb fb-i">NOM</span> NOMINAL</td><td>sust., pron., f. sust., f. nom.</td><td>Frase nominal</td></tr>
+      <tr><td><span class="fb fb-p">ENL</span> ENLACE</td><td>preposición (siempre)</td><td>Frase preposicional</td></tr>
+      <tr><td><span class="fb fb-p">TÉRM</span> TÉRMINO</td><td>sust., pron., adv., f. sust., f. nom.</td><td>Frase preposicional</td></tr>
+      <tr><td><span class="fb fb-g">NÚC</span> NÚCLEO</td><td>sust., pron. (f. sust.) · adj. (f. adj.) · adv. (f. adv.)</td><td>Frases sustantiva, adjetiva y adverbial</td></tr>
+      <tr><td><span class="fb fb-y">MOD</span> MODIFICADOR</td><td>adj., adv., frase preposicional</td><td>Frases sustantiva, adjetiva y adverbial</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ─── EJERCICIOS ─── -->
+  <h3 class="sub-title">Ejercicios: Bloque 1 – Funciones en la Frase</h3>
+
+  <!-- EJ 1: Matching -->
+  <div class="teoria-recap">
+    <h3>📌 Antes de empezar: recuerda</h3>
+    <p>Para clasificar una frase, localiza primero su elemento nuclear: si tiene <strong>DET + NOM</strong>, es nominal; si empieza por <strong>preposición<strong>, es <strong>preposicional<strong>; si el <strong>NÚC<strong> es un <strong>sustantivo<strong>, es sustantiva; si es un <strong>adjetivo<strong>, adjetiva; si es un <strong>adverbio<strong>, adverbial.</p>
+  </div>
+
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 1 – Relaciona cada frase con su tipo <span style="font-size:12px;opacity:.8;">(nivel básico)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Haz clic en una frase de la columna izquierda y luego en su tipo correspondiente en la derecha. Las parejas correctas quedarán en verde.</p>
+      <div class="rel-grid">
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e1" data-lado="izq" data-key="a" onclick="ejRel('e1','izq','a',this)">El gato negro</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="izq" data-key="b" onclick="ejRel('e1','izq','b',this)">Por la mañana</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="izq" data-key="c" onclick="ejRel('e1','izq','c',this)">Muy feliz</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="izq" data-key="d" onclick="ejRel('e1','izq','d',this)">Libros apasionantes</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="izq" data-key="e" onclick="ejRel('e1','izq','e',this)">Bastante cerca</button>
+        </div>
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e1" data-lado="der" data-key="c" onclick="ejRel('e1','der','c',this)">Frase adjetiva</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="der" data-key="a" onclick="ejRel('e1','der','a',this)">Frase nominal</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="der" data-key="e" onclick="ejRel('e1','der','e',this)">Frase adverbial</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="der" data-key="b" onclick="ejRel('e1','der','b',this)">Frase preposicional</button>
+          <button class="rel-btn" data-ejg="e1" data-lado="der" data-key="d" onclick="ejRel('e1','der','d',this)">Frase sustantiva</button>
+        </div>
+      </div>
+      <div class="rel-success" id="e1-ok">✅ ¡Perfecto! Has clasificado correctamente los cinco tipos de frase.</div>
+    </div>
+  </div>
+
+  <!-- EJ 2: V/F -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 2 – Verdadero o Falso <span style="font-size:12px;opacity:.8;">(nivel básico-medio)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Decide si cada afirmación es correcta. Haz clic en V o F para comprobar al instante.</p>
+
+      <div class="vf-item">
+        <div class="vf-frase">1. En una frase nominal, el DETERMINANTE puede ser un posesivo, un artículo o un demostrativo.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf1')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf1')">F</button>
+        </div>
+        <div class="vf-fb" id="vf1">Correcto. El DET puede ser: artículo, demostrativo, posesivo, numeral, indefinido, interrogativo o exclamativo.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">2. El NÚCLEO de una frase adjetiva es siempre un adverbio.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,false,'vf2')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,false,'vf2')">F</button>
+        </div>
+        <div class="vf-fb" id="vf2">Falso. El NÚC de una frase <em>adjetiva</em> es un <strong>adjetivo</strong>. Si fuera un adverbio, sería una frase adverbial.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">3. En una frase preposicional, la función ENLACE solo puede ser desempeñada por una preposición.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf3')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf3')">F</button>
+        </div>
+        <div class="vf-fb" id="vf3">Correcto. El ENL siempre es una preposición; de ahí el nombre de frase «preposicional».</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">4. En «días alegres», la palabra «alegres» desempeña la función NOMINAL.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,false,'vf4')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,false,'vf4')">F</button>
+        </div>
+        <div class="vf-fb" id="vf4">Falso. Es una frase sustantiva: «días» = <span class="fb fb-g">NÚC</span> (sust.) y «alegres» = <span class="fb fb-y">MOD</span> (adj.).</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">5. La función TÉRMINO puede aparecer en forma de adverbio o de pronombre.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf5')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf5')">F</button>
+        </div>
+        <div class="vf-fb" id="vf5">Correcto. El TÉRM puede ser: sust., pron., adv., f. sust. o f. nom. Ej.: «desde <em>allí</em>» (adv.) o «para <em>ella</em>» (pron.).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJ 3: Select function of word -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 3 – ¿Qué función desempeña la palabra subrayada? <span style="font-size:12px;opacity:.8;">(nivel medio)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Selecciona la función sintáctica de la palabra o grupo subrayado en cada frase. Fíjate también en qué tipo de frase es.</p>
+      <div id="ej3-items"></div>
+      <button class="btn-ej" onclick="checkEj('ej3')">Comprobar</button>
+      <div class="ej-res" id="ej3-res"></div>
+    </div>
+  </div>
+
+  <!-- EJ 4: Complete analysis -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 4 – Análisis de frases: función de cada elemento <span style="font-size:12px;opacity:.8;">(nivel medio-alto)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Para cada frase, selecciona la función de cada uno de sus elementos. Recuerda que primero debes identificar el tipo de frase.</p>
+      <div id="ej4-items"></div>
+      <button class="btn-ej" onclick="checkEj('ej4')">Comprobar</button>
+      <div class="ej-res" id="ej4-res"></div>
+    </div>
+  </div>
+
+  <!-- EJ 5: Classify type + select function -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 5 – Clasifica e identifica el NÚCLEO o DET <span style="font-size:12px;opacity:.8;">(nivel alto)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Indica el tipo de frase y señala cuál es su elemento central (NÚC o DET según el tipo). Es el ejercicio más completo del bloque.</p>
+      <div id="ej5-items"></div>
+      <button class="btn-ej" onclick="checkEj('ej5')">Comprobar</button>
+      <div class="ej-res" id="ej5-res"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;text-align:right;">
+    <button class="btn-ej" style="font-size:14px;padding:10px 28px;" onclick="show('clausulas')">Siguiente: Funciones en la Cláusula →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     BLOQUE 2 · FUNCIONES EN LA CLÁUSULA
+══════════════════════════════════════════ -->
+<section class="section container" id="s-clausulas">
+
+  <h2 class="section-title">Bloque 2 · Funciones Sintácticas dentro de la Cláusula</h2>
+  <p class="section-lead">La <strong>cláusula simple</strong> es un conjunto de palabras con un verbo que siempre funciona de <strong>PREDICADO (PRED)</strong>. A partir de él localizamos todas las demás funciones.</p>
+
+  <!-- ─── TEORÍA ─── -->
+  <h3 class="sub-title">Teoría: funciones de la cláusula simple</h3>
+
+  <div class="pista"><strong>💡 Método:</strong> Localiza siempre primero el <strong>verbo = PRED</strong>. Luego busca el SUJ (concordancia). Después, identifica los complementos del PRED según sus pruebas.</div>
+
+  <table class="ftable">
+    <thead><tr><th>FUNCIÓN</th><th>FORMA</th><th>CARACTERIZACIÓN</th><th>PRUEBA</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="fb fb-i">SUJ</span> SUJETO</td>
+        <td>sust., pron., f. nom., f. sust.</td>
+        <td>Concuerda con el verbo en número y persona</td>
+        <td>Cambiar la concordancia: <em>el pez <u>nada</u> → los peces <u>nadan</u></em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-r">PRED</span> PREDICADO</td>
+        <td>verbo (siempre)</td>
+        <td>Lo desempeña siempre el verbo</td>
+        <td>—</td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-g">AT</span> ATRIBUTO</td>
+        <td>adj., adv., f. nom., f. sust., f. adj., f. adv., f. prep.</td>
+        <td>Con <em>ser, estar</em> o <em>parecer</em></td>
+        <td>Sustituir por <strong>LO</strong>: <em>es mi hijo → lo es</em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-b">CD</span> COMPL. DIRECTO</td>
+        <td>sust., pron., f. nom., f. sust., f. prep. (solo con «a»)</td>
+        <td>Elemento sobre el que recae directamente la acción verbal</td>
+        <td>Sustituir por <strong>lo/la/los/las</strong> · pasivización (CD → SUJ paciente)</td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-b">CI</span> COMPL. INDIRECTO</td>
+        <td>f. prep. (solo con prep. «a»)</td>
+        <td>Beneficiario o destinatario de la acción</td>
+        <td>Sustituir por <strong>le/les</strong>: <em>contamos un chiste a María → le contamos…</em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-y">CREG</span> COMPL. DE RÉGIMEN</td>
+        <td>f. prep. (a…, de…, en…)</td>
+        <td>Preposición exigida por el verbo (verbo de régimen)</td>
+        <td>Cambiar por <strong>prep. + ELLO</strong>: <em>creo en Dios → creo en ello</em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-p">CPRED</span> COMPL. PREDICATIVO</td>
+        <td>adj., f. adj., f. nom., f. sust.</td>
+        <td>Complementa al SUJ (subjetivo) o al CD (objetivo). No aparece con ser/estar/parecer</td>
+        <td>Concordancia con SUJ o CD con verbos diferentes a <em>ser<em>, <em>estar<em> y <em>parecer<em>: <em>el chico permaneció <u>inmóvil</u> → los chicos permanecieron <u>inmóviles</u></em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-i">CC</span> COMPL. CIRCUNSTANCIAL</td>
+        <td>adv., f. nom., f. adv., f. prep.</td>
+        <td>Expresa tiempo, lugar, modo, instrumento…</td>
+        <td>Se puede <strong>eliminar y cambiar de orden</strong>: <em>cantaron <u>sobre el escenario</u></em></td>
+      </tr>
+      <tr>
+        <td><span class="fb fb-r">CAG</span> COMPL. AGENTE</td>
+        <td>f. prep. (solo con prep. «por»)</td>
+        <td>Quién realiza la acción en oraciones <strong>pasivas</strong></td>
+        <td>En la oración activa equivale al SUJ</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="teoria-recap" style="margin-top:0;">
+    <h3>⚠️ Funciones periféricas (actúan desde fuera de la cláusula)</h3>
+    <p><strong>Vocativo:</strong> Llama la atención del receptor; va separado por coma/s. Ej.: <em>Pedro, ven aquí / Ven, Pedro, aquí.</em></p>
+    <p><strong>Modificador oracional:</strong> Complementa a toda la cláusula. Ej.: <em>Desgraciadamente, comenzó a llover. / Según los especialistas, la vacuna es efectiva.</em></p>
+  </div>
+
+  <!-- Diagram -->
+  <div style="background:white;border:1.5px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.25rem 0;text-align:center;box-shadow:var(--shadow);">
+    <p style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:1rem;">EJEMPLO COMPLETO · «Esa ardilla comía nueces sabrosas»</p>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.25rem;">
+      <div style="text-align:center;">
+        <div style="font-size:12px;font-weight:700;color:var(--indigo);margin-bottom:4px;">SUJ → frase nominal</div>
+        <div style="background:var(--parchment);border:2px solid var(--indigo);border-radius:8px;padding:8px 14px;display:inline-flex;gap:1rem;">
+          <div><div style="font-size:11px;font-weight:700;color:var(--indigo);">DET</div><div style="font-size:15px;font-weight:600;">Esa</div><div style="font-size:10px;color:var(--muted);">det. dem.</div></div>
+          <div><div style="font-size:11px;font-weight:700;color:var(--indigo);">NOM</div><div style="font-size:15px;font-weight:600;">ardilla</div><div style="font-size:10px;color:var(--muted);">sust.</div></div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:12px;font-weight:700;color:#C0392B;margin-bottom:4px;">PRED</div>
+        <div style="background:#FEF0F0;border:2px solid #C0392B;border-radius:8px;padding:8px 14px;display:inline-flex;gap:1rem;">
+          <div><div style="font-size:15px;font-weight:600;">comía</div><div style="font-size:10px;color:var(--muted);">verbo</div></div>
+        </div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:12px;font-weight:700;color:#2D7DD2;margin-bottom:4px;">CD → frase sustantiva</div>
+        <div style="background:#EFF6FF;border:2px solid #2D7DD2;border-radius:8px;padding:8px 14px;display:inline-flex;gap:1rem;">
+          <div><div style="font-size:11px;font-weight:700;color:#27AE60;">NÚC</div><div style="font-size:15px;font-weight:600;">nueces</div><div style="font-size:10px;color:var(--muted);">sust.</div></div>
+          <div><div style="font-size:11px;font-weight:700;color:#D4820A;">MOD</div><div style="font-size:15px;font-weight:600;">sabrosas</div><div style="font-size:10px;color:var(--muted);">adj.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EJERCICIOS ─── -->
+  <h3 class="sub-title">Ejercicios: Bloque 2 – Funciones en la Cláusula</h3>
+
+  <div class="teoria-recap">
+    <h3>📌 Antes de empezar: recuerda las pruebas</h3>
+    <p>· <strong>SUJ</strong>: cambia el número del verbo. · <strong>AT</strong>: sustituye por <em>lo</em> (con ser/estar/parecer). · <strong>CD</strong>: sustituye por <em>lo/la/los/las</em>. · <strong>CI</strong>: sustituye por <em>le/les</em>. · <strong>CREG</strong>: cambia por <em>prep. + ello</em>. · <strong>CC</strong>: puedes eliminarlo o moverlo. · <strong>CAG</strong>: solo en pasiva, con «por».</p>
+  </div>
+
+  <!-- EJ 6: Matching -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 6 – Relaciona el elemento subrayado con su función <span style="font-size:12px;opacity:.8;">(nivel básico)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Haz clic primero en la oración de la izquierda y luego en la función correspondiente.</p>
+      <div class="rel-grid">
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e6" data-lado="izq" data-key="a" onclick="ejRel('e6','izq','a',this)">Compré <u>un jersey</u>.</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="izq" data-key="b" onclick="ejRel('e6','izq','b',this)">Cantaron <u>sobre el escenario</u>.</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="izq" data-key="c" onclick="ejRel('e6','izq','c',this)">Contamos un chiste <u>a María</u>.</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="izq" data-key="d" onclick="ejRel('e6','izq','d',this)">Es <u>mi hijo</u>.</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="izq" data-key="e" onclick="ejRel('e6','izq','e',this)">Creo <u>en Dios</u>.</button>
+        </div>
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e6" data-lado="der" data-key="d" onclick="ejRel('e6','der','d',this)">AT · Atributo</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="der" data-key="a" onclick="ejRel('e6','der','a',this)">CD · Compl. directo</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="der" data-key="e" onclick="ejRel('e6','der','e',this)">CREG · Compl. de régimen</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="der" data-key="b" onclick="ejRel('e6','der','b',this)">CC · Compl. circunstancial</button>
+          <button class="rel-btn" data-ejg="e6" data-lado="der" data-key="c" onclick="ejRel('e6','der','c',this)">CI · Compl. indirecto</button>
+        </div>
+      </div>
+      <div class="rel-success" id="e6-ok">✅ ¡Excelente! Has identificado correctamente todas las funciones.</div>
+    </div>
+  </div>
+
+  <!-- EJ 7: V/F -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 7 – Verdadero o Falso <span style="font-size:12px;opacity:.8;">(nivel básico-medio)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Decide si las siguientes afirmaciones sobre las funciones de la cláusula son correctas.</p>
+
+      <div class="vf-item">
+        <div class="vf-frase">6. El COMPLEMENTO DIRECTO siempre lleva la preposición «a».</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,false,'vf6')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,false,'vf6')">F</button>
+        </div>
+        <div class="vf-fb" id="vf6">Falso. El CD lleva «a» <strong>solo cuando es una persona</strong>: <em>Busco a la secretaria</em>. En otros casos no lleva preposición: <em>Compré un jersey</em>.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">7. El ATRIBUTO aparece únicamente con los verbos <em>ser</em>, <em>estar</em> o <em>parecer</em>.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf7')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf7')">F</button>
+        </div>
+        <div class="vf-fb" id="vf7">Correcto. El AT solo aparece con los verbos copulativos <strong>ser, estar y parecer</strong>. Prueba: se puede sustituir por <em>lo</em>.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">8. El COMPLEMENTO PREDICATIVO concuerda con el SUJ o el CD con verbos diferentes a <em>ser</em>, <em>estar</em> y <em>parecer</em>.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf8')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf8')">F</button>
+        </div>
+        <div class="vf-fb" id="vf8">Correcto. Esa es la prueba principal del CPRED: <em><u>El</u> emplead<u>o</u> se puso <u>muy nervioso</u></em> → <em><u>Los</u> emplead<u>os</u> se pusieron <u>muy nerviosos</u></em>.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">9. El COMPLEMENTO AGENTE aparece en oraciones activas introducido por la preposición «por».</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,false,'vf9')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,false,'vf9')">F</button>
+        </div>
+        <div class="vf-fb" id="vf9">Falso. El CAG aparece <strong>solo en oraciones pasivas</strong> (ser + participio): <em>El incendio fue sofocado <u>por los bomberos</u></em>.</div>
+      </div>
+
+      <div class="vf-item">
+        <div class="vf-frase">10. El COMPLEMENTO CIRCUNSTANCIAL puede eliminarse sin que la oración pierda su significado esencial.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" onclick="vfAns(this,true,true,'vf10')">V</button>
+          <button class="vf-btn" onclick="vfAns(this,false,true,'vf10')">F</button>
+        </div>
+        <div class="vf-fb" id="vf10">Correcto. El CC expresa circunstancias (tiempo, lugar, modo…) y es prescindible: <em>Llegaremos pronto → Llegaremos</em>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJ 8: Select function -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 8 – Identifica la función del elemento subrayado <span style="font-size:12px;opacity:.8;">(nivel medio)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Selecciona la función sintáctica del elemento subrayado en cada cláusula. Usa las pruebas aprendidas para verificar tu respuesta.</p>
+      <div id="ej8-items"></div>
+      <button class="btn-ej" onclick="checkEj('ej8')">Comprobar</button>
+      <div class="ej-res" id="ej8-res"></div>
+    </div>
+  </div>
+
+  <!-- EJ 9: Pruebas matching -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 9 – Relaciona cada función con su prueba sintáctica <span style="font-size:12px;opacity:.8;">(nivel medio-alto)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Conecta cada función con la prueba que permite identificarla. Dominar las pruebas es clave para el análisis.</p>
+      <div class="rel-grid">
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e9" data-lado="izq" data-key="a" onclick="ejRel('e9','izq','a',this)">SUJETO (SUJ)</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="izq" data-key="b" onclick="ejRel('e9','izq','b',this)">COMPL. DIRECTO (CD)</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="izq" data-key="c" onclick="ejRel('e9','izq','c',this)">COMPL. INDIRECTO (CI)</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="izq" data-key="d" onclick="ejRel('e9','izq','d',this)">ATRIBUTO (AT)</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="izq" data-key="e" onclick="ejRel('e9','izq','e',this)">COMPL. DE RÉGIMEN (CREG)</button>
+        </div>
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="e9" data-lado="der" data-key="b" onclick="ejRel('e9','der','b',this)">Se sustituye por <em>lo / la / los / las</em></button>
+          <button class="rel-btn" data-ejg="e9" data-lado="der" data-key="d" onclick="ejRel('e9','der','d',this)">Se sustituye por <em>LO</em> (con ser, estar, parecer)</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="der" data-key="a" onclick="ejRel('e9','der','a',this)">Se cambia la concordancia con el verbo</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="der" data-key="e" onclick="ejRel('e9','der','e',this)">Se sustituye por «prep. + ELLO»</button>
+          <button class="rel-btn" data-ejg="e9" data-lado="der" data-key="c" onclick="ejRel('e9','der','c',this)">Se sustituye por <em>le / les</em></button>
+        </div>
+      </div>
+      <div class="rel-success" id="e9-ok">✅ ¡Excelente! Dominas las pruebas sintácticas.</div>
+    </div>
+  </div>
+
+  <!-- EJ 10: Full sentence analysis -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio 10 – Análisis sintáctico completo <span style="font-size:12px;opacity:.8;">(nivel alto)</span></h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Identifica la función de <strong>todos</strong> los elementos señalados en las siguientes cláusulas simples. Es el ejercicio de mayor dificultad.</p>
+      <div id="ej10-items"></div>
+      <button class="btn-ej" onclick="checkEj('ej10')">Comprobar</button>
+      <div class="ej-res" id="ej10-res"></div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;display:flex;gap:1rem;justify-content:flex-end;">
+    <button class="btn-ej" style="font-size:14px;padding:10px 28px;" onclick="show('test1')">Test 1: Frases →</button>
+    <button class="btn-ej" style="font-size:14px;padding:10px 28px;background:var(--amber);" onclick="show('test2')">Test 2: Cláusulas →</button>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════
+     TEST 1 · FRASES
+══════════════════════════════════════════ -->
+<section class="section container" id="s-test1">
+  <h2 class="section-title">Test 1 · Funciones en la Frase</h2>
+  <p class="section-lead">10 preguntas de opción múltiple sobre tipos de frase y funciones sintácticas dentro de la frase. <strong>Este test sí cuenta para tu nota final.</strong> Puedes volver a la teoría antes de empezar.</p>
+  <div class="score-wrap">
+    <div><div style="font-size:12px;color:var(--muted);">Puntuación</div><div class="score-num" id="sc1">0 / 10</div></div>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="sb1" style="width:0%"></div></div>
+  </div>
+  <div id="qbox1"></div>
+  <div class="test-go" id="go-test2">
+    <strong>¡Test 1 completado!</strong> Cuando quieras, pasa al Test 2 sobre funciones en la cláusula.
+    <br><button onclick="show('test2')">Ir al Test 2 →</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     TEST 2 · CLÁUSULAS
+══════════════════════════════════════════ -->
+<section class="section container" id="s-test2">
+  <h2 class="section-title">Test 2 · Funciones en la Cláusula</h2>
+  <p class="section-lead">10 preguntas de opción múltiple sobre las funciones de la cláusula simple y sus pruebas de identificación. <strong>Este test sí cuenta para tu nota final.</strong></p>
+  <div class="score-wrap">
+    <div><div style="font-size:12px;color:var(--muted);">Puntuación</div><div class="score-num" id="sc2">0 / 10</div></div>
+    <div class="score-bar-wrap"><div class="score-bar-fill" id="sb2" style="width:0%"></div></div>
+  </div>
+  <div id="qbox2"></div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     RESUMEN FINAL
+══════════════════════════════════════════ -->
+<div id="resumenFinal" style="display:none;">
+  <div class="res-outer">
+    <div class="res-box">
+      <div class="res-hdr"><h3>📊 Resultados finales · <span id="resNombre"></span></h3></div>
+      <div class="res-body">
+        <div class="res-grid">
+          <div class="res-stat"><div class="val" id="res-t1">—</div><div class="lbl">Test 1 · Frases<br>(sobre 10)</div></div>
+          <div class="res-stat"><div class="val" id="res-t2">—</div><div class="lbl">Test 2 · Cláusulas<br>(sobre 10)</div></div>
+          <div class="res-stat"><div class="val" id="res-tot">—</div><div class="lbl">Total<br>(sobre 20)</div></div>
+        </div>
+        <div class="nota-wrap">
+          <div class="nota-num" id="res-nota">—</div>
+          <div style="font-size:13px;opacity:.85;margin-top:3px;">Nota final sobre 10</div>
+          <div class="nota-msg" id="res-msg"></div>
+        </div>
+        <div class="res-errs" id="resErrWrap">
+          <h4>Preguntas falladas que debes repasar</h4>
+          <div id="resErr"></div>
+        </div>
+        <button class="btn-send" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
+        <div class="send-ok" id="envioOk">✅ <strong>¡Resultados enviados!</strong> El profesor recibirá tu nota.</div>
+        <div class="ya-env" id="yaEnv">⚠️ Ya enviaste tus resultados en esta sesión.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>ESO / Bachillerato · Lengua Castellana y Literatura · Sintaxis: Funciones en la Frase y la Cláusula</footer>
+
+<script>
+/* ════════════════════════════════════════
+   CONFIG
+════════════════════════════════════════ */
+const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSdUFcWi9gRzhLDh3JyObDV0QjxiPLi9Zx0sFg17i1cIWCedkg/formResponse';
+const FIELDS = {
+  nombre : 'entry.2013791434',
+  curso  : 'entry.591257558',
+  t1     : 'entry.1891682145',
+  t2     : 'entry.1018044959',
+  nota   : 'entry.1089617851'
+};
+
+let ALUMNO = '', CURSO = '';
+
+/* ════════════════════════════════════════
+   LOGIN
+════════════════════════════════════════ */
+function doLogin() {
+  const n = document.getElementById('loginNombre').value.trim();
+  const c = document.getElementById('loginCurso').value;
+  const err = document.getElementById('loginErr');
+  if (n.split(/\s+/).filter(Boolean).length < 2 || !c) {
+    err.style.display = 'block'; return;
+  }
+  ALUMNO = n; CURSO = c;
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('navUser').innerHTML = `<strong>${n}</strong>&nbsp;·&nbsp;${c}`;
+  buildAllExercises();
+  buildQ(1); buildQ(2);
+}
+document.getElementById('loginNombre').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+/* ════════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════════ */
+function show(k) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('s-' + k).classList.add('active');
+  const map = { frases:0, clausulas:1, test1:2, test2:3 };
+  if (map[k] !== undefined) document.querySelectorAll('.nav-btn')[map[k]].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════
+   MATCHING EXERCISE
+════════════════════════════════════════ */
+const _rel = {};
+function ejRel(grp, lado, key, btn) {
+  if (!_rel[grp]) {
+    const tot = document.querySelectorAll(`[data-ejg="${grp}"][data-lado="izq"]`).length;
+    _rel[grp] = { matched: 0, total: tot, izq: null };
+  }
+  const st = _rel[grp];
+  if (btn.classList.contains('matched')) return;
+
+  if (lado === 'izq') {
+    document.querySelectorAll(`[data-ejg="${grp}"][data-lado="izq"]`).forEach(b => {
+      if (!b.classList.contains('matched')) b.classList.remove('sel', 'fail');
+    });
+    st.izq = { key, btn };
+    btn.classList.add('sel');
+  } else {
+    if (!st.izq) return;
+    if (st.izq.key === key) {
+      btn.classList.add('matched');
+      st.izq.btn.classList.remove('sel', 'fail');
+      st.izq.btn.classList.add('matched');
+      st.matched++;
+      st.izq = null;
+      if (st.matched >= st.total) {
+        const ok = document.getElementById(grp + '-ok');
+        if (ok) ok.style.display = 'block';
+      }
+    } else {
+      st.izq.btn.classList.add('fail');
+      const prev = st.izq;
+      setTimeout(() => { prev.btn.classList.remove('fail', 'sel'); }, 900);
+      st.izq = null;
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   V/F EXERCISE
+════════════════════════════════════════ */
+function vfAns(btn, userTrue, correctTrue, fbId) {
+  const wrap = btn.closest('.vf-btns');
+  if (wrap.dataset.done) return;
+  wrap.dataset.done = '1';
+  const isOk = userTrue === correctTrue;
+  btn.classList.add(isOk ? 'ok' : 'fail');
+  wrap.querySelectorAll('.vf-btn').forEach(b => {
+    const bTrue = b.textContent.trim() === 'V';
+    if (!isOk && bTrue === correctTrue) b.classList.add('ok');
+    b.classList.add('nt');
+  });
+  const fb = document.getElementById(fbId);
+  fb.className = 'vf-fb ' + (isOk ? 'ok' : 'fail');
+}
+
+/* ════════════════════════════════════════
+   EXERCISE DATA
+════════════════════════════════════════ */
+const FOPTS = ['DET','NOM','ENL','TÉRM','NÚC','MOD'];
+const COPTS = ['SUJ','PRED','AT','CD','CI','CREG','CPRED','CC','CAG'];
+const TOPTS = ['frase nominal','frase preposicional','frase sustantiva','frase adjetiva','frase adverbial'];
+
+// EJ3: Select function of underlined word (frases)
+const EJ3 = [
+  { frase:'<u>Mi</u> amigo', hint:'(frase nominal)', correct:'DET', opts: FOPTS },
+  { frase:'Desde <u>allí</u>', hint:'(frase preposicional)', correct:'TÉRM', opts: FOPTS },
+  { frase:'<u>Muy</u> cansado', hint:'(frase adjetiva)', correct:'MOD', opts: FOPTS },
+  { frase:'<u>Días</u> alegres', hint:'(frase sustantiva)', correct:'NÚC', opts: FOPTS },
+  { frase:'Amarillo <u>chillón</u>', hint:'(frase adjetiva)', correct:'MOD', opts: FOPTS },
+];
+
+// EJ4: Complete phrase analysis
+const EJ4 = [
+  { frase:'mi amigo fiel', words:[{w:'mi',c:'DET'},{w:'amigo fiel',c:'NOM'}] },
+  { frase:'desde aquí', words:[{w:'desde',c:'ENL'},{w:'aquí',c:'TÉRM'}] },
+  { frase:'muy cansado', words:[{w:'muy',c:'MOD'},{w:'cansado',c:'NÚC'}] },
+  { frase:'verdes prados', words:[{w:'verdes',c:'MOD'},{w:'prados',c:'NÚC'}] },
+];
+
+// EJ5: Classify type + identify central element
+const EJ5 = [
+  { frase:'sus libros favoritos', tipo:'frase nominal', nucleo:'libros favoritos', tipoQ:'¿Qué tipo de frase es?', nucQ:'¿Cuál es el NOM (elemento nominal)?', nucOpts:['sus','libros favoritos'] },
+  { frase:'sin ningún problema', tipo:'frase preposicional', nucleo:'sin', tipoQ:'¿Qué tipo de frase es?', nucQ:'¿Cuál es el ENL (enlace)?', nucOpts:['sin','ningún','problema'] },
+  { frase:'demasiado tarde', tipo:'frase adverbial', nucleo:'tarde', tipoQ:'¿Qué tipo de frase es?', nucQ:'¿Cuál es el NÚC?', nucOpts:['demasiado','tarde'] },
+  { frase:'jóvenes inquietos', tipo:'frase sustantiva', nucleo:'jóvenes', tipoQ:'¿Qué tipo de frase es?', nucQ:'¿Cuál es el NÚC?', nucOpts:['jóvenes','inquietos'] },
+  { frase:'absolutamente genial', tipo:'frase adjetiva', nucleo:'genial', tipoQ:'¿Qué tipo de frase es?', nucQ:'¿Cuál es el NÚC?', nucOpts:['absolutamente','genial'] },
+];
+
+// EJ8: Select function in clause
+const EJ8 = [
+  { frase:'<u>El pez</u> nada.', correct:'SUJ', opts:['SUJ','PRED','CD','CI','AT','CC'] },
+  { frase:'Era <u>muy guapa</u>.', correct:'AT', opts:['SUJ','PRED','CD','CI','AT','CC'] },
+  { frase:'Busco <u>a la secretaria</u>.', correct:'CD', opts:['SUJ','PRED','CD','CI','CREG','CC'] },
+  { frase:'Daremos el premio <u>al mejor alumno</u>.', correct:'CI', opts:['SUJ','CD','CI','CC','CREG','AT'] },
+  { frase:'Me alegré <u>de tu victoria</u>.', correct:'CREG', opts:['CD','CI','CC','CREG','AT','CPRED'] },
+];
+
+// EJ10: Full sentence analysis
+const EJ10 = [
+  { frase:'Juan taló un árbol.', partes:[{l:'Juan',c:'SUJ'},{l:'taló',c:'PRED'},{l:'un árbol',c:'CD'}] },
+  { frase:'María está muy cansada.', partes:[{l:'María',c:'SUJ'},{l:'está',c:'PRED'},{l:'muy cansada',c:'AT'}] },
+  { frase:'Contamos un chiste a María el lunes.', partes:[{l:'Contamos',c:'PRED'},{l:'un chiste',c:'CD'},{l:'a María',c:'CI'},{l:'el lunes',c:'CC'}] },
+  { frase:'El examen les resultó muy difícil a.', partes:[{l:'El examen',c:'SUJ'},{l:'les',c:'CI'},{l:'resultó',c:'PRED'},{l:'muy difícil',c:'CPRED'}] },
+];
+
+/* ════════════════════════════════════════
+   BUILD EXERCISES
+════════════════════════════════════════ */
+function mkSel(opts, id) {
+  return `<select class="wselect" id="${id}"><option value="">—</option>${opts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+}
+
+function buildAllExercises() {
+  // EJ3
+  document.getElementById('ej3-items').innerHTML = EJ3.map((it,i) =>
+    `<div class="analisis-item">
+      <div class="analisis-frase">${it.frase} <span style="font-size:12px;color:var(--muted);">${it.hint}</span></div>
+      <div class="analisis-row">
+        <span style="font-size:13px;">Función de la palabra subrayada:</span>
+        ${mkSel(it.opts, `ej3-${i}`)}
+      </div>
+    </div>`
+  ).join('');
+
+  // EJ4
+  document.getElementById('ej4-items').innerHTML = EJ4.map((it,fi) => {
+    const ws = it.words.map((w,wi) =>
+      `<span style="margin:2px 4px;display:inline-flex;align-items:center;gap:4px;">
+        <span class="wlabel">«${w.w}»</span> → ${mkSel(FOPTS,`ej4-${fi}-${wi}`)}
+       </span>`
+    ).join('');
+    return `<div class="analisis-item">
+      <div class="analisis-frase" style="margin-bottom:.6rem;font-weight:600;">«${it.frase}»</div>
+      <div class="analisis-row" style="flex-wrap:wrap;">${ws}</div>
+    </div>`;
+  }).join('');
+
+  // EJ5
+  document.getElementById('ej5-items').innerHTML = EJ5.map((it,i) => {
+    const nucSel = `<select class="wselect" id="ej5n-${i}"><option value="">—</option>${it.nucOpts.map(o=>`<option value="${o}">${o}</option>`).join('')}</select>`;
+    return `<div class="analisis-item">
+      <div class="analisis-frase" style="font-weight:600;">«${it.frase}»</div>
+      <div class="analisis-row" style="margin-top:.4rem;flex-wrap:wrap;gap:.6rem;">
+        <span>${it.tipoQ}</span> ${mkSel(TOPTS,`ej5t-${i}`)}
+        <span style="margin-left:.5rem;">${it.nucQ}</span> ${nucSel}
+      </div>
+    </div>`;
+  }).join('');
+
+  // EJ8
+  document.getElementById('ej8-items').innerHTML = EJ8.map((it,i) =>
+    `<div class="analisis-item">
+      <div class="analisis-frase">${it.frase}</div>
+      <div class="analisis-row">
+        <span>Función del elemento subrayado:</span>
+        ${mkSel(it.opts,`ej8-${i}`)}
+      </div>
+    </div>`
+  ).join('');
+
+  // EJ10
+  document.getElementById('ej10-items').innerHTML = EJ10.map((sent,si) => {
+    const rows = sent.partes.map((p,pi) =>
+      `<div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.4rem;">
+        <span class="wlabel">«${p.l}»</span> → ${mkSel(COPTS,`ej10-${si}-${pi}`)}
+       </div>`
+    ).join('');
+    return `<div class="analisis-item">
+      <div class="analisis-frase" style="font-weight:600;font-size:15px;margin-bottom:.6rem;">${sent.frase}</div>
+      ${rows}
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════
+   CHECK EXERCISES (generic)
+════════════════════════════════════════ */
+function checkEj(id) {
+  let ok = 0, total = 0;
+  const res = document.getElementById(id + '-res');
+
+  if (id === 'ej3') {
+    EJ3.forEach((it,i) => {
+      total++;
+      const s = document.getElementById(`ej3-${i}`);
+      const good = s.value === it.correct;
+      s.className = 'wselect ' + (good ? 'ok' : (s.value ? 'fail' : ''));
+      if (good) ok++;
+    });
+  } else if (id === 'ej4') {
+    EJ4.forEach((it,fi) => it.words.forEach((w,wi) => {
+      total++;
+      const s = document.getElementById(`ej4-${fi}-${wi}`);
+      const good = s.value === w.c;
+      s.className = 'wselect ' + (good ? 'ok' : (s.value ? 'fail' : ''));
+      if (good) ok++;
+    }));
+  } else if (id === 'ej5') {
+    EJ5.forEach((it,i) => {
+      const st = document.getElementById(`ej5t-${i}`);
+      const sn = document.getElementById(`ej5n-${i}`);
+      const gt = st.value === it.tipo;
+      const gn = sn.value === it.nucleo;
+      st.className = 'wselect ' + (gt ? 'ok' : (st.value ? 'fail' : ''));
+      sn.className = 'wselect ' + (gn ? 'ok' : (sn.value ? 'fail' : ''));
+      if (gt) ok++; if (gn) ok++;
+      total += 2;
+    });
+  } else if (id === 'ej8') {
+    EJ8.forEach((it,i) => {
+      total++;
+      const s = document.getElementById(`ej8-${i}`);
+      const good = s.value === it.correct;
+      s.className = 'wselect ' + (good ? 'ok' : (s.value ? 'fail' : ''));
+      if (good) ok++;
+    });
+  } else if (id === 'ej10') {
+    EJ10.forEach((sent,si) => sent.partes.forEach((p,pi) => {
+      total++;
+      const s = document.getElementById(`ej10-${si}-${pi}`);
+      const good = s.value === p.c;
+      s.className = 'wselect ' + (good ? 'ok' : (s.value ? 'fail' : ''));
+      if (good) ok++;
+    }));
+  }
+
+  if (ok === total) {
+    res.className = 'ej-res ok';
+    res.textContent = `✅ ¡Perfecto! ${ok} / ${total} correctas.`;
+  } else if (ok >= total * 0.6) {
+    res.className = 'ej-res parcial';
+    res.textContent = `⚡ ${ok} / ${total} correctas. Revisa las marcadas en rojo y repasa la teoría.`;
+  } else {
+    res.className = 'ej-res fail';
+    res.textContent = `❌ ${ok} / ${total} correctas. Vuelve a la teoría antes de intentarlo de nuevo.`;
+  }
+}
+
+/* ════════════════════════════════════════
+   TESTS
+════════════════════════════════════════ */
+const QS = {
+  1: [
+    { q:'¿Cuál es la estructura de una frase nominal?',
+      opts:['ENL + TÉRM','DET + NOM','NÚC + MOD','MOD + ENL'], c:1,
+      fb:'La frase nominal se estructura como DET + NOM. El DETERMINANTE es el elemento que la encabeza (art., posesivo, demostrativo…).' },
+    { q:'En la frase «desde allí», ¿qué función sintáctica desempeña «desde»?',
+      opts:['NOM','TÉRM','ENL','DET'], c:2,
+      fb:'«Desde» es una preposición que desempeña la función ENLACE (ENL) en esta frase preposicional.' },
+    { q:'¿Qué tipo de frase es «muy lejos»?',
+      opts:['Frase nominal','Frase adjetiva','Frase adverbial','Frase preposicional'], c:2,
+      fb:'«Muy lejos»: NÚC (lejos, adv.) + MOD (muy, adv.) → frase adverbial. El NÚC es un adverbio.' },
+    { q:'En la frase sustantiva «verdes prados», ¿qué función desempeña «verdes»?',
+      opts:['DET','NOM','NÚC','MOD'], c:3,
+      fb:'«Verdes» es un adjetivo que funciona como MODIFICADOR del NÚC «prados».' },
+    { q:'¿Qué formas puede adoptar la función MODIFICADOR dentro de una frase?',
+      opts:['Sustantivo, pronombre, adverbio','Adjetivo, adverbio, frase preposicional','Preposición, adverbio, adjetivo','Artículo, demostrativo, posesivo'], c:1,
+      fb:'El MOD puede ser: adjetivo, adverbio o frase preposicional. No puede ser ni sustantivo ni preposición.' },
+    { q:'En la frase adverbial «cerca de aquí», ¿qué función desempeña «de aquí»?',
+      opts:['NÚCLEO','ENLACE','MODIFICADOR','TÉRMINO'], c:2,
+      fb:'«De aquí» es una frase preposicional que funciona como MODIFICADOR del NÚC «cerca».' },
+    { q:'¿Qué función determina el tipo de una frase sustantiva, adjetiva o adverbial?',
+      opts:['DETERMINANTE','MODIFICADOR','NÚCLEO','ENLACE'], c:2,
+      fb:'El NÚCLEO es la palabra más importante de la frase y determina su tipo: si es sust.→f. sust.; adj.→f. adj.; adv.→f. adv.' },
+    { q:'¿Cuál de las siguientes puede desempeñar la función TÉRMINO en una frase preposicional?',
+      opts:['Preposición','Adverbio','Artículo','Conjunción'], c:1,
+      fb:'El TÉRMINO puede ser: sust., pronombre, adv., f. sust. o f. nom. El adverbio es una opción válida: «desde allí».' },
+    { q:'En «mi vecina simpática», ¿cuántas funciones distintas hay y cuáles son?',
+      opts:['Dos: DET y NÚC','Dos: NÚC y MOD','Tres: DET, NOM (y dentro de la función NOM hay dos: NÚC y MOD','Tres: ENL, TÉRM y MOD'], c:2,
+      fb:'«Mi»=DET (pos.), «vecina»=NOM (sust.), «simpática»=MOD (adj.). Tres funciones en una frase nominal con modificador.' },
+    { q:'¿Cuál de estas construcciones es una frase preposicional?',
+      opts:['«El perro negro»','«Muy tarde»','«Con mucha alegría»','«Días felices»'], c:2,
+      fb:'«Con mucha alegría»: ENL (con, prep.) + TÉRM (mucha alegría) → frase preposicional.' },
+  ],
+  2: [
+    { q:'¿Cuál es la función sintáctica que siempre desempeña el verbo en una cláusula simple?',
+      opts:['SUJETO','PREDICADO','COMPLEMENTO DIRECTO','ATRIBUTO'], c:1,
+      fb:'El verbo es siempre el PREDICADO (PRED). Es la función central a partir de la cual se identifican las demás.' },
+    { q:'¿Cuál es la prueba principal para verificar que un elemento es COMPLEMENTO DIRECTO?',
+      opts:['Sustituir por «le/les»','Cambiar la concordancia del verbo','Sustituir por «lo/la/los/las»','Cambiar por «prep. + ELLO»'], c:2,
+      fb:'La prueba del CD es la sustitución por «lo/la/los/las». También admite pasivización: el CD se convierte en sujeto paciente.' },
+    { q:'En «El pez nada», ¿cuál es el SUJETO?',
+      opts:['«El»','«pez»','«El pez»','«nada»'], c:2,
+      fb:'El SUJ es la frase nominal completa «El pez» (DET+NOM). Prueba: «Los peces nadan» (concuerda en número y persona).' },
+    { q:'¿Con qué verbos aparece exclusivamente el ATRIBUTO?',
+      opts:['Verbos predicativos transitivos','Verbos «ser», «estar» o «parecer»','Verbos de movimiento','Verbos reflexivos'], c:1,
+      fb:'El AT solo aparece con los verbos copulativos «ser», «estar» y «parecer». Prueba: se puede sustituir por «lo».' },
+    { q:'En «Creo en Dios», ¿qué función desempeña «en Dios»?',
+      opts:['CI','CC','CD','CREG'], c:3,
+      fb:'El verbo «creer» rige la preposición «en». Prueba: «Creo en ello» (prep. + ELLO) → CREG. El CC se podría eliminar; el CREG no.' },
+    { q:'¿Qué caracteriza exclusivamente al COMPLEMENTO AGENTE?',
+      opts:['Va con la preposición «a»','Solo aparece en oraciones pasivas con la preposición «por»','Expresa tiempo, lugar o modo','Se puede sustituir por «lo/la/los/las»'], c:1,
+      fb:'El CAG solo aparece en oraciones pasivas (ser + participio), siempre con «por» y equivale al SUJ de la voz activa.' },
+    { q:'En «Contamos un chiste a María», ¿qué función desempeña «a María»?',
+      opts:['CD','CI','CC','CREG'], c:1,
+      fb:'«A María» es el destinatario del chiste. Prueba: «Le contamos un chiste» (sustitución por «le»). → CI.' },
+    { q:'¿Cuál de las siguientes NO es una función periférica de la cláusula?',
+      opts:['Vocativo','Modificador oracional','CPRED (complemento predicativo)','Ninguna, todas son periféricas'], c:2,
+      fb:'El CPRED es una función interna de la cláusula (complementa al SUJ o al CD). Las funciones periféricas son el vocativo y los modificadores oracionales.' },
+    { q:'En «El chico permaneció inmóvil», «inmóvil» es:',
+      opts:['AT (Atributo)','CPRED subjetivo','CC de modo','CD'], c:1,
+      fb:'«Inmóvil» concuerda con el SUJ pero no puede sustituirse por «lo» → no es AT. Con verbo semiatributivo como «permanecer» es CPRED subjetivo.' },
+    { q:'¿Cómo se distingue el CREG del CC?',
+      opts:['El CREG no lleva preposición','El CC siempre lleva la preposición «a»','El CREG lleva una preposición exigida e insustituible por el verbo','El CC no puede eliminarse'], c:2,
+      fb:'En el CREG, la preposición es obligatoria y la exige el propio verbo. Si se cambia la prep. o se elimina, la oración resulta agramatical.' },
+  ]
+};
+
+const ST = { 1:{ sc:0, ans:{} }, 2:{ sc:0, ans:{} } };
+
+function buildQ(n) {
+  const box = document.getElementById('qbox' + n);
+  box.innerHTML = '';
+  QS[n].forEach((q, i) => {
+    const L = ['A','B','C','D'];
+    const opts = q.opts.map((o,j) =>
+      `<button class="q-opt" onclick="answer(${n},${i},${j})"><span class="opt-l">${L[j]}</span>${o}</button>`
+    ).join('');
+    const d = document.createElement('div');
+    d.innerHTML = `${i>0?'<div class="q-divider"></div>':''}<div class="q-item">
+      <div class="q-num">Pregunta ${i+1} de ${QS[n].length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts" id="opts-${n}-${i}">${opts}</div>
+      <div class="q-fb" id="fb-${n}-${i}"></div>
+    </div>`;
+    box.appendChild(d);
+  });
+}
+
+function answer(n, qi, oi) {
+  if (ST[n].ans[qi] !== undefined) return;
+  ST[n].ans[qi] = oi;
+  const q = QS[n][qi], ok = oi === q.c;
+  document.getElementById(`opts-${n}-${qi}`).querySelectorAll('.q-opt').forEach((el,j) => {
+    el.classList.add('revealed');
+    if (j === q.c) el.classList.add('correct');
+    else if (j === oi && !ok) el.classList.add('wrong');
+  });
+  const fb = document.getElementById(`fb-${n}-${qi}`);
+  fb.textContent = (ok ? '✓ Correcto. ' : '✗ Incorrecto. ') + q.fb;
+  fb.className = 'q-fb ' + (ok ? 'correct' : 'wrong');
+  if (ok) ST[n].sc++;
+  document.getElementById('sc' + n).textContent = ST[n].sc + ' / ' + QS[n].length;
+  document.getElementById('sb' + n).style.width = (ST[n].sc / QS[n].length * 100) + '%';
+
+  // Test 1 done → hint
+  if (n === 1 && Object.keys(ST[1].ans).length === QS[1].length) {
+    document.getElementById('go-test2').style.display = 'block';
+  }
+  // Both done → resumen
+  if (Object.keys(ST[1].ans).length === QS[1].length &&
+      Object.keys(ST[2].ans).length === QS[2].length) {
+    setTimeout(mostrarResumen, 600);
+  }
+}
+
+/* ════════════════════════════════════════
+   RESUMEN & ENVÍO
+════════════════════════════════════════ */
+function mostrarResumen() {
+  const t1 = ST[1].sc, t2 = ST[2].sc, tot = t1 + t2;
+  const nota = (Math.round(tot / 20 * 100) / 10).toFixed(1);
+
+  document.getElementById('res-t1').textContent = t1 + '/10';
+  document.getElementById('res-t2').textContent = t2 + '/10';
+  document.getElementById('res-tot').textContent = tot + '/20';
+  document.getElementById('res-nota').textContent = nota;
+  document.getElementById('resNombre').textContent = ALUMNO + ' · ' + CURSO;
+
+  const msgs = [
+    [0,4,'Necesitas repasar los contenidos con más detenimiento.'],
+    [4,6,'Vas por buen camino, pero hay aspectos importantes que repasar.'],
+    [6,8,'Buen trabajo. Repasa los puntos que has fallado.'],
+    [8,9,'¡Muy bien! Dominas los contenidos de sintaxis.'],
+    [9,11,'¡Excelente! 🎉 Dominas perfectamente las funciones sintácticas.'],
+  ];
+  const msg = (msgs.find(([a,b]) => parseFloat(nota) >= a && parseFloat(nota) < b) || msgs[4])[2];
+  document.getElementById('res-msg').textContent = msg;
+
+  const errores = [];
+  [1,2].forEach(n => QS[n].forEach((q,i) => {
+    if (ST[n].ans[i] !== undefined && ST[n].ans[i] !== q.c)
+      errores.push(`Test ${n} · P${i+1}: ${q.q}`);
+  }));
+  const ew = document.getElementById('resErrWrap');
+  if (!errores.length) { ew.style.display = 'none'; }
+  else { ew.style.display = 'block'; document.getElementById('resErr').innerHTML = errores.map(e=>`<div class="err-item">❌ ${e}</div>`).join(''); }
+
+  const yaEnv = sessionStorage.getItem('fsyn_env_' + ALUMNO.toLowerCase().trim());
+  if (yaEnv) {
+    document.getElementById('btnEnviar').style.display = 'none';
+    document.getElementById('yaEnv').style.display = 'block';
+  }
+
+  document.getElementById('resumenFinal').style.display = 'block';
+  setTimeout(() => document.getElementById('resumenFinal').scrollIntoView({ behavior:'smooth', block:'start' }), 400);
+}
+
+function enviarResultados() {
+  const t1 = ST[1].sc, t2 = ST[2].sc, tot = t1 + t2;
+  const nota = (Math.round(tot / 20 * 100) / 10).toFixed(1);
+
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none'; iframe.name = 'hfsyn';
+  document.body.appendChild(iframe);
+
+  const form = document.createElement('form');
+  form.method = 'POST'; form.action = FORM_ACTION; form.target = 'hfsyn';
+
+  [
+    [FIELDS.nombre, ALUMNO],
+    [FIELDS.curso,  CURSO],
+    [FIELDS.t1,     t1 + '/10'],
+    [FIELDS.t2,     t2 + '/10'],
+    [FIELDS.nota,   nota + '/10'],
+  ].forEach(([k,v]) => {
+    const inp = document.createElement('input');
+    inp.type = 'hidden'; inp.name = k; inp.value = v;
+    form.appendChild(inp);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+
+  sessionStorage.setItem('fsyn_env_' + ALUMNO.toLowerCase().trim(), '1');
+  const btn = document.getElementById('btnEnviar');
+  btn.disabled = true;
+  btn.innerHTML = '✅ Resultados enviados';
+  document.getElementById('envioOk').style.display = 'block';
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompts Comentario Crítico — Bachillerato</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1612;
+    --muted: #6b6258;
+    --accent: #c0392b;
+    --accent2: #2c6e49;
+    --accent3: #1d4e89;
+    --warm: #e8ddd0;
+    --card: #ffffff;
+    --border: #d4c8b8;
+    --gold: #c9a96e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 2.5rem 2rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 18px,
+      rgba(255,255,255,.04) 18px, rgba(255,255,255,.04) 19px
+    );
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header-tag {
+    display: inline-block;
+    font-size: .75rem; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: .75rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.2; margin-bottom: .4rem;
+  }
+  header p { color: rgba(255,255,255,.65); font-style: italic; font-size: .92rem; margin-bottom: 1.6rem; }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    position: relative; z-index: 1;
+  }
+  .nav-tab {
+    padding: .8rem 2.4rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: .92rem; font-weight: 600;
+    letter-spacing: .03em;
+    border: none;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+    border-radius: 8px 8px 0 0;
+    color: rgba(255,255,255,.5);
+    background: rgba(255,255,255,.06);
+  }
+  .nav-tab:first-child { margin-right: 4px; }
+  .nav-tab.active {
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .nav-tab:not(.active):hover {
+    background: rgba(255,255,255,.13);
+    color: rgba(255,255,255,.9);
+  }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: .75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-heading-icon {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; flex-shrink: 0;
+  }
+  .icon-resumen    { background: #fde8e8; }
+  .icon-comentario { background: #ddeeff; }
+  .section-heading h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; color: var(--ink);
+  }
+  .section-heading p { font-size: .85rem; color: var(--muted); font-style: italic; }
+
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--warm);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px 8px 8px 4px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2rem;
+    font-size: .93rem; color: #3d342b;
+    line-height: 1.7;
+  }
+  .intro-box strong { color: var(--accent); }
+  .intro-box a { color: var(--accent3); font-weight: 600; text-decoration: none; }
+  .intro-box a:hover { text-decoration: underline; }
+
+  /* ── STEP CARDS ── */
+  .step {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; flex-shrink: 0;
+  }
+  .num-red   { background: #fde8e8; color: var(--accent); border: 2px solid var(--accent); }
+  .num-blue  { background: #ddeeff; color: var(--accent3); border: 2px solid var(--accent3); }
+  .num-green { background: #d4edda; color: var(--accent2); border: 2px solid var(--accent2); }
+  .num-gold  { background: #fdf3e0; color: #8a6a1d; border: 2px solid #c9a96e; }
+
+  .step-title-wrap { flex: 1; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+  .step-subtitle { font-size: .8rem; color: var(--muted); font-style: italic; }
+
+  .step-badge {
+    font-size: .7rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: .2rem .65rem; border-radius: 99px;
+  }
+  .badge-red   { background: #fde8e8; color: var(--accent); }
+  .badge-blue  { background: #ddeeff; color: var(--accent3); }
+  .badge-green { background: #d4edda; color: var(--accent2); }
+  .badge-gold  { background: #fdf3e0; color: #8a6a1d; }
+
+  .step-body { padding: 1.5rem; }
+
+  /* ── STEPS LIST ── */
+  .steps-list { list-style: none; margin: 0 0 1.2rem; }
+  .steps-list li {
+    display: flex; gap: .8rem;
+    font-size: .93rem; padding: .45rem 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .steps-list li:last-child { border-bottom: none; }
+  .step-icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--warm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 700; flex-shrink: 0;
+    margin-top: .2rem; color: var(--muted);
+  }
+  .steps-list a { color: var(--accent3); font-weight: 600; text-decoration: none; }
+  .steps-list a:hover { text-decoration: underline; }
+
+  /* ── PROMPT BOX ── */
+  .prompt-label {
+    font-size: .72rem; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .4rem;
+  }
+  .prompt-box {
+    background: #f4f1ec;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent3);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    font-size: .9rem;
+    font-family: 'Source Serif 4', serif;
+    color: var(--ink);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-wrap { margin-bottom: 1rem; }
+
+  .btn-copy {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--ink); color: #fff; border: none;
+    font-family: 'Source Serif 4', serif;
+    font-size: .82rem; font-weight: 600;
+    padding: .45rem 1.1rem; border-radius: 6px;
+    cursor: pointer; margin-top: .6rem;
+    transition: background .2s, transform .1s;
+    letter-spacing: .04em;
+  }
+  .btn-copy:hover { background: #333; transform: translateY(-1px); }
+  .btn-copy.copied { background: var(--accent2); }
+
+  /* ── HINTS ── */
+  .hint {
+    border-radius: 8px; padding: .9rem 1.1rem;
+    margin-bottom: 1rem; font-size: .88rem; line-height: 1.65;
+  }
+  .hint-blue   { background: #eef4fb; border-left: 3px solid var(--accent3); }
+  .hint-yellow { background: #fef9e7; border-left: 3px solid #e6a817; }
+  .hint-green  { background: #eafaf1; border-left: 3px solid var(--accent2); }
+  .hint-red    { background: #fdf2f8; border-left: 3px solid var(--accent); }
+  .hint strong { font-weight: 600; }
+
+  /* ── TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; }
+  .tag {
+    display: inline-block; font-size: .72rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: .18rem .55rem; border-radius: 3px;
+  }
+  .tag-avoid { background: #fde8e8; color: var(--accent); }
+
+  /* ── CONNECTORS ── */
+  .connector-grid { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .8rem; }
+  .connector-pill {
+    background: #fff; border: 1px solid var(--border);
+    padding: .22rem .7rem; border-radius: 99px;
+    font-size: .82rem; font-style: italic; color: var(--ink);
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
+
+  /* ── ARTICLE BOX ── */
+  .article-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .article-header {
+    display: flex; align-items: center; gap: .8rem;
+    padding: 1rem 1.5rem;
+    background: #f7f4ef;
+    border-bottom: 1px solid var(--border);
+  }
+  .article-header-icon { font-size: 1.2rem; }
+  .article-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; }
+  .article-header-sub { font-size: .8rem; color: var(--muted); font-style: italic; }
+  .article-body { padding: 1.5rem; }
+
+  /* ── FOOTER ── */
+  .footer-note {
+    background: var(--ink); color: rgba(255,255,255,.75);
+    border-radius: 10px; padding: 1.4rem 1.8rem;
+    font-size: .88rem; line-height: 1.7;
+  }
+  .footer-note strong { color: var(--gold); }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-tag">Lengua Castellana y Literatura · Bachillerato</div>
+    <h1>Prompts para ChatGPT<br><em>Resumen y comentario crítico</em></h1>
+    <p>Elige una sección · copia el prompt · pega el artículo en ChatGPT · revisa y mejora el resultado</p>
+    <nav class="nav-tabs">
+      <button class="nav-tab active" onclick="showSection('resumen', this)">📝 Resumen</button>
+      <button class="nav-tab" onclick="showSection('comentario', this)">💬 Comentario crítico</button>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 1 — RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="section active" id="section-resumen">
+
+    <div class="section-heading">
+      <div class="section-heading-icon icon-resumen">📝</div>
+      <div>
+        <h2>Resumen del artículo periodístico</h2>
+        <p>Objetivo · síntesis de ideas principales · ~60 palabras</p>
+      </div>
+    </div>
+
+    <div class="intro-box">
+      <strong>¿Cómo funciona?</strong> Copia el prompt de abajo, ve a <a href="https://chatgpt.com" target="_blank">chatgpt.com</a> y pégalo en el cuadro de chat. A continuación, <strong>en el mismo cuadro</strong>, pega el texto del artículo y envía el mensaje. ChatGPT generará dos borradores que tú revisarás y mejorarás.
+      <br><br>
+      <strong>¿Quieres usar otro artículo?</strong> Copia el texto directamente desde la página web donde esté publicado y pégalo en ChatGPT justo después del prompt, en el mismo cuadro. No hace falta cambiar nada en el prompt.
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num num-red">1</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Prompt para el resumen</div>
+          <div class="step-subtitle">Dos versiones · inicio diferente en cada una</div>
+        </div>
+        <div class="step-badge badge-red">Paso previo</div>
+      </div>
+      <div class="step-body">
+
+        <ul class="steps-list">
+          <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+          <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del artículo.</span></li>
+          <li><div class="step-icon">3</div><span>Lee los resúmenes generados, corrige posibles errores y úsalos como modelo para redactar el tuyo.</span></li>
+        </ul>
+
+        <div class="prompt-wrap">
+          <div class="prompt-label">📋 Prompt listo para copiar</div>
+          <div class="prompt-box" id="prompt1">Elabora dos resúmenes de aproximadamente 60 palabras del artículo propuesto siguiendo estas pautas: que sea objetivo, que sintetice las 3 o 4 ideas / argumentos principales (en especial, la tesis final), que estas ideas se enlacen con 2 o 3 conectores textuales (a continuación, además, asimismo, por último…), que se empleen verbos de pensamiento y sinónimos e hiperónimos (para no repetir palabras o frases del texto; tampoco se deben repetir ejemplos o datos del texto). Un resumen lo inicias con "El autor del texto..." (jamás con "El texto trata…"), y el otro con una oración que comience con una frase nominal y con menos conectores (solo los esenciales).</div>
+          <button class="btn-copy" onclick="copyPrompt('prompt1', this)">📋 Copiar prompt</button>
+        </div>
+
+        <div class="hint hint-yellow">
+          <strong>⚠️ El resumen NO debe:</strong>
+          <div class="tags">
+            <span class="tag tag-avoid">Usar 1.ª persona</span>
+            <span class="tag tag-avoid">Copiar frases del autor</span>
+            <span class="tag tag-avoid">Dar tu opinión</span>
+            <span class="tag tag-avoid">Empezar con «El texto trata»</span>
+            <span class="tag tag-avoid">Usar palabras baúl</span>
+            <span class="tag tag-avoid">Desarrollar los ejemplos del texto</span>
+          </div>
+          <div style="margin-top:.6rem;">
+            <strong>✅ Inicios válidos:</strong> «El autor reflexiona / analiza / denuncia / señala…» · «La necesidad de…» · «El problema de…» (frase nominal).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="article-box">
+      <div class="article-header">
+        <div class="article-header-icon">📰</div>
+        <div>
+          <div class="article-header-title">Texto del artículo</div>
+          <div class="article-header-sub">Cópialo y pégalo en ChatGPT tras el prompt · o usa el texto de cualquier otro artículo</div>
+        </div>
+      </div>
+      <div class="article-body">
+        <div class="hint hint-blue" style="margin-bottom:1rem;">
+          <strong>📌 Recuerda:</strong> pega este texto en el <strong>mismo cuadro de mensaje</strong> de ChatGPT, justo después del prompt. Si trabajas con <strong>otro artículo</strong>, cópialo desde su página web y pégalo aquí en su lugar.
+        </div>
+        <div class="prompt-box" id="texto-resumen" style="border-left-color:var(--muted); font-size:.87rem; line-height:1.85;">La imagen de Sabastian Sawe levantando los brazos en el centro de Londres bajo una pancarta de meta en la que el reloj marca 1:59:30 es ya uno de los momentos estelares de la historia del deporte profesional y abre una época de marcas impensables en la prueba más épica del atletismo. El corredor keniano, de 31 años, es el primer hombre de la historia en correr los 42,195 kilómetros del maratón en menos de dos horas. La hazaña de Sawe recuerda que hay límites humanos que parecen insuperables, y no lo son. La otra imagen que define este momento en el atletismo es la del propio Sawe mostrando las zapatillas Adidas con las que corrió el histórico maratón. La proeza no se explica sin la evolución de la tecnología del calzado deportivo desde que el keniano Abebe Bikila corría descalzo por las calles de Roma en los Juegos de 1960 porque las zapatillas le hacían ampollas. Las de Sawe pesaban solo 96 gramos cada una. Es una carrera tecnológica. El triunfo del domingo en Londres también es un triunfo de las marcas deportivas que llevan décadas compitiendo por esa fotografía y para las que se abre un jugoso mercado. Detrás de la gesta de Sawe hay toda una industria de la nutrición deportiva que evoluciona con la misma fiereza competitiva que la de la tecnología del calzado. La imagen del corredor de maratón solitario que agarraba una botella de agua por el camino, se refrescaba la cabeza y la tiraba al suelo es hoy más mito que realidad. Durante la carrera, Sawe ingirió 115 gramos de carbohidratos por hora en botellitas de fructosa-glucosa repartidas por el recorrido. El combustible justo para rellenar su depósito de energía y nunca quedarse seco. Hoy los avances el conocimiento del funcionamiento del organismo gracias al progreso de la investigación biomédica son parte integrante de los récords. Esta realidad choca con la mística de un deporte, el atletismo, que el público no aficionado sigue viendo como un esfuerzo humano solitario y contra los elementos. Pero un corredor de maratón de su nivel tiene hoy mucho en común con un piloto de Fórmula 1, rodeado de patrocinadores e ingenieros que deciden cómo se va a correr la carrera. Desde que Filípides corrió desde Maratón hasta Atenas para morir después de anunciar la victoria sobre los persas, la carrera de los 42,195 kilómetros ha sido una lucha individual, el empeño de una persona para superar sus límites de manera heroica. La del campeón de maratón es una imagen que cautiva. Este domingo, Sabastian Sawe y su inmediato perseguidor, Yomif Kejelcha, corrieron en Londres por debajo de las dos horas. La ruptura de la barrera física y psicológica será recordada con justicia. Pero también nos muestra hasta qué punto los atletas han perdido el aura épica de la pura superación física para compartir podio con una ciencia que los impulsa hacia nuevas metas imposibles.</div>
+        <button class="btn-copy" onclick="copyPrompt('texto-resumen', this)">📋 Copiar texto del artículo</button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>Recuerda:</strong> el borrador de ChatGPT es un punto de partida, no el resultado final. Revísalo, corrige lo que no cuadre y redacta tu propio resumen con tus palabras.
+    </div>
+
+  </div><!-- /section-resumen -->
+
+
+  <!-- ══════════════════════════════════════
+       SECCIÓN 2 — COMENTARIO CRÍTICO
+  ══════════════════════════════════════ -->
+  <div class="section" id="section-comentario">
+
+    <div class="section-heading">
+      <div class="section-heading-icon icon-comentario">💬</div>
+      <div>
+        <h2>Comentario crítico</h2>
+        <p>Un prompt para cada parte · introducción · argumentación · conclusión</p>
+      </div>
+    </div>
+
+    <div class="intro-box">
+      <strong>¿Cómo funciona?</strong> El comentario tiene tres partes. Aquí encontrarás un prompt distinto para cada una. Úsalos por separado en el orden que necesites: copia el prompt en <a href="https://chatgpt.com" target="_blank">chatgpt.com</a> y pega el texto del artículo <strong>en el mismo cuadro</strong> antes de enviar.
+      <br><br>
+      <strong>¿Quieres trabajar con otro artículo?</strong> Cópialo directamente desde la web donde esté publicado y pégalo en ChatGPT justo después del prompt que corresponda. No necesitas cambiar nada en los prompts.
+    </div>
+
+    <!-- ── PROMPT INTRODUCCIÓN ── -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num num-blue">1</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Introducción</div>
+          <div class="step-subtitle">Dos versiones · original · ~50 palabras · no es un resumen</div>
+        </div>
+        <div class="step-badge badge-blue">1.ª parte</div>
+      </div>
+      <div class="step-body">
+
+        <div class="hint hint-blue">
+          <strong>🎯 Para qué sirve:</strong> La introducción contextualiza el tema, menciona al autor y su intención, y deja entrever tu tesis sin desvelarla completamente. Debe ser original: no es otro resumen del artículo.
+        </div>
+
+        <ul class="steps-list">
+          <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+          <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del artículo.</span></li>
+          <li><div class="step-icon">3</div><span>Lee las dos introducciones, fíjate en cómo están construidas y escribe la tuya propia inspirándote en ellas.</span></li>
+        </ul>
+
+        <div class="prompt-wrap">
+          <div class="prompt-label">📋 Prompt listo para copiar</div>
+          <div class="prompt-box" id="prompt2">Elabora dos introducciones diferentes (nivel de redacción medio-bajo de bachillerato) de aproximadamente 50 palabras para comenzar el comentario crítico sobre el artículo propuesto. En una de ellas se puede apreciar que sigue la tesis del autor; en la otra, no. Debe ser original (que no sea un resumen del artículo) y en ella la tesis que se defenderá debe solo intuirse pero no mostrarse claramente ya que se expondrá abiertamente en la conclusión del comentario. Puede definirse el concepto o conceptos claves como apoyo. Una de ellas puede finalizar con una pregunta retórica.</div>
+          <button class="btn-copy" onclick="copyPrompt('prompt2', this)">📋 Copiar prompt</button>
+        </div>
+
+        <div class="hint hint-yellow">
+          <strong>⚠️ La introducción NO debe:</strong>
+          <div class="tags">
+            <span class="tag tag-avoid">Empezar con «El texto trata»</span>
+            <span class="tag tag-avoid">Ser otro resumen</span>
+            <span class="tag tag-avoid">Mostrar la tesis completamente</span>
+            <span class="tag tag-avoid">Usar 1.ª persona</span>
+            <span class="tag tag-avoid">Dirigirse a un «tú»</span>
+          </div>
+          <div style="margin-top:.6rem;"><strong>✅ Sí puede:</strong> comenzar con frase nominal · definir el concepto clave · terminar con pregunta retórica · dejar intuir la postura.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROMPT ARGUMENTACIÓN ── -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num num-green">2</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Argumentación</div>
+          <div class="step-subtitle">3 argumentos con ejemplos · 2 a favor · 1 en contra</div>
+        </div>
+        <div class="step-badge badge-green">Desarrollo</div>
+      </div>
+      <div class="step-body">
+
+        <div class="hint hint-green">
+          <strong>🎯 Para qué sirve:</strong> El desarrollo es el núcleo del comentario. Cada argumento va acompañado de un ejemplo o dato que lo respalde. El contraargumento demuestra que conoces el tema desde distintos ángulos y que tu postura es reflexiva, no simplista.
+        </div>
+
+        <ul class="steps-list">
+          <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+          <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del artículo.</span></li>
+          <li><div class="step-icon">3</div><span>Selecciona o adapta los argumentos que mejor encajen con tu postura. Son un punto de partida, no la versión definitiva.</span></li>
+        </ul>
+
+        <div class="prompt-wrap">
+          <div class="prompt-label">📋 Prompt listo para copiar</div>
+          <div class="prompt-box" id="prompt3">Elabora tres argumentos (dos a favor de la tesis del autor y uno en contra, a modo de contraargumento) para el comentario crítico del artículo propuesto. Cada argumento debe ir acompañado de un ejemplo o dato concreto y pertinente (evita repetir los ejemplos o datos que ya aparecen en el artículo). Redacta cada argumento en un párrafo independiente de 50-60 palabras. Los dos argumentos a favor los introduces con los conectores 'Por un lado,' y 'Por otro lado,'; el contraargumento, con 'Sin embargo,'. Emplea verbos de pensamiento (pretender, resultar, sostener, constatar, defender, cuestionar, demostrar, revelar, señalar…), sinónimos y sustantivos abstractos. Evita la primera persona ('creo', 'opino', 'estoy de acuerdo') y la segunda persona (no te dirijas a un "tú"). El nivel de redacción debe ser medio-bajo de bachillerato (registro formal, vocabulario preciso, sin coloquialismos).</div>
+          <button class="btn-copy" onclick="copyPrompt('prompt3', this)">📋 Copiar prompt</button>
+        </div>
+
+        <hr class="divider">
+
+        <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Conectores del desarrollo</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:.8rem;">
+          <div>
+            <div class="hint hint-green" style="margin-bottom:.4rem; padding:.6rem .9rem;"><strong>A favor</strong></div>
+            <div class="connector-grid">
+              <span class="connector-pill">Por un lado,</span>
+              <span class="connector-pill">Por otro lado,</span>
+              <span class="connector-pill">Además,</span>
+              <span class="connector-pill">Asimismo,</span>
+              <span class="connector-pill">A ello se añade que</span>
+            </div>
+          </div>
+          <div>
+            <div class="hint hint-red" style="margin-bottom:.4rem; padding:.6rem .9rem;"><strong>En contra</strong></div>
+            <div class="connector-grid">
+              <span class="connector-pill">Sin embargo,</span>
+              <span class="connector-pill">No obstante,</span>
+              <span class="connector-pill">Ahora bien,</span>
+              <span class="connector-pill">Cabría objetar que</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hint hint-yellow">
+          <strong>⚠️ Los argumentos NO deben:</strong>
+          <div class="tags">
+            <span class="tag tag-avoid">Repetir ejemplos del artículo</span>
+            <span class="tag tag-avoid">Usar 1.ª persona</span>
+            <span class="tag tag-avoid">Usar palabras baúl</span>
+            <span class="tag tag-avoid">Quedarse sin ejemplo o dato</span>
+            <span class="tag tag-avoid">Dirigirse a un «tú»</span>
+          </div>
+          <div style="margin-top:.6rem;"><strong>✅ Sí deben:</strong> emplear verbos de pensamiento · aportar ejemplos propios (libros, películas, estudios, datos, referencias culturales…) · usar conectores variados · mostrar distintas perspectivas.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PROMPT CONCLUSIÓN ── -->
+    <div class="step">
+      <div class="step-header">
+        <div class="step-num num-gold">3</div>
+        <div class="step-title-wrap">
+          <div class="step-title">Conclusión</div>
+          <div class="step-subtitle">Dos versiones · síntesis + propuesta · ~60-80 palabras</div>
+        </div>
+        <div class="step-badge badge-gold">Cierre</div>
+      </div>
+      <div class="step-body">
+
+        <div class="hint hint-blue">
+          <strong>🎯 Para qué sirve:</strong> La conclusión sintetiza tu tesis, fija tu postura de forma clara y cierra con una idea llamativa o una propuesta que invite a pensar. No es un resumen: es el punto de llegada de tu argumentación.
+        </div>
+
+        <ul class="steps-list">
+          <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+          <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del artículo.</span></li>
+          <li><div class="step-icon">3</div><span>Lee las dos conclusiones y redacta la tuya combinando las ideas que mejor conecten con tu tesis y argumentos.</span></li>
+        </ul>
+
+        <div class="prompt-wrap">
+          <div class="prompt-label">📋 Prompt listo para copiar</div>
+          <div class="prompt-box" id="prompt4">Elabora dos versiones de la conclusión (nivel de redacción medio-bajo de bachillerato) de aproximadamente 50-60 palabras para el comentario crítico del artículo propuesto. La conclusión debe: (1) comenzar con un conector conclusivo ('En definitiva,' / 'En conclusión,' / 'Para concluir,'); (2) sintetizar la tesis defendida en el comentario (sin repetir literalmente lo ya dicho); (3) fijar una postura clara sobre el tema; (4) aportar al menos una propuesta, solución o reflexión final que invite a pensar (puede referirse a la empatía, la educación, el pensamiento crítico, etc.); (5) cerrar con una frase original y llamativa. Evita la primera persona ('creo', 'opino', 'me ha gustado') y la segunda persona. Evita los cierres vacuos del tipo 'En conclusión, este tema es muy importante y nos hace reflexionar'.</div>
+          <button class="btn-copy" onclick="copyPrompt('prompt4', this)">📋 Copiar prompt</button>
+        </div>
+
+        <hr class="divider">
+
+        <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Conectores conclusivos</p>
+        <div class="connector-grid">
+          <span class="connector-pill">En definitiva,</span>
+          <span class="connector-pill">En conclusión,</span>
+          <span class="connector-pill">Para concluir,</span>
+          <span class="connector-pill">En suma,</span>
+          <span class="connector-pill">A la luz de lo expuesto,</span>
+          <span class="connector-pill">Todo lo anterior lleva a pensar que</span>
+        </div>
+
+        <div class="hint hint-yellow">
+          <strong>⚠️ La conclusión NO debe:</strong>
+          <div class="tags">
+            <span class="tag tag-avoid">«Me ha gustado mucho»</span>
+            <span class="tag tag-avoid">«Es un tema muy importante»</span>
+            <span class="tag tag-avoid">Repetir literalmente lo dicho</span>
+            <span class="tag tag-avoid">Usar 1.ª persona</span>
+            <span class="tag tag-avoid">Ser un resumen más</span>
+          </div>
+          <div style="margin-top:.6rem;"><strong>✅ Sí debe:</strong> sintetizar la tesis · fijar una postura clara · proponer soluciones o reflexiones · cerrar con fuerza (empatía, educación, pensamiento crítico…).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TEXTO ARTÍCULO ── -->
+    <div class="article-box">
+      <div class="article-header">
+        <div class="article-header-icon">📰</div>
+        <div>
+          <div class="article-header-title">Texto del artículo</div>
+          <div class="article-header-sub">Cópialo y pégalo en ChatGPT tras cada prompt · o usa el texto de cualquier otro artículo</div>
+        </div>
+      </div>
+      <div class="article-body">
+        <div class="hint hint-blue" style="margin-bottom:1rem;">
+          <strong>📌 Recuerda:</strong> después de pegar el prompt, añade este texto en el <strong>mismo cuadro de mensaje</strong> de ChatGPT. Si prefieres trabajar con <strong>otro artículo</strong>, cópialo desde su página web y pégalo en su lugar.
+        </div>
+        <div class="prompt-box" id="texto-comentario" style="border-left-color:var(--muted); font-size:.87rem; line-height:1.85;">La imagen de Sabastian Sawe levantando los brazos en el centro de Londres bajo una pancarta de meta en la que el reloj marca 1:59:30 es ya uno de los momentos estelares de la historia del deporte profesional y abre una época de marcas impensables en la prueba más épica del atletismo. El corredor keniano, de 31 años, es el primer hombre de la historia en correr los 42,195 kilómetros del maratón en menos de dos horas. La hazaña de Sawe recuerda que hay límites humanos que parecen insuperables, y no lo son. La otra imagen que define este momento en el atletismo es la del propio Sawe mostrando las zapatillas Adidas con las que corrió el histórico maratón. La proeza no se explica sin la evolución de la tecnología del calzado deportivo desde que el keniano Abebe Bikila corría descalzo por las calles de Roma en los Juegos de 1960 porque las zapatillas le hacían ampollas. Las de Sawe pesaban solo 96 gramos cada una. Es una carrera tecnológica. El triunfo del domingo en Londres también es un triunfo de las marcas deportivas que llevan décadas compitiendo por esa fotografía y para las que se abre un jugoso mercado. Detrás de la gesta de Sawe hay toda una industria de la nutrición deportiva que evoluciona con la misma fiereza competitiva que la de la tecnología del calzado. La imagen del corredor de maratón solitario que agarraba una botella de agua por el camino, se refrescaba la cabeza y la tiraba al suelo es hoy más mito que realidad. Durante la carrera, Sawe ingirió 115 gramos de carbohidratos por hora en botellitas de fructosa-glucosa repartidas por el recorrido. El combustible justo para rellenar su depósito de energía y nunca quedarse seco. Hoy los avances el conocimiento del funcionamiento del organismo gracias al progreso de la investigación biomédica son parte integrante de los récords. Esta realidad choca con la mística de un deporte, el atletismo, que el público no aficionado sigue viendo como un esfuerzo humano solitario y contra los elementos. Pero un corredor de maratón de su nivel tiene hoy mucho en común con un piloto de Fórmula 1, rodeado de patrocinadores e ingenieros que deciden cómo se va a correr la carrera. Desde que Filípides corrió desde Maratón hasta Atenas para morir después de anunciar la victoria sobre los persas, la carrera de los 42,195 kilómetros ha sido una lucha individual, el empeño de una persona para superar sus límites de manera heroica. La del campeón de maratón es una imagen que cautiva. Este domingo, Sabastian Sawe y su inmediato perseguidor, Yomif Kejelcha, corrieron en Londres por debajo de las dos horas. La ruptura de la barrera física y psicológica será recordada con justicia. Pero también nos muestra hasta qué punto los atletas han perdido el aura épica de la pura superación física para compartir podio con una ciencia que los impulsa hacia nuevas metas imposibles.</div>
+        <button class="btn-copy" onclick="copyPrompt('texto-comentario', this)">📋 Copiar texto del artículo</button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      <strong>Recuerda:</strong> los textos que genera ChatGPT son borradores de trabajo. Tu tarea es revisarlos, mejorarlos y, sobre todo, hacerlos tuyos. El comentario que entregues debe reflejar tu voz y tu criterio.
+    </div>
+
+  </div><!-- /section-comentario -->
+
+</div><!-- /container -->
+
+<script>
+  function showSection(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('section-' + name).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function copyPrompt(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    const original = btn.innerHTML;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '✅ ¡Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.innerHTML = '✅ ¡Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Ortográfico Inglés ESO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1f2a24;
+    --chalkboard:#1f3b33;
+    --chalkboard-2:#284a40;
+    --chalk:#f5f1e8;
+    --marigold:#f2a73b;
+    --marigold-dark:#c9860f;
+    --coral:#e2574c;
+    --paper:#fbf7ee;
+    --paper-line:#c9d6cf;
+    --paper-margin:#e2a39c;
+    --muted:#6b7a72;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo 2', sans-serif;
+  }
+
+  /* ---------- Top bar / tabs ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    background:var(--paper);
+    border-bottom:3px solid var(--ink);
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .display{ font-size:24px; font-weight:800; letter-spacing:.3px; }
+  .brand .display span{ color:var(--coral); }
+  .brand small{ color:var(--muted); font-size:12.5px; }
+
+  .topbar-right{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+
+  .tabs{ display:flex; gap:6px; background:#eee6d6; padding:5px; border-radius:999px; }
+  .tab-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:9px 18px;
+    border:none;
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .tab-btn.active{ background:var(--ink); color:var(--paper); }
+  .tab-btn:not(.active):hover{ background:#e3d9c2; }
+  .tab-btn.hidden-tab{ display:none; }
+
+  .proj-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--muted);
+    background:#fff;
+    border:1.5px solid #d8cfb8;
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .proj-toggle .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:#c7bfa6;
+    transition:background .15s ease;
+  }
+  .proj-toggle.on{ border-color:var(--coral); color:var(--coral); font-weight:600; }
+  .proj-toggle.on .dot{ background:var(--coral); }
+
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* =====================================================
+     VISTA 0 — CÓMO SE JUEGA (para proyectar a la clase)
+  ===================================================== */
+  .rules-wrap{
+    background:var(--chalkboard);
+    min-height:calc(100vh - 74px);
+    color:var(--chalk);
+    padding:46px 24px 60px;
+  }
+  .rules-inner{ max-width:820px; margin:0 auto; }
+  .rules-inner h2{
+    font-size:15px;
+    letter-spacing:1.5px;
+    color:#bcd0c6;
+    font-weight:500;
+    margin:0 0 8px;
+    text-align:center;
+  }
+  .rules-title{
+    font-size:36px;
+    font-weight:800;
+    margin:0 0 40px;
+    text-align:center;
+  }
+  .rules-steps{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .rule-step{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    background:var(--chalkboard-2);
+    border:2px solid #3f6357;
+    border-radius:16px;
+    padding:20px 22px;
+  }
+  .rule-step .num{
+    font-family:'Baloo 2', sans-serif;
+    font-size:26px;
+    font-weight:800;
+    color:var(--marigold);
+    flex-shrink:0;
+    width:40px;
+    text-align:center;
+  }
+  .rule-step p{ margin:0; font-size:18px; line-height:1.55; }
+  .rule-step b{ color:var(--marigold); }
+
+  /* =====================================================
+     VISTA 1 — PREPARAR (solo profesorado, antes de clase)
+  ===================================================== */
+  .setup-wrap{ max-width:960px; margin:0 auto; padding:32px 24px 64px; }
+  .private-banner{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fbe3e0;
+    color:#a3352a;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.3px;
+    padding:7px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .setup-intro h2{ font-size:22px; margin:0 0 6px; }
+  .setup-intro p{ color:var(--muted); margin:0 0 26px; font-size:15px; line-height:1.5; max-width:64ch; }
+
+  .setup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media (max-width:760px){ .setup-grid{ grid-template-columns:1fr; } }
+
+  .panel{ background:#fff; border:2px solid var(--ink); border-radius:14px; padding:20px 22px; }
+  .panel label{ display:block; font-weight:600; font-size:14px; margin-bottom:8px; }
+  textarea{
+    width:100%; min-height:220px; resize:vertical;
+    font-family:'Work Sans', sans-serif; font-size:14.5px; line-height:1.7;
+    padding:12px 14px; border-radius:8px; border:1.5px solid #d8cfb8;
+    background:#fffdf8; color:var(--ink);
+  }
+  textarea:focus{ outline:2px solid var(--marigold); border-color:transparent; }
+  .hint{ font-size:12.5px; color:var(--muted); margin-top:8px; }
+
+  .num-row{ display:flex; align-items:center; gap:10px; margin-top:16px; }
+  .num-row input{ width:70px; padding:8px 10px; font-size:14.5px; border-radius:8px; border:1.5px solid #d8cfb8; font-family:'Work Sans', sans-serif; }
+
+  .btn{
+    font-family:'Work Sans', sans-serif; font-weight:700; font-size:14px;
+    padding:11px 20px; border-radius:10px; border:2px solid var(--ink);
+    background:var(--marigold); color:var(--ink); cursor:pointer;
+    transition:transform .1s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn.secondary{ background:#fff; }
+  .btn.ghost{ background:transparent; border-color:#d8cfb8; color:var(--muted); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+  .btn.suggest{ background:var(--chalkboard); color:var(--chalk); border-color:var(--chalkboard); width:100%; margin-bottom:14px; }
+
+  .actions-row{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+
+  .status-msg{ font-size:13.5px; margin-top:12px; padding:9px 12px; border-radius:8px; display:none; }
+  .status-msg.show{ display:block; }
+  .status-msg.error{ background:#fbe3e0; color:#a3352a; }
+  .status-msg.ok{ background:#e6efe6; color:#2c5c3a; }
+
+  .word-bank-preview{ display:flex; flex-direction:column; gap:4px; margin-top:14px; font-size:14.5px; }
+  .word-bank-preview .wb-row{ display:flex; gap:8px; align-items:baseline; }
+  .word-bank-preview .wb-row b{ color:var(--coral); min-width:20px; }
+  .wb-word{
+    padding:2px 4px; border-radius:4px; cursor:text;
+    border:1px solid transparent;
+  }
+  .wb-word:hover{ border-color:#d8cfb8; }
+  .wb-word:focus{ outline:none; border-color:var(--marigold); background:#fffdf8; }
+
+  #cardsPreview{ margin-top:30px; }
+  .cards-page{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:600px){ .cards-page{ grid-template-columns:1fr; } }
+
+  .bingo-card{ background:#fffdf8; border:2px solid var(--ink); border-radius:10px; padding:16px 18px 18px; break-inside:avoid; page-break-inside:avoid; }
+  .bingo-card h3{ text-align:center; font-size:19px; letter-spacing:.5px; margin:0 0 12px; }
+  .card-name{ font-size:12.5px; display:flex; gap:6px; align-items:baseline; margin-bottom:14px; color:var(--muted); }
+  .card-name .line{ flex:1; border-bottom:1px solid var(--ink); height:14px; }
+  .card-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .word-list{ position:relative; padding-left:14px; border-left:2px solid var(--paper-margin); }
+  .word-list .col-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px; }
+  .ruled-line{ display:flex; gap:5px; align-items:baseline; border-bottom:1px solid var(--paper-line); padding:5px 0; font-size:12.5px; }
+  .ruled-line .n{ color:var(--muted); width:16px; flex-shrink:0; }
+  .ruled-line .write-space{ flex:1; }
+
+  .pick-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .pick-rows{ display:flex; flex-direction:column; gap:9px; }
+  .pick-row{ display:flex; align-items:center; gap:8px; border-bottom:1.5px solid var(--ink); padding-bottom:5px; }
+  .pick-num{ font-size:10.5px; color:var(--muted); border:1px solid var(--paper-line); border-radius:4px; padding:2px 5px; flex-shrink:0; }
+  .pick-line{ flex:1; height:16px; }
+
+  .result-sheet{ display:none; }
+  .result-sheet.showing{ display:block; }
+  .result-banner{ background:var(--marigold); color:var(--ink); font-weight:700; font-size:13px; letter-spacing:.5px; padding:10px 16px; border-radius:8px; margin-bottom:18px; display:inline-block; }
+  .result-grid{ display:flex; flex-direction:column; gap:2px; max-width:760px; }
+  .result-item{ font-size:14px; line-height:1.5; padding:9px 0; border-bottom:1px solid var(--paper-line); }
+  .result-item b{ color:var(--coral); display:block; margin-bottom:2px; }
+  .result-item .def{ display:block; color:var(--ink); }
+  .result-item .def-es{ display:block; color:var(--muted); font-style:italic; font-size:13px; }
+  .result-item .syn{ display:block; font-size:13px; color:#2c5c3a; font-weight:600; }
+
+  /* =====================================================
+     VISTA 2 — SORTEO (pizarra, solo el número)
+  ===================================================== */
+  .stage-wrap{ background:var(--chalkboard); min-height:calc(100vh - 74px); padding:40px 20px 60px; color:var(--chalk); }
+  .stage-inner{ max-width:820px; margin:0 auto; text-align:center; }
+  .stage-inner h2{ font-size:16px; letter-spacing:1px; color:#bcd0c6; font-weight:500; margin:0 0 6px; }
+  .stage-title{ font-size:34px; font-weight:800; margin:0 0 34px; }
+
+  .reveal-box{
+    background:var(--chalkboard-2); border:3px solid #3f6357; border-radius:26px;
+    padding:44px 30px; margin:0 auto 26px; max-width:340px;
+    box-shadow:0 10px 0 rgba(0,0,0,.18);
+  }
+  .reveal-label{ font-size:14px; letter-spacing:2px; color:#bcd0c6; font-weight:600; margin-bottom:10px; }
+  .reveal-number{
+    font-family:'Baloo 2', sans-serif; font-size:104px; font-weight:800; color:var(--marigold);
+    line-height:1; min-height:110px; display:flex; align-items:center; justify-content:center;
+  }
+  .reveal-number.placeholder{ color:#5d7a70; font-size:22px; font-family:'Work Sans',sans-serif; font-weight:500; }
+  .reveal-number.pop{ animation:pop .38s ease; }
+  @keyframes pop{ 0%{ transform:scale(.8); opacity:.4; } 60%{ transform:scale(1.08); opacity:1; } 100%{ transform:scale(1); } }
+  .reveal-number.spinning{ color:#9db6ac; }
+
+  .stage-controls{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:34px; }
+  .btn.stage-btn{ border:2px solid var(--chalk); background:var(--marigold); color:var(--chalkboard); }
+  .btn.stage-btn.secondary{ background:transparent; color:var(--chalk); }
+  .btn.stage-btn:disabled{ opacity:.35; }
+
+  .stage-meta{ display:flex; justify-content:center; gap:28px; font-size:13.5px; color:#bcd0c6; margin-bottom:30px; }
+  .stage-meta b{ color:var(--chalk); font-size:16px; display:block; }
+
+  .history-title{ font-size:13px; letter-spacing:1px; color:#bcd0c6; margin-bottom:12px; text-align:left; }
+  .history-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start; }
+  .history-chip{ background:#0f261f; border:1px solid #3f6357; border-radius:8px; padding:8px 14px; font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700; color:var(--marigold); }
+  .empty-note{ color:#7f988e; font-size:13.5px; text-align:left; }
+
+  .meanings-stage{ margin-top:38px; text-align:left; }
+  .meanings-stage-list{ display:flex; flex-direction:column; gap:12px; margin-top:22px; }
+  .meanings-stage-item{ background:var(--chalkboard-2); border:2px solid #3f6357; border-radius:12px; padding:14px 18px; }
+  .meanings-stage-item b{ font-family:'Baloo 2', sans-serif; color:var(--marigold); font-size:17px; display:block; margin-bottom:4px; }
+  .meanings-stage-item span{ font-size:14.5px; line-height:1.5; color:var(--chalk); }
+
+  /* =====================================================
+     VISTA 3 — GANADORES
+  ===================================================== */
+  .winners-wrap{ max-width:820px; margin:0 auto; padding:32px 24px 64px; }
+  .winners-form{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .winners-form .field{ display:flex; flex-direction:column; gap:6px; }
+  .winners-form label{ font-size:12.5px; font-weight:600; color:var(--muted); }
+  .winners-form input[type="date"], .winners-form input[type="text"]{
+    padding:9px 12px; border-radius:8px; border:1.5px solid #d8cfb8;
+    font-family:'Work Sans', sans-serif; font-size:14px;
+  }
+  .winners-form input[type="text"]{ min-width:260px; flex:1; }
+  .winners-form .field.grow{ flex:1; }
+
+  .winners-table-wrap{ margin-top:26px; }
+  .winners-print-title{ display:none; }
+  table.winners-table{ width:100%; border-collapse:collapse; font-size:14.5px; }
+  table.winners-table th{
+    text-align:left; font-size:12px; letter-spacing:.3px; color:var(--muted);
+    border-bottom:2px solid var(--ink); padding:8px 6px;
+  }
+  table.winners-table td{ padding:10px 6px; border-bottom:1px solid var(--paper-line); }
+  table.winners-table td.date-col{ white-space:nowrap; color:var(--muted); width:110px; }
+  .row-del{
+    background:none; border:none; color:var(--coral); cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .winners-empty{ color:var(--muted); font-size:14px; margin-top:16px; }
+
+  @media print{
+    .topbar, .setup-intro, .private-banner, .panel, .actions-row, .status-msg, .winners-form, .winners-actions, .row-del{ display:none !important; }
+    body{ background:#fff; }
+    #cardsPreview{ margin:0; }
+
+    /* Tarjetas: 2 tarjetas apaisadas por hoja, más grandes */
+    .cards-page{
+      display:block;
+      page: cards-landscape;
+    }
+    .bingo-card{
+      border-color:#000;
+      box-sizing:border-box;
+      width:100%;
+      min-height:88mm;
+      padding:7mm 10mm;
+      margin-bottom:8mm;
+      page-break-inside:avoid;
+    }
+    .bingo-card:nth-child(2n){ page-break-after:always; }
+    .bingo-card h3{ font-size:18px; margin:0 0 5mm; }
+    .bingo-card .card-name{ font-size:11px; margin-bottom:5mm; }
+    .bingo-card .card-name .line{ height:12px; }
+    .bingo-card .card-cols{ gap:16mm; }
+    .bingo-card .word-list{ padding-left:10px; }
+    .bingo-card .word-list .col-title,
+    .bingo-card .pick-title{ font-size:9.5px; margin-bottom:3mm; }
+    .bingo-card .ruled-line{ font-size:12px; padding:2.5px 0; }
+    .bingo-card .ruled-line .n{ width:16px; }
+    .bingo-card .pick-row{ padding-bottom:3px; gap:8px; }
+    .bingo-card .pick-num{ font-size:10px; padding:2px 4px; }
+    .bingo-card .pick-line{ height:12px; }
+
+    .winners-print-title{ display:block; font-size:22px; margin:0 0 18px; }
+    @page{ margin:14mm; }
+    @page cards-landscape{ size: landscape; margin:10mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="display">Bingo<span>Ortográfico</span></div>
+    <small>Inglés · ESO</small>
+  </div>
+  <div class="topbar-right">
+    <div class="proj-toggle" id="projToggle"><span class="dot"></span><span id="projToggleLabel">Modo proyección: apagado</span></div>
+    <div class="tabs">
+      <button class="tab-btn" data-view="setup" id="tabSetup">Preparar (privado)</button>
+      <button class="tab-btn active" data-view="rules">Cómo se juega</button>
+      <button class="tab-btn" data-view="stage">Sorteo</button>
+      <button class="tab-btn" data-view="winners">Ganadores</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 0: CÓMO SE JUEGA ================= -->
+<div class="view active" id="view-rules">
+  <div class="rules-wrap">
+    <div class="rules-inner">
+      <h2>ANTES DE EMPEZAR</h2>
+      <div class="rules-title">¿En qué consiste el Bingo Ortográfico?</div>
+      <div class="rules-steps">
+        <div class="rule-step"><span class="num">1</span><p>El profesor o profesora os entrega una hoja con los <b>«cartones» o «tarjetas de bingo»</b> (o ya os la ha entregado antes).</p></div>
+        <div class="rule-step"><span class="num">2</span><p>El profesor o profesora <b>dicta 12 palabras en inglés</b>, una a una, <b>repitiendo cada una dos veces</b>, sin deletrearlas.</p></div>
+        <div class="rule-step"><span class="num">3</span><p>Escribes cada palabra <b>tal como creas que se escribe</b>, numerada del 1 al 12, en el orden del dictado.</p></div>
+        <div class="rule-step"><span class="num">4</span><p>Eliges las <b>6 palabras en inglés</b> que creas que has escrito bien y las copias en tu tarjeta, anotando el número de cada una.</p></div>
+        <div class="rule-step"><span class="num">5</span><p>El profesor va sacando <b>números al azar, sin repetir</b>. Si tienes ese número entre tus 6, lo marcas.</p></div>
+        <div class="rule-step"><span class="num">6</span><p>En cuanto tengas tus <b>6 números marcados</b>, canta bien alto: <b>¡BINGO!</b></p></div>
+        <div class="rule-step"><span class="num">7</span><p>El profesor revisa tu tarjeta. Si las <b>6 palabras están bien escritas, ganas</b>. Si alguna tiene una falta, el bingo no vale y el juego sigue hasta el próximo bingo válido.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 1: PREPARAR ================= -->
+<div class="view" id="view-setup">
+  <div class="setup-wrap">
+    <div class="private-banner">🔒 Solo para el profesorado — prepara esto antes de clase</div>
+    <div class="setup-intro">
+      <h2>Banco de vocabulario en inglés</h2>
+      <p>Genera 12 palabras en inglés de nivel ESO, o escribe las tuyas, en el orden en que las vas a dictar. El alumnado no verá nunca esta pantalla.</p>
+    </div>
+
+    <div class="setup-grid">
+      <div class="panel">
+        <label>Palabras para dictar</label>
+        <button class="btn suggest" id="suggestBtn">🎲 Generar 12 palabras en inglés (nivel ESO)</button>
+        <div id="suggestMeta" class="hint" style="margin-bottom:4px;"></div>
+        <div class="word-bank-preview" id="wordBankPreview"></div>
+        <div class="hint" style="margin-top:10px;">Puedes hacer clic sobre cualquier palabra para corregirla a mano.</div>
+
+        <div class="num-row">
+          <label style="margin:0;">Nº de tarjetas a imprimir</label>
+          <input type="number" id="cardCount" min="1" max="60" value="24">
+        </div>
+
+        <div class="hint" style="margin-top:14px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="includeMeanings" checked style="width:auto; margin:0;">
+          <label for="includeMeanings" style="margin:0; font-weight:600; color:var(--ink); cursor:pointer;">Incluir significados en inglés, traducción breve y sinónimos para la hoja del profesorado</label>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn ghost" id="clearBtn">Vaciar</button>
+          <button class="btn ghost" id="resetHistoryBtn" title="Olvida qué palabras se han usado ya, para empezar un nuevo curso o ciclo">Reiniciar histórico (nuevo curso)</button>
+          <button class="btn ghost" id="exportWordsBtn">Exportar palabras (archivo)</button>
+          <button class="btn ghost" id="importWordsBtn">Importar palabras (archivo)</button>
+          <input type="file" id="importWordsFile" accept="application/json" style="display:none;">
+        </div>
+
+        <div class="hint" style="margin-top:8px;">Esto solo sirve para volver a imprimir las mismas tarjetas en <b>otro ordenador</b>. La pantalla de <i>«Sorteo»</i> es independiente y no necesita este archivo: solo le tienes que decir cuántas palabras tiene el bingo (por defecto, 12).</div>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="actions-row" id="printButtonsRow" style="margin-top:14px; display:none;">
+          <button class="btn secondary" id="printCardsBtn">Imprimir tarjetas (alumnado)</button>
+          <button class="btn secondary" id="printResultBtn">Imprimir hoja de corrección y significados</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <label style="margin-bottom:14px;">Cómo se usa esta pestaña</label>
+        <div style="font-size:14px; line-height:1.75; color:var(--ink);">
+          <p style="margin:0 0 12px;"><b>1.</b> Antes de clase, pulsa <i>«Generar 12 palabras»</i> (o escribe las tuyas); las tarjetas se preparan solas para imprimir.</p>
+          <p style="margin:0 0 12px;"><b>2.</b> Imprime las tarjetas en blanco para el alumnado y, aparte, la <i>hoja de corrección y significados</i>: te sirve a ti para corregir y también para repasar el vocabulario con la clase al terminar.</p>
+          <p style="margin:0 0 12px;"><b>3.</b> Activa <i>«Modo proyección»</i> arriba a la derecha antes de proyectar: esta pestaña desaparece de la vista y solo queda «Cómo se juega» y «Sorteo».</p>
+          <p style="margin:0;"><b>4.</b> Al terminar, desactiva el modo proyección para volver a editar tu banco de palabras.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="cardsPreview"></div>
+  </div>
+</div>
+
+<!-- ================= VISTA 2: SORTEO ================= -->
+<div class="view" id="view-stage">
+  <div class="stage-wrap">
+    <div class="stage-inner">
+      <h2>SORTEO EN DIRECTO</h2>
+      <div class="stage-title">¡Bingo Ortográfico!</div>
+
+      <div class="total-numbers-row" style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:22px;">
+        <label for="totalNumbersInput" style="font-size:13px; color:#bcd0c6;">Números del bingo (según las tarjetas impresas):</label>
+        <input type="number" id="totalNumbersInput" min="1" max="99" value="12" style="width:70px; padding:6px 8px; border-radius:6px; border:1px solid #3f6357; background:#0f261f; color:#fff; text-align:center; font-size:15px;">
+      </div>
+
+      <div class="reveal-box">
+        <div class="reveal-label">NÚMERO</div>
+        <div class="reveal-number placeholder" id="revealNumber">?</div>
+      </div>
+
+      <div class="stage-controls">
+        <button class="btn stage-btn" id="spinBtn">Girar</button>
+        <button class="btn stage-btn secondary" id="undoBtn">Deshacer última</button>
+        <button class="btn stage-btn secondary" id="finishBtn">🏆 ¡Bingo cantado! Finalizar ronda</button>
+        <button class="btn stage-btn secondary" id="resetBtn">Reiniciar ronda</button>
+        <button class="btn stage-btn secondary" id="soundToggleBtn">🔊 Sonido</button>
+      </div>
+
+      <div class="stage-meta">
+        <div><b id="drawnCount">0</b>salidos</div>
+        <div><b id="remainingCount">0</b>quedan</div>
+        <div><b id="totalCount">0</b>en total</div>
+      </div>
+
+      <div class="history-title">NÚMEROS YA SALIDOS</div>
+      <div class="history-list" id="historyList"></div>
+      <div class="empty-note" id="emptyNote">Todavía no ha salido ningún número.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 3: GANADORES ================= -->
+<div class="view" id="view-winners">
+  <div class="winners-wrap">
+    <h2 class="winners-print-title">Ganadores — Bingo Ortográfico</h2>
+    <div class="setup-intro">
+      <h2>Tabla de ganadores del trimestre</h2>
+      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). La tabla se mantiene mientras no cierres esta pestaña; usa «Exportar datos» al terminar la clase y «Cargar datos» la próxima vez para seguir sumando en la misma tabla.</p>
+    </div>
+
+    <div class="panel winners-form">
+      <div class="field">
+        <label for="winnerDate">Fecha</label>
+        <input type="date" id="winnerDate">
+      </div>
+      <div class="field grow">
+        <label for="winnerNames">Ganador/a (o varios, separados por coma)</label>
+        <input type="text" id="winnerNames" placeholder="Nombre y apellido">
+      </div>
+      <button class="btn" id="addWinnerBtn">Añadir</button>
+    </div>
+
+    <div class="actions-row winners-actions">
+      <button class="btn secondary" id="exportWinnersBtn">Exportar datos (.json)</button>
+      <button class="btn secondary" id="importWinnersBtn">Cargar datos (.json)</button>
+      <input type="file" id="importWinnersFile" accept="application/json" style="display:none;">
+      <button class="btn ghost" id="printWinnersBtn">Guardar tabla en PDF</button>
+    </div>
+
+    <div class="winners-table-wrap" id="winnersTableWrap"></div>
+  </div>
+</div>
+
+<script>
+  // ---------------- word bank by orthographic difficulty ----------------
+  const WORD_BANK = {
+    "Adjectives — feelings & personality": [
+      {word:"happy", defEn:"Feeling or showing pleasure and enjoyment.", defEs:"feliz, contento/a", syn:["glad","cheerful"]},
+      {word:"sad", defEn:"Feeling unhappy or sorrowful.", defEs:"triste", syn:["unhappy","sorrowful"]},
+      {word:"angry", defEn:"Feeling strong annoyance or displeasure.", defEs:"enfadado/a", syn:["mad","furious"]},
+      {word:"nervous", defEn:"Feeling worried or anxious about something.", defEs:"nervioso/a", syn:["anxious","tense"]},
+      {word:"shy", defEn:"Feeling nervous or embarrassed about meeting people.", defEs:"tímido/a", syn:["timid","bashful"]},
+      {word:"confident", defEn:"Feeling sure of yourself and your abilities.", defEs:"seguro/a de sí mismo", syn:["self-assured","certain"]},
+      {word:"kind", defEn:"Friendly, generous, and thinking of others.", defEs:"amable", syn:["friendly","caring"]},
+      {word:"brave", defEn:"Ready to face danger or pain without fear.", defEs:"valiente", syn:["courageous","fearless"]},
+      {word:"proud", defEn:"Feeling pleased about something you or others have done.", defEs:"orgulloso/a", syn:["pleased","satisfied"]},
+      {word:"jealous", defEn:"Feeling envious of someone else's success or advantages.", defEs:"celoso/a, envidioso/a", syn:["envious","resentful"]},
+      {word:"curious", defEn:"Eager to know or learn something.", defEs:"curioso/a", syn:["inquisitive","interested"]},
+      {word:"calm", defEn:"Not showing or feeling nervousness or excitement.", defEs:"tranquilo/a", syn:["relaxed","peaceful"]},
+      {word:"selfish", defEn:"Caring only about yourself, not about others.", defEs:"egoísta", syn:["self-centred","inconsiderate"]},
+      {word:"honest", defEn:"Telling the truth and not cheating or stealing.", defEs:"honesto/a, sincero/a", syn:["truthful","sincere"]},
+      {word:"patient", defEn:"Able to wait calmly for a long time.", defEs:"paciente", syn:["tolerant","calm"]},
+      {word:"stubborn", defEn:"Refusing to change your opinion or way of doing things.", defEs:"terco/a, testarudo/a", syn:["obstinate","inflexible"]},
+      {word:"generous", defEn:"Willing to give more money, help or time than necessary.", defEs:"generoso/a", syn:["giving","unselfish"]},
+      {word:"cheerful", defEn:"Noticeably happy and positive.", defEs:"alegre", syn:["happy","upbeat"]},
+      {word:"embarrassed", defEn:"Feeling awkward or ashamed.", defEs:"avergonzado/a", syn:["ashamed","self-conscious"]},
+      {word:"friendly", defEn:"Kind and pleasant towards other people.", defEs:"simpático/a, amistoso/a", syn:["kind","sociable"]},
+      {word:"rude", defEn:"Not polite; showing bad manners.", defEs:"maleducado/a", syn:["impolite","disrespectful"]},
+      {word:"anxious", defEn:"Feeling worried and nervous.", defEs:"ansioso/a", syn:["worried","uneasy"]},
+      {word:"determined", defEn:"Having made a firm decision and being resolved not to change it.", defEs:"decidido/a", syn:["resolute","firm"]},
+      {word:"modest", defEn:"Not talking much about your own abilities or achievements.", defEs:"modesto/a", syn:["humble","unassuming"]},
+      {word:"grateful", defEn:"Feeling or showing thanks.", defEs:"agradecido/a", syn:["thankful","appreciative"]},
+      {word:"bored", defEn:"Feeling tired and impatient because of a lack of interest.", defEs:"aburrido/a (sentirse)", syn:["uninterested","weary"]},
+      {word:"lonely", defEn:"Feeling unhappy because you are alone.", defEs:"solo/a (sentirse)", syn:["isolated","friendless"]},
+      {word:"relaxed", defEn:"Free from tension or anxiety.", defEs:"relajado/a", syn:["calm","at ease"]},
+      {word:"ambitious", defEn:"Having a strong desire for success or achievement.", defEs:"ambicioso/a", syn:["driven","aspiring"]},
+      {word:"loyal", defEn:"Giving firm support to a person or cause.", defEs:"leal, fiel", syn:["faithful","devoted"]},
+      {word:"arrogant", defEn:"Having an exaggerated sense of your own importance.", defEs:"arrogante", syn:["conceited","haughty"]},
+      {word:"sensitive", defEn:"Easily affected or hurt by things.", defEs:"sensible", syn:["touchy","delicate"]}
+    ],
+    "Adjectives — describing things": [
+      {word:"expensive", defEn:"Costing a lot of money.", defEs:"caro/a", syn:["costly","pricey"]},
+      {word:"cheap", defEn:"Costing little money.", defEs:"barato/a", syn:["inexpensive","affordable"]},
+      {word:"difficult", defEn:"Not easy; needing effort or skill.", defEs:"difícil", syn:["hard","tough"]},
+      {word:"dangerous", defEn:"Likely to cause harm or injury.", defEs:"peligroso/a", syn:["risky","hazardous"]},
+      {word:"boring", defEn:"Not interesting; making you feel tired or uninterested.", defEs:"aburrido/a", syn:["dull","tedious"]},
+      {word:"exciting", defEn:"Causing great enthusiasm and interest.", defEs:"emocionante", syn:["thrilling","stimulating"]},
+      {word:"comfortable", defEn:"Giving a feeling of physical ease or relaxation.", defEs:"cómodo/a", syn:["cosy","relaxing"]},
+      {word:"crowded", defEn:"Full of people.", defEs:"abarrotado/a, lleno de gente", syn:["packed","busy"]},
+      {word:"useful", defEn:"Able to be used for a practical purpose.", defEs:"útil", syn:["helpful","practical"]},
+      {word:"useless", defEn:"Not fulfilling or not able to fulfil the intended purpose.", defEs:"inútil", syn:["worthless","ineffective"]},
+      {word:"modern", defEn:"Relating to the present time, not the past.", defEs:"moderno/a", syn:["contemporary","up-to-date"]},
+      {word:"ancient", defEn:"Belonging to a time very far in the past.", defEs:"antiguo/a", syn:["old","historic"]},
+      {word:"huge", defEn:"Extremely large in size or amount.", defEs:"enorme", syn:["enormous","massive"]},
+      {word:"tiny", defEn:"Very small.", defEs:"diminuto/a", syn:["minuscule","small"]},
+      {word:"narrow", defEn:"Small in width.", defEs:"estrecho/a", syn:["thin","tight"]},
+      {word:"wide", defEn:"Large in width.", defEs:"ancho/a", syn:["broad","spacious"]},
+      {word:"fragile", defEn:"Easily broken or damaged.", defEs:"frágil", syn:["delicate","breakable"]},
+      {word:"sturdy", defEn:"Strongly and solidly built.", defEs:"resistente, robusto/a", syn:["solid","robust"]},
+      {word:"flexible", defEn:"Able to bend or change easily.", defEs:"flexible", syn:["adaptable","bendable"]},
+      {word:"reliable", defEn:"Able to be trusted to do what is expected.", defEs:"fiable", syn:["dependable","trustworthy"]},
+      {word:"convenient", defEn:"Fitting in well with your needs and plans.", defEs:"conveniente, práctico/a", syn:["handy","practical"]},
+      {word:"messy", defEn:"Untidy or dirty.", defEs:"desordenado/a", syn:["untidy","disorganised"]},
+      {word:"spotless", defEn:"Perfectly clean.", defEs:"impecable", syn:["immaculate","pristine"]},
+      {word:"noisy", defEn:"Making a lot of noise.", defEs:"ruidoso/a", syn:["loud","deafening"]},
+      {word:"quiet", defEn:"Making little or no noise.", defEs:"silencioso/a, tranquilo/a", syn:["silent","calm"]},
+      {word:"delicious", defEn:"Highly pleasant to the taste.", defEs:"delicioso/a", syn:["tasty","scrumptious"]},
+      {word:"disgusting", defEn:"Causing a feeling of dislike or repulsion.", defEs:"asqueroso/a", syn:["revolting","repulsive"]},
+      {word:"reasonable", defEn:"Fair and sensible.", defEs:"razonable", syn:["sensible","fair"]},
+      {word:"surprising", defEn:"Causing surprise; unexpected.", defEs:"sorprendente", syn:["unexpected","astonishing"]},
+      {word:"complicated", defEn:"Consisting of many interconnecting parts; hard to understand.", defEs:"complicado/a", syn:["complex","intricate"]},
+      {word:"essential", defEn:"Absolutely necessary.", defEs:"esencial", syn:["vital","crucial"]},
+      {word:"impressive", defEn:"Making a strong positive impression.", defEs:"impresionante", syn:["remarkable","striking"]}
+    ],
+    "Common verbs": [
+      {word:"begin", defEn:"To start doing something.", defEs:"empezar", syn:["start","commence"]},
+      {word:"finish", defEn:"To complete or come to the end of something.", defEs:"terminar", syn:["complete","end"]},
+      {word:"discover", defEn:"To find something for the first time.", defEs:"descubrir", syn:["find","uncover"]},
+      {word:"choose", defEn:"To pick one thing among two or more.", defEs:"elegir", syn:["select","pick"]},
+      {word:"remember", defEn:"To keep something in your memory.", defEs:"recordar", syn:["recall","memorize"]},
+      {word:"allow", defEn:"To let someone do something.", defEs:"permitir", syn:["permit","let"]},
+      {word:"improve", defEn:"To make or become better.", defEs:"mejorar", syn:["enhance","develop"]},
+      {word:"borrow", defEn:"To take something and use it, planning to give it back later.", defEs:"pedir prestado", syn:["take on loan","use temporarily"]},
+      {word:"lend", defEn:"To give something to someone for a period of time, expecting it back.", defEs:"prestar", syn:["loan","provide temporarily"]},
+      {word:"achieve", defEn:"To successfully complete or reach a goal.", defEs:"lograr, conseguir", syn:["accomplish","attain"]},
+      {word:"avoid", defEn:"To keep away from or prevent something happening.", defEs:"evitar", syn:["prevent","steer clear of"]},
+      {word:"suggest", defEn:"To put forward an idea for consideration.", defEs:"sugerir", syn:["propose","recommend"]},
+      {word:"explain", defEn:"To make something clear by describing it in detail.", defEs:"explicar", syn:["clarify","describe"]},
+      {word:"complain", defEn:"To express dissatisfaction about something.", defEs:"quejarse", syn:["protest","grumble"]},
+      {word:"apologise", defEn:"To say sorry for something you have done.", defEs:"disculparse", syn:["say sorry","express regret"]},
+      {word:"admit", defEn:"To confess that something is true.", defEs:"admitir, reconocer", syn:["acknowledge","confess"]},
+      {word:"deny", defEn:"To state that something is not true.", defEs:"negar", syn:["reject","refute"]},
+      {word:"include", defEn:"To make something part of a whole.", defEs:"incluir", syn:["contain","incorporate"]},
+      {word:"exclude", defEn:"To leave something or someone out.", defEs:"excluir", syn:["leave out","omit"]},
+      {word:"persuade", defEn:"To make someone do or believe something by giving good reasons.", defEs:"persuadir, convencer", syn:["convince","win over"]},
+      {word:"refuse", defEn:"To say that you will not do or accept something.", defEs:"negarse a, rechazar", syn:["decline","reject"]},
+      {word:"promise", defEn:"To tell someone that you will definitely do something.", defEs:"prometer", syn:["vow","pledge"]},
+      {word:"warn", defEn:"To tell someone about a possible danger or problem.", defEs:"advertir", syn:["alert","caution"]},
+      {word:"protect", defEn:"To keep someone or something safe from harm.", defEs:"proteger", syn:["defend","shield"]},
+      {word:"escape", defEn:"To get free from a place or a dangerous situation.", defEs:"escapar", syn:["flee","get away"]},
+      {word:"disappear", defEn:"To stop being visible.", defEs:"desaparecer", syn:["vanish","fade away"]},
+      {word:"arrange", defEn:"To plan or organise something in advance.", defEs:"organizar, quedar en", syn:["organise","plan"]},
+      {word:"cancel", defEn:"To decide that a planned event will not happen.", defEs:"cancelar", syn:["call off","abandon"]},
+      {word:"delay", defEn:"To make something happen later than planned.", defEs:"retrasar", syn:["postpone","put off"]},
+      {word:"rely on", defEn:"To depend on someone or something with confidence.", defEs:"depender de, confiar en", syn:["depend on","count on"]},
+      {word:"succeed", defEn:"To achieve the result that you wanted.", defEs:"tener éxito, lograr", syn:["achieve","prevail"]},
+      {word:"fail", defEn:"To be unsuccessful in achieving a goal.", defEs:"fracasar, suspender", syn:["not succeed","flunk"]}
+    ],
+    "Free time & hobbies": [
+      {word:"hobby", defEn:"An activity that you do for pleasure in your free time.", defEs:"afición, hobby", syn:["pastime","interest"]},
+      {word:"journey", defEn:"An act of travelling from one place to another.", defEs:"viaje", syn:["trip","voyage"]},
+      {word:"adventure", defEn:"An exciting or unusual experience.", defEs:"aventura", syn:["expedition","escapade"]},
+      {word:"competition", defEn:"An event in which people try to win against each other.", defEs:"competición", syn:["contest","tournament"]},
+      {word:"opponent", defEn:"A person who competes against you in a game or contest.", defEs:"oponente, rival", syn:["rival","competitor"]},
+      {word:"achievement", defEn:"Something that has been done successfully.", defEs:"logro", syn:["accomplishment","success"]},
+      {word:"challenge", defEn:"A difficult task that tests someone's ability.", defEs:"desafío, reto", syn:["difficulty","test"]},
+      {word:"rehearsal", defEn:"A practice of a performance before the real one.", defEs:"ensayo (de teatro, música...)", syn:["practice run","run-through"]},
+      {word:"teammate", defEn:"A person who is on the same team as you.", defEs:"compañero/a de equipo", syn:["fellow player","colleague"]},
+      {word:"audience", defEn:"The group of people watching or listening to a performance.", defEs:"público, audiencia", syn:["spectators","viewers"]},
+      {word:"performance", defEn:"An act of presenting a play, concert or other form of entertainment.", defEs:"actuación", syn:["show","presentation"]},
+      {word:"exhibition", defEn:"A public display of art or interesting items.", defEs:"exposición", syn:["display","show"]},
+      {word:"tournament", defEn:"A series of contests between a number of competitors.", defEs:"torneo", syn:["competition","championship"]},
+      {word:"championship", defEn:"A competition to decide who is the best in a sport.", defEs:"campeonato", syn:["title contest","tournament"]},
+      {word:"leisure", defEn:"Free time not occupied by work.", defEs:"tiempo libre, ocio", syn:["free time","spare time"]},
+      {word:"entertainment", defEn:"Activities that give people pleasure or amusement.", defEs:"entretenimiento", syn:["amusement","fun"]},
+      {word:"gathering", defEn:"A meeting of people, especially for a social reason.", defEs:"reunión", syn:["meeting","get-together"]},
+      {word:"excursion", defEn:"A short trip made for pleasure.", defEs:"excursión", syn:["trip","outing"]},
+      {word:"campsite", defEn:"A place where people can camp.", defEs:"camping", syn:["camping ground","campground"]},
+      {word:"equipment", defEn:"The items needed for a particular activity.", defEs:"equipo, material", syn:["gear","kit"]},
+      {word:"skill", defEn:"The ability to do something well.", defEs:"habilidad, destreza", syn:["ability","expertise"]},
+      {word:"talent", defEn:"A natural ability to do something well.", defEs:"talento", syn:["gift","aptitude"]},
+      {word:"effort", defEn:"A vigorous or determined attempt.", defEs:"esfuerzo", syn:["attempt","endeavour"]},
+      {word:"victory", defEn:"An act of winning a battle, contest or game.", defEs:"victoria", syn:["win","triumph"]},
+      {word:"defeat", defEn:"The failure to win a game or contest.", defEs:"derrota", syn:["loss","failure"]},
+      {word:"referee", defEn:"An official who watches a game to make sure the rules are followed.", defEs:"árbitro/a", syn:["umpire","official"]},
+      {word:"spectator", defEn:"A person who watches an event.", defEs:"espectador/a", syn:["onlooker","viewer"]},
+      {word:"membership", defEn:"The state of being a member of a group or club.", defEs:"afiliación, condición de socio", syn:["affiliation","enrolment"]},
+      {word:"instructor", defEn:"A person who teaches a practical skill.", defEs:"instructor/a, monitor/a", syn:["teacher","coach"]},
+      {word:"costume", defEn:"A set of clothes worn to look like a particular character.", defEs:"disfraz", syn:["outfit","disguise"]},
+      {word:"rehearse", defEn:"To practise a performance before it is given publicly.", defEs:"ensayar", syn:["practise","run through"]},
+      {word:"souvenir", defEn:"An object that you keep to remember a place or event.", defEs:"recuerdo (objeto)", syn:["keepsake","memento"]}
+    ],
+    "Weather & nature": [
+      {word:"storm", defEn:"A period of very bad weather with strong wind and rain.", defEs:"tormenta", syn:["tempest","gale"]},
+      {word:"drought", defEn:"A long period of time without rain.", defEs:"sequía", syn:["dry spell","water shortage"]},
+      {word:"breeze", defEn:"A gentle wind.", defEs:"brisa", syn:["light wind","gust"]},
+      {word:"thunder", defEn:"The loud noise that you hear after lightning.", defEs:"trueno", syn:["rumble","boom"]},
+      {word:"flood", defEn:"A large amount of water covering an area that is usually dry.", defEs:"inundación", syn:["deluge","overflow"]},
+      {word:"forecast", defEn:"A statement about what the weather will be like.", defEs:"pronóstico", syn:["prediction","outlook"]},
+      {word:"climate", defEn:"The general weather conditions of a place over time.", defEs:"clima", syn:["weather pattern","conditions"]},
+      {word:"wildlife", defEn:"Animals and plants that live in nature.", defEs:"fauna y flora", syn:["fauna","natural life"]},
+      {word:"lightning", defEn:"A flash of light in the sky caused by electricity during a storm.", defEs:"relámpago", syn:["flash","bolt"]},
+      {word:"rainfall", defEn:"The amount of rain that falls in a place.", defEs:"precipitación, lluvia caída", syn:["precipitation","rain"]},
+      {word:"temperature", defEn:"A measure of how hot or cold something is.", defEs:"temperatura", syn:["heat level","warmth"]},
+      {word:"humidity", defEn:"The amount of water vapour in the air.", defEs:"humedad", syn:["dampness","moisture"]},
+      {word:"fog", defEn:"A thick cloud of tiny water droplets near the ground.", defEs:"niebla", syn:["mist","haze"]},
+      {word:"hail", defEn:"Small balls of ice that fall like rain.", defEs:"granizo", syn:["ice pellets","sleet"]},
+      {word:"blizzard", defEn:"A severe snowstorm with strong winds.", defEs:"ventisca", syn:["snowstorm","whiteout"]},
+      {word:"tide", defEn:"The regular rise and fall of the sea.", defEs:"marea", syn:["sea level change","ebb and flow"]},
+      {word:"earthquake", defEn:"A sudden violent shaking of the ground.", defEs:"terremoto", syn:["tremor","quake"]},
+      {word:"eruption", defEn:"A sudden release of material from a volcano.", defEs:"erupción", syn:["outburst","explosion"]},
+      {word:"pollution", defEn:"The presence of harmful substances in the environment.", defEs:"contaminación", syn:["contamination","environmental damage"]},
+      {word:"environment", defEn:"The natural world in which people, animals and plants live.", defEs:"medio ambiente", syn:["surroundings","ecosystem"]},
+      {word:"species", defEn:"A group of animals or plants that are similar.", defEs:"especie", syn:["kind","type"]},
+      {word:"extinction", defEn:"The state of no longer existing.", defEs:"extinción", syn:["dying out","disappearance"]},
+      {word:"habitat", defEn:"The natural home of an animal or plant.", defEs:"hábitat", syn:["natural environment","home"]},
+      {word:"rainforest", defEn:"A dense forest found in tropical areas with heavy rainfall.", defEs:"selva tropical", syn:["jungle","tropical forest"]},
+      {word:"shower", defEn:"A short period of rain.", defEs:"chubasco, chaparrón", syn:["rain shower","downpour"]},
+      {word:"gale", defEn:"A very strong wind.", defEs:"vendaval", syn:["strong wind","storm"]},
+      {word:"frost", defEn:"A thin layer of ice that forms outdoors when it is very cold.", defEs:"escarcha", syn:["ice layer","rime"]},
+      {word:"drizzle", defEn:"Light rain falling in fine drops.", defEs:"llovizna", syn:["light rain","fine rain"]},
+      {word:"glacier", defEn:"A large mass of ice that moves slowly.", defEs:"glaciar", syn:["ice mass","ice field"]},
+      {word:"current", defEn:"A continuous flow of water or air in one direction.", defEs:"corriente", syn:["flow","stream"]},
+      {word:"sunrise", defEn:"The time when the sun appears in the morning.", defEs:"amanecer", syn:["dawn","daybreak"]},
+      {word:"sunset", defEn:"The time when the sun disappears in the evening.", defEs:"atardecer, puesta de sol", syn:["dusk","nightfall"]}
+    ],
+    "Health & body": [
+      {word:"illness", defEn:"A disease or period of poor health.", defEs:"enfermedad", syn:["sickness","disease"]},
+      {word:"injury", defEn:"Physical harm or damage done to the body.", defEs:"lesión", syn:["wound","harm"]},
+      {word:"treatment", defEn:"Medical care given to a patient.", defEs:"tratamiento", syn:["therapy","care"]},
+      {word:"symptom", defEn:"A sign that shows you have an illness.", defEs:"síntoma", syn:["sign","indication"]},
+      {word:"exercise", defEn:"Physical activity done to stay healthy and fit.", defEs:"ejercicio", syn:["workout","training"]},
+      {word:"diet", defEn:"The food and drink that a person usually has.", defEs:"dieta, alimentación", syn:["nutrition","eating habits"]},
+      {word:"recovery", defEn:"The process of becoming healthy again after an illness.", defEs:"recuperación", syn:["healing","improvement"]},
+      {word:"tiredness", defEn:"The state of needing rest or sleep.", defEs:"cansancio", syn:["fatigue","exhaustion"]},
+      {word:"wound", defEn:"An injury in which the skin is cut or broken.", defEs:"herida", syn:["injury","cut"]},
+      {word:"bruise", defEn:"A dark mark on the skin caused by a blow.", defEs:"moretón, cardenal", syn:["contusion","mark"]},
+      {word:"swelling", defEn:"An area of the body that becomes larger than normal.", defEs:"hinchazón", syn:["inflammation","puffiness"]},
+      {word:"fever", defEn:"An abnormally high body temperature.", defEs:"fiebre", syn:["high temperature","pyrexia"]},
+      {word:"cough", defEn:"A sudden noisy release of air from the lungs.", defEs:"tos", syn:["hacking","throat clearing"]},
+      {word:"sneeze", defEn:"A sudden involuntary expulsion of air through the nose.", defEs:"estornudo", syn:["achoo","nasal burst"]},
+      {word:"allergy", defEn:"A condition causing sensitivity to certain substances.", defEs:"alergia", syn:["sensitivity","intolerance"]},
+      {word:"infection", defEn:"The invasion of the body by harmful microorganisms.", defEs:"infección", syn:["contamination","disease"]},
+      {word:"vaccine", defEn:"A substance used to protect against a disease.", defEs:"vacuna", syn:["immunisation","jab"]},
+      {word:"surgery", defEn:"Medical treatment involving cutting the body.", defEs:"cirugía", syn:["operation","procedure"]},
+      {word:"bandage", defEn:"A strip of material used to bind a wound.", defEs:"venda", syn:["dressing","wrap"]},
+      {word:"crutch", defEn:"A support used to help someone walk when injured.", defEs:"muleta", syn:["walking support","cane"]},
+      {word:"wheelchair", defEn:"A chair with wheels used by people who cannot walk.", defEs:"silla de ruedas", syn:["mobility chair","invalid chair"]},
+      {word:"appointment", defEn:"An arrangement to meet someone, such as a doctor.", defEs:"cita (médica)", syn:["booking","consultation"]},
+      {word:"prescription", defEn:"A written instruction from a doctor for medicine.", defEs:"receta médica", syn:["medical order","script"]},
+      {word:"dose", defEn:"A measured quantity of medicine.", defEs:"dosis", syn:["measured amount","portion"]},
+      {word:"nutrition", defEn:"The process of providing food necessary for health.", defEs:"nutrición", syn:["nourishment","diet"]},
+      {word:"strength", defEn:"The quality of being physically strong.", defEs:"fuerza", syn:["power","muscle"]},
+      {word:"flexibility", defEn:"The ability to bend or move easily.", defEs:"flexibilidad", syn:["suppleness","agility"]},
+      {word:"stamina", defEn:"The ability to sustain prolonged physical effort.", defEs:"resistencia (física)", syn:["endurance","staying power"]},
+      {word:"posture", defEn:"The position in which someone holds their body.", defEs:"postura", syn:["stance","position"]},
+      {word:"balanced", defEn:"Containing the right amount of different food groups.", defEs:"equilibrado/a", syn:["well-proportioned","varied"]},
+      {word:"hygiene", defEn:"Practices that keep you and your surroundings clean.", defEs:"higiene", syn:["cleanliness","sanitation"]},
+      {word:"wellbeing", defEn:"The state of being comfortable, healthy and happy.", defEs:"bienestar", syn:["welfare","health"]}
+    ]
+  };
+
+  // ---- histórico de palabras ya usadas (para no repetir hasta agotar el banco) ----
+  const USED_WORDS_KEY = 'bingoUsedWordsHistory_v1';
+
+  function loadUsedWords(){
+    try{
+      const raw = localStorage.getItem(USED_WORDS_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return (parsed && typeof parsed === 'object') ? parsed : {};
+    }catch(e){ return {}; }
+  }
+
+  function saveUsedWords(used){
+    try{ localStorage.setItem(USED_WORDS_KEY, JSON.stringify(used)); }catch(e){}
+  }
+
+  function proposeTwelveWords(){
+    const cats = Object.keys(WORD_BANK); // 6 categorías × 2 palabras = 12
+    const used = loadUsedWords();
+    const chosen = [];
+    const usedCats = [];
+    let recycledCats = [];
+    cats.forEach(cat=>{
+      const fullBank = WORD_BANK[cat];
+      const usedList = used[cat] || [];
+      let available = fullBank.filter(item => !usedList.includes(item.word));
+      if(available.length < 2){
+        // se han usado ya todas las palabras nuevas de esta categoría: empieza un nuevo ciclo
+        used[cat] = [];
+        available = [...fullBank];
+        recycledCats.push(cat);
+      }
+      const pool = [...available];
+      for(let k=0;k<2;k++){
+        const idx = Math.floor(Math.random()*pool.length);
+        const picked = pool[idx];
+        chosen.push(picked);
+        pool.splice(idx,1);
+        used[cat] = used[cat] || [];
+        used[cat].push(picked.word);
+      }
+      usedCats.push(cat);
+    });
+    saveUsedWords(used);
+    // shuffle so the dictation order doesn't reveal the category pattern
+    for(let i=chosen.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [chosen[i],chosen[j]] = [chosen[j],chosen[i]];
+    }
+    return { words: chosen, cats: usedCats, recycled: recycledCats };
+  }
+
+  // ---------------- state ----------------
+  let words = [];
+  let pool = [];
+  let history = [];
+  let spinning = false;
+  let projectionMode = false;
+
+  // ---------------- tabs ----------------
+  const tabSetup = document.getElementById('tabSetup');
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.classList.contains('hidden-tab')) return;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    });
+  });
+
+  const projToggle = document.getElementById('projToggle');
+  const projToggleLabel = document.getElementById('projToggleLabel');
+  projToggle.addEventListener('click', ()=>{
+    projectionMode = !projectionMode;
+    projToggle.classList.toggle('on', projectionMode);
+    projToggleLabel.textContent = 'Modo proyección: ' + (projectionMode ? 'activado' : 'apagado');
+    tabSetup.classList.toggle('hidden-tab', projectionMode);
+    if(projectionMode && tabSetup.classList.contains('active')){
+      tabSetup.classList.remove('active');
+      document.getElementById('view-setup').classList.remove('active');
+      const rulesTab = document.querySelector('.tab-btn[data-view="rules"]');
+      rulesTab.classList.add('active');
+      document.getElementById('view-rules').classList.add('active');
+    }
+  });
+
+  // ---------------- setup view ----------------
+  const statusMsg = document.getElementById('statusMsg');
+  const wordBankPreview = document.getElementById('wordBankPreview');
+  const cardsPreview = document.getElementById('cardsPreview');
+  const suggestMeta = document.getElementById('suggestMeta');
+
+  function showStatus(msg, type){
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg show ' + type;
+  }
+
+  const WORDS_STORAGE_KEY = 'bingoOrtograficoWords_v1';
+
+  function saveWordsToStorage(){
+    try{ localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(words)); }catch(e){}
+  }
+
+  function loadWordsFromStorage(){
+    try{
+      const raw = localStorage.getItem(WORDS_STORAGE_KEY);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length>0) return parsed;
+    }catch(e){}
+    return null;
+  }
+
+  function setWords(list){
+    words = list.map((w,i)=>({
+      n:i+1,
+      word: (typeof w === 'string' ? w : w.word),
+      defEn: (typeof w === 'string' ? '' : (w.defEn || '')),
+      defEs: (typeof w === 'string' ? '' : (w.defEs || '')),
+      syn: (typeof w === 'string' ? [] : (w.syn || []))
+    }));
+    showStatus(words.length+' palabras numeradas del 1 al '+words.length+'. Las tarjetas están listas y el sorteo ya puede girar. Se han guardado en este navegador: al volver a abrir el archivo aquí mismo, seguirán cargadas.', 'ok');
+    renderWordBank();
+    renderCards();
+    resetGameState();
+    saveWordsToStorage();
+  }
+
+  document.getElementById('suggestBtn').addEventListener('click', ()=>{
+    const { words: proposed, cats, recycled } = proposeTwelveWords();
+    let meta = 'Dificultades cubiertas: ' + cats.join(' · ');
+    if(recycled && recycled.length>0){
+      meta += ' ⚠️ Ya se han usado todas las palabras nuevas de: ' + recycled.join(', ') + '. Esa(s) categoría(s) empieza(n) un nuevo ciclo.';
+    }
+    suggestMeta.textContent = meta;
+    setWords(proposed);
+  });
+
+  document.getElementById('resetHistoryBtn').addEventListener('click', ()=>{
+    try{ localStorage.removeItem(USED_WORDS_KEY); }catch(e){}
+    showStatus('Histórico de palabras usadas reiniciado. La próxima vez que generes, todas las palabras vuelven a estar disponibles.', 'ok');
+  });
+
+  document.getElementById('includeMeanings').addEventListener('change', ()=>{
+    if(words.length>0){
+      renderCards();
+      updateStageButtons();
+    }
+  });
+
+  function renderWordBank(){
+    wordBankPreview.innerHTML = words.map(item=>
+      '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
+    ).join('');
+    wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
+      el.addEventListener('blur', ()=>{
+        const n = parseInt(el.dataset.n);
+        const newVal = el.textContent.trim();
+        const entry = words.find(w=>w.n===n);
+        if(entry && newVal){
+          entry.word = newVal;
+          renderCards();
+          saveWordsToStorage();
+        } else if(entry){
+          el.textContent = entry.word;
+        }
+      });
+      el.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter'){ e.preventDefault(); el.blur(); }
+      });
+    });
+  }
+
+  function buildCardHTML(){
+    const half = Math.ceil(words.length/2);
+    const colA = words.slice(0, half);
+    const colB = words.slice(half);
+    const rowsHTML = (col)=> col.map(item=>
+      '<div class="ruled-line"><span class="n">'+item.n+'.</span><span class="write-space">&nbsp;</span></div>'
+    ).join('');
+
+    const pickRows = Array.from({length:6}).map(()=>`
+      <div class="pick-row"><span class="pick-num">Nº</span><span class="pick-line"></span></div>`).join('');
+
+    return `
+      <div class="bingo-card">
+        <h3>BINGO ORTOGRÁFICO</h3>
+        <div class="card-name"><span>Nombre:</span><span class="line"></span></div>
+        <div class="card-cols">
+          <div class="word-list">
+            <div class="col-title">ESCRIBE LO QUE DICTA EL PROFESOR</div>
+            ${rowsHTML(colA)}
+            ${rowsHTML(colB)}
+          </div>
+          <div>
+            <div class="pick-title">TUS 6 PALABRAS (LAS QUE CREES QUE ESTÁN BIEN)</div>
+            <div class="pick-rows">${pickRows}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildResultSheet(){
+    const includeDefs = document.getElementById('includeMeanings').checked;
+    const items = words.map(item=>{
+      let extra = '';
+      if(includeDefs){
+        const defEn = item.defEn || 'No definition available (word edited by hand).';
+        const defEs = item.defEs || '—';
+        const synList = (item.syn && item.syn.length) ? item.syn.join(', ') : '—';
+        extra = '<span class="def">EN: '+defEn+'</span>'
+              + '<span class="def-es">ES: '+defEs+'</span>'
+              + '<span class="syn">Synonyms: '+synList+'</span>';
+      }
+      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+extra+'</div>';
+    }).join('');
+    return `
+      <div class="result-banner">HOJA DE CORRECCIÓN${includeDefs ? ', SIGNIFICADOS Y SINÓNIMOS' : ''} — para el profesorado y para repasar con el alumnado al terminar</div>
+      <h3 style="margin:0 0 16px;">Vocabulario del dictado${includeDefs ? ', su significado y sinónimos' : ''}</h3>
+      <div class="result-grid">${items}</div>`;
+  }
+
+  function renderCards(){
+    const printButtonsRow = document.getElementById('printButtonsRow');
+    if(words.length===0){
+      cardsPreview.innerHTML = '';
+      printButtonsRow.style.display = 'none';
+      return;
+    }
+    const count = Math.max(1, Math.min(60, parseInt(document.getElementById('cardCount').value) || 1));
+    let html = '<div class="cards-page" id="cardsPage">';
+    for(let i=0;i<count;i++){ html += buildCardHTML(); }
+    html += '</div>';
+    html += `<div class="result-sheet" id="resultSheet">${buildResultSheet()}</div>`;
+    cardsPreview.innerHTML = html;
+    printButtonsRow.style.display = 'flex';
+  }
+
+  document.getElementById('printCardsBtn').addEventListener('click', ()=> window.print());
+  document.getElementById('printResultBtn').addEventListener('click', ()=>{
+    const cardsPage = document.getElementById('cardsPage');
+    const sheet = document.getElementById('resultSheet');
+    cardsPage.style.display = 'none';
+    sheet.classList.add('showing');
+    window.print();
+    const restore = ()=>{
+      cardsPage.style.display = '';
+      sheet.classList.remove('showing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    suggestMeta.textContent = '';
+    words = [];
+    wordBankPreview.innerHTML = '';
+    cardsPreview.innerHTML = '';
+    statusMsg.className = 'status-msg';
+    resetGameState();
+    try{ localStorage.removeItem(WORDS_STORAGE_KEY); }catch(e){}
+  });
+
+  document.getElementById('exportWordsBtn').addEventListener('click', ()=>{
+    if(words.length===0){
+      showStatus('Primero genera o escribe las palabras; todavía no hay ninguna que exportar.', 'error');
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ words }, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo-ortografico-palabras.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const importWordsFile = document.getElementById('importWordsFile');
+  document.getElementById('importWordsBtn').addEventListener('click', ()=> importWordsFile.click());
+  importWordsFile.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const loaded = Array.isArray(data.words) ? data.words : null;
+        if(!loaded || loaded.length===0) throw new Error('vacío');
+        words = loaded;
+        renderWordBank();
+        renderCards();
+        resetGameState();
+        saveWordsToStorage();
+        showStatus(words.length+' palabras importadas correctamente desde el archivo. El sorteo ya puede girar en este ordenador.', 'ok');
+      }catch(err){
+        showStatus('No se ha podido leer ese archivo. Comprueba que sea un .json exportado desde esta misma herramienta.', 'error');
+      }
+    };
+    reader.readAsText(file);
+    importWordsFile.value = '';
+  });
+
+  // ---------------- stage / sorteo view (independiente del resto) ----------------
+  const revealNumber = document.getElementById('revealNumber');
+  const spinBtn = document.getElementById('spinBtn');
+  const undoBtn = document.getElementById('undoBtn');
+  const finishBtn = document.getElementById('finishBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const historyList = document.getElementById('historyList');
+  const emptyNote = document.getElementById('emptyNote');
+  const drawnCount = document.getElementById('drawnCount');
+  const remainingCount = document.getElementById('remainingCount');
+  const totalCount = document.getElementById('totalCount');
+  const totalNumbersInput = document.getElementById('totalNumbersInput');
+  let manualFinish = false;
+  let totalNumbers = 12;
+
+  function getTotalNumbersInput(){
+    const val = Math.max(1, Math.min(99, parseInt(totalNumbersInput.value) || 12));
+    totalNumbersInput.value = val;
+    return val;
+  }
+
+  function resetGameState(){
+    totalNumbers = getTotalNumbersInput();
+    pool = Array.from({length: totalNumbers}, (_, i)=> i+1);
+    history = [];
+    spinning = false;
+    manualFinish = false;
+    revealNumber.textContent = '?';
+    revealNumber.className = 'reveal-number placeholder';
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function updateMeta(){
+    drawnCount.textContent = history.length;
+    remainingCount.textContent = pool.length;
+    totalCount.textContent = totalNumbers;
+  }
+
+  function updateStageButtons(){
+    const finished = pool.length===0 || manualFinish;
+    spinBtn.disabled = spinning || pool.length===0 || manualFinish;
+    undoBtn.disabled = spinning || history.length===0;
+    finishBtn.disabled = spinning || finished || history.length===0;
+    resetBtn.disabled = spinning;
+    if(pool.length===0 && !manualFinish){
+      revealNumber.textContent = '¡Fin!';
+      revealNumber.className = 'reveal-number placeholder';
+    } else if(manualFinish){
+      revealNumber.textContent = '¡Bingo!';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+  }
+
+  function renderHistory(){
+    historyList.innerHTML = '';
+    if(history.length===0){ emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+    history.forEach(n=>{
+      const chip = document.createElement('div');
+      chip.className = 'history-chip';
+      chip.textContent = n;
+      historyList.appendChild(chip);
+    });
+  }
+
+  // ---- sonido (Web Audio API, sin archivos externos) ----
+  let audioCtx = null;
+  let soundEnabled = true;
+
+  function getAudioCtx(){
+    if(!audioCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return null;
+      audioCtx = new Ctx();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function playTick(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 680;
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.05);
+    }catch(e){}
+  }
+
+  function playFinalSound(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i)=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const start = now + i*0.09;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+      });
+    }catch(e){}
+  }
+
+  function spin(){
+    if(spinning || pool.length===0) return;
+    spinning = true;
+    updateStageButtons();
+
+    let ticks = 0;
+    const maxTicks = 14;
+    revealNumber.className = 'reveal-number spinning';
+
+    const interval = setInterval(()=>{
+      const randNum = pool[Math.floor(Math.random()*pool.length)];
+      revealNumber.textContent = randNum;
+      playTick();
+      ticks++;
+      if(ticks >= maxTicks){
+        clearInterval(interval);
+        const finalPos = Math.floor(Math.random()*pool.length);
+        const finalNum = pool[finalPos];
+        pool.splice(finalPos,1);
+        history.push(finalNum);
+
+        revealNumber.textContent = finalNum;
+        revealNumber.className = 'reveal-number pop';
+        playFinalSound();
+
+        updateMeta();
+        renderHistory();
+        spinning = false;
+        updateStageButtons();
+      }
+    }, 80);
+  }
+
+  function undo(){
+    if(spinning) return;
+    if(manualFinish){
+      manualFinish = false;
+      updateStageButtons();
+      return;
+    }
+    if(history.length===0) return;
+    const lastN = history.pop();
+    pool.push(lastN);
+    if(history.length>0){
+      revealNumber.textContent = history[history.length-1];
+      revealNumber.className = 'reveal-number';
+    } else {
+      revealNumber.textContent = '?';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function finishRound(){
+    if(spinning || history.length===0 || manualFinish || pool.length===0) return;
+    manualFinish = true;
+    updateStageButtons();
+  }
+
+  spinBtn.addEventListener('click', spin);
+  undoBtn.addEventListener('click', undo);
+  finishBtn.addEventListener('click', finishRound);
+  resetBtn.addEventListener('click', resetGameState);
+  totalNumbersInput.addEventListener('change', resetGameState);
+
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  soundToggleBtn.addEventListener('click', ()=>{
+    soundEnabled = !soundEnabled;
+    soundToggleBtn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
+    if(soundEnabled) getAudioCtx();
+  });
+
+  // ---------------- winners ----------------
+  let winners = [];
+  let winnerIdSeq = 1;
+
+  const winnerDate = document.getElementById('winnerDate');
+  const winnerNames = document.getElementById('winnerNames');
+  const winnersTableWrap = document.getElementById('winnersTableWrap');
+
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function formatDate(iso){
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return d+'/'+m+'/'+y;
+  }
+  winnerDate.value = todayISO();
+
+  function renderWinners(){
+    if(winners.length===0){
+      winnersTableWrap.innerHTML = '<div class="winners-empty">Todavía no hay ganadores registrados.</div>';
+      return;
+    }
+    const rows = winners.map(w=>
+      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
+    ).join('');
+    winnersTableWrap.innerHTML = `
+      <table class="winners-table">
+        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    winnersTableWrap.querySelectorAll('.row-del').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = parseInt(btn.dataset.id);
+        winners = winners.filter(w=>w.id!==id);
+        renderWinners();
+      });
+    });
+  }
+
+  document.getElementById('addWinnerBtn').addEventListener('click', ()=>{
+    const names = winnerNames.value.trim();
+    if(!names) return;
+    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names });
+    winnerNames.value = '';
+    renderWinners();
+  });
+
+  document.getElementById('exportWinnersBtn').addEventListener('click', ()=>{
+    const data = JSON.stringify({ winners }, null, 2);
+    const blob = new Blob([data], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo-ortografico-ganadores.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const importWinnersFile = document.getElementById('importWinnersFile');
+  document.getElementById('importWinnersBtn').addEventListener('click', ()=> importWinnersFile.click());
+  importWinnersFile.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const loaded = Array.isArray(data.winners) ? data.winners : [];
+        loaded.forEach(w=>{
+          winners.push({ id: winnerIdSeq++, date: w.date || '', names: w.names || '' });
+        });
+        renderWinners();
+      }catch(err){
+        alert('No se ha podido leer ese archivo. Comprueba que sea un .json exportado desde esta misma herramienta.');
+      }
+    };
+    reader.readAsText(file);
+    importWinnersFile.value = '';
+  });
+
+  document.getElementById('printWinnersBtn').addEventListener('click', ()=> window.print());
+
+  renderWinners();
+
+  // ---------------- init ----------------
+  const restoredWords = loadWordsFromStorage();
+  if(restoredWords){
+    words = restoredWords;
+    renderWordBank();
+    renderCards();
+    showStatus(words.length+' palabras recuperadas de la sesión anterior en este navegador. Si quieres otras nuevas, pulsa "Generar" o "Vaciar".', 'ok');
+  }
+  resetGameState();
+</script>
+
+</body>
+</html>

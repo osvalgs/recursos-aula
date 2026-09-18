@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompts Comentario Literario · Bachillerato</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #eef0f7;
+    --ink: #1a1d30;
+    --muted: #5a6080;
+    --accent: #5a3e8c;
+    --accent2: #1a7060;
+    --accent3: #1d4f8c;
+    --warm: #dde2f2;
+    --card: #ffffff;
+    --border: #bcc8e0;
+    --gold: #a87c35;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: #1e2444;
+    color: #fff;
+    padding: 2.5rem 2rem 2.2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 18px,
+      rgba(255,255,255,.03) 18px, rgba(255,255,255,.03) 19px
+    );
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .header-tag {
+    display: inline-block;
+    font-size: .75rem; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: #c9ae78; margin-bottom: .75rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    line-height: 1.2; margin-bottom: .4rem;
+  }
+  header p { color: rgba(255,255,255,.62); font-style: italic; font-size: .92rem; margin-bottom: 0; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── SECTION HEADING ── */
+  .section-heading {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; padding-bottom: .75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-heading-icon {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem; flex-shrink: 0;
+    background: #e8e4f6;
+  }
+  .section-heading h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; color: var(--ink);
+  }
+  .section-heading p { font-size: .85rem; color: var(--muted); font-style: italic; }
+
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--warm);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px 8px 8px 4px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2rem;
+    font-size: .93rem; color: #2c2e45;
+    line-height: 1.7;
+  }
+  .intro-box strong { color: var(--accent); }
+  .intro-box a { color: var(--accent3); font-weight: 600; text-decoration: none; }
+  .intro-box a:hover { text-decoration: underline; }
+
+  /* ── STEP CARDS ── */
+  .step {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 700; flex-shrink: 0;
+  }
+  .num-violet { background: #ede5f8; color: var(--accent);  border: 2px solid var(--accent); }
+  .num-teal   { background: #d4f0ea; color: var(--accent2); border: 2px solid var(--accent2); }
+  .num-blue   { background: #ddeeff; color: var(--accent3); border: 2px solid var(--accent3); }
+  .num-gold   { background: #fdf3e0; color: #8a6a1d;        border: 2px solid #c9a96e; }
+
+  .step-title-wrap { flex: 1; }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+  .step-subtitle { font-size: .8rem; color: var(--muted); font-style: italic; }
+
+  .step-badge {
+    font-size: .7rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: .2rem .65rem; border-radius: 99px;
+  }
+  .badge-violet { background: #ede5f8; color: var(--accent); }
+  .badge-teal   { background: #d4f0ea; color: var(--accent2); }
+  .badge-blue   { background: #ddeeff; color: var(--accent3); }
+  .badge-gold   { background: #fdf3e0; color: #8a6a1d; }
+
+  .step-body { padding: 1.5rem; }
+
+  /* ── STEPS LIST ── */
+  .steps-list { list-style: none; margin: 0 0 1.2rem; }
+  .steps-list li {
+    display: flex; gap: .8rem;
+    font-size: .93rem; padding: .45rem 0;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+  .steps-list li:last-child { border-bottom: none; }
+  .step-icon {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--warm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .7rem; font-weight: 700; flex-shrink: 0;
+    margin-top: .2rem; color: var(--muted);
+  }
+  .steps-list a { color: var(--accent3); font-weight: 600; text-decoration: none; }
+  .steps-list a:hover { text-decoration: underline; }
+
+  /* ── PROMPT BOX ── */
+  .prompt-label {
+    font-size: .72rem; font-weight: 700;
+    letter-spacing: .16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: .4rem;
+  }
+  .prompt-box {
+    background: #f1f4fa;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent3);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    font-size: .9rem;
+    font-family: 'Source Serif 4', serif;
+    color: var(--ink);
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .prompt-wrap { margin-bottom: 1rem; }
+
+  .btn-copy {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: var(--ink); color: #fff; border: none;
+    font-family: 'Source Serif 4', serif;
+    font-size: .82rem; font-weight: 600;
+    padding: .45rem 1.1rem; border-radius: 6px;
+    cursor: pointer; margin-top: .6rem;
+    transition: background .2s, transform .1s;
+    letter-spacing: .04em;
+  }
+  .btn-copy:hover { background: #333; transform: translateY(-1px); }
+  .btn-copy.copied { background: var(--accent2); }
+
+  /* ── HINTS ── */
+  .hint {
+    border-radius: 8px; padding: .9rem 1.1rem;
+    margin-bottom: 1rem; font-size: .88rem; line-height: 1.65;
+  }
+  .hint-violet { background: #f4eefb; border-left: 3px solid var(--accent); }
+  .hint-teal   { background: #e4f5f0; border-left: 3px solid var(--accent2); }
+  .hint-blue   { background: #eef4fb; border-left: 3px solid var(--accent3); }
+  .hint-yellow { background: #fef9e7; border-left: 3px solid #e6a817; }
+  .hint strong { font-weight: 600; }
+
+  /* ── TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: .35rem; margin: .5rem 0; }
+  .tag {
+    display: inline-block; font-size: .72rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: .18rem .55rem; border-radius: 3px;
+  }
+  .tag-avoid { background: #ede5f8; color: var(--accent); }
+
+  /* ── CONNECTORS ── */
+  .connector-grid { display: flex; flex-wrap: wrap; gap: .4rem; margin: .5rem 0 .8rem; }
+  .connector-pill {
+    background: #fff; border: 1px solid var(--border);
+    padding: .22rem .7rem; border-radius: 99px;
+    font-size: .82rem; font-style: italic; color: var(--ink);
+  }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.4rem 0; }
+
+  /* ── POEM BOX ── */
+  .poem-box {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .poem-header {
+    display: flex; align-items: center; gap: .8rem;
+    padding: 1rem 1.5rem;
+    background: #e8e4f6;
+    border-bottom: 1px solid var(--border);
+  }
+  .poem-header-icon { font-size: 1.2rem; }
+  .poem-header-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink); }
+  .poem-header-sub { font-size: .8rem; color: var(--muted); font-style: italic; }
+  .poem-body { padding: 1.5rem; }
+
+  .poem-text {
+    background: #f1f4fa;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    padding: 1.2rem 1.4rem;
+    font-size: .93rem;
+    font-family: 'Source Serif 4', serif;
+    color: var(--ink);
+    line-height: 2;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ── FOOTER ── */
+  .footer-note {
+    background: #1e2444; color: rgba(255,255,255,.75);
+    border-radius: 10px; padding: 1.4rem 1.8rem;
+    font-size: .88rem; line-height: 1.7;
+  }
+  .footer-note strong { color: #c9ae78; }
+
+  html { scroll-behavior: smooth; }
+
+  @media (max-width: 600px) {
+    .step-header { flex-wrap: wrap; }
+    .step-badge { margin-left: auto; }
+    header { padding: 1.8rem 1rem 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-tag">Lengua Castellana y Literatura · 1.º Bachillerato</div>
+    <h1>Prompts para ChatGPT<br><em>Comentario literario · Soneto barroco</em></h1>
+    <p>Un prompt para cada parte · copia · pega el poema en ChatGPT · revisa y mejora el resultado</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="section-heading">
+    <div class="section-heading-icon">✍️</div>
+    <div>
+      <h2>Comentario literario</h2>
+      <p>Cuatro partes · introducción · análisis del contenido · análisis de la forma · conclusión</p>
+    </div>
+  </div>
+
+  <div class="intro-box">
+    <strong>¿Cómo funciona?</strong> El comentario literario tiene cuatro partes. Aquí encontrarás un prompt distinto para cada una. Úsalos <strong>por separado y en orden</strong>: copia el prompt en <a href="https://chatgpt.com" target="_blank">chatgpt.com</a> y pega el texto del poema <strong>en el mismo cuadro</strong> antes de enviar.
+    <br><br>
+    <strong>¿Quieres trabajar con otro soneto barroco?</strong> Los prompts están diseñados para funcionar con cualquier soneto del Barroco español (Quevedo, Góngora, Lope de Vega, Sor Juana Inés de la Cruz…). Copia el texto del poema que te hayan propuesto y pégalo en ChatGPT justo después del prompt correspondiente, en lugar del de Quevedo.
+    <br><br>
+    <strong>Recuerda:</strong> lo que genere ChatGPT es solo un <em>borrador de trabajo</em>. Tu tarea es leerlo con atención, corregir lo que no cuadre y redactar tu propio comentario con tus palabras. El texto que entregues debe reflejar tu voz y tu comprensión del poema.
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 1 — INTRODUCCIÓN
+  ══════════════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num num-violet">1</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Introducción</div>
+        <div class="step-subtitle">Dos versiones · género, autor, movimiento, época · ~40-50 palabras</div>
+      </div>
+      <div class="step-badge badge-violet">1.ª parte</div>
+    </div>
+    <div class="step-body">
+
+      <div class="hint hint-violet">
+        <strong>🎯 Para qué sirve:</strong> La introducción sitúa el poema en su contexto: género, subgénero, autor, movimiento literario y época. Es breve y no debe ser un resumen del poema. Su función es contextualizar al lector antes de entrar en el análisis.
+      </div>
+
+      <ul class="steps-list">
+        <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+        <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del poema.</span></li>
+        <li><div class="step-icon">3</div><span>Lee las dos introducciones, fíjate en cómo están construidas y escribe la tuya propia inspirándote en ellas.</span></li>
+      </ul>
+
+      <div class="prompt-wrap">
+        <div class="prompt-label">📋 Prompt listo para copiar</div>
+        <div class="prompt-box" id="prompt1">Redacta dos versiones de la introducción (nivel de redacción medio-bajo de 1.º de bachillerato) de aproximadamente 40 palabras para comenzar el comentario literario del soneto que aparece a continuación. Cada introducción debe mencionar: el género literario (lírico), el subgénero (determina si se trata de un soneto amoroso, filosófico-moral, satírico-burlesco, religioso u otro, según el contenido del poema), el nombre completo del autor con sus fechas de nacimiento y muerte, el movimiento literario (Barroco) y la época (primera mitad o segunda mitad del siglo XVII, según el autor). Conviene también añadir alguna nota breve y llamativa sobre el autor. No ha de ser un resumen del poema: es una breve contextualización que sitúa al lector. Una de las versiones debe comenzar con «El texto propuesto pertenece a una obra del género lírico, en concreto, un soneto…»; la otra, con «Nos hallamos ante un texto del género lírico, concretamente un soneto…». Utiliza un registro formal y evita la primera persona.</div>
+        <button class="btn-copy" onclick="copyPrompt('prompt1', this)">📋 Copiar prompt</button>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Inicios sugeridos</p>
+      <div class="connector-grid">
+        <span class="connector-pill">«El texto propuesto pertenece a una obra del género lírico, en concreto, un soneto…»</span>
+        <span class="connector-pill">«Nos hallamos ante un texto del género lírico, concretamente un soneto…»</span>
+      </div>
+
+      <div class="hint hint-yellow">
+        <strong>⚠️ La introducción NO debe:</strong>
+        <div class="tags">
+          <span class="tag tag-avoid">Ser un resumen del poema</span>
+          <span class="tag tag-avoid">Empezar con «Este poema trata»</span>
+          <span class="tag tag-avoid">Usar 1.ª persona</span>
+          <span class="tag tag-avoid">Ser demasiado extensa</span>
+          <span class="tag tag-avoid">Analizar recursos ya</span>
+        </div>
+        <div style="margin-top:.6rem;"><strong>✅ Sí debe:</strong> mencionar género, subgénero (incluido si es satírico-burlesco o irónico), autor con fechas, movimiento y época · comenzar con una de las frases sugeridas · ser breve y directa.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 2 — ANÁLISIS DEL CONTENIDO
+  ══════════════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num num-teal">2</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Análisis del contenido</div>
+        <div class="step-subtitle">Resumen estrofa a estrofa · tema · tópicos · ~120-150 palabras</div>
+      </div>
+      <div class="step-badge badge-teal">2.ª parte</div>
+    </div>
+    <div class="step-body">
+
+      <div class="hint hint-teal">
+        <strong>🎯 Para qué sirve:</strong> El análisis del contenido explica qué dice el poema y qué significa. Se resume lo que expresa el poeta estrofa a estrofa, se identifica el tema central y se señalan los tópicos literarios presentes (ideas o imágenes recurrentes en la tradición literaria, como el <em>carpe diem</em>, el <em>amor post mortem</em>, etc.).
+      </div>
+
+      <ul class="steps-list">
+        <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+        <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del poema.</span></li>
+        <li><div class="step-icon">3</div><span>Comprueba que el análisis es correcto, completa lo que falte y redacta el tuyo con tus propias palabras.</span></li>
+      </ul>
+
+      <div class="prompt-wrap">
+        <div class="prompt-label">📋 Prompt listo para copiar</div>
+        <div class="prompt-box" id="prompt2">Redacta el análisis del contenido (nivel de redacción medio-bajo de 1.º de bachillerato) del soneto que aparece a continuación. El análisis debe incluir: (1) un breve resumen estrofa a estrofa que explique qué expresa el poeta en cada cuarteto y en cada terceto; (2) el tema central del poema, formulado en pocas palabras; (3) el tono del poema: indica si es lírico-amoroso, filosófico-moral, satírico-burlesco, irónico o crítico, y explica brevemente contra qué o quién va dirigida esa crítica o ironía si es el caso; (4) los tópicos literarios presentes en el poema, explicados brevemente. La extensión aproximada es de 100 palabras. Usa un registro formal, evita la primera persona y no copies versos literalmente.</div>
+        <button class="btn-copy" onclick="copyPrompt('prompt2', this)">📋 Copiar prompt</button>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Tópicos frecuentes en la poesía barroca</p>
+      <div class="connector-grid">
+        <span class="connector-pill">Amor post mortem</span>
+        <span class="connector-pill">Carpe diem</span>
+        <span class="connector-pill">Petrarquismo</span>
+        <span class="connector-pill">Memento mori</span>
+        <span class="connector-pill">Amor cortés</span>
+        <span class="connector-pill">Inmortalidad del amor</span>
+        <span class="connector-pill">Tempus fugit</span>
+        <span class="connector-pill">Vanitas vanitatum</span>
+        <span class="connector-pill">Desengaño</span>
+        <span class="connector-pill">Locus amoenus</span>
+        <span class="connector-pill">Sátira de costumbres</span>
+        <span class="connector-pill">Sátira social</span>
+      </div>
+
+      <div class="hint hint-yellow">
+        <strong>⚠️ El análisis del contenido NO debe:</strong>
+        <div class="tags">
+          <span class="tag tag-avoid">Copiar versos sin explicarlos</span>
+          <span class="tag tag-avoid">Confundir tema con resumen</span>
+          <span class="tag tag-avoid">Olvidar los tópicos</span>
+          <span class="tag tag-avoid">Usar 1.ª persona</span>
+        </div>
+        <div style="margin-top:.6rem;"><strong>✅ Sí debe:</strong> parafrasear el contenido de cada estrofa · formular el tema de forma breve y precisa · señalar el tono (satírico, irónico, burlesco, lírico…) · identificar y explicar los tópicos con ejemplos del poema.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 3 — ANÁLISIS DE LA FORMA
+  ══════════════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num num-blue">3</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Análisis de la forma</div>
+        <div class="step-subtitle">Métrica · estilo · recursos retóricos · ~120-150 palabras</div>
+      </div>
+      <div class="step-badge badge-blue">3.ª parte</div>
+    </div>
+    <div class="step-body">
+
+      <div class="hint hint-blue">
+        <strong>🎯 Para qué sirve:</strong> El análisis de la forma examina cómo está construido el poema: la estrofa y el esquema métrico, el estilo general del autor y los recursos literarios (figuras retóricas) más destacados, siempre ilustrados con versos concretos del poema.
+      </div>
+
+      <ul class="steps-list">
+        <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+        <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del poema.</span></li>
+        <li><div class="step-icon">3</div><span>Verifica que los recursos identificados son correctos y que los versos citados están bien transcritos.</span></li>
+      </ul>
+
+      <div class="prompt-wrap">
+        <div class="prompt-label">📋 Prompt listo para copiar</div>
+        <div class="prompt-box" id="prompt3">Redacta el análisis de la forma (nivel de redacción medio-bajo de 1.º de bachillerato) del soneto que aparece a continuación. El análisis debe incluir: (1) la estrofa utilizada y su esquema métrico (tipo de verso, número de sílabas y esquema de rima); (2) el estilo general del autor: determina si se trata de un poeta conceptista (tendencia a la densidad expresiva, el ingenio, la paradoja y la agudeza, como en Quevedo) o culterano (tendencia al lenguaje sensorial y colorista, los cultismos y latinismos, las metáforas complejas y el hipérbaton extremo, como en Góngora), y justifícalo brevemente; (3) al menos cuatro recursos literarios identificados en el poema, bien nombrados, explicados brevemente y acompañados del verso o versos concretos donde aparecen. La extensión aproximada es de 100 palabras. Usa un registro formal y evita la primera persona.</div>
+        <button class="btn-copy" onclick="copyPrompt('prompt3', this)">📋 Copiar prompt</button>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Recursos retóricos habituales en la poesía barroca</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:.8rem; margin-bottom:.8rem;">
+        <div>
+          <div class="hint hint-violet" style="margin-bottom:.4rem; padding:.6rem .9rem;"><strong>Conceptismo</strong> (Quevedo…)</div>
+          <div class="connector-grid">
+            <span class="connector-pill">Paradoja</span>
+            <span class="connector-pill">Antítesis</span>
+            <span class="connector-pill">Hipérbole</span>
+            <span class="connector-pill">Hipérbaton</span>
+            <span class="connector-pill">Retruécano</span>
+            <span class="connector-pill">Anáfora</span>
+            <span class="connector-pill">Juego de palabras</span>
+          </div>
+        </div>
+        <div>
+          <div class="hint hint-teal" style="margin-bottom:.4rem; padding:.6rem .9rem;"><strong>Culteranismo</strong> (Góngora…)</div>
+          <div class="connector-grid">
+            <span class="connector-pill">Cultismo / latinismo</span>
+            <span class="connector-pill">Perífrasis</span>
+            <span class="connector-pill">Metáfora gongorina</span>
+            <span class="connector-pill">Hipérbaton extremo</span>
+            <span class="connector-pill">Imagen sensorial</span>
+            <span class="connector-pill">Ref. mitológica</span>
+            <span class="connector-pill">Alegoría</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint hint-yellow">
+        <strong>⚠️ El análisis de la forma NO debe:</strong>
+        <div class="tags">
+          <span class="tag tag-avoid">Citar recursos sin explicarlos</span>
+          <span class="tag tag-avoid">Olvidar los versos como ejemplo</span>
+          <span class="tag tag-avoid">Confundir el esquema de rima</span>
+          <span class="tag tag-avoid">Usar 1.ª persona</span>
+        </div>
+        <div style="margin-top:.6rem;"><strong>✅ Sí debe:</strong> nombrar y explicar cada recurso · acompañarlo del verso donde aparece · indicar la estrofa y el esquema métrico · determinar si el estilo es conceptista o culterano y justificarlo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PASO 4 — CONCLUSIÓN
+  ══════════════════════════════════════ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-num num-gold">4</div>
+      <div class="step-title-wrap">
+        <div class="step-title">Conclusión</div>
+        <div class="step-subtitle">Dos versiones · síntesis y valoración · ~40-50 palabras</div>
+      </div>
+      <div class="step-badge badge-gold">4.ª parte</div>
+    </div>
+    <div class="step-body">
+
+      <div class="hint hint-yellow">
+        <strong>🎯 Para qué sirve:</strong> La conclusión sintetiza el valor literario del poema y cierra el comentario de forma ordenada. No es un resumen de lo ya dicho: es el punto de llegada del análisis, donde se relaciona el soneto con el estilo del autor y con la tradición literaria del Barroco.
+      </div>
+
+      <ul class="steps-list">
+        <li><div class="step-icon">1</div><span>Copia el <em>prompt</em> de abajo con el botón.</span></li>
+        <li><div class="step-icon">2</div><span>Pégalo en <a href="https://chatgpt.com" target="_blank"><strong>chatgpt.com</strong></a> y, <strong>en el mismo cuadro</strong>, añade a continuación el texto del poema.</span></li>
+        <li><div class="step-icon">3</div><span>Lee las dos conclusiones y redacta la tuya escogiendo las ideas que mejor cierren tu comentario.</span></li>
+      </ul>
+
+      <div class="prompt-wrap">
+        <div class="prompt-label">📋 Prompt listo para copiar</div>
+        <div class="prompt-box" id="prompt4">Redacta dos versiones de la conclusión (nivel de redacción medio-bajo de 1.º de bachillerato) de aproximadamente 40-50 palabras para el comentario literario del soneto que aparece a continuación. Cada conclusión debe: (1) comenzar con un conector conclusivo ('En definitiva,', 'En conclusión,', 'En suma,', 'A la luz de lo analizado,'); (2) sintetizar, sin repetir literalmente lo ya dicho, el valor literario y el contenido del poema; (3) relacionar el soneto con el estilo conceptista o culterano del autor, según corresponda, y con la tradición literaria del Barroco español. Evita la primera persona y los cierres vacuos del tipo 'Es un poema muy bonito y emocionante'.</div>
+        <button class="btn-copy" onclick="copyPrompt('prompt4', this)">📋 Copiar prompt</button>
+      </div>
+
+      <hr class="divider">
+
+      <p style="font-size:.85rem; font-weight:600; margin-bottom:.5rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase;">Conectores conclusivos</p>
+      <div class="connector-grid">
+        <span class="connector-pill">En definitiva,</span>
+        <span class="connector-pill">En conclusión,</span>
+        <span class="connector-pill">En suma,</span>
+        <span class="connector-pill">A la luz de lo analizado,</span>
+        <span class="connector-pill">Todo lo anterior permite afirmar que</span>
+      </div>
+
+      <div class="hint hint-yellow">
+        <strong>⚠️ La conclusión NO debe:</strong>
+        <div class="tags">
+          <span class="tag tag-avoid">«Es un poema muy bonito»</span>
+          <span class="tag tag-avoid">«Me ha gustado mucho»</span>
+          <span class="tag tag-avoid">Repetir literalmente lo dicho</span>
+          <span class="tag tag-avoid">Usar 1.ª persona</span>
+          <span class="tag tag-avoid">Ser un resumen más</span>
+        </div>
+        <div style="margin-top:.6rem;"><strong>✅ Sí debe:</strong> sintetizar el valor del poema · relacionarlo con el Barroco y el estilo del autor (conceptismo o culteranismo) · comenzar con conector conclusivo · cerrar con una idea que dé sentido al análisis.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       TEXTO DEL POEMA
+  ══════════════════════════════════════ -->
+  <div class="poem-box">
+    <div class="poem-header">
+      <div class="poem-header-icon">📜</div>
+      <div>
+        <div class="poem-header-title">Texto del poema · Ejemplo con Quevedo</div>
+        <div class="poem-header-sub">Cópialo y pégalo en ChatGPT tras cada prompt · o sustitúyelo por cualquier otro soneto barroco</div>
+      </div>
+    </div>
+    <div class="poem-body">
+      <div class="hint hint-blue" style="margin-bottom:1rem;">
+        <strong>📌 Recuerda:</strong> después de pegar el prompt, añade el poema en el <strong>mismo cuadro de mensaje</strong> de ChatGPT antes de pulsar enviar. El soneto de Quevedo que aparece aquí es el <strong>poema de ejemplo</strong>: si tu profesor te ha propuesto otro soneto barroco, cópialo y pégalo en su lugar. No hace falta cambiar nada en los prompts.
+      </div>
+      <div class="poem-text" id="texto-poema">Amor constante más allá de la muerte
+Francisco de Quevedo
+
+Cerrar podrá mis ojos la postrera
+sombra que me llevare el blanco día,
+y podrá desatar esta alma mía
+hora a su afán ansioso lisonjera;
+
+mas no, de esotra parte, en la ribera,
+dejará la memoria, en donde ardía:
+nadar sabe mi llama la agua fría,
+y perder el respeto a ley severa.
+
+Alma a quien todo un dios prisión ha sido,
+venas que humor a tanto fuego han dado,
+médulas que han gloriosamente ardido:
+
+su cuerpo dejará, no su cuidado;
+serán ceniza, mas tendrá sentido;
+polvo serán, mas polvo enamorado.</div>
+      <button class="btn-copy" onclick="copyPrompt('texto-poema', this)">📋 Copiar texto del poema</button>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <strong>Recuerda:</strong> los textos que genera ChatGPT son borradores de trabajo. Tu tarea es revisarlos, corregir lo que no cuadre y, sobre todo, hacerlos tuyos. El comentario que entregues debe reflejar tu voz y tu comprensión del poema.
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function copyPrompt(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText || el.textContent;
+    const original = btn.innerHTML;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.innerHTML = '✅ ¡Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.innerHTML = '✅ ¡Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.innerHTML = original; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+</script>
+
+</body>
+</html>

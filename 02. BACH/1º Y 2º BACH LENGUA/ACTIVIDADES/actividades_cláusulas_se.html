@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bachillerato · Clasificación de la cláusula · Tipos de SE</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --indigo:#2D3A8C;--indigo-light:#4A5BC7;--amber:#D4820A;--amber-light:#F0A832;
+  --cream:#F8F7FF;--parchment:#EEEEFF;--dark:#141A4A;--text:#1C2240;
+  --muted:#5A6080;--border:rgba(45,58,140,0.15);--shadow:0 4px 24px rgba(20,26,74,0.10);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text);font-size:17px;line-height:1.75;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:rgba(14,20,60,0.88);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.login-box{background:white;border-radius:12px;padding:2.5rem 2rem;max-width:420px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.login-box h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--indigo);margin-bottom:0.4rem;}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:1.5rem;}
+.login-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;color:var(--text);margin-bottom:1rem;transition:border-color 0.15s;}
+.login-input:focus{outline:none;border-color:var(--indigo);}
+.login-btn{width:100%;background:var(--indigo);color:white;border:none;padding:13px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;}
+.login-btn:hover{background:var(--indigo-light);}
+.login-error{font-size:13px;color:#C0392B;margin-top:0.5rem;display:none;}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--indigo) 0%,#1A2570 60%,#0D1545 100%);color:white;min-height:260px;display:flex;align-items:stretch;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(212,130,10,0.18) 0%,transparent 60%);}
+.hero-inner{position:relative;max-width:1100px;margin:0 auto;padding:2.5rem 2rem;width:100%;}
+.hero-tag{display:inline-block;background:var(--amber);color:white;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:4px 12px;border-radius:2px;margin-bottom:1rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,40px);font-weight:700;line-height:1.2;margin-bottom:0.75rem;}
+.hero h1 em{color:#F0C060;font-style:italic;}
+.hero-sub{font-size:16px;opacity:0.85;max-width:680px;margin-bottom:1.25rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:white;font-size:12px;padding:4px 12px;border-radius:20px;font-family:'Source Sans 3',sans-serif;cursor:pointer;transition:background 0.2s;}
+.hero-pill:hover{background:rgba(255,255,255,0.28);}
+
+/* NAV */
+.main-nav{background:white;border-bottom:2px solid var(--parchment);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.5rem;display:flex;overflow-x:auto;}
+.nav-btn{padding:12px 13px;font-family:'Source Sans 3',sans-serif;font-size:11px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all 0.2s;letter-spacing:0.03em;text-transform:uppercase;}
+.nav-btn:hover{color:var(--indigo);}
+.nav-btn.active{color:var(--indigo);border-bottom-color:var(--indigo);}
+.nav-user{margin-left:auto;padding:0 0.5rem;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap;}
+.nav-user strong{color:var(--indigo);}
+
+/* LAYOUT */
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.section{display:none;padding:2.5rem 0;}
+.section.active{display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:28px;color:var(--indigo);margin-bottom:0.4rem;}
+.section-lead{font-size:16px;color:var(--muted);margin-bottom:1.75rem;max-width:700px;border-left:3px solid var(--amber);padding-left:1rem;}
+
+/* SUBAPARTADO */
+.sub-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--indigo);margin:2rem 0 0.75rem;padding-bottom:6px;border-bottom:2px solid var(--parchment);}
+
+/* CARDS */
+.card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.4rem;box-shadow:var(--shadow);margin-bottom:1rem;}
+.card-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--indigo);margin-bottom:0.6rem;}
+.card p{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:0.5rem;}
+
+/* GRIDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;}
+@media(max-width:800px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* TIPO CARD */
+.tipo{border-radius:8px;padding:1.1rem 1.25rem;margin-bottom:0.85rem;border-left:5px solid var(--indigo);}
+.tipo.enunciativa{border-color:#2D7DD2;background:#EFF6FF;}
+.tipo.exclamativa{border-color:#D4380D;background:#FFF2ED;}
+.tipo.interrogativa{border-color:#7E57C2;background:#F3EFFF;}
+.tipo.exhortativa{border-color:#E67E22;background:#FEF9ED;}
+.tipo.dubitativa{border-color:#16A085;background:#EDFAF6;}
+.tipo.desiderativa{border-color:#C0392B;background:#FEF0F0;}
+.tipo.bimembre{border-color:#2E86AB;background:#EEF7FB;}
+.tipo.unimembre{border-color:#8E44AD;background:#F5F0FF;}
+.tipo.atributiva{border-color:#27AE60;background:#EDFAF3;}
+.tipo.predicativa{border-color:#E67E22;background:#FEF3E6;}
+.tipo.pasiva{border-color:#C0392B;background:#FEF0F0;}
+.tipo.pronominal{border-color:#8E44AD;background:#F5F0FF;}
+.tipo-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:5px;}
+.tipo p{font-size:14px;color:var(--text);line-height:1.6;margin-bottom:4px;}
+.tipo-marca{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,0.08);margin-bottom:5px;color:var(--dark);}
+.ejemplo-box{background:rgba(255,255,255,0.7);border-radius:5px;padding:6px 11px;font-size:14px;margin-top:5px;font-style:italic;}
+.ejemplo-box .et{font-style:normal;font-weight:600;font-size:11px;color:var(--muted);margin-right:4px;}
+
+/* TABLA SE */
+.se-table{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:1.25rem;}
+.se-table th{background:var(--indigo);color:white;padding:9px 12px;text-align:left;font-weight:600;font-size:12px;}
+.se-table td{padding:10px 12px;border-bottom:1px solid var(--parchment);vertical-align:top;line-height:1.5;}
+.se-table tr:nth-child(even) td{background:#F4F4FF;}
+.se-table .se-name{font-weight:700;color:var(--indigo);}
+.se-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;margin:1px;}
+.se-badge.fn{background:#DBEAFE;color:#1E40AF;}
+.se-badge.sin{background:#FEF3C7;color:#92400E;}
+
+/* PISTA BOX */
+.pista{background:#FEF9E7;border:1px solid var(--amber);border-radius:8px;padding:0.85rem 1.1rem;margin:0.75rem 0;font-size:13px;}
+.pista strong{color:var(--amber);}
+
+/* EJERCICIOS */
+.ej-box{background:white;border:2px solid var(--amber);border-radius:10px;overflow:hidden;margin-top:2rem;}
+.ej-header{background:var(--indigo);color:white;padding:0.85rem 1.25rem;}
+.ej-header h3{font-family:'Playfair Display',serif;font-size:17px;margin:0;}
+.ej-body{padding:1.25rem 1.5rem;}
+.ej-instruc{font-size:14px;color:var(--muted);margin-bottom:1rem;font-style:italic;}
+.rel-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.rel-col{display:flex;flex-direction:column;gap:6px;}
+.rel-btn{padding:8px 12px;border-radius:6px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;text-align:left;background:white;transition:all 0.15s;font-family:'Source Sans 3',sans-serif;line-height:1.4;}
+.rel-btn:hover{border-color:var(--indigo);}
+.rel-btn.sel{border-color:var(--amber);background:#FEF9E7;}
+.rel-btn.matched{border-color:#4CAF50;background:#E8F5E9;pointer-events:none;opacity:0.85;}
+.rel-btn.fail{border-color:#C0392B;background:#FDEAEA;}
+.vf-item{margin-bottom:0.85rem;padding:0.75rem 1rem;background:var(--parchment);border-radius:8px;border:1px solid var(--border);}
+.vf-frase{font-size:15px;margin-bottom:6px;line-height:1.5;}
+.vf-btns{display:flex;gap:6px;}
+.vf-btn{padding:5px 16px;border-radius:20px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;background:white;font-family:'Source Sans 3',sans-serif;font-weight:600;transition:all 0.15s;}
+.vf-btn.ok{background:#4CAF50;color:white;border-color:#4CAF50;pointer-events:none;}
+.vf-btn.fail{background:#C0392B;color:white;border-color:#C0392B;}
+.vf-btn.disabled{pointer-events:none;opacity:0.5;}
+.vf-fb{font-size:12px;margin-top:5px;display:none;padding:4px 8px;border-radius:4px;}
+.vf-fb.ok{display:block;color:#1B5E20;background:#E8F5E9;}
+.vf-fb.fail{display:block;color:#8B1A1A;background:#FDEAEA;}
+.hueco-frase{font-size:15px;line-height:2.5;margin-bottom:0.4rem;}
+.hueco-input{border:none;border-bottom:2px solid var(--indigo);background:transparent;font-size:14px;font-family:'Source Sans 3',sans-serif;width:130px;text-align:center;outline:none;padding:0 4px;color:var(--dark);}
+.hueco-input.ok{border-color:#4CAF50;color:#1B5E20;}
+.hueco-input.fail{border-color:#C0392B;color:#C0392B;}
+.btn-ej{background:var(--indigo);color:white;border:none;padding:8px 20px;border-radius:6px;font-size:13px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;margin-top:0.75rem;}
+.btn-ej:hover{background:var(--amber);color:var(--dark);}
+.ej-result{font-size:13px;font-weight:600;margin-top:0.5rem;padding:6px 10px;border-radius:6px;display:none;}
+.ej-result.ok{display:block;color:#1B5E20;background:#E8F5E9;}
+.ej-result.parcial{display:block;color:#7A4F00;background:#FFF8E1;}
+.select-ej{padding:6px 10px;border-radius:6px;border:1.5px solid var(--border);font-size:13px;font-family:'Source Sans 3',sans-serif;background:white;cursor:pointer;}
+.select-ej.ok{border-color:#4CAF50;background:#E8F5E9;color:#1B5E20;}
+.select-ej.fail{border-color:#C0392B;background:#FDEAEA;color:#8B1A1A;}
+
+/* QUIZ */
+.score-wrap{background:var(--parchment);border-radius:8px;padding:1rem 1.25rem;display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;border:1px solid var(--border);}
+.score-num{font-family:'Playfair Display',serif;font-size:28px;color:var(--indigo);min-width:70px;}
+.score-bar-wrap{flex:1;height:8px;background:rgba(45,58,140,0.12);border-radius:4px;overflow:hidden;}
+.score-bar-fill{height:100%;background:var(--indigo);border-radius:4px;transition:width 0.4s;}
+.q-item{margin-bottom:1.5rem;}
+.q-num{font-size:11px;font-weight:600;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.q-text{font-size:16px;font-weight:600;color:var(--dark);margin-bottom:0.75rem;line-height:1.5;}
+.q-opts{display:flex;flex-direction:column;gap:6px;}
+.q-opt{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;font-size:15px;color:var(--text);background:white;transition:all 0.15s;text-align:left;}
+.q-opt:hover{border-color:var(--indigo);background:var(--parchment);}
+.q-opt.correct{background:#E8F5E9;border-color:#4CAF50;color:#1B5E20;}
+.q-opt.wrong{background:#FDEAEA;border-color:#C0392B;color:#8B1A1A;}
+.q-opt.revealed{pointer-events:none;}
+.opt-letter{width:24px;height:24px;flex-shrink:0;border-radius:50%;background:var(--parchment);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--indigo);}
+.q-opt.correct .opt-letter{background:#4CAF50;color:white;}
+.q-opt.wrong .opt-letter{background:#C0392B;color:white;}
+.q-fb{font-size:14px;padding:8px 12px;border-radius:6px;margin-top:8px;display:none;line-height:1.5;}
+.q-fb.correct{display:block;background:#E8F5E9;color:#1B5E20;border-left:3px solid #4CAF50;}
+.q-fb.wrong{display:block;background:#FDEAEA;color:#8B1A1A;border-left:3px solid #C0392B;}
+.q-divider{height:1px;background:var(--parchment);margin-bottom:1.5rem;}
+
+/* RESUMEN */
+.resumen-box{background:white;border:2px solid var(--indigo);border-radius:10px;overflow:hidden;margin-top:2rem;}
+.resumen-header{background:var(--indigo);color:white;padding:1.25rem 1.5rem;}
+.resumen-header h3{font-family:'Playfair Display',serif;font-size:20px;}
+.resumen-body{padding:1.5rem;}
+.resumen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.25rem;}
+.resumen-stat{background:var(--parchment);border-radius:8px;padding:1rem;text-align:center;border:1px solid var(--border);}
+.resumen-stat .val{font-family:'Playfair Display',serif;font-size:32px;color:var(--indigo);line-height:1;}
+.resumen-stat .lbl{font-size:12px;color:var(--muted);margin-top:4px;}
+.nota-final-wrap{background:var(--indigo);border-radius:8px;padding:1.25rem;text-align:center;color:white;margin-bottom:1.25rem;}
+.nota-final-wrap .nota-num{font-family:'Playfair Display',serif;font-size:52px;line-height:1;}
+.nota-msg{font-size:15px;margin-top:0.5rem;opacity:0.9;}
+.resumen-errores{background:#F5F5FF;border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1.25rem;}
+.resumen-errores h4{font-size:13px;font-weight:600;color:var(--indigo);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;}
+.error-item{font-size:13px;color:var(--muted);padding:4px 0;border-bottom:1px solid var(--parchment);line-height:1.4;}
+.btn-enviar{width:100%;background:var(--indigo);color:white;border:none;padding:14px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background 0.15s;margin-top:1rem;}
+.btn-enviar:hover{background:var(--indigo-light);}
+.btn-enviar:disabled{background:#888;cursor:not-allowed;}
+.envio-ok{background:#E8F5E9;border:1.5px solid #4CAF50;border-radius:8px;padding:1rem;text-align:center;color:#1B5E20;font-size:14px;display:none;margin-top:0.75rem;}
+.ya-enviado{background:#FFF8E8;border:1.5px solid var(--amber);border-radius:8px;padding:1rem;text-align:center;color:#7A4200;font-size:14px;display:none;margin-top:0.75rem;}
+.tests-inc{background:#FFF8E8;border:1.5px solid var(--amber);border-radius:8px;padding:1rem;text-align:center;color:#7A4200;font-size:14px;margin-bottom:1rem;display:none;}
+.kahoot-banner{background:linear-gradient(135deg,#46178F 0%,#7B2ECA 100%);color:white;border-radius:10px;padding:2rem;text-align:center;margin-top:2rem;}
+.kahoot-banner h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:0.5rem;}
+.mb-2{margin-bottom:2rem;}
+em{font-style:italic;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="hero-tag" style="display:inline-block;margin-bottom:.9rem;">ESO / Bachillerato · Lengua Castellana y Literatura</div>
+    <h2>- Clasificación de la cláusulas <br> - Tipos de "se"</h2>
+    <p>Rellena los datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
+    <input class="login-input" type="text" id="loginNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
+    <input class="login-input" type="text" id="loginCurso" placeholder="Curso" maxlength="30">
+    </select>
+    <div class="login-err" id="loginErr">Por favor, rellena todos los campos antes de continuar.</div>
+    <button class="login-btn" onclick="doLogin()">Empezar →</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Bachillerato · Lengua Castellana y Literatura · Sintaxis</div>
+    <h1>Clasificación de la cláusula<br>y <em>Tipos de SE</em></h1>
+    <p class="hero-sub">Modalidad oracional, estructura del predicado, tipo de predicado y todos los valores del pronombre SE.</p>
+    <div class="hero-pills">
+      <button class="hero-pill" onclick="show('clausula')">📋 Clasificación de la cláusula</button>
+      <button class="hero-pill" onclick="show('se')">🔤 Tipos de SE</button>
+      <button class="hero-pill" onclick="show('test1')">✏️ Tests</button>
+    </div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="show('clausula')">1. Clasificación de la cláusula</button>
+    <button class="nav-btn" onclick="show('se')">2. Tipos de SE</button>
+    <button class="nav-btn" onclick="show('test1')">Test 1</button>
+    <button class="nav-btn" onclick="show('test2')">Test 2</button>
+    <button class="nav-btn" onclick="show('kahoot')">🏆 Kahoot</button>
+    <div class="nav-user" id="navUser" style="display:none">👤 <strong id="navNombre"></strong></div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ══ 1. CLASIFICACIÓN ══ -->
+<section class="section active container" id="s-clausula">
+  <h2 class="section-title">Clasificación de la cláusula</h2>
+  <p class="section-lead">La cláusula u oración simple puede clasificarse atendiendo a tres criterios: la intención del emisor (modalidad oracional), la relación sujeto-predicado y la estructura del predicado.</p>
+
+  <!-- 1.1 Modalidad -->
+  <h3 class="sub-title">1.1 Según la intención del emisor: modalidad oracional</h3>
+  <div class="grid-2 mb-2">
+    <div>
+      <div class="tipo enunciativa">
+        <div class="tipo-title">Enunciativas o declarativas</div>
+        <span class="tipo-marca">Indicativo · entonación objetiva</span>
+        <p>El contenido se expresa como algo real y objetivo.</p>
+        <div class="ejemplo-box"><span class="et">Ej.</span>Hoy es viernes. / Mañana vamos al cine.</div>
+      </div>
+      <div class="tipo exclamativa">
+        <div class="tipo-title">Exclamativas</div>
+        <span class="tipo-marca">¡! · det./pron./adv. exclamativos · interjecciones</span>
+        <p>Expresan emoción o énfasis. Pueden combinarse con otras modalidades.</p>
+        <div class="ejemplo-box"><span class="et">Ej.</span>¡Qué armario tan bonito! / ¡Cuánto hemos sufrido! / ¡Ojalá venga! (desiderativa exclamativa)</div>
+      </div>
+      <div class="tipo interrogativa">
+        <div class="tipo-title">Interrogativas</div>
+        <span class="tipo-marca">¿? (directas) · sin signos (indirectas)</span>
+        <p>El emisor solicita información. Se dividen en:</p>
+        <p><strong>Totales:</strong> pregunta sobre la totalidad; respuesta sí/no.<br>
+        <strong>Parciales:</strong> pregunta sobre un elemento mediante pronombre o adverbio interrogativo.</p>
+        <div class="ejemplo-box"><span class="et">Total:</span>¿Te has presentado? –Sí / –No.<br><span class="et">Parcial:</span>¿Cómo has hecho el examen? –Bastante bien.</div>
+      </div>
+    </div>
+    <div>
+      <div class="tipo exhortativa">
+        <div class="tipo-title">Exhortativas o imperativas</div>
+        <span class="tipo-marca">Imperativo · subjuntivo (negativas) · por favor</span>
+        <p>Expresan orden o mandato. Las negativas usan subjuntivo.</p>
+        <div class="ejemplo-box"><span class="et">Ej.</span>Ven aquí. / No te rías así.</div>
+      </div>
+      <div class="tipo dubitativa">
+        <div class="tipo-title">Dubitativas</div>
+        <span class="tipo-marca">Subjuntivo · futuro · condicional · quizá, tal vez, a lo mejor...</span>
+        <p>Expresan duda o probabilidad.</p>
+        <div class="ejemplo-box"><span class="et">Ej.</span>Tal vez llegue a tiempo. / Quizás venga mañana.</div>
+      </div>
+      <div class="tipo desiderativa">
+        <div class="tipo-title">Desiderativas</div>
+        <span class="tipo-marca">Subjuntivo · ojalá · así · que</span>
+        <p>Expresan deseo.</p>
+        <div class="ejemplo-box"><span class="et">Ej.</span>Ojalá llegue mañana. / Que te mejores pronto.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.2 Sujeto-Predicado -->
+  <h3 class="sub-title">1.2 Según la relación sujeto-predicado</h3>
+  <div class="grid-2 mb-2">
+    <div class="tipo bimembre">
+      <div class="tipo-title">No impersonales o bimembres</div>
+      <p>Pueden llevar sujeto léxico (expreso u omitido / tácito).</p>
+      <div class="ejemplo-box"><span class="et">Expreso:</span>Nosotros iremos a Italia.<br><span class="et">Tácito:</span>Iré a Italia. [yo]</div>
+    </div>
+    <div class="tipo unimembre">
+      <div class="tipo-title">Impersonales o unimembres</div>
+      <p>Sin sujeto léxico. El verbo va obligatoriamente en 3.ª persona singular.</p>
+      <p><strong>Tipos:</strong></p>
+      <p>① Verbos meteorológicos: <em>llover, nevar, granizar…</em><br>
+      ② <em>Ser</em> temporal, <em>Haber</em> existencial, <em>Hacer</em> meteorológico, <em>Bastar, Sobrar</em><br>
+      ③ Impersonal refleja con <em>SE</em> + verbo en 3.ª sg. sin sujeto</p>
+      <div class="ejemplo-box">
+        <span class="et">①</span>Ayer nevó en el Teide.<br>
+        <span class="et">②</span>Es de noche. / No hay nadie. / Hace frío.<br>
+        <span class="et">③</span>Se vive bien en Lugo.
+      </div>
+    </div>
+  </div>
+
+  <!-- 1.3 Estructura del predicado -->
+  <h3 class="sub-title">1.3 Según la estructura del predicado</h3>
+  <div class="grid-2 mb-2">
+    <div>
+      <div class="tipo atributiva">
+        <div class="tipo-title">Atributivas (copulativas)</div>
+        <span class="tipo-marca">Predicado nominal · ser / estar / parecer + AT</span>
+        <p>El atributo puede pronominalizarse por <em>lo</em>.</p>
+        <div class="ejemplo-box">
+          Oliva es magistrada. → <em>Oliva lo es.</em><br>
+          Estos niños están felices. → <em>Estos lo están.</em>
+        </div>
+      </div>
+      <div class="card" style="border-left:4px solid #27AE60;">
+        <div class="card-title" style="font-size:14px;">⚠️ Semiatributivas (seudocopulativas)</div>
+        <p style="font-size:13px;">A medio camino entre atribución y predicación. El verbo ha perdido parte de su significado léxico y el CPVO no puede pronominalizarse por <em>lo</em>.</p>
+        <p style="font-size:13px;margin-top:4px;"><strong>Verbos semiatributivos principales:</strong> <em>ponerse, resultar, volverse, andar, quedarse, hacerse, salir, venir, seguir, mantenerse, hallarse, permanecer, continuar, encontrarse…</em></p>
+        <div class="ejemplo-box" style="margin-top:6px;">Esta niña ha salido muy rebelde. / La fiesta resultó aburrida.</div>
+      </div>
+    </div>
+    <div>
+      <div class="tipo predicativa">
+        <div class="tipo-title">Predicativas · Activas</div>
+        <span class="tipo-marca">Predicado verbal · verbo predicativo · sujeto agente</span>
+        <p><strong>Transitivas:</strong> llevan CD. <em>La lectura proporciona placer.</em></p>
+        <p style="margin-top:6px;"><strong>→ Reflexivas directas:</strong> pronombre = CD. <em>Yo me lavo.</em><br>
+        <strong>→ Reflexivas indirectas:</strong> pronombre = CI. <em>Yo me lavo la cara.</em><br>
+        <strong>→ Recíprocas directas:</strong> pron. plural = CD. <em>Se pegaron.</em><br>
+        <strong>→ Recíprocas indirectas:</strong> pron. plural = CI. <em>Se pegaron patadas.</em></p>
+        <p style="margin-top:6px;"><strong>Intransitivas:</strong> sin CD. <em>Nos iremos a la montaña.</em></p>
+      </div>
+      <div class="tipo pasiva">
+        <div class="tipo-title">Predicativas · Pasivas</div>
+        <span class="tipo-marca">Sujeto paciente · verbo en voz pasiva</span>
+        <p><strong>Propias o perifrásticas:</strong> <em>ser</em> + participio + CAG (por…)<br>
+        <em>El festival fue presentado por José.</em></p>
+        <p style="margin-top:6px;"><strong>Reflejas:</strong> SE + verbo activo + sujeto que concuerda. SE = marca de pasividad sin función sintáctica. Transformable en perifrástica.<br>
+        <em>Se espera la concesión de los premios. → La concesión es esperada.</em></p>
+      </div>
+      <div class="tipo pronominal">
+        <div class="tipo-title">Predicativas · Pronominales</div>
+        <span class="tipo-marca">Pronombre = morfema sin función sintáctica</span>
+        <p>El pronombre forma parte de la unidad léxica del verbo.</p>
+        <div class="ejemplo-box">Se arrepintieron de no haber asistido.<br>No me acuerdo de aquella mujer.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJERCICIO CLÁUSULA -->
+  <div class="ej-box">
+    <div class="ej-header"><h3>📝 Ejercicio de repaso: clasificación de la cláusula</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Parte A — Relaciona cada oración con su tipo de modalidad.</p>
+      <div class="rel-grid" style="margin-bottom:1.5rem;">
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="rc1" data-lado="izq" data-key="a" onclick="ejRel('rc1','izq','a',this)">Ojalá apruebe el examen de selectividad.</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="izq" data-key="b" onclick="ejRel('rc1','izq','b',this)">¿Cuándo entregarás el trabajo?</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="izq" data-key="c" onclick="ejRel('rc1','izq','c',this)">Quizás apruebe todo en junio.</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="izq" data-key="d" onclick="ejRel('rc1','izq','d',this)">¡Estudia más y queja menos!</button>
+        </div>
+        <div class="rel-col">
+          <button class="rel-btn" data-ejg="rc1" data-lado="der" data-key="c" onclick="ejRel('rc1','der','c',this)">Dubitativa</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="der" data-key="a" onclick="ejRel('rc1','der','a',this)">Desiderativa</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="der" data-key="d" onclick="ejRel('rc1','der','d',this)">Exhortativa</button>
+          <button class="rel-btn" data-ejg="rc1" data-lado="der" data-key="b" onclick="ejRel('rc1','der','b',this)">Interrogativa parcial</button>
+        </div>
+      </div>
+      <div id="rc1-msg" style="display:none;margin-bottom:1rem;font-size:13px;color:green;font-weight:600;">✅ ¡Perfecto! Todas correctas.</div>
+
+      <p class="ej-instruc">Parte B — Identifica el tipo de cláusula según la estructura del predicado.</p>
+      <div id="ejB" style="display:flex;flex-direction:column;gap:0.75rem;"></div>
+      <button class="btn-ej" onclick="checkEjB()" style="margin-top:0.75rem;">Comprobar parte B</button>
+      <div class="ej-result" id="ejB-res"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2. TIPOS DE SE ══ -->
+<section class="section container" id="s-se">
+  <h2 class="section-title">Tipos de SE</h2>
+  <p class="section-lead">El pronombre <em>se</em> es uno de los elementos más complejos de la gramática española. Su función varía radicalmente según el contexto. Distinguimos dos grandes grupos: el <em>se</em> con función sintáctica y el <em>se</em> sin función sintáctica.</p>
+
+  <!-- 2.1 Con función -->
+  <h3 class="sub-title">2.1 SE con función sintáctica</h3>
+  <table class="se-table mb-2">
+    <tr>
+      <th>Tipo de SE</th>
+      <th>Función</th>
+      <th>Pista clave</th>
+      <th>Ejemplo</th>
+    </tr>
+    <tr>
+      <td class="se-name">SE pronombre personal átono<br><em style="font-size:11px;font-weight:400;">(«falso SE»)</em></td>
+      <td><span class="se-badge fn">CI</span></td>
+      <td>Sustituye a <em>le/les</em> cuando le sigue un pronombre LO/LA/LOS/LAS (CD). Equivale a <em>a él / a ella / a ellos…</em></td>
+      <td><em>Le di el libro.</em> → <strong>Se</strong> lo di.<br><em>Les entregué el trabajo.</em> → <strong>Se</strong> lo entregué.</td>
+    </tr>
+    <tr>
+      <td class="se-name">SE pronombre reflexivo</td>
+      <td><span class="se-badge fn">CD</span> <span class="se-badge fn">CI</span></td>
+      <td>El sujeto ejecuta una acción que recae sobre sí mismo. Admite el refuerzo <em>a sí mismo</em>.</td>
+      <td>Carlos <strong>se</strong> (CD) peina.<br>Carlos <strong>se</strong> (CI) peina el pelo.</td>
+    </tr>
+    <tr>
+      <td class="se-name">SE pronombre recíproco</td>
+      <td><span class="se-badge fn">CD</span> <span class="se-badge fn">CI</span></td>
+      <td>Sujeto múltiple o plural. Admite el refuerzo <em>mutuamente / el uno al otro</em>.</td>
+      <td>María y Carmen <strong>se</strong> (CD) vieron.<br>Los jugadores <strong>se</strong> (CI) cambiaron las camisetas (CD).</td>
+    </tr>
+  </table>
+
+  <!-- 2.2 Sin función -->
+  <h3 class="sub-title">2.2 SE sin función sintáctica</h3>
+  <table class="se-table mb-2">
+    <tr>
+      <th>Tipo de SE</th>
+      <th>Análisis</th>
+      <th>Pista clave</th>
+      <th>Ejemplo</th>
+    </tr>
+    <tr>
+      <td class="se-name">SE morfema pronominal<br><em style="font-size:11px;font-weight:400;">(parte del verbo)</em></td>
+      <td><span class="se-badge sin">Con el verbo</span></td>
+      <td>Acompaña obligatoriamente a ciertos verbos. A veces diferencia significados. Puede ser incoativo (inicio de acción).</td>
+      <td><em>Se quejaba</em> continuamente.<br><em>Acordar</em> la paz / <em>Acordarse</em> de algo.<br><em>Fue</em> enseguida / <em>Se fue</em> enseguida.</td>
+    </tr>
+    <tr>
+      <td class="se-name">SE dativo ético</td>
+      <td><span class="se-badge sin">Con el verbo</span></td>
+      <td>Refuerzo expresivo, coloquial, afectivo. <strong>Puede eliminarse</strong> sin cambiar el significado esencial.</td>
+      <td><strong>Se</strong> leyó el libro sin rechistar.<br>= Leyó el libro sin rechistar.</td>
+    </tr>
+    <tr>
+      <td class="se-name">SE pasivo reflejo</td>
+      <td><span class="se-badge sin">Con el verbo</span></td>
+      <td>Hay sujeto que <strong>concuerda</strong> con el verbo. Transformable en pasiva perifrástica.</td>
+      <td><em>Los perfumes</em> <strong>se</strong> extraen de las plantas.<br>→ <em>Los perfumes son extraídos</em> de las plantas.</td>
+    </tr>
+    <tr>
+      <td class="se-name">SE impersonal</td>
+      <td><span class="se-badge sin">Con el verbo</span></td>
+      <td>Verbo siempre en 3.ª persona <strong>singular</strong>. No concuerda con ningún sustantivo. Si hay CD de persona, va con <em>a</em>.</td>
+      <td><strong>Se</strong> vive bien en Madrid. (no varía en plural)<br><strong>Se</strong> aplaudió <em>a</em> los jugadores.</td>
+    </tr>
+  </table>
+
+  <div class="pista">
+    <strong>💡 Clave para distinguir pasivo reflejo vs. impersonal con SE:</strong><br>
+    En el <strong>pasivo reflejo</strong> hay un sujeto que <em>concuerda</em> con el verbo: <em>Se <u>venden</u> <u>pisos</u></em> (pisos = SUJ, verbo en plural).<br>
+    En el <strong>impersonal</strong> el verbo <em>no varía</em>: <em>Se <u>vive</u> bien aquí / Se <u>vive</u> bien allí</em> (siempre singular, sin sujeto).
+  </div>
+
+  <!-- EJERCICIO SE -->
+  <div class="ej-box" style="margin-top:2rem;">
+    <div class="ej-header"><h3>📝 Ejercicio de repaso: tipos de SE</h3></div>
+    <div class="ej-body">
+      <p class="ej-instruc">Parte A — Verdadero o falso.</p>
+      <div class="vf-item">
+        <div class="vf-frase">1. En «Se lo dije», el <em>se</em> es un pronombre reflexivo con función de CD.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" data-vfid="sv1" data-val="V" onclick="ejVF('sv1','V','F','Incorrecto. Es SE pronombre personal átono («falso SE»), que sustituye a «le» (CI) cuando le sigue el pronombre «lo» (CD).')">Verdadero</button>
+          <button class="vf-btn" data-vfid="sv1" data-val="F" onclick="ejVF('sv1','F','F','Correcto. No es reflexivo: es el «falso SE», variante de LE en función de CI cuando sigue otro pronombre de 3.ª persona.')">Falso</button>
+        </div>
+        <div class="vf-fb" id="vf-fb-sv1"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-frase">2. «Se venden pisos» es una oración impersonal con SE.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" data-vfid="sv2" data-val="V" onclick="ejVF('sv2','V','F','Incorrecto. Es una pasiva refleja: «pisos» es el sujeto paciente que concuerda con el verbo en plural.')">Verdadero</button>
+          <button class="vf-btn" data-vfid="sv2" data-val="F" onclick="ejVF('sv2','F','F','Correcto. Es pasiva refleja: «pisos» es el SUJ que concuerda con «venden». En impersonal el verbo no varía.')">Falso</button>
+        </div>
+        <div class="vf-fb" id="vf-fb-sv2"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-frase">3. En «Carlos se peina el pelo», el <em>se</em> funciona como CI.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" data-vfid="sv3" data-val="V" onclick="ejVF('sv3','V','V','Correcto. Como ya hay CD expreso («el pelo»), el pronombre reflexivo desempeña función de CI.')">Verdadero</button>
+          <button class="vf-btn" data-vfid="sv3" data-val="F" onclick="ejVF('sv3','F','V','Incorrecto. Al haber ya un CD («el pelo»), el pronombre reflexivo pasa a ser CI.')">Falso</button>
+        </div>
+        <div class="vf-fb" id="vf-fb-sv3"></div>
+      </div>
+      <div class="vf-item">
+        <div class="vf-frase">4. El SE dativo ético puede eliminarse de la oración sin que cambie su significado esencial.</div>
+        <div class="vf-btns">
+          <button class="vf-btn" data-vfid="sv4" data-val="V" onclick="ejVF('sv4','V','V','Correcto. Es un refuerzo expresivo y coloquial: «Se leyó el libro» = «Leyó el libro». Solo aporta énfasis.')">Verdadero</button>
+          <button class="vf-btn" data-vfid="sv4" data-val="F" onclick="ejVF('sv4','F','V','Incorrecto. Sí puede eliminarse: «Se bebió todo el café» = «Bebió todo el café». Solo añade expresividad.')">Falso</button>
+        </div>
+        <div class="vf-fb" id="vf-fb-sv4"></div>
+      </div>
+
+      <p class="ej-instruc" style="margin-top:1.5rem;">Parte B — Identifica el tipo de SE en cada oración.</p>
+      <div id="ejSE" style="display:flex;flex-direction:column;gap:0.85rem;"></div>
+      <button class="btn-ej" onclick="checkEjSE()" style="margin-top:0.75rem;">Comprobar parte B</button>
+      <div class="ej-result" id="ejSE-res"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TEST 1 ══ -->
+<section class="section container" id="s-test1">
+  <h2 class="section-title">Test 1: Clasificación de la cláusula</h2>
+  <p class="section-lead">10 preguntas sobre modalidad oracional, relación sujeto-predicado y estructura del predicado.</p>
+  <div class="score-wrap"><div><div style="font-size:13px;color:var(--muted);">Puntuación</div><div class="score-num" id="sc1">0 / 10</div></div><div class="score-bar-wrap"><div class="score-bar-fill" id="sb1" style="width:0%"></div></div></div>
+  <div id="qbox1"></div>
+</section>
+
+<!-- ══ TEST 2 ══ -->
+<section class="section container" id="s-test2">
+  <h2 class="section-title">Test 2: Tipos de SE</h2>
+  <p class="section-lead">10 preguntas sobre los distintos valores y funciones del pronombre SE.</p>
+  <div class="score-wrap"><div><div style="font-size:13px;color:var(--muted);">Puntuación</div><div class="score-num" id="sc2">0 / 10</div></div><div class="score-bar-wrap"><div class="score-bar-fill" id="sb2" style="width:0%"></div></div></div>
+  <div id="qbox2"></div>
+
+  <div class="resumen-box" id="resumenFinal" style="display:none">
+    <div class="resumen-header"><h3>📊 Tu resultado final</h3><p id="resumenNombreHead"></p></div>
+    <div class="resumen-body">
+      <div class="resumen-grid">
+        <div class="resumen-stat"><div class="val" id="res-t1">—</div><div class="lbl">Test Cláusula<br>(sobre 10)</div></div>
+        <div class="resumen-stat"><div class="val" id="res-t2">—</div><div class="lbl">Test SE<br>(sobre 10)</div></div>
+        <div class="resumen-stat"><div class="val" id="res-total">—</div><div class="lbl">Total<br>(sobre 20)</div></div>
+      </div>
+      <div class="nota-final-wrap"><div class="nota-num" id="res-nota">—</div><div style="font-size:14px;opacity:0.85;">Nota final sobre 10</div><div class="nota-msg" id="res-msg"></div></div>
+      <div class="resumen-errores" id="resErrWrap"><h4>Preguntas que debes repasar</h4><div id="resErr"></div></div>
+      <div class="tests-inc" id="testsInc">⚠️ Completa los dos tests antes de enviar.</div>
+      <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
+      <div class="envio-ok" id="envioOk">✅ <strong>¡Resultados enviados!</strong> Tu profesor recibirá tu nota.</div>
+      <div class="ya-enviado" id="yaEnviado">⚠️ <strong>Ya has enviado tus resultados.</strong> Solo se permite un envío por sesión.</div>
+    </div>
+  </div>
+
+  <div class="kahoot-banner" style="margin-top:2rem;">
+    <h3>🏆 ¿Preparados para el Kahoot?</h3>
+    <p>Tu profesor pondrá en marcha el Kahoot cuando todos hayáis terminado los tests.</p>
+    <a href="https://kahoot.it" target="_blank" rel="noopener"
+       style="display:inline-block;margin-top:1.25rem;background:white;color:#46178F;font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:15px;padding:12px 28px;border-radius:8px;text-decoration:none;">
+      🎮 Ir a kahoot.it para introducir el PIN
+    </a>
+  </div>
+</section>
+
+<!-- ══ KAHOOT ══ -->
+<section class="section container" id="s-kahoot">
+  <h2 class="section-title">🏆 Kahoot final</h2>
+  <p class="section-lead">Cuando tu profesor lo indique, entra en <strong>kahoot.it</strong> e introduce el PIN.</p>
+  <div style="background:linear-gradient(135deg,#46178F 0%,#7B2ECA 100%);color:white;border-radius:10px;padding:2.5rem;text-align:center;margin-top:1rem;">
+    <h3 style="font-family:'Playfair Display',serif;font-size:28px;margin-bottom:0.5rem;">¿Preparados?</h3>
+    <p style="font-size:16px;opacity:0.9;margin-bottom:1.5rem;">Entra en <strong>kahoot.it</strong> e introduce el PIN que aparezca en la pantalla.</p>
+    <a href="https://kahoot.it" target="_blank" rel="noopener"
+       style="display:inline-block;background:white;color:#46178F;font-family:'Source Sans 3',sans-serif;font-weight:700;font-size:16px;padding:14px 36px;border-radius:8px;text-decoration:none;box-shadow:0 4px 16px rgba(0,0,0,0.3);">
+      🎮 Ir a kahoot.it para introducir el PIN
+    </a>
+  </div>
+</section>
+</main>
+
+<footer style="background:var(--indigo);color:white;text-align:center;padding:1.5rem;margin-top:3rem;font-size:13px;opacity:0.9;">
+  Bachillerato · Lengua Castellana y Literatura · Clasificación de la cláusula y Tipos de SE
+</footer>
+
+<script>
+const FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLScyYsueAWhJ0DD2AoVGF0QtwOUY3XP3h-CrB0QYv-0x89o1kQ/formResponse';
+const FIELD_NOMBRE='entry.1791367276',FIELD_T1='entry.2126806944',FIELD_T2='entry.1230015467',FIELD_FIN='entry.1412898436',FIELD_ERR='entry.531157057';
+let ALUMNO='';
+
+function doLogin(){
+  const v=document.getElementById('loginNombre').value.trim();
+  if(v.split(/\s+/).filter(Boolean).length<2){document.getElementById('loginError').style.display='block';return;}
+  ALUMNO=v;
+  document.getElementById('loginOverlay').style.display='none';
+  document.getElementById('navUser').style.display='flex';
+  document.getElementById('navNombre').textContent=ALUMNO;
+}
+document.getElementById('loginNombre').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+// ── EJERCICIO B (cláusula) ──
+const ejBdata=[
+  {frase:'El volcán entró en erupción de madrugada.',opts:['Atributiva','Predicativa transitiva','Predicativa intransitiva','Impersonal'],c:2,fb:'No lleva CD ni atributo. El verbo «entrar» es intransitivo → predicativa intransitiva.'},
+  {frase:'La película resultó muy aburrida.',opts:['Atributiva copulativa','Semiatributiva','Pasiva refleja','Predicativa transitiva'],c:1,fb:'«Resultar» es verbo semiatributivo (seudocopulativo): el CPVO no puede pronominalizarse por «lo».'},
+  {frase:'Se alquilaron los pisos del centro.',opts:['Impersonal con SE','Pasiva refleja','Reflexiva directa','Pronominal'],c:1,fb:'«Los pisos» es el sujeto que concuerda con el verbo en plural → pasiva refleja.'},
+  {frase:'Hace mucho frío en el norte.',opts:['Atributiva','Predicativa intransitiva','Impersonal','Bimembre tácita'],c:2,fb:'«Hacer» con valor meteorológico forma impersonales. No tiene sujeto léxico.'},
+];
+(function buildEjB(){
+  const box=document.getElementById('ejB');
+  ejBdata.forEach((item,i)=>{
+    const sel=document.createElement('div');
+    sel.style.cssText='padding:0.75rem 1rem;background:var(--parchment);border-radius:8px;';
+    sel.innerHTML=`<p style="font-size:14px;margin-bottom:6px;">${i+1}. <em>${item.frase}</em></p>
+    <select id="ejb-${i}" class="select-ej">
+      <option value="">— Elige el tipo —</option>
+      ${item.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}
+    </select>
+    <div id="ejb-fb-${i}" style="font-size:12px;margin-top:5px;display:none;padding:4px 8px;border-radius:4px;"></div>`;
+    box.appendChild(sel);
+  });
+})();
+function checkEjB(){
+  let ok=0;
+  ejBdata.forEach((item,i)=>{
+    const sel=document.getElementById(`ejb-${i}`);
+    const fb=document.getElementById(`ejb-fb-${i}`);
+    const val=parseInt(sel.value);
+    fb.style.display='block';
+    if(isNaN(val)){fb.style.background='#FEF3C7';fb.style.color='#92400E';fb.textContent='Elige una opción.';return;}
+    if(val===item.c){ok++;sel.className='select-ej ok';fb.style.background='#E8F5E9';fb.style.color='#1B5E20';fb.textContent='✓ Correcto. '+item.fb;}
+    else{sel.className='select-ej fail';fb.style.background='#FDEAEA';fb.style.color='#8B1A1A';fb.textContent='✗ Incorrecto. '+item.fb;}
+  });
+  const res=document.getElementById('ejB-res');
+  res.textContent=`${ok}/${ejBdata.length} correctas${ok===ejBdata.length?' 🎉':''}`;
+  res.className='ej-result '+(ok===ejBdata.length?'ok':'parcial');
+}
+
+// ── EJERCICIO SE ──
+const ejSEdata=[
+  {frase:'María se arrepintió de sus palabras.',opts:['SE morfema pronominal','SE reflexivo (CD)','SE pasivo reflejo','SE impersonal'],c:0,fb:'«Arrepentirse» es un verbo pronominal: el pronombre forma parte de la unidad léxica y no cumple función sintáctica.'},
+  {frase:'Se construyeron tres puentes nuevos.',opts:['SE impersonal','SE morfema pronominal','SE pasivo reflejo','SE dativo ético'],c:2,fb:'«Tres puentes» es el sujeto que concuerda con el verbo en plural → pasiva refleja.'},
+  {frase:'En ese pueblo se come muy bien.',opts:['SE pasivo reflejo','SE impersonal','SE reflexivo','SE morfema pronominal'],c:1,fb:'El verbo no varía (siempre singular). No hay sujeto → impersonal con SE.'},
+  {frase:'El niño se comió todo el plato.',opts:['SE reflexivo (CD)','SE pasivo reflejo','SE dativo ético','SE morfema pronominal'],c:2,fb:'Puede eliminarse: «El niño comió todo el plato». Solo añade énfasis/expresividad → dativo ético.'},
+];
+(function buildEjSE(){
+  const box=document.getElementById('ejSE');
+  ejSEdata.forEach((item,i)=>{
+    const sel=document.createElement('div');
+    sel.style.cssText='padding:0.75rem 1rem;background:var(--parchment);border-radius:8px;';
+    sel.innerHTML=`<p style="font-size:14px;margin-bottom:6px;">${i+1}. <em>${item.frase}</em></p>
+    <select id="ejse-${i}" class="select-ej">
+      <option value="">— Identifica el SE —</option>
+      ${item.opts.map((o,j)=>`<option value="${j}">${o}</option>`).join('')}
+    </select>
+    <div id="ejse-fb-${i}" style="font-size:12px;margin-top:5px;display:none;padding:4px 8px;border-radius:4px;"></div>`;
+    box.appendChild(sel);
+  });
+})();
+function checkEjSE(){
+  let ok=0;
+  ejSEdata.forEach((item,i)=>{
+    const sel=document.getElementById(`ejse-${i}`);
+    const fb=document.getElementById(`ejse-fb-${i}`);
+    const val=parseInt(sel.value);
+    fb.style.display='block';
+    if(isNaN(val)){fb.style.background='#FEF3C7';fb.style.color='#92400E';fb.textContent='Elige una opción.';return;}
+    if(val===item.c){ok++;sel.className='select-ej ok';fb.style.background='#E8F5E9';fb.style.color='#1B5E20';fb.textContent='✓ Correcto. '+item.fb;}
+    else{sel.className='select-ej fail';fb.style.background='#FDEAEA';fb.style.color='#8B1A1A';fb.textContent='✗ Incorrecto. '+item.fb;}
+  });
+  const res=document.getElementById('ejSE-res');
+  res.textContent=`${ok}/${ejSEdata.length} correctas${ok===ejSEdata.length?' 🎉':''}`;
+  res.className='ej-result '+(ok===ejSEdata.length?'ok':'parcial');
+}
+
+// ── RELACIONAR ──
+var _relSel={};
+function ejRel(gid,lado,key,el){
+  var g=_relSel[gid]||(_relSel[gid]={});
+  document.querySelectorAll('[data-ejg="'+gid+'"][data-lado="'+lado+'"]').forEach(function(b){if(!b.classList.contains('matched'))b.classList.remove('sel');});
+  el.classList.add('sel');g[lado]={key:key,el:el};
+  if(g.izq&&g.der){
+    var izq=g.izq,der=g.der;
+    if(izq.key===der.key){
+      izq.el.classList.remove('sel');izq.el.classList.add('matched');
+      der.el.classList.remove('sel');der.el.classList.add('matched');
+      var done=document.querySelectorAll('[data-ejg="'+gid+'"].matched').length/2;
+      var total=document.querySelectorAll('[data-ejg="'+gid+'"][data-lado="izq"]').length;
+      if(done>=total){var m=document.getElementById(gid+'-msg');if(m)m.style.display='block';}
+    }else{
+      izq.el.classList.remove('sel');izq.el.classList.add('fail');
+      der.el.classList.remove('sel');der.el.classList.add('fail');
+      setTimeout(function(){izq.el.classList.remove('fail');der.el.classList.remove('fail');},700);
+    }
+    delete g.izq;delete g.der;
+  }
+}
+function ejVF(id,resp,correcto,fb){
+  document.querySelectorAll('[data-vfid="'+id+'"]').forEach(function(b){b.classList.add('disabled');});
+  var btn=document.querySelector('[data-vfid="'+id+'"][data-val="'+resp+'"]');
+  var fbEl=document.getElementById('vf-fb-'+id);
+  if(resp===correcto){btn.classList.add('ok');if(fbEl){fbEl.textContent='✓ '+fb;fbEl.className='vf-fb ok';}}
+  else{btn.classList.add('fail');var cb=document.querySelector('[data-vfid="'+id+'"][data-val="'+correcto+'"]');if(cb)cb.classList.add('ok');if(fbEl){fbEl.textContent='✗ '+fb;fbEl.className='vf-fb fail';}}
+}
+
+// ── PREGUNTAS TEST ──
+const QS={
+1:[
+  {q:'«Tal vez llegue mañana.» ¿Qué tipo de cláusula es según la modalidad oracional?',
+   opts:['Desiderativa','Dubitativa','Interrogativa indirecta','Exhortativa'],c:1,
+   fb:'El adverbio «tal vez» y el modo subjuntivo son marcas de la cláusula dubitativa, que expresa duda o probabilidad.'},
+  {q:'«¡Ven inmediatamente!» ¿Qué tipos acumula esta cláusula?',
+   opts:['Solo exhortativa','Exhortativa y exclamativa','Desiderativa y exclamativa','Solo exclamativa'],c:1,
+   fb:'Es exhortativa por el imperativo y exclamativa por la entonación y los signos de admiración. Las modalidades pueden combinarse.'},
+  {q:'¿Cuál de estas oraciones es impersonal unimembre?',
+   opts:['Iré a Italia (sujeto tácito)','Hace mucho frío esta mañana','El libro es muy interesante','Los alumnos estudian mucho'],c:1,
+   fb:'«Hacer» con valor meteorológico forma impersonales: no tiene sujeto léxico y el verbo va obligatoriamente en 3.ª persona singular.'},
+  {q:'«La reunión resultó muy productiva.» ¿Qué tipo es esta cláusula según la estructura del predicado?',
+   opts:['Atributiva copulativa','Predicativa transitiva','Semiatributiva','Predicativa intransitiva'],c:2,
+   fb:'«Resultar» es un verbo semiatributivo (seudocopulativo). El CPVO no puede pronominalizarse por «lo»: *La reunión lo resultó.'},
+  {q:'«Los jugadores se pegaron patadas.» ¿De qué tipo de cláusula se trata?',
+   opts:['Reflexiva directa','Reflexiva indirecta','Recíproca directa','Recíproca indirecta'],c:3,
+   fb:'El sujeto es plural (los jugadores), se admite «mutuamente» y ya hay CD expreso (patadas), por lo que el pronombre desempeña CI → recíproca indirecta.'},
+  {q:'En una pasiva refleja, ¿qué característica distingue al SE de la impersonal con SE?',
+   opts:['El SE pasivo reflejo no tiene función sintáctica','El verbo concuerda con un sujeto en la pasiva refleja','La impersonal admite sujeto en plural','El SE pasivo puede sustituirse por «le»'],c:1,
+   fb:'En la pasiva refleja hay un sujeto paciente que concuerda con el verbo: «Se venden pisos» (pisos = SUJ plural). En la impersonal el verbo no varía.'},
+  {q:'«Me preguntó cuándo regresaría.» ¿Qué tipo de interrogativa es la subordinada?',
+   opts:['Interrogativa total directa','Interrogativa parcial directa','Interrogativa total indirecta','Interrogativa parcial indirecta'],c:3,
+   fb:'Es indirecta (sin signos de interrogación, integrada en la oración) y parcial (pregunta sobre un elemento: «cuándo»).'},
+  {q:'¿Cuál de estos verbos NO es semiatributivo (seudocopulativo)?',
+   opts:['Volverse','Quedarse','Resultar','Proporcionar'],c:3,
+   fb:'«Proporcionar» es un verbo predicativo transitivo pleno. Los semiatributivos son: volverse, quedarse, resultar, ponerse, andar, hacerse, seguir…'},
+  {q:'«Ojalá llueva esta tarde.» ¿Qué tipo de cláusula es según la modalidad oracional?',
+   opts:['Dubitativa','Desiderativa','Exhortativa','Enunciativa'],c:1,
+   fb:'«Ojalá» introduce siempre una cláusula desiderativa, que expresa deseo. Suele acompañarse de subjuntivo.'},
+  {q:'«Ayer nevó copiosamente en la sierra.» ¿Por qué es una cláusula impersonal?',
+   opts:['Porque el sujeto está omitido pero se sobrentiende','Porque el verbo meteorológico no admite sujeto léxico','Porque el verbo va en voz pasiva','Porque el CD está implícito'],c:1,
+   fb:'Los verbos meteorológicos como «nevar», «llover» o «granizar» son impersonales léxicos: no tienen sujeto ni lo admiten.'},
+],
+2:[
+  {q:'«Se lo expliqué despacio.» ¿Qué tipo es el SE?',
+   opts:['SE reflexivo (CI)','SE pronombre personal átono (CI)','SE morfema pronominal','SE impersonal'],c:1,
+   fb:'Es el «falso SE»: sustituye a «le» (CI) porque le sigue el pronombre «lo» (CD). Equivale a «a él/ella/ellos».'},
+  {q:'«Se construyeron dos hospitales nuevos.» ¿Qué tipo es el SE?',
+   opts:['SE impersonal','SE dativo ético','SE pasivo reflejo','SE morfema pronominal'],c:2,
+   fb:'«Dos hospitales» concuerda con el verbo en plural (sujeto paciente). Es transformable en perifrástica: «Dos hospitales fueron construidos».'},
+  {q:'¿Qué prueba permite distinguir el SE dativo ético de otros tipos?',
+   opts:['Admite el refuerzo «a sí mismo»','Puede eliminarse sin cambiar el significado esencial','El verbo no concuerda con ningún sustantivo','Puede sustituirse por «le/les»'],c:1,
+   fb:'El dativo ético puede suprimirse sin alterar el significado: «Se bebió toda la sopa» = «Bebió toda la sopa». Solo añade expresividad coloquial.'},
+  {q:'«En este país se vive muy bien.» ¿Qué tipo es el SE?',
+   opts:['SE pasivo reflejo','SE reflexivo','SE impersonal','SE morfema pronominal'],c:2,
+   fb:'El verbo no concuerda con ningún sustantivo y siempre va en singular. No hay sujeto → impersonal con SE.'},
+  {q:'«Los niños se peinaron.» ¿Qué función desempeña el SE?',
+   opts:['CD (reflexivo directo)','CI (reflexivo indirecto)','Ninguna (morfema pronominal)','Ninguna (pasivo reflejo)'],c:0,
+   fb:'La acción recae directamente sobre el sujeto (los propios niños). Admite «a sí mismos» → reflexivo directo, SE = CD.'},
+  {q:'«María y Juan se enviaron mensajes.» ¿Cuál es la función del SE?',
+   opts:['CD (recíproco directo)','CI (recíproco indirecto)','SE morfema pronominal','SE pasivo reflejo'],c:1,
+   fb:'Hay CD expreso («mensajes») y el sujeto es plural. Se admite «el uno al otro» → recíproco indirecto, SE = CI.'},
+  {q:'«Se arrepintió de todo lo que había dicho.» ¿Qué tipo es el SE?',
+   opts:['SE reflexivo (CD)','SE impersonal','SE morfema pronominal','SE pasivo reflejo'],c:2,
+   fb:'«Arrepentirse» exige obligatoriamente el pronombre: forma parte de la unidad léxica del verbo. Es SE morfema pronominal.'},
+  {q:'¿Cuál de estas oraciones contiene un SE pasivo reflejo?',
+   opts:['Se duerme mal cuando hay ruido','Se le comunicó la noticia al director','Se suspendió la reunión por falta de quórum','Se peinó antes de salir'],c:2,
+   fb:'«La reunión» es el sujeto paciente que concuerda con «suspendió» (sg.). Transformable: «La reunión fue suspendida». → Pasiva refleja.'},
+  {q:'«Se le rompió el jarrón a María.» ¿Qué tipo de SE aparece en esta oración?',
+   opts:['SE morfema pronominal','SE dativo ético','SE reflexivo (CI)','SE pasivo reflejo'],c:0,
+   fb:'«Romperse» es un verbo pronominal en el que el SE forma parte de la unidad léxica del verbo. No tiene función sintáctica independiente: es SE morfema pronominal.'},
+  {q:'«Los estudiantes se intercambiaron los apuntes.» ¿Qué función desempeña el SE?',
+   opts:['CD (recíproco directo)','CI (recíproco indirecto)','SE morfema pronominal','SE pasivo reflejo'],c:1,
+   fb:'Hay CD expreso («los apuntes») y el sujeto es plural. Se admite «el uno al otro» → recíproco indirecto, SE = CI.'},
+]};
+
+const ST={1:{sc:0,ans:{}},2:{sc:0,ans:{}}};
+function buildQ(n){
+  const box=document.getElementById('qbox'+n);box.innerHTML='';
+  QS[n].forEach((q,i)=>{
+    const L=['A','B','C','D'];
+    const opts=q.opts.map((o,j)=>`<button class="q-opt" onclick="answer(${n},${i},${j})"><span class="opt-letter">${L[j]}</span>${o}</button>`).join('');
+    const d=document.createElement('div');
+    d.innerHTML=`${i>0?'<div class="q-divider"></div>':''}<div class="q-item"><div class="q-num">Pregunta ${i+1} de ${QS[n].length}</div><div class="q-text">${q.q}</div><div class="q-opts" id="opts-${n}-${i}">${opts}</div><div class="q-fb" id="fb-${n}-${i}"></div></div>`;
+    box.appendChild(d);
+  });
+}
+function answer(n,qi,oi){
+  if(ST[n].ans[qi]!==undefined)return;
+  ST[n].ans[qi]=oi;
+  const q=QS[n][qi],ok=oi===q.c;
+  document.getElementById('opts-'+n+'-'+qi).querySelectorAll('.q-opt').forEach((el,j)=>{
+    el.classList.add('revealed');
+    if(j===q.c)el.classList.add('correct');
+    else if(j===oi&&!ok)el.classList.add('wrong');
+  });
+  const fb=document.getElementById('fb-'+n+'-'+qi);
+  fb.textContent=(ok?'✓ Correcto. ':'✗ Incorrecto. ')+q.fb;
+  fb.className='q-fb '+(ok?'correct':'wrong');
+  if(ok)ST[n].sc++;
+  document.getElementById('sc'+n).textContent=ST[n].sc+' / '+QS[n].length;
+  document.getElementById('sb'+n).style.width=(ST[n].sc/QS[n].length*100)+'%';
+  if(n===2&&Object.keys(ST[2].ans).length===QS[2].length)mostrarResumen();
+}
+function mostrarResumen(){
+  const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;
+  const nota=(Math.round(tot/20*100)/10).toFixed(1);
+  document.getElementById('res-t1').textContent=t1+'/10';
+  document.getElementById('res-t2').textContent=t2+'/10';
+  document.getElementById('res-total').textContent=tot+'/20';
+  document.getElementById('res-nota').textContent=nota;
+  document.getElementById('resumenNombreHead').textContent=ALUMNO;
+  const msgs=[[0,4,'Necesitas repasar los contenidos con más atención.'],[4,6,'Vas por buen camino, pero hay aspectos que repasar.'],[6,8,'Buen trabajo. Repasa los puntos fallados.'],[8,9,'¡Muy bien! Dominas los contenidos.'],[9,11,'¡Excelente! 🎉']];
+  document.getElementById('res-msg').textContent=(msgs.find(([a,b])=>parseFloat(nota)>=a&&parseFloat(nota)<b)||msgs[4])[2];
+  const errores=[];
+  [1,2].forEach(n=>QS[n].forEach((q,i)=>{if(ST[n].ans[i]!==undefined&&ST[n].ans[i]!==q.c)errores.push(`Test ${n} P${i+1}: ${q.q}`);}));
+  const w=document.getElementById('resErrWrap');
+  if(!errores.length){w.style.display='none';}
+  else{w.style.display='block';document.getElementById('resErr').innerHTML=errores.map(e=>`<div class="error-item">❌ ${e}</div>`).join('');}
+  const t1done=Object.keys(ST[1].ans).length===QS[1].length;
+  document.getElementById('testsInc').style.display=t1done?'none':'block';
+  document.getElementById('btnEnviar').disabled=!t1done;
+  const yaEnvio=sessionStorage.getItem('clausulase_enviado_'+ALUMNO.toLowerCase().trim());
+  if(yaEnvio){document.getElementById('btnEnviar').style.display='none';document.getElementById('yaEnviado').style.display='block';}
+  document.getElementById('resumenFinal').style.display='block';
+  setTimeout(()=>document.getElementById('resumenFinal').scrollIntoView({behavior:'smooth',block:'start'}),300);
+}
+function enviarResultados(){
+  const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;
+  const nota=(Math.round(tot/20*100)/10).toFixed(1);
+  const errores=[];
+  [1,2].forEach(n=>QS[n].forEach((q,i)=>{if(ST[n].ans[i]!==undefined&&ST[n].ans[i]!==q.c)errores.push(`T${n}P${i+1}`);}));
+  const errText=errores.length?errores.join(', '):'Ninguna';
+  const iframe=document.createElement('iframe');
+  iframe.style.display='none';iframe.name='hf';
+  document.body.appendChild(iframe);
+  const form=document.createElement('form');
+  form.method='POST';form.action=FORM_ACTION;form.target='hf';
+  [[FIELD_NOMBRE,ALUMNO],[FIELD_T1,t1+'/10'],[FIELD_T2,t2+'/10'],[FIELD_FIN,nota+'/10'],[FIELD_ERR,errText]].forEach(([k,v])=>{
+    const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;form.appendChild(i);
+  });
+  document.body.appendChild(form);form.submit();
+  sessionStorage.setItem('clausulase_enviado_'+ALUMNO.toLowerCase().trim(),'1');
+  document.getElementById('btnEnviar').disabled=true;
+  document.getElementById('btnEnviar').innerHTML='✅ Resultados enviados';
+  document.getElementById('envioOk').style.display='block';
+}
+function show(k){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+k).classList.add('active');
+  const idx={clausula:0,se:1,test1:2,test2:3,kahoot:4};
+  document.querySelectorAll('.nav-btn')[idx[k]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildQ(1);buildQ(2);
+</script>
+</body>
+</html>

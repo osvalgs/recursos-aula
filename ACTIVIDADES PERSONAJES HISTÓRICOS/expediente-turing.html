@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El expediente Turing · Lengua castellana y literatura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TOKENS DE DISEÑO
+     ============================================================ */
+  :root{
+    --ink:#12161d;
+    --ink-panel:#1b212c;
+    --paper:#efe7d6;
+    --paper-dark:#e2d8bf;
+    --paper-line:#c9bd9e;
+    --brass:#b9873c;
+    --brass-dark:#8f6527;
+    --rust:#9a3324;
+    --sage:#3f6a56;
+    --text-dark:#211c14;
+    --text-light:#eee6d4;
+    --text-muted:#9aa0ac;
+    --radius:3px;
+    --serif: "Source Serif 4", Georgia, serif;
+    --type: "Special Elite", "Courier New", monospace;
+    --mono: "IBM Plex Mono", "Courier New", monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse at top, #1c2330 0%, var(--ink) 55%) fixed;
+    color:var(--text-light);
+    font-family:var(--serif);
+    line-height:1.6;
+    padding:32px 16px 80px;
+  }
+
+  a{color:inherit;}
+
+  .app{
+    max-width:760px;
+    margin:0 auto;
+  }
+
+  /* ------------- cabecera / progreso ------------- */
+  .masthead{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .masthead .kicker{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--brass);
+  }
+  .masthead h1{
+    font-family:var(--type);
+    font-weight:400;
+    font-size:clamp(28px,5vw,42px);
+    margin:6px 0 4px;
+    color:var(--text-light);
+  }
+  .masthead p{
+    margin:0;
+    color:var(--text-muted);
+    font-size:15px;
+  }
+
+  .progress{
+    display:flex;
+    justify-content:center;
+    gap:6px;
+    margin:26px 0 30px;
+    flex-wrap:wrap;
+  }
+  .progress .stop{
+    width:30px;height:30px;
+    border-radius:50%;
+    border:1px solid #3a4152;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--text-muted);
+    background:var(--ink-panel);
+    transition:all .25s ease;
+  }
+  .progress .stop.done{background:var(--sage);border-color:var(--sage);color:var(--text-light);}
+  .progress .stop.active{background:var(--brass);border-color:var(--brass);color:var(--ink);font-weight:700;}
+  .progress .stop.clickable{cursor:pointer;}
+  .progress .stop.clickable:hover{border-color:var(--brass); transform:scale(1.08);}
+
+  .progress-legend{
+    text-align:center; font-family:var(--mono); font-size:10.5px; color:var(--text-muted);
+    margin:0 0 22px; line-height:1.8; max-width:600px; margin-left:auto; margin-right:auto;
+  }
+  .progress-legend .pl-current{color:var(--brass); font-weight:600;}
+
+  /* ------------- el "expediente" (panel de papel) ------------- */
+  .dossier{
+    background:var(--paper);
+    color:var(--text-dark);
+    border-radius:var(--radius);
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.04) inset;
+    padding:38px 34px 34px;
+    position:relative;
+    border:1px solid var(--paper-line);
+  }
+  .dossier::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:1px solid rgba(33,28,20,.15);
+    pointer-events:none;
+  }
+  .folio{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    color:var(--brass-dark);
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+    border-bottom:1px dashed var(--paper-line);
+    padding-bottom:10px;
+  }
+  .section{display:none;}
+  .section.active{display:block; animation:fadein .4s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .section h2{
+    font-family:var(--type);
+    font-weight:400;
+    font-size:24px;
+    margin:0 0 4px;
+    color:var(--text-dark);
+  }
+  .section .lede{
+    color:#544a38;
+    font-size:15px;
+    margin:0 0 20px;
+  }
+  .section h3{
+    font-family:var(--type);
+    font-weight:400;
+    font-size:17px;
+    margin:26px 0 10px;
+    color:var(--brass-dark);
+  }
+  p{max-width:none; text-align:justify;}
+
+  /* ------------- estampa de portada ------------- */
+  .stamp-wrap{display:flex; justify-content:center; margin:6px 0 26px;}
+  .stamp{
+    width:132px;height:132px;
+    border:3px solid var(--rust);
+    border-radius:50%;
+    color:var(--rust);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-8deg);
+    font-family:var(--type);
+    text-align:center;
+    line-height:1.15;
+    opacity:.9;
+  }
+  .stamp span.big{font-size:15px; font-weight:700;}
+  .stamp span.small{font-size:10px; letter-spacing:.08em; margin-top:4px;}
+
+  /* ------------- formularios / inputs ------------- */
+  label{
+    display:block;
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.04em;
+    color:#5b503b;
+    margin-bottom:6px;
+  }
+  .field{margin-bottom:16px;}
+  input[type=text], select, textarea{
+    width:100%;
+    font-family:var(--serif);
+    font-size:16px;
+    padding:11px 12px;
+    border:1px solid #b7a97f;
+    border-radius:2px;
+    background:#faf6ec;
+    color:var(--text-dark);
+  }
+  textarea{resize:vertical; min-height:110px; line-height:1.55;}
+  input:focus, select:focus, textarea:focus{
+    outline:2px solid var(--brass);
+    outline-offset:1px;
+  }
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:520px){.row2{grid-template-columns:1fr;}}
+
+  .counter{
+    font-family:var(--mono);
+    font-size:12px;
+    color:#7a6f57;
+    text-align:right;
+    margin-top:-10px;
+    margin-bottom:14px;
+  }
+  .counter.warn{color:var(--rust);}
+  .counter.ok{color:var(--sage);}
+
+  /* ------------- botones ------------- */
+  .actions{
+    display:flex;
+    justify-content:space-between;
+    margin-top:28px;
+    gap:10px;
+  }
+  button{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.03em;
+    padding:12px 20px;
+    border-radius:2px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:transform .12s ease, background .2s ease;
+  }
+  button:active{transform:scale(.97);}
+  button:disabled{opacity:.4; cursor:not-allowed;}
+  .btn-primary{background:var(--brass); color:#20150a; border-color:var(--brass-dark); font-weight:600;}
+  .btn-primary:hover:not(:disabled){background:var(--brass-dark); color:var(--text-light);}
+  .btn-ghost{background:transparent; color:#6b6046; border-color:#b7a97f;}
+  .btn-ghost:hover{background:rgba(0,0,0,.05);}
+
+  /* ------------- imágenes / vídeo ------------- */
+  figure{margin:18px 0; padding:0;}
+  figure img{
+    width:100%; display:block; border-radius:2px;
+    filter:sepia(12%);
+    border:1px solid var(--paper-line);
+  }
+  figcaption{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:#7a6f57;
+    margin-top:6px;
+  }
+  .video-frame{
+    position:relative; padding-bottom:56.25%; height:0; overflow:hidden;
+    border-radius:2px; border:1px solid var(--paper-line); margin:18px 0;
+  }
+  .video-frame iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+
+  /* ------------- ejercicios de autocorrección ------------- */
+  .word-bank{display:flex; flex-wrap:wrap; gap:8px; margin:14px 0;}
+  .chip{
+    font-family:var(--mono);
+    font-size:14px;
+    padding:7px 12px;
+    background:#faf6ec;
+    border:1px solid #b7a97f;
+    border-radius:2px;
+    cursor:pointer;
+    color:var(--text-dark);
+    user-select:none;
+  }
+  .chip.selected{background:var(--brass); border-color:var(--brass-dark);}
+  .chip.correct{background:var(--sage); border-color:#2e5142; color:#fff;}
+  .chip.incorrect{background:var(--rust); border-color:#6f251a; color:#fff;}
+  .chip.missed{background:#faf6ec; border:2px dashed var(--rust); color:var(--rust);}
+  .chip.locked{cursor:default;}
+
+  .mcq{border:1px solid var(--paper-line); border-radius:2px; padding:14px 16px; margin:14px 0; background:#faf6ec;}
+  .mcq p.q{margin:0 0 10px; font-weight:600;}
+  .mcq .opt{
+    display:block; width:100%; text-align:left;
+    background:#fff; border:1px solid #c9bd9e; margin-bottom:8px;
+    padding:9px 12px; border-radius:2px; font-family:var(--serif); font-size:15px;
+    color:var(--text-dark); cursor:pointer;
+  }
+  .mcq .opt:hover:not(:disabled){border-color:var(--brass);}
+  .mcq .opt.correct{background:var(--sage); border-color:#2e5142; color:#fff;}
+  .mcq .opt.incorrect{background:var(--rust); border-color:#6f251a; color:#fff;}
+  .mcq .fb{font-family:var(--mono); font-size:12.5px; margin-top:6px; display:none;}
+  .mcq .fb.show{display:block;}
+  .fb.ok-text{color:var(--sage);}
+  .fb.bad-text{color:var(--rust);}
+
+  .result-badge{
+    font-family:var(--mono); font-size:12.5px;
+    display:inline-block; padding:4px 10px; border-radius:20px;
+    margin-top:8px;
+  }
+  .result-badge.ok{background:rgba(63,106,86,.15); color:var(--sage);}
+  .result-badge.bad{background:rgba(154,51,36,.12); color:var(--rust);}
+
+  /* ------------- test final ------------- */
+  .quiz-progress{
+    font-family:var(--mono); font-size:12px; color:#7a6f57; margin-bottom:10px;
+  }
+  .quiz-bar{height:4px; background:#d8cca8; border-radius:2px; overflow:hidden; margin-bottom:22px;}
+  .quiz-bar > div{height:100%; background:var(--brass); width:0%; transition:width .3s ease;}
+
+  /* ------------- pantalla final ------------- */
+  .summary-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0;
+  }
+  @media (max-width:520px){.summary-grid{grid-template-columns:1fr;}}
+  .summary-card{
+    border:1px solid var(--paper-line); background:#faf6ec; padding:14px 16px; border-radius:2px;
+  }
+  .summary-card .k{font-family:var(--mono); font-size:11px; color:#7a6f57; letter-spacing:.05em;}
+  .summary-card .v{font-family:var(--type); font-size:20px; margin-top:2px;}
+
+  .score-big{
+    text-align:center; margin:22px 0;
+  }
+  .score-big .num{font-family:var(--type); font-size:56px; color:var(--brass-dark);}
+  .score-big .lbl{font-family:var(--mono); font-size:12px; color:#7a6f57;}
+
+  .feedback-panel{
+    border:1px solid var(--paper-line); background:#faf6ec; border-radius:2px;
+    padding:16px 18px; margin:20px 0;
+  }
+  .feedback-panel p{margin:0 0 8px; font-size:14.5px;}
+  .feedback-panel .fp-row{display:flex; gap:8px; align-items:baseline; margin-bottom:6px;}
+  .feedback-panel .fp-tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:#7a6f57;
+    min-width:110px;
+  }
+  .send-status{
+    font-family:var(--mono); font-size:12.5px; margin-top:14px; padding:10px 12px;
+    border-radius:2px; display:none;
+  }
+  .send-status.show{display:block;}
+  .send-status.pending{background:rgba(185,135,60,.12); color:var(--brass-dark);}
+  .send-status.done{background:rgba(63,106,86,.15); color:var(--sage);}
+  .send-status.error{background:rgba(154,51,36,.12); color:var(--rust);}
+
+  footer.note{
+    text-align:center; color:var(--text-muted); font-family:var(--mono); font-size:11px;
+    margin-top:26px;
+  }
+
+  #hiddenTimer{
+    position:fixed; top:10px; right:12px;
+    font-family:var(--mono); font-size:13px; color:var(--text-muted);
+    opacity:.6; letter-spacing:.03em; z-index:50; user-select:none;
+  }
+
+  /* ------------- juegos lingüísticos ------------- */
+  .ws-grid{
+    display:grid; grid-template-columns:repeat(10, 1fr); gap:2px;
+    max-width:340px; margin:14px auto 16px; user-select:none;
+  }
+  .ws-cell{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:13px; font-weight:600;
+    background:#faf6ec; border:1px solid #c9bd9e; color:var(--text-dark);
+    cursor:pointer; border-radius:1px;
+  }
+  .ws-cell.selected{background:var(--brass); border-color:var(--brass-dark);}
+  .ws-cell.found{background:var(--sage); border-color:#2e5142; color:#fff; cursor:default;}
+  .ws-word-list{
+    display:flex; flex-wrap:wrap; gap:8px 14px; justify-content:center;
+    font-family:var(--mono); font-size:12.5px; color:#5b503b; margin-bottom:22px;
+  }
+  .ws-word-list span.found{text-decoration:line-through; color:var(--sage);}
+
+  .anagram-item{
+    border:1px solid var(--paper-line); background:#faf6ec; border-radius:2px;
+    padding:12px 14px; margin-bottom:10px;
+  }
+  .anagram-scrambled{
+    font-family:var(--mono); letter-spacing:.2em; font-size:19px; font-weight:700;
+    color:var(--brass-dark);
+  }
+  .anagram-hint{font-size:12.5px; color:#7a6f57; margin:4px 0 10px;}
+  .anagram-input{width:170px; display:inline-block;}
+  .anagram-fb{margin-left:10px; font-family:var(--mono); font-size:12px;}
+
+  .match-columns{display:flex; gap:28px; justify-content:center; margin:14px 0 6px; flex-wrap:wrap;}
+  .match-col{display:flex; flex-direction:column; gap:8px; min-width:150px;}
+  .match-item{
+    padding:9px 14px; border:1px solid #c9bd9e; background:#faf6ec; border-radius:2px;
+    cursor:pointer; font-size:14px; text-align:center; font-family:var(--serif);
+  }
+  .match-item.selected{background:var(--brass); border-color:var(--brass-dark);}
+  .match-item.matched{background:var(--sage); color:#fff; border-color:#2e5142; cursor:default;}
+
+  /* ------------- glosario y palabras en inglés ------------- */
+  .gloss-word{
+    border-bottom:1px dotted var(--brass-dark);
+    cursor:pointer;
+    color:inherit;
+  }
+  .gloss-word:hover{background:rgba(185,135,60,.15);}
+  .en-word{
+    border-bottom:1px dotted var(--sage);
+    cursor:pointer;
+    color:inherit;
+    white-space:nowrap;
+  }
+  .en-word:hover{background:rgba(63,106,86,.15);}
+  .en-word::after{content:"🔊"; font-size:9px; margin-left:2px; opacity:.75;}
+
+  .video-word{
+    border-bottom:1px dotted var(--brass-dark);
+    cursor:pointer;
+    color:inherit;
+  }
+  .video-word:hover{background:rgba(185,135,60,.15);}
+  .video-word::after{content:"▶"; font-size:9px; margin-left:2px; opacity:.75;}
+
+  .term-popup{
+    position:absolute; z-index:400; max-width:280px;
+    background:#fffdf6; border:1px solid var(--brass-dark); border-radius:2px;
+    box-shadow:0 10px 24px rgba(0,0,0,.3);
+    padding:10px 12px; font-family:var(--serif); font-size:13.5px; line-height:1.45;
+    color:var(--text-dark);
+    display:none;
+  }
+  .term-popup.show{display:block;}
+  .term-popup .tp-term{
+    font-family:var(--mono); font-size:11.5px; color:var(--brass-dark);
+    text-transform:uppercase; letter-spacing:.03em; display:block; margin-bottom:4px;
+  }
+  .term-popup .tp-note{color:#7a6f57; font-size:12px; display:block; margin-top:4px;}
+
+  /* ------------- callout explicativo ------------- */
+  .callout{
+    background:#f4ecd8; border-left:4px solid var(--brass); border-radius:2px;
+    padding:14px 16px; margin:6px 0 20px; font-size:14.5px; text-align:left;
+  }
+  .callout .callout-title{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.05em; color:var(--brass-dark);
+    text-transform:uppercase; margin-bottom:6px; display:block;
+  }
+
+  /* ------------- botón de ayuda / info y lista de ayudas ------------- */
+  .btn-info{
+    background:transparent; color:var(--brass-dark); border:1px dashed var(--brass);
+    font-family:var(--mono); font-size:12.5px; padding:9px 14px; margin:0 8px 14px 0;
+  }
+  .btn-info:hover{background:rgba(185,135,60,.12);}
+  .info-row{display:flex; flex-wrap:wrap; gap:0; margin-top:4px;}
+
+  /* ------------- ventana modal (glosarios, ejemplos, explicaciones) ------------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(18,22,29,.72);
+    display:none; align-items:center; justify-content:center; z-index:500; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--paper); color:var(--text-dark); border:1px solid var(--paper-line);
+    border-radius:3px; max-width:560px; width:100%; max-height:84vh; overflow-y:auto;
+    padding:28px 26px 22px; position:relative; box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+  }
+  .modal-box h3{margin-top:0; font-family:var(--type); font-weight:400; color:var(--brass-dark); font-size:19px;}
+  .modal-box p{font-size:14.5px; text-align:left;}
+  .modal-box ul, .modal-box ol{padding-left:20px; font-size:14.5px; text-align:left;}
+  .modal-box li{margin-bottom:6px;}
+  .modal-close{
+    position:absolute; top:10px; right:12px; background:transparent; border:none;
+    font-size:20px; color:#7a6f57; padding:4px 8px; cursor:pointer; line-height:1;
+  }
+  .modal-close:hover{color:var(--rust);}
+  .glossary-list dt{font-family:var(--mono); font-weight:600; color:var(--brass-dark); margin-top:12px; font-size:13px; text-transform:uppercase; letter-spacing:.02em;}
+  .glossary-list dd{margin:2px 0 0; font-size:14.5px;}
+  .example-box{
+    background:#faf6ec; border:1px solid var(--paper-line); border-radius:2px;
+    padding:12px 14px; margin-top:10px; font-size:14.5px; line-height:1.55; text-align:justify;
+  }
+  .example-box .ex-label{
+    font-family:var(--mono); font-size:11px; color:#7a6f57; letter-spacing:.04em;
+    display:block; margin-bottom:6px; text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <span id="hiddenTimer" aria-hidden="true">00:00</span>
+
+
+  <div class="masthead">
+    <div class="kicker">LENGUA CASTELLANA Y LITERATURA · EVALUACIÓN INICIAL</div>
+    <h1>El expediente Turing</h1>
+    <p>Comprensión, expresión y corrección lingüística a partir de una vida extraordinaria</p>
+  </div>
+
+  <div class="progress" id="progressTrack"></div>
+  <div class="progress-legend" id="progressLegend"></div>
+
+  <div class="dossier">
+    <div class="folio">
+      <span id="folioLeft">EXPEDIENTE Nº 01</span>
+      <span id="folioRight">PÁGINA 1 / 8</span>
+    </div>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 0 · PORTADA / ACCESO                         -->
+    <!-- =================================================== -->
+    <section class="section active" data-id="acceso">
+      <div class="stamp-wrap">
+        <div class="stamp"><span class="big">CLASIFICADO</span><span class="small">ABRIR CON<br>ATENCIÓN</span></div>
+      </div>
+      <h2>Antes de abrir la carpeta</h2>
+      <p class="lede">Vas a trabajar durante esta unidad con la figura de Alan Turing. De paso, repasaremos comprensión lectora, ortografía, sintaxis básica y expresión escrita. Empieza identificándote como agente de este expediente.</p>
+
+      <div class="row2">
+        <div class="field">
+          <label for="inNombre">Nombre</label>
+          <input type="text" id="inNombre" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label for="inApellidos">Apellidos</label>
+          <input type="text" id="inApellidos" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="inCurso">Curso</label>
+        <select id="inCurso">
+          <option value="">Selecciona tu curso…</option>
+          <option>1º ESO</option>
+          <option>2º ESO</option>
+          <option>3º ESO</option>
+          <option>4º ESO</option>
+          <option>FPB I</option>
+          <option>FPB II</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <span></span>
+        <button class="btn-primary" id="btnAbrir" disabled>Abrir expediente →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 1 · CONOCIMIENTOS PREVIOS                    -->
+    <!-- =================================================== -->
+    <section class="section" data-id="previos">
+      <h2>Punto de partida</h2>
+      <p class="lede">Antes de investigar nada, anota lo que ya sepas —o simplemente intuyas— sobre esta persona. No hay respuestas incorrectas: es tu punto de partida para medir lo que aprenderás.</p>
+
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alan_Turing_Aged_16.jpg" alt="Alan Turing a los 16 años, fotografía de pasaporte">
+        <figcaption>Alan Turing a los 16 años, en una fotografía de la época.</figcaption>
+      </figure>
+
+      <div class="field">
+        <label for="inPrevios">¿Quién crees que fue Alan Turing? ¿Habías oído hablar de él?</label>
+        <textarea id="inPrevios" placeholder="Escribe aquí lo que sepas o imagines, aunque sea poco…"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" id="btnNextPrevios" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 2 · BIOGRAFÍA (LECTURA)                      -->
+    <!-- =================================================== -->
+    <section class="section" data-id="biografia">
+      <h2>La biografía</h2>
+      <p class="lede">Lee con atención: el resto de la unidad se construye sobre este texto.</p>
+
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Alan_Turing_(1951).jpg" alt="Retrato de Alan Turing en 1951">
+        <figcaption>Alan Turing, fotografiado en 1951.</figcaption>
+      </figure>
+
+      <p class="callout" style="margin-bottom:20px;"><span class="callout-title">Cómo usar el texto</span>Las palabras subrayadas con puntos <span class="gloss-word" data-term="ejemplo">así</span> tienen su significado a un clic. Las subrayadas en verde con un altavoz <span class="en-word" data-en="ejemplo">like this</span> son palabras o nombres en inglés: haz clic para escucharlas pronunciadas y ver su traducción.</p>
+
+      <p>Alan <span class="en-word" data-en="Alan Turing">Turing</span> nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad extraordinaria para las matemáticas y la <span class="gloss-word" data-term="lógica-bio">lógica</span>, aunque en la escuela no siempre encajó con el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador (lo que en el mundo académico británico se llama <span class="en-word" data-en="fellowship"><em>fellowship</em></span>) en el <span class="en-word" data-en="King's College">King's College</span> de <span class="en-word" data-en="Cambridge">Cambridge</span>, y poco después viajó a la Universidad de <span class="en-word" data-en="Princeton">Princeton</span>, en Estados Unidos, donde completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en el que describía una máquina teórica capaz de resolver cualquier problema que pudiera expresarse mediante un <span class="gloss-word" data-term="algoritmo">algoritmo</span>. Aquella idea, conocida hoy como <em>máquina de Turing</em>, se considera el fundamento teórico de los ordenadores actuales.</p>
+
+      <div class="callout">
+        <span class="callout-title">🔍 Para entenderlo mejor</span>
+        Imagina una receta de cocina muy detallada y ordenada: «casca dos huevos», «bate un minuto», «añade la harina»… Un <strong>algoritmo</strong> es exactamente eso: una lista de instrucciones exactas, ordenadas paso a paso, para resolver un problema concreto. Turing imaginó una máquina capaz de seguir <em>cualquier</em> «receta» (algoritmo) que se le diera, sin importar el problema: sumar números, jugar al ajedrez, corregir un texto… Esa idea —una única máquina capaz de ejecutar cualquier programa— es justo la base de cómo funciona hoy tu propio ordenador o tu móvil: el aparato (el hardware) es siempre el mismo, y lo que cambia son los «algoritmos» (los programas) que le pedimos que ejecute.
+      </div>
+
+      <p>Durante la Segunda Guerra Mundial, Turing trabajó en <span class="en-word" data-en="Bletchley Park">Bletchley Park</span>, el centro británico de descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con la máquina alemana Enigma, un avance que los historiadores consideran <span class="gloss-word" data-term="clave">clave</span> para acortar la guerra y salvar millones de vidas.</p>
+
+      <figure>
+        <img src="https://commons.wikimedia.org/wiki/Special:FilePath/EnigmaMachineLabeled.jpg" alt="Máquina Enigma utilizada por el ejército alemán">
+        <figcaption>Una máquina Enigma, como las que Turing y su equipo lograron descifrar.</figcaption>
+      </figure>
+
+      <p>Terminada la guerra, Turing no abandonó la investigación. Diseñó el ACE (<span class="en-word" data-en="Automatic Computing Engine"><em>Automatic Computing Engine</em></span>) en el Laboratorio Nacional de Física de Londres, uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la Universidad de <span class="en-word" data-en="Manchester">Manchester</span> para trabajar en una de las primeras máquinas con programa almacenado en memoria, un antecesor directo de los ordenadores actuales.</p>
+
+      <p>Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento práctico que hoy se conoce como el <em><span class="video-word" data-video="2Avnyp81bC0">test de Turing</span></em>: si una persona conversa con una máquina y no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</p>
+
+      <p>Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue <span class="gloss-word" data-term="procesado">procesado judicialmente</span> por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un tratamiento <span class="gloss-word" data-term="hormonal">hormonal</span> forzoso que además le hizo perder su <span class="gloss-word" data-term="acreditación">acreditación de seguridad</span> y, con ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954, su asistenta lo encontró muerto en su casa de <span class="en-word" data-en="Wilmslow">Wilmslow</span>, cerca de Manchester. El <span class="gloss-word" data-term="veredicto">veredicto</span> oficial de la época fue suicidio por <span class="gloss-word" data-term="envenenamiento">envenenamiento</span> con <span class="gloss-word" data-term="cianuro">cianuro</span>; junto a su cuerpo se halló una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en casa un pequeño laboratorio químico y que la muerte pudo deberse a una <span class="gloss-word" data-term="inhalación">inhalación</span> accidental de vapores de cianuro. Tenía 41 años.</p>
+
+      <p>Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que recibió, y en 2013 la reina Isabel II le concedió un <span class="gloss-word" data-term="indulto">indulto</span> real. Desde 2021, su rostro aparece en el billete de 50 libras esterlinas, y desde 1966 la <span class="en-word" data-en="Association for Computing Machinery">Association for Computing Machinery</span> entrega anualmente el Premio Turing, considerado el <span class="gloss-word" data-term="galardón">galardón</span> más <span class="gloss-word" data-term="prestigioso">prestigioso</span> de la informática mundial —una especie de «Nobel de la computación»—, un reconocimiento <span class="gloss-word" data-term="tardío">tardío</span> a quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</p>
+
+      <p style="font-size:14px; color:#5b503b;">Si quieres profundizar más, su vida ha inspirado la película <em>Descifrando Enigma</em> (<span class="en-word" data-en="The Imitation Game"><em>The Imitation Game</em></span>, 2014), protagonizada por <span class="en-word" data-en="Benedict Cumberbatch">Benedict Cumberbatch</span> —puedes ver su <a href="https://www.youtube.com/watch?v=wh5ErCfvIYI" target="_blank" rel="noopener">tráiler en español aquí</a>—, así como el documental <em>Alan Turing: <span class="en-word" data-en="Codebreaker">Codebreaker</span></em> (2011), disponible en algunas plataformas de streaming.</p>
+
+      <h3>Para verlo en movimiento</h3>
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/Y9SdiJt_bHc" title="Resumen en vídeo sobre Alan Turing" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <p style="font-family:var(--mono); font-size:12px; color:#7a6f57; margin-top:-10px;">
+      ¿No carga? Puede verse directamente en <a href="https://youtu.be/Y9SdiJt_bHc" target="_blank" rel="noopener">YouTube</a>.</p>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 3 · COMPRENSIÓN LECTORA                      -->
+    <!-- =================================================== -->
+    <section class="section" data-id="comprension">
+      <h2>Comprensión lectora</h2>
+      <p class="lede">Comprueba lo que has entendido. Cada pregunta se corrige al momento.</p>
+
+      <div id="comprensionMcq"></div>
+
+      <h3>Ahora, en tus palabras</h3>
+      <p>Redacta un resumen de la biografía de Turing de entre <strong>60 y 70 palabras</strong>. Esta actividad se entrega.</p>
+
+      <div class="callout">
+        <span class="callout-title">Pautas para resumir bien una biografía</span>
+        <ul style="margin:6px 0 0; padding-left:20px;">
+          <li>Recoge solo lo esencial: quién fue la persona, qué hizo y por qué es importante.</li>
+          <li>Sigue el orden cronológico de los hechos más relevantes (de lo primero a lo último).</li>
+          <li>Usa tus propias palabras: no copies frases tal cual del texto original.</li>
+          <li>Enlaza las ideas con conectores (<em>además, sin embargo, por eso, finalmente…</em>).</li>
+          <li>Deja fuera anécdotas curiosas y detalles secundarios; no incluyas tu opinión.</li>
+        </ul>
+      </div>
+      <button type="button" class="btn-info" id="btnEjemploResumen">📄 Ver un ejemplo de resumen</button>
+
+      <div class="field">
+        <textarea id="inResumen" placeholder="Escribe aquí tu resumen…"></textarea>
+      </div>
+      <div class="counter" id="resumenCounter">0 / 60-70 palabras</div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" id="btnNextComprension" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 4 · TALLER DE CORRECCIÓN                     -->
+    <!-- =================================================== -->
+    <section class="section" data-id="correccion">
+      <h2>Taller de corrección</h2>
+      <p class="lede">Cuatro actividades breves de autocorrección. Haz clic donde se te indique y pulsa «Comprobar».</p>
+
+      <h3>1 · Ortografía: letras que se confunden</h3>
+      <p>Completa cada hueco con la letra correcta. Presta atención: son las confusiones más habituales al escribir en castellano.</p>
+      <div id="ortoBlock"></div>
+      <div class="actions" style="margin-top:6px; margin-bottom:10px;">
+        <span></span>
+        <button class="btn-ghost" id="btnCheckOrto">Comprobar ortografía</button>
+      </div>
+      <div id="ortoResult"></div>
+
+      <h3>2 · Acentuación: ¿a cuáles les falta la tilde?</h3>
+      <p>De esta lista de palabras relacionadas con Turing, marca solo las que necesitan tilde y no la tienen.</p>
+      <div class="word-bank" id="acentBank"></div>
+      <div class="actions" style="margin-top:6px; margin-bottom:10px;">
+        <span></span>
+        <button class="btn-ghost" id="btnCheckAcento">Comprobar</button>
+      </div>
+      <div id="acentoResult"></div>
+
+      <h3>3 · Sintaxis: funciones dentro de la oración</h3>
+      <p>Sujeto, CI, sujeto elíptico, voz pasiva… presta atención, hay trampas.</p>
+      <div id="sintaxisMcq"></div>
+
+      <h3>4 · Vocabulario</h3>
+      <div class="info-row">
+        <button type="button" class="btn-info" id="btnInfoSinonimia">💡 ¿Qué es la sinonimia?</button>
+        <button type="button" class="btn-info" id="btnInfoAntonimia">💡 ¿Qué es la antonimia?</button>
+      </div>
+      <div id="vocabMcq"></div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" id="btnNextCorreccion" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 5 · EXPRESIÓN ESCRITA                        -->
+    <!-- =================================================== -->
+    <section class="section" data-id="redaccion">
+      <h2>Expresión escrita</h2>
+      <p class="lede">Esta actividad se entrega. Escribe con orden: introducción, argumento a favor, argumento en contra y una conclusión breve.</p>
+
+      <p><strong>Redacta un texto argumentativo de entre 80 y 120 palabras</strong> respondiendo a esta pregunta: <em>¿Puede una máquina pensar?</em> Incluye al menos un argumento a favor y uno en contra.</p>
+
+      <div class="info-row">
+        <button type="button" class="btn-info" id="btnInfoArgumentativo">💡 ¿Qué es un texto argumentativo?</button>
+        <button type="button" class="btn-info" id="btnEjemploArgumentativo">📄 Ver un ejemplo</button>
+      </div>
+
+      <div class="field">
+        <textarea id="inRedaccion" style="min-height:180px;" placeholder="Escribe aquí tu redacción…"></textarea>
+      </div>
+      <div class="counter" id="redaccionCounter">0 / 80–120 palabras</div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" id="btnNextRedaccion" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 6bis · JUEGOS LINGÜÍSTICOS                   -->
+    <!-- =================================================== -->
+    <section class="section" data-id="juegos">
+      <h2>Pausa para jugar</h2>
+      <p class="lede">Tres juegos de palabras antes del interrogatorio final. No puntúan, pero agudizan la vista para lo que viene.</p>
+
+      <h3>Sopa de letras</h3>
+      <p>Encuentra las palabras escondidas. Pueden estar en horizontal, en vertical, en diagonal… ¡e incluso al revés! Haz clic en su primera letra y luego en su última letra.</p>
+      <div class="ws-grid" id="wordSearchGrid"></div>
+      <div class="ws-word-list" id="wordSearchWords"></div>
+
+      <h3>Anagramas</h3>
+      <p>Ordena las letras para formar la palabra correcta (¡cuidado con las tildes!) y pulsa «Comprobar».</p>
+      <div id="anagramsHolder"></div>
+
+      <h3>Empareja los sinónimos</h3>
+      <p>Haz clic en una palabra de la izquierda y luego en su sinónimo de la derecha.</p>
+      <button type="button" class="btn-info" id="btnGlosarioSinonimos">📖 Glosario de estas palabras</button>
+      <div class="match-columns">
+        <div class="match-col" id="matchColA"></div>
+        <div class="match-col" id="matchColB"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" data-next>Continuar →</button>
+      </div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 7 · TEST FINAL                               -->
+    <!-- =================================================== -->
+    <section class="section" data-id="test">
+      <h2>El interrogatorio final</h2>
+      <p class="lede">12 preguntas. Combinan lo que has leído sobre Turing con la lengua trabajada en esta unidad.</p>
+      <div class="quiz-progress" id="quizProgressLabel">Pregunta 1 / 12</div>
+      <div class="quiz-bar"><div id="quizBarFill"></div></div>
+      <div id="quizHolder"></div>
+    </section>
+
+    <!-- =================================================== -->
+    <!-- SECCIÓN 7 · CIERRE / ENVÍO                           -->
+    <!-- =================================================== -->
+    <section class="section" data-id="final">
+      <h2>Cierre del expediente</h2>
+      <p class="lede">Revisa el resumen antes de enviarlo. Al pulsar «Enviar expediente», tu profesor/a recibirá tus resultados.</p>
+
+      <div class="score-big">
+        <div class="num" id="scoreNum">0/12</div>
+        <div class="lbl">RESULTADO DEL TEST</div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-card"><div class="k">AGENTE</div><div class="v" id="sumNombre">—</div></div>
+        <div class="summary-card"><div class="k">CURSO</div><div class="v" id="sumCurso">—</div></div>
+      </div>
+
+      <div class="feedback-panel" id="studentFeedback"></div>
+
+      <div class="actions">
+        <button class="btn-ghost" data-back>← Atrás</button>
+        <button class="btn-primary" id="btnEnviar">Enviar expediente →</button>
+      </div>
+
+      <div class="send-status" id="sendStatus"></div>
+    </section>
+
+  </div>
+
+  <footer class="note">Unidad didáctica · Lengua castellana y literatura · Evaluación inicial</footer>
+</div>
+
+<!-- iframe oculto para el envío silencioso al formulario -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
+<!-- burbuja emergente para palabras del glosario y palabras en inglés -->
+<div class="term-popup" id="termPopup"></div>
+
+<!-- ventana modal para glosarios, ejemplos y explicaciones -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN DEL ENVÍO A GOOGLE FORMS
+   ---------------------------------------------------------------------
+   1) Crea el Google Form con un campo por cada valor de "entries".
+   2) Abre el formulario, rellena una respuesta de prueba con datos
+      cualquiera y, ANTES de enviarla, mira el código fuente de la
+      página (o usa el modo desarrollador) para localizar el atributo
+      "name" de cada campo: tendrá la forma entry.123456789.
+      Otra forma rápida: en el formulario ya publicado, usa "Obtener
+      enlace para completar automáticamente", rellena algo en cada
+      campo y copia el enlace generado: ahí aparecen todos los
+      entry.XXXXXXXXX seguidos del valor que escribiste.
+   3) Pega la URL de envío (termina en /formResponse) en formActionUrl.
+   4) Pega cada entry.XXXXXXXXX en su campo correspondiente abajo.
+   Mientras formActionUrl esté vacío, la unidad seguirá funcionando:
+   al final mostrará los datos en pantalla para copiarlos a mano.
+   ===================================================================== */
+  const CONFIG = {
+    formActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfC1yfOdTydyvZIUD13ae9mZ3enUOgbmhxxo7cluXOBBQ7PEA/formResponse",
+    entries: {
+      nombreCompleto:         "entry.1757143941", // nombre + apellidos juntos
+      curso:                  "entry.317932223",
+      conocimientosPrevios:   "entry.132138773",
+      resumen:                "entry.1280615450",
+      ortografia:             "entry.820027318",
+      acentuacion:            "entry.1808550560",
+      sintaxis:               "entry.860207379",
+      vocabulario:            "entry.1369497620",
+      redaccion:              "entry.1045304660",
+      notaTest:               "entry.299251515",
+      detalleTest:            "entry.1580565298",
+      // --- Rúbrica de nivel (solo para ti; el alumnado no ve estos datos) ---
+      nivelGlobal:            "entry.1072371234",
+      detalleRubrica:         "entry.1468374494",
+      cumpleResumen:          "entry.1339054087",
+      cumpleRedaccion:        "entry.264704354",
+      tiempoTotal:            "entry.1799808706"
+    }
+  };
+
+  /* =====================================================================
+     ESTADO GENERAL
+     ===================================================================== */
+  const sectionOrder = ["acceso","previos","biografia","comprension","correccion","redaccion","juegos","test","final"];
+  const sectionLabels = {
+    acceso:"Acceso", previos:"Previos", biografia:"Biografía", comprension:"Comprensión",
+    correccion:"Corrección", redaccion:"Redacción", juegos:"Juegos", test:"Test", final:"Cierre"
+  };
+  let currentIndex = 0;
+  let maxVisited = 0; // la página más avanzada a la que se ha llegado alguna vez
+
+  const state = {
+    nombre:"", apellidos:"", curso:"",
+    previos:"",
+    resumen:"",
+    comprensionScore:"", ortoScore:"", acentScore:"", sintaxisScore:"", vocabScore:"",
+    redaccion:"",
+    quizScore:0, quizDetail:[]
+  };
+
+  /* =====================================================================
+     NAVEGACIÓN ENTRE SECCIONES
+     ===================================================================== */
+  function renderProgress(){
+    const track = document.getElementById('progressTrack');
+    track.innerHTML = "";
+    sectionOrder.forEach((id, i)=>{
+      const dot = document.createElement('div');
+      const visitado = i <= maxVisited;
+      dot.className = 'stop' + (visitado && i !== currentIndex ? ' done' : '') + (i === currentIndex ? ' active' : '');
+      dot.textContent = i+1;
+      if(i !== currentIndex){
+        dot.classList.add('clickable');
+        dot.title = sectionLabels[id];
+        dot.addEventListener('click', ()=> showSection(sectionOrder[i]));
+      }
+      track.appendChild(dot);
+    });
+    document.getElementById('folioRight').textContent = `PÁGINA ${currentIndex+1} / ${sectionOrder.length}`;
+    const legend = document.getElementById('progressLegend');
+    if(legend){
+      legend.innerHTML = sectionOrder.map((id,i)=>{
+        const cls = i === currentIndex ? 'pl-current' : '';
+        return `<span class="${cls}">${i+1}. ${sectionLabels[id]}</span>`;
+      }).join(' · ');
+    }
+  }
+
+  function showSection(id){
+    document.querySelectorAll('.section').forEach(s=>{
+      s.classList.toggle('active', s.dataset.id === id);
+    });
+    currentIndex = sectionOrder.indexOf(id);
+    maxVisited = Math.max(maxVisited, currentIndex);
+    renderProgress();
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(id === 'final') fillSummary();
+  }
+
+  document.querySelectorAll('[data-next]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const cur = sectionOrder[currentIndex];
+      if(cur === 'previos') state.previos = document.getElementById('inPrevios').value.trim();
+      if(cur === 'comprension') state.resumen = document.getElementById('inResumen').value.trim();
+      if(cur === 'redaccion') state.redaccion = document.getElementById('inRedaccion').value.trim();
+      const next = sectionOrder[currentIndex+1];
+      if(next) showSection(next);
+    });
+  });
+  document.querySelectorAll('[data-back]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const prev = sectionOrder[currentIndex-1];
+      if(prev) showSection(prev);
+    });
+  });
+
+  /* =====================================================================
+     PORTADA
+     ===================================================================== */
+  const inNombre = document.getElementById('inNombre');
+  const inApellidos = document.getElementById('inApellidos');
+  const inCurso = document.getElementById('inCurso');
+  const btnAbrir = document.getElementById('btnAbrir');
+
+  function checkAcceso(){
+    btnAbrir.disabled = !(inNombre.value.trim() && inApellidos.value.trim() && inCurso.value);
+  }
+  [inNombre, inApellidos, inCurso].forEach(el=>el.addEventListener('input', checkAcceso));
+  inCurso.addEventListener('change', checkAcceso);
+
+  btnAbrir.addEventListener('click', ()=>{
+    state.nombre = inNombre.value.trim();
+    state.apellidos = inApellidos.value.trim();
+    state.curso = inCurso.value;
+    document.getElementById('folioLeft').textContent = `EXPEDIENTE · ${state.apellidos.toUpperCase()}`;
+    startTimer();
+    showSection('previos');
+  });
+
+  /* =====================================================================
+     CRONÓMETRO DISCRETO (solo para registro del profesorado)
+     ===================================================================== */
+  let startTime = null;
+  let timerInterval = null;
+  function pad(n){ return n.toString().padStart(2,'0'); }
+  function formatElapsed(ms){
+    const secs = Math.floor(ms/1000);
+    return `${pad(Math.floor(secs/60))}:${pad(secs%60)}`;
+  }
+  function startTimer(){
+    startTime = Date.now();
+    const el = document.getElementById('hiddenTimer');
+    timerInterval = setInterval(()=>{ if(el) el.textContent = formatElapsed(Date.now()-startTime); }, 1000);
+  }
+  function stopTimerAndGetElapsed(){
+    if(!startTime) return "00:00";
+    const elapsed = formatElapsed(Date.now()-startTime);
+    if(timerInterval) clearInterval(timerInterval);
+    return elapsed;
+  }
+
+  /* =====================================================================
+     CONTADORES DE PALABRAS
+     ===================================================================== */
+  function countWords(str){
+    const t = str.trim();
+    return t.length ? t.split(/\s+/).length : 0;
+  }
+  function bindCounter(taId, counterId, min, max){
+    const ta = document.getElementById(taId);
+    const c = document.getElementById(counterId);
+    ta.addEventListener('input', ()=>{
+      const n = countWords(ta.value);
+      c.textContent = max ? `${n} / ${min}-${max} palabras` : `${n} / ${min} palabras`;
+      c.classList.remove('warn','ok');
+      if(max){
+        c.classList.add(n>=min && n<=max ? 'ok' : (n>max ? 'warn' : ''));
+      } else {
+        c.classList.add(n<=min ? 'ok' : 'warn');
+      }
+    });
+  }
+  bindCounter('inResumen','resumenCounter',60,70);
+  bindCounter('inRedaccion','redaccionCounter',80,120);
+
+  /* =====================================================================
+     BLOQUEO DE AVANCE: no se puede continuar sin responder
+     ===================================================================== */
+  // NOTA: solo la portada (nombre/curso) es obligatoria; el resto de secciones
+  // permiten avanzar sin responder a todo (los datos igualmente se registran).
+
+  let comprensionDone = false;
+  function updateGateComprension(){ }
+
+  let ortoDone = false, acentDone = false, sintaxisDone = false, vocabDone = false;
+  function updateGateCorreccion(){ }
+
+  /* =====================================================================
+     COMPRENSIÓN LECTORA — preguntas de opción múltiple
+     ===================================================================== */
+  const comprensionData = [
+    {q:"¿Qué idea presentó Turing en su artículo de 1936?", opts:["Un dispositivo mecánico para transmitir mensajes cifrados","Una máquina teórica capaz de resolver cualquier problema expresable como algoritmo","Un método para acelerar los cálculos del ejército británico","Un sistema de numeración binaria"], correct:1,
+     fb:"Es la llamada 'máquina de Turing', el fundamento teórico de la computación, no un aparato físico ni un sistema de numeración."},
+    {q:"¿Cuál fue el papel exacto de Turing en Bletchley Park?", opts:["Fabricar las máquinas Enigma para el ejército británico","Liderar al equipo que logró descifrar los mensajes cifrados con Enigma","Traducir documentos militares del alemán","Diseñar el armamento utilizado en el desembarco de Normandía"], correct:1,
+     fb:"Turing no construyó Enigma (era alemana) ni tradujo documentos: lideró el descifrado de sus mensajes."},
+    {q:"¿Qué propone exactamente el llamado 'test de Turing'?", opts:["Medir cuántas operaciones por segundo realiza una máquina","Comprobar si una persona distingue a una máquina de un ser humano al conversar","Evaluar si una máquina puede resolver ecuaciones complejas","Calcular la memoria necesaria para simular un cerebro"], correct:1,
+     fb:"No mide velocidad ni capacidad de cálculo, sino si la conversación resulta indistinguible de la de una persona."},
+    {q:"¿Por qué fue procesado judicialmente Turing en 1952?", opts:["Por revelar secretos de Bletchley Park tras la guerra","Por un fraude relacionado con sus patentes","Por ser homosexual, algo entonces ilegal en el Reino Unido","Por negarse a colaborar con el gobierno británico"], correct:2,
+     fb:"Fue condenado por su orientación sexual, algo que hoy se reconoce como una injusticia; no por espionaje ni por negarse a colaborar."},
+    {q:"Según el texto, ¿qué ocurrió con la imagen pública de Turing después de su muerte?", opts:["Permaneció ignorada hasta la actualidad","Recibió una disculpa pública y un indulto real, y hoy aparece en un billete","Fue borrada de los libros de historia de la informática","Solo se reconoció su trabajo militar, nunca el científico"], correct:1,
+     fb:"En 2009 hubo disculpas oficiales, en 2013 un indulto real, y desde 2021 aparece en el billete de 50 libras."}
+  ];
+  renderScoredMcq('comprensionMcq', comprensionData, score=>{ state.comprensionScore = score; comprensionDone = true; updateGateComprension(); });
+
+  /* =====================================================================
+     TALLER DE CORRECCIÓN
+     ===================================================================== */
+
+  // --- 1. Ortografía: huecos b/v, g/j, h (las confusiones más frecuentes al escribir en castellano) ---
+  const ortoGroups = [
+    { titulo:"Con B o V", items:[
+        {before:"in", after:"entó", answer:"v", word:"inventó"},
+        {before:"tra", after:"ajo", answer:"b", word:"trabajo"},
+        {before:"go", after:"ierno", answer:"b", word:"gobierno"},
+        {before:"decisi", after:"o", answer:"v", word:"decisivo"},
+        {before:"", after:"íctima", answer:"v", word:"víctima"}
+    ]},
+    { titulo:"Con G o J", items:[
+        {before:"tra", after:"eron", answer:"j", word:"trajeron"},
+        {before:"eli", after:"ió", answer:"g", word:"eligió"},
+        {before:"prote", after:"ido", answer:"g", word:"protegido"},
+        {before:"e", after:"ército", answer:"j", word:"ejército"},
+        {before:"ur", after:"ente", answer:"g", word:"urgente"}
+    ]},
+    { titulo:"Con H o sin H", items:[
+        {before:"", after:"izo", answer:"h", word:"hizo"},
+        {before:"", after:"abitualmente", answer:"h", word:"habitualmente"},
+        {before:"pro", after:"ibido", answer:"h", word:"prohibido"},
+        {before:"ex", after:"austo", answer:"h", word:"exhausto"},
+        {before:"", after:"armonía", answer:"", word:"armonía"}
+    ]}
+  ];
+  const ortoInputs = []; // {input, item}
+  const ortoBlock = document.getElementById('ortoBlock');
+  ortoGroups.forEach(group=>{
+    const h = document.createElement('p');
+    h.innerHTML = `<strong>${group.titulo}</strong>`;
+    h.style.marginBottom = "6px";
+    ortoBlock.appendChild(h);
+    const row = document.createElement('div');
+    row.style.display = "flex";
+    row.style.flexWrap = "wrap";
+    row.style.gap = "14px";
+    row.style.marginBottom = "16px";
+    group.items.forEach(item=>{
+      const box = document.createElement('span');
+      box.style.fontFamily = "var(--mono)";
+      box.style.fontSize = "15px";
+      const input = document.createElement('input');
+      input.type = "text";
+      input.maxLength = 2;
+      input.style.width = "34px";
+      input.style.textAlign = "center";
+      input.style.padding = "6px 4px";
+      input.style.margin = "0 2px";
+      box.appendChild(document.createTextNode(item.before));
+      box.appendChild(input);
+      box.appendChild(document.createTextNode(item.after));
+      row.appendChild(box);
+      ortoInputs.push({input, item});
+    });
+    ortoBlock.appendChild(row);
+  });
+
+  // --- Diccionarios de definiciones y glosario en línea (aparece tras comprobar) ---
+  const ortoDefs = {
+    "inventó":"Creó algo nuevo que no existía antes.",
+    "trabajo":"Actividad que se realiza, normalmente a cambio de un sueldo.",
+    "gobierno":"Conjunto de personas que dirige el Estado.",
+    "decisivo":"Que resulta determinante o definitivo para lo que ocurre después.",
+    "víctima":"Persona que sufre un daño, un accidente o un delito.",
+    "trajeron":"Del verbo «traer»: llevaron algo hasta un lugar.",
+    "eligió":"Del verbo «elegir»: escogió entre varias opciones.",
+    "protegido":"Que está defendido o a salvo de un peligro.",
+    "ejército":"Conjunto organizado de las fuerzas militares de un país.",
+    "urgente":"Que requiere atención o solución inmediata.",
+    "hizo":"Del verbo «hacer».",
+    "habitualmente":"De forma frecuente, normal o acostumbrada.",
+    "prohibido":"Que no está permitido.",
+    "exhausto":"Muy cansado, sin fuerzas.",
+    "armonía":"Equilibrio y buena relación entre las partes de algo."
+  };
+  const acentDefs = {
+    "matemático":"Relativo a las matemáticas; persona que se dedica a ellas.",
+    "lógica":"Forma de razonar de manera correcta y coherente.",
+    "código":"Sistema de signos con reglas para representar información (aquí, un mensaje cifrado).",
+    "numérico":"Relativo a los números.",
+    "máquina":"Aparato construido para realizar una tarea.",
+    "algoritmo":"Conjunto ordenado de pasos para resolver un problema, como una receta.",
+    "práctico":"Útil, orientado a la acción más que a la teoría.",
+    "científico":"Relativo a la ciencia; persona que se dedica a la investigación.",
+    "sencillo":"Fácil, sin complicaciones.",
+    "automático":"Que funciona por sí solo, sin intervención directa de una persona.",
+    "raíz":"Origen o base de algo (en gramática, parte fija de una palabra).",
+    "leído":"Participio del verbo «leer»."
+  };
+  const sintaxisDefs = {
+    "sujeto":"Quien realiza —o, en voz pasiva, quien recibe— la acción del verbo.",
+    "complemento indirecto (CI)":"Indica el destinatario de la acción: ¿a quién? ¿para quién?",
+    "complemento directo (CD)":"Recibe directamente la acción del verbo: ¿qué? ¿a quién?",
+    "voz pasiva":"Construcción en la que el sujeto no realiza la acción, sino que la recibe.",
+    "sujeto paciente":"El sujeto de una oración en voz pasiva, que sufre la acción."
+  };
+  const vocabDefs = {
+    "descifrar":"Interpretar o averiguar el significado de un mensaje codificado.",
+    "precursor":"Quien hace o dice algo antes que los demás, abriendo camino.",
+    "brillante":"Que destaca mucho por su inteligencia o talento.",
+    "mediocre":"De poca calidad o valor; que no destaca."
+  };
+
+  function renderInlineGlossary(container, defsObj, words){
+    const box = document.createElement('div');
+    box.className = 'callout';
+    box.style.marginTop = '10px';
+    box.innerHTML = `<span class="callout-title">📖 Glosario de estas palabras (haz clic en cada una)</span>`;
+    const wrap = document.createElement('div');
+    wrap.className = 'word-bank';
+    wrap.style.marginTop = '4px';
+    (words || Object.keys(defsObj)).forEach(w=>{
+      const def = defsObj[w];
+      if(!def) return;
+      const chip = document.createElement('span');
+      chip.className = 'chip';
+      chip.textContent = w;
+      chip.addEventListener('click', (e)=>{
+        e.stopPropagation();
+        showTermPopupNear(chip, `<span class="tp-term">${w}</span>${def}`);
+      });
+      wrap.appendChild(chip);
+    });
+    box.appendChild(wrap);
+    container.appendChild(box);
+  }
+
+  document.getElementById('btnCheckOrto').addEventListener('click', ()=>{
+    let correct = 0;
+    ortoInputs.forEach(({input, item})=>{
+      const val = input.value.trim().toLowerCase();
+      const ok = val === item.answer.toLowerCase();
+      input.disabled = true;
+      input.style.borderColor = ok ? "#3f6a56" : "#9a3324";
+      input.style.background = ok ? "rgba(63,106,86,.15)" : "rgba(154,51,36,.12)";
+      if(ok) correct++;
+      else input.title = `Correcto: "${item.answer || '(nada)'}"`;
+    });
+    state.ortoScore = correct + "/" + ortoInputs.length;
+    const res = document.getElementById('ortoResult');
+    res.innerHTML = `<div class="result-badge ${correct===ortoInputs.length?'ok':'bad'}">Aciertos: ${correct} / ${ortoInputs.length}</div>
+      <p style="font-family:var(--mono); font-size:11.5px; color:#7a6f57; margin-top:6px;">Pasa el ratón sobre un hueco en rojo para ver la solución.</p>`;
+    renderInlineGlossary(res, ortoDefs, ortoInputs.map(({item})=>item.word));
+    ortoDone = true;
+    updateGateCorreccion();
+  });
+
+  // --- 2. Acentuación ---
+  const acentWords = [
+    {w:"matemático", needs:false},
+    {w:"logica", needs:true, fix:"lógica"},
+    {w:"código", needs:false},
+    {w:"numerico", needs:true, fix:"numérico"},
+    {w:"máquina", needs:false},
+    {w:"algoritmo", needs:false},
+    {w:"práctico", needs:false},
+    {w:"cientifico", needs:true, fix:"científico"},
+    {w:"sencillo", needs:false},
+    {w:"automatico", needs:true, fix:"automático"},
+    {w:"raiz", needs:true, fix:"raíz"},
+    {w:"leido", needs:true, fix:"leído"}
+  ];
+  const acentBank = document.getElementById('acentBank');
+  const acentChips = [];
+  acentWords.forEach(item=>{
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = item.w;
+    chip.addEventListener('click', ()=>{
+      if(chip.classList.contains('locked')) return;
+      chip.classList.toggle('selected');
+    });
+    acentBank.appendChild(chip);
+    acentChips.push({chip, item});
+  });
+  document.getElementById('btnCheckAcento').addEventListener('click', ()=>{
+    let correct = 0;
+    acentChips.forEach(({chip,item})=>{
+      chip.classList.add('locked');
+      const sel = chip.classList.contains('selected');
+      if(item.needs && sel){ chip.classList.add('correct'); correct++; }
+      else if(item.needs && !sel){ chip.classList.add('missed'); chip.textContent += ` → ${item.fix}`; }
+      else if(!item.needs && sel){ chip.classList.add('incorrect'); }
+    });
+    const total = acentWords.filter(w=>w.needs).length;
+    state.acentScore = correct + "/" + total;
+    const res = document.getElementById('acentoResult');
+    res.innerHTML = `<div class="result-badge ${correct===total?'ok':'bad'}">Aciertos: ${correct} / ${total}</div>`;
+    renderInlineGlossary(res, acentDefs, acentWords.map(w=>(w.fix || w.w)));
+    acentDone = true;
+    updateGateCorreccion();
+  });
+
+  // --- 3. Sintaxis: sujeto, CD, CI, atributo ---
+  const sintaxisData = [
+    {q:"«A los descifradores les preocupaba el tiempo.» ¿Cuál es el sujeto?", opts:["A los descifradores","les","el tiempo","preocupaba"], correct:2, fb:"Con verbos como «preocupar» (igual que «gustar»), el orden habitual se invierte: «a los descifradores» y «les» son el CI, y «el tiempo» —lo que preocupa— es el sujeto, aunque vaya al final."},
+    {q:"«Bletchley Park fue elegido como sede secreta.» Esta oración está en voz pasiva. ¿Cuál es el sujeto paciente?", opts:["Bletchley Park","como sede secreta","fue elegido","secreta"], correct:0, fb:"En voz pasiva, el sujeto no realiza la acción, sino que la recibe: «Bletchley Park» es el sujeto paciente (quien lo eligió, el agente, ni siquiera se menciona)."},
+    {q:"«A Turing le concedieron un indulto en 2013.» ¿Qué función cumple «le»?", opts:["Sujeto","Complemento indirecto","Complemento directo","Complemento circunstancial"], correct:1, fb:"«le» es el pronombre de CI que duplica a «a Turing»; el indulto es lo concedido (CD), y a quien se le concede es el CI."}
+  ];
+  renderScoredMcq('sintaxisMcq', sintaxisData, score=>{
+    state.sintaxisScore = score; sintaxisDone = true; updateGateCorreccion();
+    renderInlineGlossary(document.getElementById('sintaxisMcq'), sintaxisDefs);
+  });
+
+  // --- 4. Vocabulario ---
+  const vocabData = [
+    {q:"Sinónimo de «descifrar» en el contexto del texto:", opts:["Interpretar un mensaje codificado","Traducir a otro idioma","Memorizar un código","Transmitir información"], correct:0, fb:"«Descifrar» es desentrañar el significado de algo codificado, no traducirlo ni memorizarlo."},
+    {q:"Antónimo de «brillante» (referido a la inteligencia):", opts:["Mediocre","Curioso","Reflexivo","Metódico"], correct:0, fb:"«Mediocre» se opone a una inteligencia brillante; los demás no son antónimos exactos."},
+    {q:"La palabra «precursor» significa:", opts:["Que va antes, abriendo camino a algo","Que corrige los errores de otro","Que continúa el trabajo de otro sin cambios","Que financia un proyecto ajeno"], correct:0, fb:"Un precursor anticipa o inicia algo que otros continuarán después; no corrige ni financia."}
+  ];
+  renderScoredMcq('vocabMcq', vocabData, score=>{
+    state.vocabScore = score; vocabDone = true; updateGateCorreccion();
+    renderInlineGlossary(document.getElementById('vocabMcq'), vocabDefs);
+  });
+
+  function renderScoredMcq(containerId, data, onFinish){
+    const holder = document.getElementById(containerId);
+    let correctCount = 0, answered = 0;
+    data.forEach((item, qi)=>{
+      const box = document.createElement('div');
+      box.className = 'mcq';
+      box.innerHTML = `<p class="q">${qi+1}. ${item.q}</p>`;
+      item.opts.forEach((opt, oi)=>{
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.textContent = opt;
+        b.addEventListener('click', ()=>{
+          if(box.dataset.answered) return;
+          box.dataset.answered = "1";
+          answered++;
+          box.querySelectorAll('.opt').forEach((o,idx)=>{
+            o.disabled = true;
+            if(idx === item.correct) o.classList.add('correct');
+            else if(idx === oi) o.classList.add('incorrect');
+          });
+          if(oi === item.correct) correctCount++;
+          const fb = box.querySelector('.fb');
+          fb.textContent = (oi === item.correct ? "✔ Correcto. " : "✘ No es correcto. ") + item.fb;
+          fb.classList.add('show', oi === item.correct ? 'ok-text':'bad-text');
+          if(answered === data.length) onFinish(correctCount + "/" + data.length);
+        });
+        box.appendChild(b);
+      });
+      const fb = document.createElement('div');
+      fb.className = 'fb';
+      box.appendChild(fb);
+      holder.appendChild(box);
+    });
+  }
+
+  /* =====================================================================
+     JUEGOS LINGÜÍSTICOS (no puntúan; son un descanso antes del test)
+     ===================================================================== */
+  const GRID_SIZE = 10;
+  const wsWords = [
+    {name:"TURING", cells:[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5]]},
+    {name:"ENIGMA", cells:[[0,9],[1,9],[2,9],[3,9],[4,9],[5,9]]},
+    {name:"CIFRA", cells:[[2,2],[2,3],[2,4],[2,5],[2,6]]},
+    {name:"LOGICA", cells:[[2,1],[3,1],[4,1],[5,1],[6,1],[7,1]]},
+    {name:"CODIGO", cells:[[5,3],[5,4],[5,5],[5,6],[5,7],[5,8]]},
+    {name:"VERBO", cells:[[3,0],[4,0],[5,0],[6,0],[7,0]]},
+    {name:"SINTAXIS", cells:[[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,6],[8,7]]},
+    {name:"TILDE", cells:[[9,0],[9,1],[9,2],[9,3],[9,4]]},
+    {name:"PROSA", cells:[[3,2],[4,3],[5,4],[6,5],[7,6]]},
+    {name:"SUJETO", cells:[[1,7],[1,6],[1,5],[1,4],[1,3],[1,2]]}
+  ];
+  const wsGridLetters = Array.from({length:GRID_SIZE}, ()=> Array(GRID_SIZE).fill(null));
+  wsWords.forEach(w=>{ w.cells.forEach((rc,i)=>{ wsGridLetters[rc[0]][rc[1]] = w.name[i]; }); });
+  const wsFiller = "AEIOSRNLTCDMPBUVQZ";
+  for(let r=0;r<GRID_SIZE;r++){
+    for(let c=0;c<GRID_SIZE;c++){
+      if(!wsGridLetters[r][c]) wsGridLetters[r][c] = wsFiller[Math.floor(Math.random()*wsFiller.length)];
+    }
+  }
+  const wsFound = new Set();
+  let wsSelStart = null;
+  const wsGridEl = document.getElementById('wordSearchGrid');
+  if(wsGridEl){
+    for(let r=0;r<GRID_SIZE;r++){
+      for(let c=0;c<GRID_SIZE;c++){
+        const cell = document.createElement('div');
+        cell.className = 'ws-cell';
+        cell.textContent = wsGridLetters[r][c];
+        cell.addEventListener('click', ()=> handleWsClick(r,c,cell));
+        wsGridEl.appendChild(cell);
+      }
+    }
+  }
+  function handleWsClick(r,c,cellEl){
+    if(cellEl.classList.contains('found')) return;
+    if(!wsSelStart){
+      wsSelStart = {r,c,el:cellEl};
+      cellEl.classList.add('selected');
+      return;
+    }
+    const start = wsSelStart;
+    wsSelStart = null;
+    start.el.classList.remove('selected');
+    if(start.r === r && start.c === c) return;
+    const dr = r - start.r, dc = c - start.c;
+    const isStraight = dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc);
+    if(!isStraight){
+      flashWsInvalid([start, {r,c}]);
+      return;
+    }
+    const stepR = dr === 0 ? 0 : dr / Math.abs(dr);
+    const stepC = dc === 0 ? 0 : dc / Math.abs(dc);
+    const path = [];
+    let rr = start.r, cc = start.c;
+    while(true){
+      path.push([rr,cc]);
+      if(rr === r && cc === c) break;
+      rr += stepR; cc += stepC;
+    }
+    const str = path.map(([rr,cc])=>wsGridLetters[rr][cc]).join('');
+    const strRev = str.split('').reverse().join('');
+    const match = wsWords.find(w=> !wsFound.has(w.name) && (w.name===str || w.name===strRev));
+    if(match){
+      wsFound.add(match.name);
+      path.forEach(([rr,cc])=>{
+        wsGridEl.children[rr*GRID_SIZE+cc].classList.add('found');
+      });
+      renderWsWordList();
+    } else {
+      flashWsInvalid(path.map(([rr,cc])=>({r:rr,c:cc})));
+    }
+  }
+  function flashWsInvalid(cells){
+    cells.forEach(({r,c})=>{
+      const el = wsGridEl.children[r*GRID_SIZE+c];
+      if(el && !el.classList.contains('found')){
+        el.style.background = '#f3d0c8';
+        setTimeout(()=>{ if(!el.classList.contains('found')) el.style.background = ''; }, 400);
+      }
+    });
+  }
+  function renderWsWordList(){
+    const listEl = document.getElementById('wordSearchWords');
+    if(!listEl) return;
+    listEl.innerHTML = wsWords.map(w=> `<span class="${wsFound.has(w.name)?'found':''}">${w.name}</span>`).join('');
+  }
+  renderWsWordList();
+
+  const anagramData = [
+    {scrambled:"NIAGME", answer:"ENIGMA", hint:"Máquina alemana de cifrado que Turing ayudó a descifrar."},
+    {scrambled:"ISNXATIS", answer:"SINTAXIS", hint:"Parte de la gramática que estudia la función de las palabras en la oración."},
+    {scrambled:"AGIÓCL", answer:"LÓGICA", hint:"Ciencia del razonamiento correcto; especialidad de Turing (¡no olvides la tilde!)."},
+    {scrambled:"ROVEB", answer:"VERBO", hint:"Clase de palabra que expresa acción, proceso o estado."},
+    {scrambled:"IDÓCOG", answer:"CÓDIGO", hint:"Sistema de signos usado para cifrar un mensaje secreto (¡no olvides la tilde!)."}
+  ];
+  const anagramsHolder = document.getElementById('anagramsHolder');
+  if(anagramsHolder){
+    anagramData.forEach(item=>{
+      const div = document.createElement('div');
+      div.className = 'anagram-item';
+      div.innerHTML = `
+        <div class="anagram-scrambled">${item.scrambled}</div>
+        <div class="anagram-hint">${item.hint}</div>
+        <input type="text" class="anagram-input" maxlength="12">
+        <button class="btn-ghost anagram-check">Comprobar</button>
+        <span class="anagram-fb"></span>
+      `;
+      const input = div.querySelector('.anagram-input');
+      const fb = div.querySelector('.anagram-fb');
+      const check = ()=>{
+        if(input.disabled) return;
+        const val = input.value.trim().toUpperCase();
+        const ok = val === item.answer;
+        input.disabled = true;
+        input.style.borderColor = ok ? '#3f6a56' : '#9a3324';
+        fb.textContent = ok ? '✔ Correcto' : `✘ Era «${item.answer}»`;
+        fb.style.color = ok ? '#3f6a56' : '#9a3324';
+      };
+      div.querySelector('.anagram-check').addEventListener('click', check);
+      input.addEventListener('keydown', e=>{ if(e.key === 'Enter') check(); });
+      anagramsHolder.appendChild(div);
+    });
+  }
+
+  const matchPairs = [
+    {a:"Descifrar", b:"Interpretar"},
+    {a:"Brillante", b:"Genial"},
+    {a:"Urgente", b:"Apremiante"},
+    {a:"Cuestionado", b:"Discutido"},
+    {a:"Pionero", b:"Precursor"}
+  ];
+  function shuffleArr(arr){
+    const copy = [...arr];
+    for(let i=copy.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [copy[i],copy[j]] = [copy[j],copy[i]];
+    }
+    return copy;
+  }
+  const matchColA = document.getElementById('matchColA');
+  const matchColB = document.getElementById('matchColB');
+  if(matchColA && matchColB){
+    const shuffledA = shuffleArr(matchPairs.map((p,i)=>({...p, id:i})));
+    const shuffledB = shuffleArr(matchPairs.map((p,i)=>({...p, id:i})));
+    let matchSelLeft = null;
+    const matchedIds = new Set();
+
+    shuffledA.forEach(pair=>{
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.textContent = pair.a;
+      el.dataset.id = pair.id;
+      el.addEventListener('click', ()=>{
+        if(el.classList.contains('matched')) return;
+        matchColA.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected');
+        matchSelLeft = {id:pair.id, el};
+      });
+      matchColA.appendChild(el);
+    });
+    shuffledB.forEach(pair=>{
+      const el = document.createElement('div');
+      el.className = 'match-item';
+      el.textContent = pair.b;
+      el.dataset.id = pair.id;
+      el.addEventListener('click', ()=>{
+        if(el.classList.contains('matched') || !matchSelLeft) return;
+        if(matchSelLeft.id === pair.id){
+          matchSelLeft.el.classList.remove('selected');
+          matchSelLeft.el.classList.add('matched');
+          el.classList.add('matched');
+          matchedIds.add(pair.id);
+        } else {
+          el.style.background = '#f3d0c8';
+          matchSelLeft.el.style.background = '#f3d0c8';
+          setTimeout(()=>{
+            el.style.background = '';
+            matchSelLeft.el.classList.remove('selected');
+            matchSelLeft.el.style.background = '';
+          }, 400);
+        }
+        matchSelLeft = null;
+      });
+      matchColB.appendChild(el);
+    });
+  }
+
+  /* =====================================================================
+     TEST FINAL (12 PREGUNTAS)
+     ===================================================================== */
+  const quizData = [
+    {q:"¿Qué cuestionan algunos historiadores sobre la muerte de Turing?", opts:["Que ocurriera en Wilmslow","Que el veredicto oficial de suicidio fuera correcto, y no un accidente","Que muriera en 1954","Que se le concediera un indulto real"], correct:1},
+    {q:"¿Cómo se llama el premio anual, considerado el «Nobel de la informática», instituido en su honor?", opts:["Premio Turing","Premio Lovelace","Medalla Bletchley","Premio Enigma"], correct:0},
+    {q:"¿Por qué se considera que el trabajo de Turing en Bletchley Park tuvo un impacto que fue más allá de lo militar?", opts:["Porque además sentó bases prácticas para la computación electrónica","Porque le hizo famoso en su época","Porque le permitió abandonar las matemáticas","Porque fue su único logro relevante"], correct:0},
+    {q:"¿Cuál de estas palabras necesita tilde y no la tiene?", opts:["reina","pais","aire","paisaje"], correct:1},
+    {q:"Señala la palabra escrita correctamente:", opts:["exivir","exhibir","exsibir","ehibir"], correct:1},
+    {q:"«El profesor entregó las notas a los alumnos.» ¿Cuál es el complemento indirecto (CI)?", opts:["El profesor","las notas","a los alumnos","entregó"], correct:2},
+    {q:"«Bletchley Park reunió a los mejores matemáticos del país.» ¿Cuál es el CD?", opts:["Bletchley Park","del país","a los mejores matemáticos del país","reunió"], correct:2},
+    {q:"«Aquel matemático resolvió el problema con rapidez.» ¿Qué función gramatical cumple «aquel»?", opts:["Pronombre personal","Determinante demostrativo","Adverbio","Preposición"], correct:1},
+    {q:"¿Cuál es el antónimo de «célebre»?", opts:["ilustre","anónimo","insigne","reconocido"], correct:1},
+    {q:"Elige la opción con la puntuación correcta:", opts:["Turing matemático, británico cambió, la historia.","Turing, matemático británico, cambió la historia.","Turing, matemático, británico cambió la historia","Turing matemático británico, cambió la historia."], correct:1},
+    {q:"En el texto se dice que, de joven, Turing «no siempre encajó» con el sistema escolar tradicional. ¿Qué significa esto?", opts:["Que no se adaptaba bien a ese sistema","Que sacaba las mejores notas de la clase","Que faltaba a clase con frecuencia","Que cambiaba de colegio constantemente"], correct:0},
+    {q:"¿Cuál es la forma correcta del pretérito perfecto simple (3ª persona singular) del verbo «traducir»?", opts:["tradució","traducía","tradujo","traduzco"], correct:2}
+  ];
+
+  let quizIndex = 0;
+  const quizAnswers = new Array(quizData.length).fill(null);
+
+  function renderQuizQuestion(){
+    const holder = document.getElementById('quizHolder');
+    holder.innerHTML = "";
+    const item = quizData[quizIndex];
+    const box = document.createElement('div');
+    box.className = 'mcq';
+    box.innerHTML = `<p class="q">${quizIndex+1}. ${item.q}</p>`;
+    item.opts.forEach((opt, oi)=>{
+      const b = document.createElement('button');
+      b.className = 'opt';
+      b.textContent = opt;
+      b.addEventListener('click', ()=>{
+        if(box.dataset.answered) return;
+        box.dataset.answered = "1";
+        quizAnswers[quizIndex] = oi;
+        box.querySelectorAll('.opt').forEach((o,idx)=>{
+          o.disabled = true;
+          if(idx === item.correct) o.classList.add('correct');
+          else if(idx === oi) o.classList.add('incorrect');
+        });
+        setTimeout(()=>{
+          if(quizIndex < quizData.length - 1){
+            quizIndex++;
+            updateQuizProgress();
+            renderQuizQuestion();
+          } else {
+            finishQuiz();
+          }
+        }, 700);
+      });
+      box.appendChild(b);
+    });
+    holder.appendChild(box);
+  }
+
+  function updateQuizProgress(){
+    document.getElementById('quizProgressLabel').textContent = `Pregunta ${quizIndex+1} / ${quizData.length}`;
+    document.getElementById('quizBarFill').style.width = ((quizIndex)/quizData.length*100) + "%";
+  }
+
+  function finishQuiz(){
+    let correct = 0;
+    const detail = [];
+    quizAnswers.forEach((a,i)=>{
+      const ok = a === quizData[i].correct;
+      if(ok) correct++;
+      detail.push(`${i+1}:${a===null?'-':(ok?'V':'F')}`);
+    });
+    state.quizScore = correct;
+    state.quizDetail = detail.join(" ");
+    document.getElementById('quizBarFill').style.width = "100%";
+    document.getElementById('quizProgressLabel').textContent = `Test completado: ${correct} / ${quizData.length}`;
+    setTimeout(()=>showSection('final'), 900);
+  }
+
+  // arrancar el test cuando se entra en su sección
+  const testSectionObserver = document.querySelector('[data-id="test"]');
+  document.querySelectorAll('[data-next]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(sectionOrder[currentIndex] === 'test' && quizIndex === 0 && !document.getElementById('quizHolder').hasChildNodes()){
+        renderQuizQuestion();
+      }
+    });
+  });
+  // Inicializar el test la primera vez que se muestra esa sección
+  const originalShowSection = showSection;
+  showSection = function(id){
+    originalShowSection(id);
+    if(id === 'test' && !document.getElementById('quizHolder').hasChildNodes()){
+      updateQuizProgress();
+      renderQuizQuestion();
+    }
+  };
+
+  /* =====================================================================
+     PANTALLA FINAL Y ENVÍO
+     ===================================================================== */
+  /* ---- Rúbrica: nivel por bloque a partir de las puntuaciones objetivas ---- */
+  function parseScore(str, fallbackMax){
+    if(!str) return {n:0, max:fallbackMax};
+    const [n,max] = str.split('/').map(Number);
+    return {n, max};
+  }
+  function levelFromPct(pct){
+    if(pct >= 85) return "Avanzado";
+    if(pct >= 65) return "Consolidado";
+    if(pct >= 40) return "En proceso";
+    return "Inicial";
+  }
+  function buildRubric(){
+    const c1 = parseScore(state.comprensionScore, comprensionData.length);
+    const c2 = parseScore(state.ortoScore, ortoInputs.length);
+    const c3 = parseScore(state.acentScore, acentWords.filter(w=>w.needs).length);
+    const c4 = parseScore(state.sintaxisScore, sintaxisData.length);
+    const c5 = parseScore(state.vocabScore, vocabData.length);
+    const c6 = {n: state.quizScore, max: quizData.length};
+
+    const cats = [
+      {key:'comprension', label:'Comprensión lectora', ...c1},
+      {key:'ortografia', label:'Ortografía', ...c2},
+      {key:'acentuacion', label:'Acentuación', ...c3},
+      {key:'sintaxis', label:'Sintaxis', ...c4},
+      {key:'vocabulario', label:'Vocabulario', ...c5},
+      {key:'test', label:'Conocimientos generales', ...c6}
+    ].map(c => {
+      const pct = c.max ? Math.round((c.n / c.max) * 100) : 0;
+      return {...c, pct, nivel: levelFromPct(pct)};
+    });
+
+    const overallPct = Math.round(cats.reduce((a,c)=>a+c.pct,0) / cats.length);
+    const overallNivel = levelFromPct(overallPct);
+    const strongest = cats.reduce((a,b)=> b.pct > a.pct ? b : a);
+    const weakest = cats.reduce((a,b)=> b.pct < a.pct ? b : a);
+
+    const nResumen = countWords(state.resumen);
+    const nRedaccion = countWords(state.redaccion);
+    const cumpleResumen = nResumen>=60 && nResumen<=70;
+    const cumpleRedaccion = nRedaccion>=80 && nRedaccion<=120;
+
+    return {cats, overallPct, overallNivel, strongest, weakest, nResumen, nRedaccion, cumpleResumen, cumpleRedaccion};
+  }
+
+  const nivelMsg = {
+    "Avanzado":"¡Muy buen nivel de partida! Dominas la mayoría de los contenidos trabajados en esta unidad, tanto en comprensión como en ortografía y gramática. Este curso te servirá sobre todo para pulir detalles y ganar soltura en tareas más exigentes.",
+    "Consolidado":"Tienes un buen nivel de partida, con una base sólida sobre la que seguir construyendo este curso. Hay algún bloque concreto en el que conviene poner el foco, pero en general partes con buenas herramientas.",
+    "En proceso":"Tu nivel de partida está en desarrollo: entiendes las ideas generales y aciertas en parte de los ejercicios, aunque conviene reforzar varios aspectos. Es un punto de partida normal al comenzar el curso, y con práctica irás ganando seguridad.",
+    "Inicial":"Este es tu punto de partida, y no pasa nada: para eso sirve esta primera prueba. Durante el curso dedicaremos tiempo a trabajar justo los aspectos que más lo necesitan, paso a paso."
+  };
+
+  const nivelFrase = {
+    "Avanzado":"lo dominas con soltura",
+    "Consolidado":"tienes una base sólida",
+    "En proceso":"vas por buen camino, aún con margen de mejora",
+    "Inicial":"es donde más te conviene poner el foco este curso"
+  };
+
+  function fillSummary(){
+    document.getElementById('scoreNum').textContent = `${state.quizScore}/${quizData.length}`;
+    document.getElementById('sumNombre').textContent = `${state.nombre} ${state.apellidos}`;
+    document.getElementById('sumCurso').textContent = state.curso || "—";
+
+    const r = buildRubric();
+    state._rubric = r; // guardado para el envío
+
+    const filas = r.cats.map(c => `
+      <div class="fp-row"><span class="fp-tag">${c.label.toUpperCase()}</span><span>${nivelFrase[c.nivel]}</span></div>
+    `).join("");
+
+    const fb = document.getElementById('studentFeedback');
+    fb.innerHTML = `
+      <p><strong>Tu valoración de esta prueba inicial</strong></p>
+      <p>${nivelMsg[r.overallNivel]}</p>
+      <p style="margin-top:14px;"><strong>Por bloques:</strong></p>
+      ${filas}
+      <p style="margin-top:14px;">En especial, <strong>destacas en ${r.strongest.label.toLowerCase()}</strong>, y el bloque en el que <strong>más margen de mejora tienes es ${r.weakest.label.toLowerCase()}</strong>. Trabajaremos sobre esto a lo largo del curso.</p>
+      <p style="margin-top:10px; font-size:13px; color:#7a6f57;">Tu resumen y tu redacción los revisará tu profesor/a personalmente: esta valoración no incluye esa parte.</p>
+    `;
+  }
+
+  document.getElementById('btnEnviar').addEventListener('click', sendEverything);
+
+  function sendEverything(){
+    const statusEl = document.getElementById('sendStatus');
+    const payload = {
+      nombreCompleto: `${state.nombre} ${state.apellidos}`.trim(),
+      curso: state.curso,
+      conocimientosPrevios: state.previos,
+      resumen: state.resumen,
+      ortografia: state.ortoScore || "0/3",
+      acentuacion: state.acentScore || "0/4",
+      sintaxis: state.sintaxisScore || "0/3",
+      vocabulario: state.vocabScore || "0/3",
+      redaccion: state.redaccion,
+      notaTest: `${state.quizScore}/${quizData.length}`,
+      detalleTest: state.quizDetail || "",
+      nivelGlobal: (state._rubric ? state._rubric.overallNivel + ` (${state._rubric.overallPct}%)` : ""),
+      detalleRubrica: (state._rubric ? state._rubric.cats.map(c=>`${c.label}: ${c.n}/${c.max} (${c.pct}% · ${c.nivel})`).join(" | ") : ""),
+      cumpleResumen: (state._rubric ? `${state._rubric.cumpleResumen ? "Sí" : "No"} (${state._rubric.nResumen} palabras)` : ""),
+      cumpleRedaccion: (state._rubric ? `${state._rubric.cumpleRedaccion ? "Sí" : "No"} (${state._rubric.nRedaccion} palabras)` : ""),
+      tiempoTotal: stopTimerAndGetElapsed()
+    };
+
+    if(!CONFIG.formActionUrl){
+      // Aún no se ha configurado el formulario: mostramos los datos para copiar.
+      statusEl.className = 'send-status show error';
+      statusEl.innerHTML = "El envío automático todavía no está configurado (falta el enlace del formulario). " +
+        "Copia y envía estos datos a tu profesor/a:<br><br>" +
+        "<textarea readonly style='width:100%;min-height:160px;font-family:var(--mono);font-size:12px;'>" +
+        JSON.stringify(payload, null, 2) + "</textarea>";
+      return;
+    }
+
+    const form = document.createElement('form');
+    form.action = CONFIG.formActionUrl;
+    form.method = "POST";
+    form.target = "hidden_iframe";
+
+    Object.keys(payload).forEach(key=>{
+      const entryId = CONFIG.entries[key];
+      if(!entryId) return;
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = entryId;
+      input.value = payload[key];
+      form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    statusEl.className = 'send-status show pending';
+    statusEl.textContent = 'Enviando expediente…';
+
+    form.submit();
+
+    setTimeout(()=>{
+      statusEl.className = 'send-status show done';
+      statusEl.textContent = '✔ Expediente enviado. Ya puedes cerrar esta página.';
+      document.getElementById('btnEnviar').disabled = true;
+      form.remove();
+    }, 1200);
+  }
+
+  renderProgress();
+
+  /* =====================================================================
+     GLOSARIO EMERGENTE Y PALABRAS EN INGLÉS (biografía)
+     ===================================================================== */
+  function speak(text, lang){
+    if(!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang || 'en-GB';
+    u.rate = 0.92;
+    window.speechSynthesis.speak(u);
+  }
+
+  const glossaryBio = {
+    "ejemplo": "Haz clic en cualquier palabra subrayada con puntos, como esta, para ver aquí su significado.",
+    "lógica-bio": "Forma de razonar y pensar de manera correcta y coherente, siguiendo reglas.",
+    "algoritmo": "Conjunto ordenado y preciso de pasos que sirven para resolver un problema, como una receta de cocina.",
+    "clave": "Fundamental, decisivo: algo sin lo cual no se habría conseguido el resultado.",
+    "procesado": "Llevado ante un tribunal para ser juzgado por una posible acusación de delito.",
+    "hormonal": "Relacionado con las hormonas, las sustancias del cuerpo que regulan su funcionamiento.",
+    "acreditación": "Permiso oficial que autoriza a una persona a acceder a información secreta o confidencial del gobierno.",
+    "veredicto": "Decisión final de un tribunal o jurado sobre si alguien es culpable o inocente.",
+    "envenenamiento": "Hecho de introducir en el cuerpo una sustancia tóxica (veneno), lo que puede causar la muerte.",
+    "cianuro": "Sustancia química extremadamente tóxica y mortal.",
+    "inhalación": "Acción de respirar y absorber una sustancia a través de los pulmones.",
+    "indulto": "Perdón oficial que concede un jefe de Estado a una persona condenada, librándola de cumplir su pena.",
+    "galardón": "Premio o reconocimiento que se concede a alguien por sus méritos.",
+    "prestigioso": "Muy respetado y valorado por su calidad o importancia.",
+    "tardío": "Que llega o sucede después del momento en que hubiera sido más adecuado."
+  };
+
+  const englishWords = {
+    "ejemplo": {es:"«así», en inglés. Haz clic en una palabra verde como esta para escucharla y ver su traducción.", say:"like this"},
+    "Alan Turing": {es:"Nombre propio: no se traduce, pero conviene saber pronunciarlo bien en inglés.", say:"Alan Turing"},
+    "fellowship": {es:"Plaza de profesor-investigador con financiación (una especie de beca de investigación).", say:"fellowship"},
+    "King's College": {es:"Nombre propio de una facultad de la Universidad de Cambridge: literalmente, «Colegio del Rey».", say:"King's College"},
+    "Cambridge": {es:"Ciudad inglesa donde está la famosa universidad (nombre propio, no se traduce).", say:"Cambridge"},
+    "Princeton": {es:"Ciudad de Estados Unidos y universidad donde estudió Turing (nombre propio).", say:"Princeton"},
+    "Bletchley Park": {es:"Nombre propio de la mansión inglesa donde trabajaban los descifradores de códigos.", say:"Bletchley Park"},
+    "Automatic Computing Engine": {es:"«Motor de Computación Automática»: nombre del ordenador que diseñó Turing (ACE).", say:"Automatic Computing Engine"},
+    "Manchester": {es:"Ciudad inglesa (nombre propio, no se traduce).", say:"Manchester"},
+    "Wilmslow": {es:"Pueblo cercano a Manchester donde vivió y murió Turing (nombre propio).", say:"Wilmslow"},
+    "Association for Computing Machinery": {es:"«Asociación para la Maquinaria de Computación»: la organización que entrega el Premio Turing.", say:"Association for Computing Machinery"},
+    "The Imitation Game": {es:"«El juego de la imitación»: título original de la película sobre Turing.", say:"The Imitation Game"},
+    "Benedict Cumberbatch": {es:"Nombre propio: actor que interpretó a Alan Turing en la película.", say:"Benedict Cumberbatch"},
+    "Codebreaker": {es:"«Descifrador de códigos»: así se titula el documental sobre Turing.", say:"Codebreaker"}
+  };
+
+  const termPopup = document.getElementById('termPopup');
+  function hideTermPopup(){ termPopup.classList.remove('show'); }
+  function showTermPopupNear(el, html){
+    termPopup.innerHTML = html;
+    termPopup.classList.add('show');
+    const r = el.getBoundingClientRect();
+    let top = window.scrollY + r.bottom + 6;
+    let left = window.scrollX + r.left;
+    termPopup.style.top = top + 'px';
+    termPopup.style.left = left + 'px';
+    requestAnimationFrame(()=>{
+      const pw = termPopup.offsetWidth;
+      const maxLeft = window.scrollX + document.documentElement.clientWidth - pw - 12;
+      if(left > maxLeft) termPopup.style.left = Math.max(8, maxLeft) + 'px';
+    });
+  }
+  document.querySelectorAll('.gloss-word').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const term = el.dataset.term;
+      const def = glossaryBio[term] || "(sin definición)";
+      showTermPopupNear(el, `<span class="tp-term">${el.textContent}</span>${def}`);
+    });
+  });
+  document.querySelectorAll('.en-word').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const key = el.dataset.en;
+      const info = englishWords[key];
+      if(!info) return;
+      speak(info.say || el.textContent, 'en-GB');
+      showTermPopupNear(el, `<span class="tp-term">🔊 ${el.textContent}</span>${info.es}<span class="tp-note">Vuelve a hacer clic para escucharla de nuevo.</span>`);
+    });
+  });
+  document.querySelectorAll('.video-word').forEach(el=>{
+    el.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const vid = el.dataset.video;
+      window.open(`https://youtu.be/${vid}`, '_blank', 'noopener');
+    });
+  });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.gloss-word') && !e.target.closest('.en-word') && !e.target.closest('.term-popup')){
+      hideTermPopup();
+    }
+  });
+  window.addEventListener('scroll', hideTermPopup, {passive:true});
+
+  /* =====================================================================
+     VENTANA MODAL (glosarios, ejemplos y explicaciones)
+     ===================================================================== */
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalContent = document.getElementById('modalContent');
+  function openModal(html){
+    modalContent.innerHTML = html;
+    modalOverlay.classList.add('show');
+  }
+  function closeModal(){ modalOverlay.classList.remove('show'); }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+
+  function buildGlossaryHtml(titulo, grupos){
+    let html = `<h3>${titulo}</h3><dl class="glossary-list">`;
+    grupos.forEach(([grupo, palabras])=>{
+      html += `<dt>${grupo}</dt>`;
+      palabras.forEach(([w,def])=>{
+        html += `<dd><strong>${w}:</strong> ${def}</dd>`;
+      });
+    });
+    html += `</dl>`;
+    return html;
+  }
+
+  // --- Glosario de "Empareja los sinónimos" ---
+  const glosarioSinonimosJuego = [
+    ["PALABRAS DEL JUEGO", [
+      ["Descifrar","Interpretar o averiguar el significado de algo codificado."],
+      ["Interpretar","Explicar o dar sentido al significado de algo."],
+      ["Brillante","Que destaca mucho por su inteligencia o talento."],
+      ["Genial","Que tiene mucho ingenio o talento; extraordinario."],
+      ["Urgente","Que necesita atención o solución inmediata."],
+      ["Apremiante","Que urge, que no admite demora."],
+      ["Cuestionado","Puesto en duda."],
+      ["Discutido","Sobre lo que hay diferentes opiniones."],
+      ["Pionero","Que es el primero en hacer algo, abriendo camino a otros."],
+      ["Precursor","Quien antecede y anuncia algo que vendrá después."]
+    ]]
+  ];
+  document.getElementById('btnGlosarioSinonimos').addEventListener('click', ()=>{
+    openModal(buildGlossaryHtml("📖 Glosario · Empareja los sinónimos", glosarioSinonimosJuego));
+  });
+
+  // --- Sinonimia y antonimia ---
+  document.getElementById('btnInfoSinonimia').addEventListener('click', ()=>{
+    openModal(`<h3>💡 ¿Qué es la sinonimia?</h3>
+      <p>La sinonimia es la relación que se da entre dos palabras que tienen <strong>formas distintas</strong> (dos <em>significantes</em> diferentes: se escriben y se pronuncian de otra manera) pero que comparten <strong>el mismo contenido</strong> (el mismo <em>significado</em>, o casi).</p>
+      <p>Por ejemplo, «descifrar» e «interpretar» son sinónimos: sus formas son distintas, pero su significado es muy parecido.</p>
+      <div class="example-box"><span class="ex-label">Para recordarlo</span>Dos formas / dos significantes diferentes → muestran el mismo contenido / significado.</div>`);
+  });
+  document.getElementById('btnInfoAntonimia').addEventListener('click', ()=>{
+    openModal(`<h3>💡 ¿Qué es la antonimia?</h3>
+      <p>La antonimia es la relación que se da entre dos palabras que tienen <strong>formas distintas</strong> (dos <em>significantes</em> diferentes) y que tienen <strong>significados opuestos o contrarios</strong>.</p>
+      <p>Por ejemplo, «brillante» y «mediocre» son antónimos: sus formas son distintas y sus significados son opuestos.</p>
+      <div class="example-box"><span class="ex-label">Para recordarlo</span>Dos formas / dos significantes diferentes → poseen significados contrarios u opuestos.</div>`);
+  });
+
+  // --- Texto argumentativo: explicación y ejemplo ---
+  document.getElementById('btnInfoArgumentativo').addEventListener('click', ()=>{
+    openModal(`<h3>💡 ¿Qué es un texto argumentativo?</h3>
+      <p>Es un texto en el que defiendes una opinión (una <strong>tesis</strong>) apoyándola con razones. Suele tener tres partes:</p>
+      <ul>
+        <li><strong>Introducción / tesis:</strong> presentas el tema y tu postura.</li>
+        <li><strong>Cuerpo argumentativo:</strong> desarrollas los argumentos a favor y en contra.</li>
+        <li><strong>Conclusión:</strong> resumes tu postura final, breve y clara.</li>
+      </ul>
+      <p><strong>Tipos de argumentos</strong> habituales: de autoridad (citar a un experto), de ejemplificación (dar un ejemplo concreto), de causa-consecuencia, de datos o estadísticas, y de analogía (comparar con algo parecido).</p>
+      <p><strong>Conectores típicos:</strong> en primer lugar, por un lado / por otro lado, además, sin embargo, no obstante, aunque, por lo tanto, en consecuencia, es decir, en conclusión.</p>`);
+  });
+  document.getElementById('btnEjemploArgumentativo').addEventListener('click', ()=>{
+    openModal(`<h3>📄 Ejemplo de texto argumentativo</h3>
+      <div class="example-box"><span class="ex-label">¿Puede una máquina pensar? (82 palabras)</span>¿De verdad piensa un ordenador, o solo finge muy bien que lo hace? <strong>Por un lado</strong>, los programas actuales de inteligencia artificial mantienen conversaciones convincentes, tal como imaginó Turing en su famoso test. <strong>Sin embargo</strong>, una máquina no siente emociones ni es consciente de lo que dice: solo combina datos según reglas matemáticas. <strong>Por lo tanto</strong>, aunque una máquina pueda imitar el pensamiento de forma sorprendente, pensar de verdad —con conciencia y sentimientos propios— sigue siendo, de momento, un rasgo exclusivamente humano.</div>`);
+  });
+
+  // --- Ejemplo de resumen ---
+  document.getElementById('btnEjemploResumen').addEventListener('click', ()=>{
+    openModal(`<h3>📄 Ejemplo de resumen</h3>
+      <div class="example-box"><span class="ex-label">70 palabras</span>Alan Turing fue un matemático británico que sentó las bases de la informática y de la inteligencia artificial al plantear cómo saber si una máquina piensa, en el llamado test de Turing. <strong>Además</strong>, durante la Segunda Guerra Mundial lideró el descifrado de los códigos nazis de Enigma, evitando así muchas muertes. <strong>Sin embargo</strong>, fue perseguido por su homosexualidad y murió joven, sin conocerse con certeza la causa de su muerte.</div>`);
+  });
+</script>
+</body>
+</html>

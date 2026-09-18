@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complementos Verbales — Ejercicios Interactivos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wine:#1A3A6B;--wine-light:#2A5299;--gold:#C9972A;--gold-light:#E8B84B;
+  --cream:#F4F7FC;--parchment:#E8EEF8;--dark:#0E1526;--text:#1A2340;--muted:#4A5A7B;
+  --border:rgba(26,58,107,0.15);--shadow:0 4px 24px rgba(14,21,38,0.10);
+  --suj:#1F5C99;--suj-l:#D6E4F0;
+  --cd:#A83800;--cd-l:#FCE8DC;
+  --ci:#1A7A44;--ci-l:#D4EEE1;
+  --cc:#5E2D91;--cc-l:#EDE2F8;
+  --atr:#1E7A4A;--atr-l:#D8F0E4;
+  --cpred:#6A3FA0;--cpred-l:#EDE4F7;
+  --creg:#C05C00;--creg-l:#FDEBD0;
+  --cag:#A41C1C;--cag-l:#FDDEDE;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--text);font-size:16px;line-height:1.7;}
+
+/* LOGIN */
+.login-overlay{position:fixed;inset:0;background:rgba(14,21,38,0.88);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;}
+.login-box{background:white;border-radius:12px;padding:2.5rem 2rem;max-width:440px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.login-box h2{font-family:'Playfair Display',serif;font-size:22px;color:var(--wine);margin-bottom:.3rem;}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:1.5rem;}
+.login-label{display:block;text-align:left;font-size:13px;font-weight:600;color:var(--wine);margin-bottom:.3rem;margin-top:.8rem;letter-spacing:.04em;}
+.login-input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;color:var(--text);margin-bottom:.4rem;transition:border-color .15s;}
+.login-input:focus{outline:none;border-color:var(--wine);}
+.login-btn{width:100%;background:var(--wine);color:white;border:none;padding:13px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;margin-top:.8rem;}
+.login-btn:hover{background:var(--wine-light);}
+.login-error{font-size:13px;color:#C0392B;margin-top:.5rem;display:none;}
+
+/* HERO */
+.hero{background:var(--wine);color:white;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 75% 50%,rgba(201,151,42,.18) 0%,transparent 60%);}
+.hero-inner{position:relative;max-width:1100px;margin:0 auto;padding:2.5rem 2rem;}
+.hero-tag{display:inline-block;background:var(--gold);color:var(--dark);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 12px;border-radius:2px;margin-bottom:.75rem;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);font-weight:700;line-height:1.15;margin-bottom:.5rem;}
+.hero h1 em{color:var(--gold-light);font-style:italic;}
+.hero-sub{font-size:15px;opacity:.85;max-width:600px;margin-bottom:1rem;}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;}
+.hero-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:white;font-size:12px;padding:4px 12px;border-radius:20px;}
+
+/* NAV */
+.main-nav{background:white;border-bottom:2px solid var(--parchment);position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.06);}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1rem;display:flex;align-items:center;overflow-x:auto;}
+.nav-btn{padding:13px 14px;font-size:11.5px;font-weight:600;color:var(--muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;transition:all .2s;letter-spacing:.04em;text-transform:uppercase;font-family:'Source Sans 3',sans-serif;}
+.nav-btn:hover{color:var(--wine);}
+.nav-btn.active{color:var(--wine);border-bottom-color:var(--wine);}
+.nav-user{margin-left:auto;padding:0 .5rem;display:none;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap;flex-shrink:0;}
+.nav-user strong{color:var(--wine);}
+
+/* SECTIONS */
+.container{max-width:1100px;margin:0 auto;padding:0 2rem;}
+.section{display:none;padding:2.5rem 0;}
+.section.active{display:block;}
+.section-title{font-family:'Playfair Display',serif;font-size:30px;color:var(--wine);margin-bottom:.4rem;}
+.section-lead{font-size:15px;color:var(--muted);margin-bottom:2rem;max-width:680px;border-left:3px solid var(--gold);padding-left:1rem;}
+
+/* THEORY BOXES */
+.teoria-box{background:white;border:1px solid var(--border);border-radius:10px;margin-bottom:2rem;box-shadow:var(--shadow);overflow:hidden;}
+.teoria-header{color:white;padding:1rem 1.5rem;display:flex;align-items:center;gap:.75rem;}
+.teoria-header h2{font-family:'Playfair Display',serif;font-size:21px;margin:0;}
+.teoria-badge{background:rgba(255,255,255,.22);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.08em;}
+.teoria-body{padding:1.5rem;}
+.teoria-body p{font-size:15px;color:var(--text);margin-bottom:.75rem;}
+.teoria-body p:last-child{margin-bottom:0;}
+
+/* PRUEBA */
+.prueba-box{background:var(--parchment);border-left:5px solid var(--gold);border-radius:0 8px 8px 0;padding:1.1rem 1.4rem;margin:1.1rem 0;}
+.prueba-box h4{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;}
+.prueba-box ul{margin-left:1.1rem;font-size:14px;color:var(--text);}
+.prueba-box ul li{margin-bottom:3px;}
+.aviso{font-size:13px;color:#8B1A1A;background:#FDEAEA;border:1px solid #E8A0A0;border-radius:5px;padding:8px 12px;margin-top:.6rem;}
+
+/* EXAMPLE */
+.ejemplo{background:#F0F5FF;border:1px solid #C0D0F0;border-radius:8px;padding:1.1rem 1.4rem;margin:1.1rem 0;}
+.ejemplo h4{font-size:12px;font-weight:700;color:var(--wine);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;}
+.ejemplo-sent{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:.5rem;font-style:italic;}
+.ejemplo-sent mark{background:transparent;font-style:normal;font-weight:700;text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;}
+.ejemplo-nota{font-size:13px;color:var(--muted);margin-bottom:3px;}
+.ejemplo-nota strong{color:var(--text);}
+
+/* CC TABLE */
+.cc-table{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:14px;}
+.cc-table th{background:var(--cc);color:white;padding:9px 12px;text-align:left;font-weight:600;}
+.cc-table td{padding:8px 12px;border-bottom:1px solid var(--border);}
+.cc-table tr:nth-child(even) td{background:#F8F5FF;}
+.cc-table tr:hover td{background:#F0EAFF;}
+.cc-sigla{font-weight:700;color:var(--cc);font-size:13px;}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr;}}
+
+/* EXERCISES */
+.ej-header{display:flex;align-items:center;gap:.6rem;margin:2rem 0 1rem;}
+.ej-header h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--wine);}
+.ej-num{background:var(--wine);color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+
+.ex-card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.2rem 1.4rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(14,21,38,.06);}
+.ex-sent{font-family:'Playfair Display',serif;font-size:17px;color:var(--dark);margin-bottom:.8rem;font-style:italic;line-height:1.6;}
+.ex-sent .hl{font-style:normal;font-weight:700;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--gold);}
+.ex-row{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+.ex-label{font-size:13px;font-weight:600;color:var(--muted);}
+.ex-select{padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:14px;font-family:'Source Sans 3',sans-serif;color:var(--text);background:white;cursor:pointer;transition:border-color .15s;}
+.ex-select:focus{outline:none;border-color:var(--wine);}
+.ex-select.correct{border-color:#1A7A44;background:#D4F0E0;color:#1A7A44;font-weight:600;}
+.ex-select.wrong{border-color:#A41C1C;background:#FDE8E8;color:#A41C1C;font-weight:600;}
+.ex-feedback{font-size:13px;font-weight:600;padding:3px 10px;border-radius:20px;display:none;}
+.ex-feedback.correct{background:#D4F0E0;color:#1A7A44;display:inline-block;}
+.ex-feedback.wrong{background:#FDE8E8;color:#A41C1C;display:inline-block;}
+
+.btn-check{background:var(--wine);color:white;border:none;padding:10px 24px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;margin-top:1rem;}
+.btn-check:hover{background:var(--wine-light);}
+
+
+.ex-score{font-size:15px;font-weight:600;color:var(--wine);margin-top:1rem;padding:10px 16px;background:var(--parchment);border-radius:6px;display:none;}
+.ex-warn{background:#FFF3CD;border:1px solid #FFC107;border-radius:7px;padding:.7rem 1rem;font-size:14px;color:#7B5000;margin-top:.6rem;}
+
+/* TESTS */
+.test-intro{background:white;border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.5rem;box-shadow:var(--shadow);}
+.test-intro p{font-size:15px;color:var(--text);}
+.test-intro strong{color:var(--wine);}
+
+.q-card{background:white;border:1px solid var(--border);border-radius:8px;padding:1.25rem 1.4rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(14,21,38,.06);transition:border-color .2s;}
+.q-card.missing{border-color:#E8A0A0;background:#FFF8F8;}
+.q-num{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;}
+.q-text{font-size:15px;color:var(--text);margin-bottom:.9rem;line-height:1.6;}
+.q-text em{font-family:'Playfair Display',serif;font-style:italic;color:var(--wine);}
+.q-opts{display:flex;flex-direction:column;gap:.5rem;}
+.q-opt{display:flex;align-items:flex-start;gap:.7rem;cursor:pointer;padding:8px 10px;border-radius:6px;transition:background .15s;}
+.q-opt:hover{background:var(--parchment);}
+.q-opt input[type=radio]{margin-top:3px;flex-shrink:0;accent-color:var(--wine);}
+.q-opt span{font-size:14px;color:var(--text);}
+.q-card.correct-ans{border-color:#1A7A44;background:#F0FAF5;}
+.q-card.wrong-ans{border-color:#A41C1C;background:#FFF4F4;}
+.q-card.correct-ans .q-num{color:#1A7A44;}
+.q-card.wrong-ans .q-num{color:#A41C1C;}
+.q-explain{font-size:13px;margin-top:.7rem;padding:8px 12px;border-radius:6px;display:none;}
+.q-card.correct-ans .q-explain{display:block;background:#D4F0E0;color:#1A7A44;}
+.q-card.wrong-ans .q-explain{display:block;background:#FDE8E8;color:#A41C1C;}
+
+.btn-calcular{background:var(--wine);color:white;border:none;padding:13px 30px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;margin-top:1.5rem;}
+.btn-calcular:hover{background:var(--wine-light);}
+.test-missing-msg{background:#FFF3CD;border:1px solid #FFC107;border-radius:8px;padding:1rem 1.2rem;margin-top:1rem;font-size:14px;color:#7B5000;display:none;}
+
+/* RESULTS */
+.result-hero{background:var(--wine);color:white;border-radius:12px;padding:2.5rem;text-align:center;margin-bottom:2rem;box-shadow:var(--shadow);}
+.result-hero h2{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:.5rem;}
+.result-grade{font-size:72px;font-weight:700;line-height:1;margin:1rem 0;font-family:'Playfair Display',serif;color:var(--gold-light);}
+.result-grade span{font-size:32px;color:rgba(255,255,255,.7);}
+.result-sub{font-size:15px;opacity:.85;}
+.result-detail{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;}
+@media(max-width:600px){.result-detail{grid-template-columns:1fr;}}
+.result-card{background:white;border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center;box-shadow:var(--shadow);}
+.result-card h3{font-family:'Playfair Display',serif;font-size:17px;color:var(--wine);margin-bottom:.3rem;}
+.result-card .score{font-size:36px;font-weight:700;font-family:'Playfair Display',serif;margin:.4rem 0;}
+.result-card .score-sub{font-size:13px;color:var(--muted);}
+.result-info{background:var(--parchment);border-radius:8px;padding:1rem 1.2rem;font-size:14px;color:var(--text);margin-bottom:1.5rem;text-align:center;}
+
+.btn-submit{background:var(--ci);color:white;border:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:100%;margin-top:.5rem;}
+.btn-submit:hover{background:#155e35;}
+.btn-submit:disabled{background:var(--muted);cursor:not-allowed;}
+.submit-ok{background:#D4F0E0;color:#1A7A44;border-radius:8px;padding:1rem 1.2rem;text-align:center;font-size:15px;font-weight:600;display:none;margin-top:1rem;}
+
+/* NEXT BUTTON */
+.next-bar{margin-top:3rem;padding-top:2rem;border-top:2px solid var(--parchment);display:flex;justify-content:flex-end;}
+.btn-next{background:var(--wine);color:white;border:none;padding:13px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Source Sans 3',sans-serif;display:flex;align-items:center;gap:.6rem;}
+.btn-next:hover{background:var(--wine-light);}
+.btn-next svg{width:18px;height:18px;}
+
+/* FUNC TAGS */
+.ftag{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.05em;color:white;}
+.ftag.suj{background:var(--suj);}
+.ftag.cd{background:var(--cd);}
+.ftag.ci{background:var(--ci);}
+.ftag.cc{background:var(--cc);}
+.ftag.atr{background:var(--atr);}
+.ftag.cpred{background:var(--cpred);}
+.ftag.creg{background:var(--creg);}
+.ftag.cag{background:var(--cag);}
+
+/* PASIVA BOX */
+.pasiva-box{background:white;border:1px solid var(--border);border-radius:10px;margin-bottom:2rem;box-shadow:var(--shadow);overflow:hidden;}
+.pasiva-header{background:#0D6E6E;color:white;padding:1rem 1.5rem;display:flex;align-items:center;gap:.75rem;}
+.pasiva-header h2{font-family:'Playfair Display',serif;font-size:21px;margin:0;}
+.pasiva-body{padding:1.5rem;}
+.pasiva-schema{background:#F0FAFA;border:1px solid #A0D8D8;border-radius:8px;padding:1.1rem 1.4rem;margin:1rem 0;font-family:'Playfair Display',serif;font-size:16px;color:var(--dark);}
+.pasiva-schema .arrow{color:#0D6E6E;font-weight:700;}
+
+/* ── TEST FORMAT (sintaxis style) ── */
+.quiz-header{background:var(--wine);color:white;padding:1.25rem 1.5rem;border-radius:8px 8px 0 0;}
+.quiz-header h3{font-family:'Playfair Display',serif;font-size:18px;}
+.quiz-header p{font-size:13px;opacity:0.8;margin-top:2px;}
+.quiz-body{background:white;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:1.5rem;}
+.quiz-score{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding:.75rem 1rem;background:var(--parchment);border-radius:6px;}
+.score-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--wine);}
+.score-bar-bg{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+.score-bar{height:100%;background:var(--wine);border-radius:4px;width:0;transition:width .3s;}
+.q-item{margin-bottom:1.5rem;}
+.q-divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0;}
+.q-num{font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px;}
+.q-text{font-size:15px;font-weight:600;color:var(--dark);margin-bottom:.75rem;line-height:1.5;}
+.q-text em{font-family:'Playfair Display',serif;font-style:italic;}
+.q-opts{display:flex;flex-direction:column;gap:6px;}
+.q-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:6px;border:1.5px solid var(--border);cursor:pointer;font-size:14px;color:var(--text);background:white;transition:all .15s;text-align:left;width:100%;}
+.q-opt:hover{border-color:var(--wine);background:var(--parchment);}
+.q-opt.correct{background:#EAF4EE;border-color:#2D7A4A;color:#1A4A2E;}
+.q-opt.wrong{background:#FDEAEA;border-color:#C0392B;color:#8B1A1A;}
+.q-opt.revealed{pointer-events:none;}
+.opt-letter{width:24px;height:24px;flex-shrink:0;border-radius:50%;background:var(--parchment);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--wine);}
+.q-opt.correct .opt-letter{background:#2D7A4A;color:white;}
+.q-opt.wrong .opt-letter{background:#C0392B;color:white;}
+.q-fb{font-size:13px;margin-top:8px;padding:8px 12px;border-radius:4px;display:none;}
+.q-fb.correct{background:#EAF4EE;color:#1A4A2E;display:block;}
+.q-fb.wrong{background:#FDEAEA;color:#8B1A1A;display:block;}
+.tests-incompletos{background:#FFF3CD;border:1px solid #FFC107;border-radius:8px;padding:1rem 1.2rem;font-size:14px;color:#7B5000;margin-bottom:1rem;display:none;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══════════════════════════════════════════════════════ -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <h2>Complementos Verbales</h2>
+    <p>Introduce tus datos para comenzar la actividad</p>
+    <label class="login-label">Nombre y apellidos</label>
+    <input class="login-input" id="loginNombre" type="text" autocomplete="off">
+    <label class="login-label">Curso</label>
+    <input class="login-input" id="loginCurso" type="text" autocomplete="off">
+    <button class="login-btn" onclick="doLogin()">Entrar →</button>
+    <p class="login-error" id="loginError">Por favor, rellena los dos campos antes de continuar.</p>
+  </div>
+</div>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-tag">Lengua Castellana · Sintaxis</span>
+      <h1>Los <em>complementos</em> verbales</h1>
+      <p class="hero-sub">Teoría interactiva y ejercicios de los principales complementos del predicado: SUJ, CD, CI, CC, ATR, CPred, CRég y CAg.</p>
+      <div class="hero-pills">
+        <span class="hero-pill">SUJ</span><span class="hero-pill">CD</span><span class="hero-pill">CI</span>
+        <span class="hero-pill">CC</span><span class="hero-pill">ATR</span><span class="hero-pill">CPred</span>
+        <span class="hero-pill">CRég</span><span class="hero-pill">CAg</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ NAV ════════════════════════════════════════════════════════ -->
+<nav class="main-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="goTo(0)">Teoría I</button>
+    <button class="nav-btn" onclick="goTo(1)">Ejercicios I</button>
+    <button class="nav-btn" onclick="goTo(2)">Teoría II</button>
+    <button class="nav-btn" onclick="goTo(3)">Ejercicios II</button>
+    <button class="nav-btn" onclick="goTo(4)">Test 1</button>
+    <button class="nav-btn" onclick="goTo(5)">Test 2</button>
+    <button class="nav-btn" onclick="goTo(6)">Resultados</button>
+    <div class="nav-user" id="navUser">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <strong id="navNombre"></strong>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 1 — TEORÍA I  (SUJ · CD · CI · CC)
+════════════════════════════════════════════════════════════════ -->
+<div class="section active" id="sec0">
+<div class="container">
+  <h2 class="section-title">Teoría I — Complementos principales</h2>
+  <p class="section-lead">SUJ, CD, CI y los siete tipos de CC. Lee con atención: la teoría y las pruebas de identificación son la base de todos los ejercicios.</p>
+
+  <!-- SUJ -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--suj);">
+      <h2>SUJETO</h2><span class="teoria-badge">SUJ</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El SUJ es el elemento que <strong>concuerda con el verbo</strong> en número y persona. No siempre aparece explícito en la oración: cuando no aparece se llama <strong>elíptico o tácito</strong>.</p>
+      <p>⚠ El SUJ <strong>NUNCA va precedido de preposición</strong>. Si un sintagma lleva preposición, no puede ser SUJ.</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba de identificación</h4>
+        <ul>
+          <li><strong>Cambia el número del verbo</strong> (singular ↔ plural). Si el sintagma cambia con él, es el SUJ.</li>
+          <li>Ej.: «<em>El pez</em> nada» → «<em>Los peces</em> nadan» ✔ → <em>El pez</em> es el SUJ.</li>
+        </ul>
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>Ejemplos</h4>
+          <p class="ejemplo-sent">«<mark>El pez</mark> nada.»</p>
+          <p class="ejemplo-nota"><strong>SUJ:</strong> el pez (sustantivo)</p>
+          <p class="ejemplo-sent">«<mark>Que fumes</mark> te perjudica.»</p>
+          <p class="ejemplo-nota"><strong>SUJ:</strong> que fumes (cláusula subordinada)</p>
+          <p class="ejemplo-sent">«Llegaron tarde.»</p>
+          <p class="ejemplo-nota"><strong>SUJ:</strong> Ø elíptico (ellos/ellas)</p>
+        </div>
+        <div class="ejemplo">
+          <h4>Formas que puede tener el SUJ</h4>
+          <p class="ejemplo-nota"><strong>Sustantivo:</strong> el pez, una tormenta</p>
+          <p class="ejemplo-nota"><strong>Pronombre:</strong> él, nosotros, quien</p>
+          <p class="ejemplo-nota"><strong>Infinitivo:</strong> correr, estudiar</p>
+          <p class="ejemplo-nota"><strong>Cláusula sub. sust.:</strong> que vengas, lo que dices</p>
+          <p class="ejemplo-nota"><strong>Elíptico:</strong> deducible del verbo</p>
+          <div class="aviso">⚠ «A María le gusta el café» → SUJ = <em>el café</em> (no María)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CD -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--cd);">
+      <h2>COMPLEMENTO DIRECTO</h2><span class="teoria-badge">CD</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El CD completa el significado del verbo transitivo. Es el elemento que <strong>recibe directamente la acción</strong>.</p>
+      <p>Si el CD es una persona o ser animado, puede ir precedido de la preposición <strong>«a»</strong>, pero sigue siendo CD (no CI).</p>
+      <div class="aviso">⚠ Los <strong>verbos copulativos</strong> (ser, estar y parecer) <strong>NO tienen CD</strong>.</div>
+      <div class="prueba-box">
+        <h4>🔍 Pruebas de identificación</h4>
+        <ul>
+          <li><strong>Sustitución por pronombre:</strong> LO / LA / LOS / LAS (no LE/LES).</li>
+          <li><strong>Pasivización:</strong> el CD pasa a ser el SUJ de la oración pasiva.</li>
+          <li>Ej.: «Compré <em>un jersey</em>» → Lo compré ✔ / «Un jersey fue comprado» ✔</li>
+        </ul>
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>Ejemplos</h4>
+          <p class="ejemplo-sent">«Compré <mark>un jersey</mark>.»</p>
+          <p class="ejemplo-nota"><strong>CD:</strong> un jersey → Lo compré ✔</p>
+          <p class="ejemplo-sent">«Busco <mark>a la secretaria</mark>.»</p>
+          <p class="ejemplo-nota"><strong>CD:</strong> a la secretaria → La busco ✔</p>
+          <p class="ejemplo-sent">«Vi <mark>que llegabas</mark>.»</p>
+          <p class="ejemplo-nota"><strong>CD:</strong> que llegabas → Lo vi ✔</p>
+        </div>
+        <div class="ejemplo">
+          <h4>Distinción CD / CI</h4>
+          <p class="ejemplo-nota">«Visité <strong>a mi abuela</strong>» → <em>la</em> visité → <strong>CD</strong></p>
+          <p class="ejemplo-nota">«Regalé flores <strong>a mi abuela</strong>» → <em>le</em> regalé → <strong>CI</strong></p>
+          <div class="aviso">La preposición «a» en el CD solo aparece con personas; no convierte el sintagma en CI.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CI -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--ci);">
+      <h2>COMPLEMENTO INDIRECTO</h2><span class="teoria-badge">CI</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El CI indica el <strong>beneficiario o destinatario</strong> de la acción. Siempre va introducido por la preposición <strong>«a»</strong>.</p>
+      <p>El CI <strong>no admite pasivización</strong>: no puede convertirse en SUJ de una oración pasiva (a diferencia del CD).</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba de identificación</h4>
+        <ul>
+          <li><strong>Sustitución por LE / LES</strong> (o ME, TE, NOS, OS si el destinatario es el hablante).</li>
+          <li>Ej.: «Conté un chiste <em>a María</em>» → Le conté un chiste ✔ → <em>a María</em> es CI.</li>
+        </ul>
+        <div class="aviso">Cuando CD y CI van juntos: SE LO dije (SE = le, CI; LO = CD). «Dije la verdad a Juan» → Se la dije.</div>
+      </div>
+      <div class="ejemplo">
+        <h4>Ejemplos</h4>
+        <p class="ejemplo-sent">«Le conté un chiste <mark>a María</mark>.»</p>
+        <p class="ejemplo-nota"><strong>CI:</strong> a María → Le conté ✔</p>
+        <p class="ejemplo-sent">«Daremos el premio <mark>a quien se lo merezca</mark>.»</p>
+        <p class="ejemplo-nota"><strong>CI:</strong> a quien se lo merezca → Le daremos el premio ✔</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CC -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--cc);">
+      <h2>COMPLEMENTOS CIRCUNSTANCIALES</h2><span class="teoria-badge">CC</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué son?</strong> Los CC expresan las <strong>circunstancias</strong> en que se desarrolla la acción: tiempo, lugar, modo, cantidad, finalidad, compañía o instrumento.</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba general de identificación</h4>
+        <ul><li>El CC se puede <strong>eliminar o cambiar de posición</strong> sin que la oración deje de ser correcta ni cambie su significado esencial.</li></ul>
+      </div>
+      <table class="cc-table">
+        <thead><tr><th>Sigla</th><th>Tipo</th><th>Pregunta clave</th><th>Ejemplo</th><th>Análisis</th></tr></thead>
+        <tbody>
+          <tr><td class="cc-sigla">CCT</td><td>Tiempo</td><td>¿Cuándo?</td><td><em>Llegaré mañana.</em></td><td>mañana → CCT</td></tr>
+          <tr><td class="cc-sigla">CCL</td><td>Lugar</td><td>¿Dónde?</td><td><em>Vivo en Madrid.</em></td><td>en Madrid → CCL</td></tr>
+          <tr><td class="cc-sigla">CCM</td><td>Modo</td><td>¿Cómo?</td><td><em>Habló muy despacio.</em></td><td>muy despacio → CCM</td></tr>
+          <tr><td class="cc-sigla">CCCANT</td><td>Cantidad</td><td>¿Cuánto?</td><td><em>Ha comido muy poco.</em></td><td>muy poco → CCCANT</td></tr>
+          <tr><td class="cc-sigla">CCFIN</td><td>Finalidad</td><td>¿Para qué?</td><td><em>Estudia para aprobar.</em></td><td>para aprobar → CCFIN</td></tr>
+          <tr><td class="cc-sigla">CCCOMP</td><td>Compañía</td><td>¿Con quién?</td><td><em>Salió con Ana.</em></td><td>con Ana → CCCOMP</td></tr>
+          <tr><td class="cc-sigla">CCINST</td><td>Instrumento</td><td>¿Con qué?</td><td><em>Escribió con lápiz.</em></td><td>con lápiz → CCINST</td></tr>
+        </tbody>
+      </table>
+      <div class="aviso">⚠ Un adjetivo NUNCA puede ser CCM. «Corrió rápido» → rápido funciona como adverbio → CCM.</div>
+    </div>
+  </div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(1)">Ir a Ejercicios I <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 2 — EJERCICIOS I
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec1">
+<div class="container">
+  <h2 class="section-title">Ejercicios I — SUJ, CD, CI y CC</h2>
+  <p class="section-lead">Identifica la función sintáctica del sintagma <u>subrayado</u> en cada oración. Selecciona tu respuesta y pulsa «Comprobar».</p>
+
+  <div id="exSet1"></div>
+  <div style="margin-top:.5rem;">
+    <button class="btn-check" id="btn-check-1" onclick="checkSet(1)">Comprobar respuestas</button>
+  </div>
+  <div class="ex-warn" id="warn1" style="display:none;"></div>
+  <div class="ex-score" id="score1"></div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(2)">Ir a Teoría II <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 3 — TEORÍA II  (ATR · CPred · CRég · CAg)
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec2">
+<div class="container">
+  <h2 class="section-title">Teoría II — Complementos secundarios</h2>
+  <p class="section-lead">ATR, CPred, CRég y CAg. Presta especial atención a las pruebas de identificación y a cómo se distinguen entre sí.</p>
+
+  <!-- ATR -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--atr);">
+      <h2>ATRIBUTO</h2><span class="teoria-badge">ATR</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El ATR acompaña a los verbos <strong>copulativos</strong>: <em>SER, ESTAR y PARECER</em>. Caracteriza o define al sujeto a través del verbo.</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba de identificación</h4>
+        <ul><li><strong>Sustitución por LO:</strong> si la oración sigue siendo correcta, es ATR.</li>
+        <li>Ej.: «María está cansada» → ¿María LO está? ✔ → <em>cansada</em> es ATR.</li></ul>
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>Ejemplos</h4>
+          <p class="ejemplo-sent">«Tu hermano es <mark>muy simpático</mark>.»</p>
+          <p class="ejemplo-nota"><strong>ATR:</strong> muy simpático → Lo es ✔</p>
+          <p class="ejemplo-sent">«Ese libro parece <mark>aburrido</mark>.»</p>
+          <p class="ejemplo-nota"><strong>ATR:</strong> aburrido → Lo parece ✔</p>
+          <p class="ejemplo-sent">«Ella es <mark>de Madrid</mark>.»</p>
+          <p class="ejemplo-nota"><strong>ATR:</strong> de Madrid (= madrileña) → Lo es ✔</p>
+        </div>
+        <div class="ejemplo">
+          <h4>ATR vs. CPred</h4>
+          <p class="ejemplo-nota">«El cielo <strong>está</strong> nublado» → verbo copulativo → <strong>ATR</strong></p>
+          <p class="ejemplo-nota">«El cielo <strong>apareció</strong> nublado» → verbo no copulativo + concuerda con SUJ → <strong>CPred</strong></p>
+          <div class="aviso">La clave es el verbo: copulativo = ATR; cualquier otro verbo = CPred (si concuerda).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CPred -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--cpred);">
+      <h2>COMPLEMENTO PREDICATIVO</h2><span class="teoria-badge">CPred</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El CPred es un complemento <strong>bivalente</strong>: complementa al verbo y, a la vez, concuerda en género y número con el SUJ o el CD.</p>
+      <div class="prueba-box">
+        <h4>🔍 Tipos de CPred</h4>
+        <ul>
+          <li><strong>CPred subjetivo:</strong> concuerda con el SUJ. Ej.: «Los niños llegaron <em>cansados</em>» → cansados concuerda con <em>los niños</em> (SUJ).</li>
+          <li><strong>CPred objetivo:</strong> concuerda con el CD. Ej.: «Encontré <em>muy desmejorada</em> a tu hermana» → concuerda con <em>a tu hermana</em> (CD).</li>
+        </ul>
+        <div class="aviso">⚠ El CPred <strong>nunca</strong> puede sustituirse por LO (si se puede, es ATR).</div>
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>CPred subjetivo</h4>
+          <p class="ejemplo-sent">«Los alumnos llegaron <mark>agotados</mark>.»</p>
+          <p class="ejemplo-nota">agotados concuerda con <em>los alumnos</em> (SUJ) ✔</p>
+          <p class="ejemplo-sent">«El público permaneció <mark>inmóvil</mark>.»</p>
+          <p class="ejemplo-nota">inmóvil concuerda con <em>el público</em> (SUJ) ✔</p>
+        </div>
+        <div class="ejemplo">
+          <h4>CPred objetivo</h4>
+          <p class="ejemplo-sent">«Encontré <mark>muy desmejorada</mark> a tu hermana.»</p>
+          <p class="ejemplo-nota">muy desmejorada concuerda con <em>a tu hermana</em> (CD) ✔</p>
+          <p class="ejemplo-sent">«Eligieron a Juan <mark>delegado</mark>.»</p>
+          <p class="ejemplo-nota">delegado concuerda con <em>a Juan</em> (CD) ✔</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRég -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--creg);">
+      <h2>COMPLEMENTO DE RÉGIMEN</h2><span class="teoria-badge">CRég</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El CRég lleva una preposición <strong>exigida por el verbo</strong>. Sin esa preposición, el verbo pierde sentido o lo cambia completamente.</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba de identificación</h4>
+        <ul>
+          <li><strong>Sustitución por prep. + ELLO:</strong> si funciona, es CRég.</li>
+          <li>Ej.: «Confío <em>en mis amigos</em>» → Confío <em>en ello</em> ✔ → <em>en mis amigos</em> es CRég.</li>
+          <li><strong>Diferencia con CC:</strong> el CC se puede eliminar; el CRég, no (el verbo pierde su significado).</li>
+        </ul>
+      </div>
+      <div class="ejemplo">
+        <h4>Verbos con CRég frecuentes</h4>
+        <p class="ejemplo-nota"><strong>confiar en</strong> | <strong>alegrarse de</strong> | <strong>depender de</strong> | <strong>hablar de/sobre</strong></p>
+        <p class="ejemplo-nota"><strong>pensar en</strong> | <strong>tratar de</strong> | <strong>insistir en</strong> | <strong>arrepentirse de</strong></p>
+        <p class="ejemplo-sent">«Me alegré <mark>de tu éxito</mark>.»</p>
+        <p class="ejemplo-nota"><strong>CRég:</strong> de tu éxito → Me alegré de ello ✔</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORACIÓN PASIVA -->
+  <div class="pasiva-box">
+    <div class="pasiva-header">
+      <h2>La oración pasiva — antes del CAg</h2>
+    </div>
+    <div class="pasiva-body">
+      <p style="font-size:15px;color:var(--text);margin-bottom:.8rem;">Una oración es <strong>pasiva</strong> cuando el SUJ no realiza la acción, sino que la recibe (<strong>Sujeto Paciente</strong>). El elemento que realiza la acción pasa a llamarse <strong>Complemento Agente (CAg)</strong>.</p>
+      <div class="pasiva-schema">
+        <strong>Estructura:</strong> SUJ Paciente + SER + Participio + <strong>por</strong> + CAg
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>Activa → Pasiva</h4>
+          <p class="ejemplo-sent">«Los bomberos apagaron el incendio.»</p>
+          <p class="ejemplo-nota">SUJ agente: <em>los bomberos</em> | CD: <em>el incendio</em></p>
+          <p class="ejemplo-sent" style="margin-top:.6rem;">«El incendio fue apagado por los bomberos.»</p>
+          <p class="ejemplo-nota">SUJ paciente: <em>el incendio</em> | CAg: <em>por los bomberos</em></p>
+        </div>
+        <div class="ejemplo">
+          <h4>Pasos para transformar</h4>
+          <p class="ejemplo-nota"><strong>1.</strong> El CD de la activa → SUJ Paciente de la pasiva.</p>
+          <p class="ejemplo-nota"><strong>2.</strong> El verbo → SER + participio (concuerda con el nuevo SUJ).</p>
+          <p class="ejemplo-nota"><strong>3.</strong> El SUJ de la activa → CAg (= por + sintagma).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAg -->
+  <div class="teoria-box">
+    <div class="teoria-header" style="background:var(--cag);">
+      <h2>COMPLEMENTO AGENTE</h2><span class="teoria-badge">CAg</span>
+    </div>
+    <div class="teoria-body">
+      <p><strong>¿Qué es?</strong> El CAg aparece <strong>solo en oraciones pasivas</strong> e indica quién realiza la acción. Siempre va introducido por la preposición <strong>POR</strong>.</p>
+      <div class="prueba-box">
+        <h4>🔍 Prueba de identificación</h4>
+        <ul>
+          <li><strong>Pasa la oración a voz activa:</strong> el CAg se convierte en el SUJ.</li>
+          <li>Ej.: «El ladrón fue detenido <em>por la policía</em>» → «La policía detuvo al ladrón» ✔ → <em>por la policía</em> era el CAg.</li>
+        </ul>
+      </div>
+      <div class="grid-2">
+        <div class="ejemplo">
+          <h4>Ejemplos</h4>
+          <p class="ejemplo-sent">«El partido fue ganado <mark>por nuestro equipo</mark>.»</p>
+          <p class="ejemplo-nota"><strong>CAg:</strong> por nuestro equipo</p>
+          <p class="ejemplo-sent">«La carta fue firmada <mark>por el director</mark>.»</p>
+          <p class="ejemplo-nota"><strong>CAg:</strong> por el director</p>
+        </div>
+        <div class="ejemplo">
+          <h4>Cuidado</h4>
+          <p class="ejemplo-nota">No todo sintagma con «por» es CAg.</p>
+          <p class="ejemplo-nota">«Pasé <strong>por Madrid</strong>» → CCL (no es oración pasiva).</p>
+          <p class="ejemplo-nota">«Lo hizo <strong>por dinero</strong>» → CCFIN (finalidad/causa).</p>
+          <div class="aviso">El CAg solo existe en oraciones con verbo en voz pasiva (SER + participio).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(3)">Ir a Ejercicios II <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 4 — EJERCICIOS II
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec3">
+<div class="container">
+  <h2 class="section-title">Ejercicios II — ATR, CPred, CRég y CAg</h2>
+  <p class="section-lead">Identifica la función del sintagma <u>subrayado</u>. Recuerda aplicar siempre la prueba de identificación.</p>
+
+  <div id="exSet2"></div>
+  <div style="margin-top:.5rem;">
+    <button class="btn-check" id="btn-check-2" onclick="checkSet(2)">Comprobar respuestas</button>
+  </div>
+  <div class="ex-warn" id="warn2" style="display:none;"></div>
+  <div class="ex-score" id="score2"></div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(4)">Ir a Test 1 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 5 — TEST 1
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec4">
+<div class="container">
+  <h2 class="section-title">Test 1 — SUJ, CD, CI y CC</h2>
+  <p class="section-lead">20 preguntas · Cada respuesta correcta vale <strong>0,25 puntos</strong>. La respuesta se bloquea en cuanto la seleccionas.</p>
+  <div class="quiz-header">
+    <h3>✏️ Test 1: SUJ, CD, CI y CC</h3>
+    <p>20 preguntas · Sin límite de tiempo</p>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-score">
+      <span class="score-num" id="sc1">0 / 20</span>
+      <div class="score-bar-bg"><div class="score-bar" id="sb1"></div></div>
+    </div>
+    <div id="qbox1"></div>
+  </div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(5)">Ir a Test 2 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 6 — TEST 2
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec5">
+<div class="container">
+  <h2 class="section-title">Test 2 — ATR, CPred, CRég y CAg</h2>
+  <p class="section-lead">20 preguntas · Cada respuesta correcta vale <strong>0,25 puntos</strong>. La respuesta se bloquea en cuanto la seleccionas.</p>
+  <div class="quiz-header">
+    <h3>✏️ Test 2: ATR, CPred, CRég y CAg</h3>
+    <p>20 preguntas · Sin límite de tiempo</p>
+  </div>
+  <div class="quiz-body">
+    <div class="quiz-score">
+      <span class="score-num" id="sc2">0 / 20</span>
+      <div class="score-bar-bg"><div class="score-bar" id="sb2"></div></div>
+    </div>
+    <div id="qbox2"></div>
+  </div>
+
+  <div class="next-bar">
+    <button class="btn-next" onclick="goTo(6)">Ver Resultados <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECCIÓN 7 — RESULTADOS
+════════════════════════════════════════════════════════════════ -->
+<div class="section" id="sec6">
+<div class="container">
+  <h2 class="section-title">Resultados</h2>
+  <p class="section-lead">Aquí puedes ver tu nota final y enviarla al formulario. Asegúrate de haber completado los dos tests.</p>
+
+  <div class="result-hero">
+    <h2>Tu calificación final</h2>
+    <div class="result-grade" id="gradeFinal">—<span> / 10</span></div>
+    <p class="result-sub" id="gradeSubtitle">Completa los dos tests para ver tu nota</p>
+  </div>
+
+  <div class="result-detail">
+    <div class="result-card">
+      <h3>Test 1 — Complementos I</h3>
+      <div class="score" id="gradeT1" style="color:var(--suj);">—</div>
+      <p class="score-sub" id="gradeT1sub">Sin completar</p>
+    </div>
+    <div class="result-card">
+      <h3>Test 2 — Complementos II</h3>
+      <div class="score" id="gradeT2" style="color:var(--creg);">—</div>
+      <p class="score-sub" id="gradeT2sub">Sin completar</p>
+    </div>
+  </div>
+
+  <div class="result-info" id="resultInfo">Cada respuesta correcta vale <strong>0,25 puntos</strong>. Test 1 y Test 2 contribuyen <strong>5 puntos</strong> cada uno a la nota final.</div>
+
+  <div class="tests-incompletos" id="testsIncompletos"><span id="testsIncompletosMsg"></span></div>
+  <button class="btn-submit" id="btnSubmit" onclick="submitForm()" disabled>Enviar resultados al formulario</button>
+  <div class="submit-ok" id="submitOk">✔ Resultados enviados correctamente. ¡Buen trabajo!</div>
+</div>
+</div>
+
+<script>
+// ══ FORM CONFIG ══════════════════════════════════════════════
+const FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLSfS_6JXJGkAd15J5JfLQIzRxv7_hzmZV33WUmrKC_QFxcERMQ/formResponse';
+const FIELD_NOMBRE='entry.1757143941',FIELD_CURSO='entry.317932223',FIELD_NOTA_10='entry.132138773',FIELD_NOTA_025='entry.1280615450';
+
+let ALUMNO='', CURSO='';
+const ST={1:{sc:0,ans:{}},2:{sc:0,ans:{}}};
+
+// ══ LOGIN ════════════════════════════════════════════════════
+function doLogin(){
+  const n=document.getElementById('loginNombre').value.trim();
+  const c=document.getElementById('loginCurso').value.trim();
+  if(!n||!c){document.getElementById('loginError').style.display='block';return;}
+  ALUMNO=n; CURSO=c;
+  document.getElementById('loginOverlay').style.display='none';
+  document.getElementById('navUser').style.display='flex';
+  document.getElementById('navNombre').textContent=ALUMNO;
+}
+
+// ══ NAVIGATION ═══════════════════════════════════════════════
+const navBtns=document.querySelectorAll('.nav-btn');
+function goTo(idx){
+  document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  navBtns.forEach((b,i)=>b.classList.toggle('active',i===idx));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(idx===6) updateResults();
+}
+
+// ══ EXERCISE DATA ═════════════════════════════════════════════
+const exData1=[
+  {sent:'<span class="hl">El viento</span> agitaba las ramas.',hint:'Cambia el número del verbo: «Los vientos agitaban» ✔',ans:'SUJ'},
+  {sent:'Compré <span class="hl">un jersey</span> en el mercado.',hint:'Sustitución: Lo compré ✔',ans:'CD'},
+  {sent:'Entregué el trabajo <span class="hl">al profesor</span>.',hint:'Sustitución: Le entregué el trabajo ✔ (no «lo» — el profesor es el destinatario)',ans:'CI'},
+  {sent:'Llegamos <span class="hl">ayer</span> al aeropuerto.',hint:'¿Cuándo llegamos? → CCT',ans:'CCT'},
+  {sent:'Viven <span class="hl">en un pueblo pequeño</span>.',hint:'¿Dónde viven? → CCL',ans:'CCL'},
+  {sent:'Habló <span class="hl">con mucha calma</span> ante el tribunal.',hint:'¿Cómo habló? → CCM',ans:'CCM'},
+  {sent:'Ha comido <span class="hl">muy poco</span> hoy.',hint:'¿Cuánto ha comido? → CCCANT',ans:'CCCANT'},
+  {sent:'Estudia <span class="hl">para aprobar</span> el examen.',hint:'¿Para qué estudia? → CCFIN',ans:'CCFIN'},
+  {sent:'Salió <span class="hl">con Ana</span> al cine.',hint:'¿Con quién salió? → CCCOMP',ans:'CCCOMP'},
+  {sent:'Escribió la carta <span class="hl">con un bolígrafo</span>.',hint:'¿Con qué escribió? → CCINST',ans:'CCINST'},
+];
+
+const exOpts1=['— Elige —','SUJ','CD','CI','CCT','CCL','CCM','CCCANT','CCFIN','CCCOMP','CCINST'];
+
+const exData2=[
+  {sent:'El cielo está <span class="hl">nublado</span>.',hint:'Verbo copulativo ESTAR → sustituye por LO: «Lo está» ✔ → ATR',ans:'ATR'},
+  {sent:'Ese libro parece <span class="hl">muy aburrido</span>.',hint:'Verbo copulativo PARECER → «Lo parece» ✔ → ATR',ans:'ATR'},
+  {sent:'Los alumnos llegaron <span class="hl">agotados</span>.',hint:'No es verbo copulativo. Concuerda con «los alumnos» (SUJ) → CPred subjetivo',ans:'CPred subjetivo'},
+  {sent:'Encontré <span class="hl">muy desmejorada</span> a tu hermana.',hint:'Concuerda con «a tu hermana» (CD) → CPred objetivo',ans:'CPred objetivo'},
+  {sent:'Confío <span class="hl">en mis amigos</span>.',hint:'Prueba: «Confío en ello» ✔ → preposición exigida por el verbo → CRég',ans:'CRég'},
+  {sent:'Me alegré <span class="hl">de tu éxito</span>.',hint:'Prueba: «Me alegré de ello» ✔ → CRég',ans:'CRég'},
+  {sent:'El incendio fue sofocado <span class="hl">por los bomberos</span>.',hint:'Oración pasiva + preposición POR → CAg. Activa: «Los bomberos sofocaron el incendio»',ans:'CAg'},
+  {sent:'La carta fue firmada <span class="hl">por el director</span>.',hint:'Oración pasiva + preposición POR → CAg',ans:'CAg'},
+  {sent:'Tu hermano es <span class="hl">muy simpático</span>.',hint:'Verbo copulativo SER → «Lo es» ✔ → ATR',ans:'ATR'},
+  {sent:'Eligieron a Juan <span class="hl">delegado de la clase</span>.',hint:'Concuerda con «a Juan» (CD) → CPred objetivo',ans:'CPred objetivo'},
+];
+
+const exOpts2=['— Elige —','ATR','CPred subjetivo','CPred objetivo','CRég','CAg'];
+
+// ══ RENDER EXERCISES ═════════════════════════════════════════
+function renderExercises(data, opts, containerId) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  data.forEach((item, i) => {
+    const sel = opts.map((o,oi) => `<option value="${o}"${o==='— Elige —'?' selected':''} >${o}</option>`).join('');
+    c.innerHTML += `
+    <div class="ex-card" id="${containerId}-card-${i}">
+      <p class="ex-sent">${item.sent}</p>
+      <div class="ex-row">
+        <span class="ex-label">Función:</span>
+        <select class="ex-select" id="${containerId}-sel-${i}">${sel}</select>
+        <span class="ex-feedback" id="${containerId}-fb-${i}"></span>
+      </div>
+    </div>`;
+  });
+}
+
+function checkSet(setNum){
+  const data = setNum===1 ? exData1 : exData2;
+  const cid = setNum===1 ? 'exSet1' : 'exSet2';
+  const warnEl = document.getElementById('warn'+setNum);
+
+  // Check for unanswered items
+  const missing=[];
+  data.forEach((item,i)=>{
+    const sel=document.getElementById(`${cid}-sel-${i}`);
+    if(sel.value==='— Elige —') missing.push(i+1);
+  });
+  if(missing.length>0){
+    warnEl.style.display='block';
+    warnEl.textContent='⚠ Faltan por contestar las oraciones: '+missing.join(', ')+'. Selecciona una opción en cada una antes de comprobar.';
+    return;
+  }
+  warnEl.style.display='none';
+
+  // All answered — evaluate, show feedback and lock
+  let ok=0;
+  data.forEach((item,i)=>{
+    const sel=document.getElementById(`${cid}-sel-${i}`);
+    const fb=document.getElementById(`${cid}-fb-${i}`);
+    const correct=sel.value===item.ans;
+    if(correct) ok++;
+    sel.className='ex-select '+(correct?'correct':'wrong');
+    sel.disabled=true;
+    fb.className='ex-feedback '+(correct?'correct':'wrong');
+    fb.textContent=correct?'✔ Correcto.':'✘ Incorrecto. La función correcta es '+item.ans+'. '+item.hint;
+  });
+  const sc=document.getElementById('score'+setNum);
+  sc.style.display='block';
+  sc.textContent=`Resultado: ${ok} / ${data.length} correctas`;
+  document.getElementById(`btn-check-${setNum}`).disabled=true;
+}
+
+
+
+// ══ TEST DATA ════════════════════════════════════════════════
+const t1Data=[
+  {q:'¿Cuál es el SUJ en «Cayó una fuerte tormenta»?',
+   opts:['cayó','una fuerte tormenta','el día','fuerte'],ans:1,
+   exp:'«Una fuerte tormenta cayó» / «Unas fuertes tormentas cayeron» ✔ → SUJ = una fuerte tormenta.'},
+  {q:'¿Cuál es la prueba para identificar el SUJ?',
+   opts:['Sustituirlo por LO/LA','Cambiar la concordancia del verbo','Añadir «por» delante','Eliminarlo de la oración'],ans:1,
+   exp:'El SUJ concuerda con el verbo en número y persona. Si cambia el número del verbo, el SUJ cambia con él.'},
+  {q:'En «Llegaron tarde», ¿cuál es el SUJ?',
+   opts:['tarde','llegaron','Ø elíptico (ellos/ellas)','no hay verbo'],ans:2,
+   exp:'El verbo «llegaron» está en 3.ª persona del plural → SUJ implícito = ellos/ellas (elíptico).'},
+  {q:'¿Cuál de estos sintagmas PUEDE ser SUJ?',
+   opts:['«a María»','«con el director»','«los libros»','«por la policía»'],ans:2,
+   exp:'El SUJ nunca lleva preposición. «A María», «con el director» y «por la policía» la llevan → no pueden ser SUJ.'},
+  {q:'¿Qué función tiene «un jersey» en «Compré un jersey»?',
+   opts:['SUJ','CI','CCL','CD'],ans:3,
+   exp:'Lo compré ✔ / Un jersey fue comprado ✔ → CD.'},
+  {q:'¿Cómo se sustituye el CD en «Vi la película»?',
+   opts:['le','lo','la','se'],ans:2,
+   exp:'El CD «la película» es femenino singular → se sustituye por LA: «La vi» ✔.'},
+  {q:'¿Qué función tiene «a la secretaria» en «Busco a la secretaria»?',
+   opts:['SUJ (lleva «a» por ser persona)','CI','CD','no hay complemento'],ans:2,
+   exp:'«La busco» ✔ (pronombre LO/LA, no LE) y «La secretaria fue buscada» ✔ → CD.'},
+  {q:'¿Cuál de estas oraciones tiene CD?',
+   opts:['«El cielo está nublado»','«Juan duerme»','«Leí el periódico»','«María parece cansada»'],ans:2,
+   exp:'«Lo leí» ✔ / «El periódico fue leído» ✔ → CD. Las demás no tienen CD (verbo copulativo o intransitivo).'},
+  {q:'¿Por qué los verbos copulativos NO tienen CD?',
+   opts:['Son intransitivos siempre','Tienen ATR en lugar de CD','No tienen sujeto','Su CD es el propio sujeto'],ans:1,
+   exp:'Ser, estar y parecer son verbos copulativos: su complemento es el ATR, no un CD.'},
+  {q:'¿Qué función tiene «al profesor» en «Entregué el trabajo al profesor»?',
+   opts:['CD','CCL','CRég','CI'],ans:3,
+   exp:'«Le entregué el trabajo» ✔ (sustituye por LE) → CI. «Al profesor» es el destinatario.'},
+  {q:'¿Cómo se sustituye el CI?',
+   opts:['LO/LA','SE','LE/LES','LO/LE'],ans:2,
+   exp:'El CI siempre se sustituye por LE/LES (o ME, TE, NOS si el destinatario es el hablante).'},
+  {q:'¿Cuál es el CI en «Le conté un chiste a María»?',
+   opts:['un chiste','a María','le','Tanto «a María» como «le»'],ans:3,
+   exp:'«Le» es el pronombre átono que anticipa el CI; «a María» es la forma tónica del mismo CI. Los dos forman el CI.'},
+  {q:'¿Qué tipo de CC es «ayer» en «Llegué ayer»?',
+   opts:['CCL','CCM','CCCANT','CCT'],ans:3,
+   exp:'¿Cuándo llegué? → ayer → CCT (tiempo).'},
+  {q:'¿Qué tipo de CC es «en el parque» en «Jugamos en el parque»?',
+   opts:['CCT','CCCOMP','CCFIN','CCL'],ans:3,
+   exp:'¿Dónde jugamos? → en el parque → CCL (lugar).'},
+  {q:'¿Qué tipo de CC es «con un bolígrafo» en «Escribe con un bolígrafo»?',
+   opts:['CCCOMP','CCM','CCFIN','CCINST'],ans:3,
+   exp:'¿Con qué escribe? → con un bolígrafo → CCINST (instrumento).'},
+  {q:'¿Qué tipo de CC es «para aprobar» en «Estudia para aprobar»?',
+   opts:['CCT','CCM','CCCANT','CCFIN'],ans:3,
+   exp:'¿Para qué estudia? → para aprobar → CCFIN (finalidad).'},
+  {q:'¿Qué tipo de CC es «con sus amigos» en «Salió con sus amigos»?',
+   opts:['CCINST','CCM','CCL','CCCOMP'],ans:3,
+   exp:'¿Con quién salió? → con sus amigos → CCCOMP (compañía).'},
+  {q:'¿Cómo comprobamos que un sintagma es CC (y no CRég)?',
+   opts:['Sustituimos por LO','Se puede eliminar sin cambiar el significado esencial','Cambiamos la concordancia','Sustituimos por LE'],ans:1,
+   exp:'El CC es prescindible; el CRég, no. «Llegué ayer» → «Llegué» ✔. «Confío en ti» → «Confío» ✘ (pierde sentido).'},
+  {q:'En «Le regalé flores a mi madre», ¿qué complementos hay?',
+   opts:['Solo CD','Solo CI','CD + CI','SUJ + CD'],ans:2,
+   exp:'«flores» = CD (las regalé ✔); «a mi madre» = CI (le regalé ✔). La oración tiene CD y CI.'},
+  {q:'En «Mi madre preparó la cena», ¿cuál es la oración pasiva correcta?',
+   opts:['«La cena fue preparada por mi madre»','«Mi madre fue preparada por la cena»','«La cena preparó a mi madre»','«Por mi madre preparó la cena»'],ans:0,
+   exp:'CD «la cena» → SUJ Paciente. SUJ «mi madre» → CAg (por mi madre). Verbo: «fue preparada» (SER + participio).'},
+];
+
+const t2Data=[
+  {q:'¿Con qué verbos aparece el ATR?',
+   opts:['Con verbos de movimiento','Con SER, ESTAR y PARECER','Con todos los verbos','Con verbos transitivos'],ans:1,
+   exp:'Solo los verbos copulativos (ser, estar y parecer) tienen ATR.'},
+  {q:'¿Cuál es la prueba para identificar el ATR?',
+   opts:['Sustituirlo por LE','Cambiarlo de posición en la oración','Sustituirlo por LO','Añadirle la preposición «por»'],ans:2,
+   exp:'«María está cansada» → ¿María LO está? ✔ → «cansada» es ATR.'},
+  {q:'¿Cuál es el ATR en «Ese libro parece muy aburrido»?',
+   opts:['ese libro','parece','muy aburrido','no hay ATR'],ans:2,
+   exp:'«Lo parece» ✔ → «muy aburrido» es el ATR. El verbo copulativo es «parece».'},
+  {q:'¿Qué caracteriza al CPred?',
+   opts:['Solo complementa al verbo','Complementa al verbo y concuerda con el SUJ o CD','Es lo mismo que el ATR','Siempre lleva preposición'],ans:1,
+   exp:'El CPred es bivalente: modifica al verbo Y concuerda (en género y número) con el SUJ (subjetivo) o el CD (objetivo).'},
+  {q:'¿Qué tipo de CPred hay en «Los alumnos llegaron agotados»?',
+   opts:['CPred objetivo (concuerda con CD)','CPred subjetivo (concuerda con SUJ)','ATR','No hay CPred'],ans:1,
+   exp:'«Agotados» concuerda con «los alumnos» (SUJ). «Llegaron» no es copulativo → CPred subjetivo.'},
+  {q:'¿Qué tipo de CPred hay en «Encontré muy desmejorada a tu hermana»?',
+   opts:['CPred subjetivo','CPred objetivo','ATR','No hay CPred'],ans:1,
+   exp:'«Muy desmejorada» concuerda con «a tu hermana» (CD) → CPred objetivo.'},
+  {q:'¿Cuál es la diferencia principal entre ATR y CPred?',
+   opts:['El ATR lleva «por»; el CPred no','El ATR va con verbos copulativos; el CPred, con cualquier verbo no copulativo','El CPred lleva preposición; el ATR no','No hay diferencia real'],ans:1,
+   exp:'ATR = verbo copulativo (ser/estar/parecer). CPred = verbo no copulativo + concordancia con SUJ o CD.'},
+  {q:'En «El cielo está nublado», «nublado» es:',
+   opts:['CPred subjetivo','CPred objetivo','ATR','CD'],ans:2,
+   exp:'«Estar» es verbo copulativo → «Lo está» ✔ → ATR, no CPred.'},
+  {q:'En «Los soldados regresaron heridos», «heridos» es:',
+   opts:['ATR','CPred subjetivo','CPred objetivo','CAg'],ans:1,
+   exp:'«Regresar» no es copulativo. «Heridos» concuerda con «los soldados» (SUJ) → CPred subjetivo.'},
+  {q:'¿Qué es el CRég?',
+   opts:['Un complemento con preposición elegida libremente','Un complemento sin preposición','Un complemento con preposición exigida por el verbo','Lo mismo que el CC'],ans:2,
+   exp:'El CRég lleva una preposición que exige el propio verbo. Sin ella, el verbo pierde sentido o lo cambia.'},
+  {q:'¿Cuál es la prueba para identificar el CRég?',
+   opts:['Sustituirlo por LO','Sustituirlo por prep. + ELLO','Pasivizarlo','Sustituirlo por LE'],ans:1,
+   exp:'«Confío en mis amigos» → «Confío en ello» ✔ → CRég. Si funciona la sustitución, es CRég.'},
+  {q:'¿Cuál es el CRég en «Confío en mis amigos»?',
+   opts:['confío','en mis amigos','mis amigos','no hay CRég'],ans:1,
+   exp:'«Confío en ello» ✔ → «en mis amigos» es el CRég. La preposición «en» es exigida por «confiar».'},
+  {q:'¿Cuál de estos verbos rige la preposición «de»?',
+   opts:['confiar','pensar','insistir','alegrarse'],ans:3,
+   exp:'Alegrarse DE: «Me alegré de tu éxito» → «Me alegré de ello» ✔.'},
+  {q:'¿En qué tipo de oraciones aparece el CAg?',
+   opts:['Activas','Impersonales','Pasivas','Copulativas'],ans:2,
+   exp:'El CAg es exclusivo de las oraciones en voz pasiva (SER + participio).'},
+  {q:'¿Con qué preposición va siempre el CAg?',
+   opts:['de','en','a','por'],ans:3,
+   exp:'El CAg siempre va introducido por la preposición POR: «fue detenido POR la policía».'},
+  {q:'¿Cuál es el CAg en «El ladrón fue detenido por la policía»?',
+   opts:['el ladrón','fue detenido','por la policía','no hay CAg'],ans:2,
+   exp:'«La policía detuvo al ladrón» (activa) → «la policía» era el SUJ → en la pasiva es el CAg.'},
+  {q:'Si pasamos una oración pasiva a activa, el CAg se convierte en:',
+   opts:['CD','CI','SUJ','CC'],ans:2,
+   exp:'El CAg de la pasiva = SUJ de la activa. «Por los bomberos» (CAg) → «Los bomberos» (SUJ en la activa).'},
+  {q:'¿Cuál de estas tiene ATR?',
+   opts:['«Los alumnos llegaron cansados»','«María parece simpática»','«Eligieron delegado a Juan»','«Me alegré de tu éxito»'],ans:1,
+   exp:'«Parecer» es verbo copulativo → «Lo parece» ✔ → «simpática» es ATR.'},
+  {q:'¿Cuál de estas tiene CRég?',
+   opts:['«Compré un libro»','«Hablo muy despacio»','«Dependo de mis padres»','«El cielo está nublado»'],ans:2,
+   exp:'«Depender de» rige la preposición «de». «Dependo de ello» ✔ → CRég.'},
+  {q:'En «La ciudad fue destruida por el terremoto», ¿cuál es el SUJ?',
+   opts:['por el terremoto (CAg)','fue destruida','la ciudad (SUJ Paciente)','el terremoto'],ans:2,
+   exp:'«La ciudad» es el SUJ Paciente (recibe la acción). «Por el terremoto» es el CAg.'},
+];
+
+// ══ BUILD & ANSWER TESTS (sintaxis style) ════════════════════
+function buildQ(n){
+  const box=document.getElementById('qbox'+n);
+  box.innerHTML='';
+  QS[n].forEach((q,i)=>{
+    const L=['A','B','C','D'];
+    const opts=q.opts.map((o,j)=>`<button class="q-opt" onclick="answer(${n},${i},${j})"><span class="opt-letter">${L[j]}</span>${o}</button>`).join('');
+    const d=document.createElement('div');
+    d.innerHTML=`${i>0?'<div class="q-divider"></div>':''}<div class="q-item"><div class="q-num">Pregunta ${i+1} de ${QS[n].length}</div><div class="q-text">${q.q}</div><div class="q-opts" id="opts-${n}-${i}">${opts}</div><div class="q-fb" id="fb-${n}-${i}"></div></div>`;
+    box.appendChild(d);
+  });
+}
+
+function answer(n,qi,oi){
+  if(ST[n].ans[qi]!==undefined) return;
+  ST[n].ans[qi]=oi;
+  const q=QS[n][qi], ok=oi===q.ans;
+  document.getElementById('opts-'+n+'-'+qi).querySelectorAll('.q-opt').forEach((el,j)=>{
+    el.classList.add('revealed');
+    if(j===q.ans) el.classList.add('correct');
+    else if(j===oi&&!ok) el.classList.add('wrong');
+  });
+  const fb=document.getElementById('fb-'+n+'-'+qi);
+  fb.textContent=(ok?'✓ Correcto. ':'✗ Incorrecto. ')+q.exp;
+  fb.className='q-fb '+(ok?'correct':'wrong');
+  if(ok) ST[n].sc++;
+  document.getElementById('sc'+n).textContent=ST[n].sc+' / '+QS[n].length;
+  document.getElementById('sb'+n).style.width=(ST[n].sc/QS[n].length*100)+'%';
+  const sec6active=document.getElementById('sec6').classList.contains('active');
+  if(sec6active) updateResults();
+}
+
+// ══ RESULTS ══════════════════════════════════════════════════
+function updateResults(){
+  const t1sc=ST[1].sc, t2sc=ST[2].sc;
+  const t1ans=Object.keys(ST[1].ans).length, t2ans=Object.keys(ST[2].ans).length;
+  const t1done=t1ans===QS[1].length, t2done=t2ans===QS[2].length;
+  const allDone=t1done&&t2done;
+
+  if(t1ans>0){
+    document.getElementById('gradeT1').textContent=(t1sc*0.25).toFixed(2)+' / 5';
+    document.getElementById('gradeT1sub').textContent=`${t1sc} de 20 correctas (${(t1sc*0.25).toFixed(2)} pts)`;
+  }
+  if(t2ans>0){
+    document.getElementById('gradeT2').textContent=(t2sc*0.25).toFixed(2)+' / 5';
+    document.getElementById('gradeT2sub').textContent=`${t2sc} de 20 correctas (${(t2sc*0.25).toFixed(2)} pts)`;
+  }
+  if(allDone){
+    const total=(t1sc+t2sc)*0.25;
+    document.getElementById('gradeFinal').innerHTML=`${total.toFixed(2)}<span> / 10</span>`;
+    document.getElementById('gradeSubtitle').textContent=`${t1sc+t2sc} respuestas correctas de 40 · cada una vale 0,25 puntos`;
+    document.getElementById('testsIncompletos').style.display='none';
+    document.getElementById('btnSubmit').disabled=false;
+  } else {
+    function missList(n){const m=[];QS[n].forEach((_,i)=>{if(ST[n].ans[i]===undefined)m.push('P'+(i+1));});return m;}
+    const m1=missList(1), m2=missList(2);
+    const parts=[];
+    if(m1.length) parts.push('Test 1: faltan '+m1.join(', '));
+    if(m2.length) parts.push('Test 2: faltan '+m2.join(', '));
+    document.getElementById('testsIncompletosMsg').textContent='⚠️ '+parts.join(' · ')+'. Completa todos los tests antes de enviar.';
+    document.getElementById('testsIncompletos').style.display='block';
+    document.getElementById('gradeSubtitle').textContent='Completa los dos tests para ver tu nota final.';
+    document.getElementById('btnSubmit').disabled=true;
+  }
+}
+
+// ══ FORM SUBMIT ══════════════════════════════════════════════
+function submitForm(){
+  const t1sc=ST[1].sc, t2sc=ST[2].sc;
+  if(Object.keys(ST[1].ans).length<QS[1].length||Object.keys(ST[2].ans).length<QS[2].length) return;
+  const total=((t1sc+t2sc)*0.25).toFixed(2);
+  const nota025=(parseFloat(total)/10*0.25).toFixed(2).replace('.',',');
+  const iframe=document.createElement('iframe');
+  iframe.style.display='none';
+  iframe.name='hf_cv';
+  document.body.appendChild(iframe);
+  const form=document.createElement('form');
+  form.method='POST';
+  form.action=FORM_ACTION;
+  form.target='hf_cv';
+  [[FIELD_NOMBRE,ALUMNO],[FIELD_CURSO,CURSO],[FIELD_NOTA_10,total],[FIELD_NOTA_025,nota025]].forEach(([k,v])=>{
+    const inp=document.createElement('input');
+    inp.type='hidden'; inp.name=k; inp.value=v;
+    form.appendChild(inp);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  document.getElementById('btnSubmit').disabled=true;
+  document.getElementById('submitOk').style.display='block';
+}
+
+// ══ INIT ═════════════════════════════════════════════════════
+function shuffle(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+shuffle(t1Data); shuffle(t2Data);
+const QS={1:t1Data, 2:t2Data};
+renderExercises(exData1, exOpts1, 'exSet1');
+renderExercises(exData2, exOpts2, 'exSet2');
+buildQ(1);
+buildQ(2);
+
+// Enter key on login
+document.getElementById('loginCurso').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('loginNombre').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('loginCurso').focus(); });
+</script>
+</body>
+</html>

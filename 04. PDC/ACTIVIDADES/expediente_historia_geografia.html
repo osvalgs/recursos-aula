@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.I.T.E. — Expediente 00: Historia y Geografía</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --parchment:#efe6d3;
+    --parchment-dark:#e2d5b7;
+    --ink:#1f2e3d;
+    --ink-soft:#3a4d61;
+    --brass:#b1832e;
+    --brass-dark:#8f6821;
+    --teal:#2e6b67;
+    --teal-dark:#1f4a47;
+    --rust:#9b4530;
+    --rust-dark:#7a3423;
+    --ok:#3f7d4f;
+    --bad:#af4133;
+    --paper-shadow: 0 10px 30px rgba(31,46,61,0.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 10%, rgba(177,131,46,0.10), transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(46,107,103,0.10), transparent 45%),
+      var(--parchment);
+    color:var(--ink);
+    font-family:'Nunito', sans-serif;
+    line-height:1.55;
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Cormorant Garamond', serif;}
+  .wrap{max-width:880px;margin:0 auto;padding:18px 18px 70px;}
+
+  /* ---------- HEADER / AGENCY BAR ---------- */
+  .agency-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:12px 18px;background:var(--ink);color:var(--parchment);
+    border-radius:10px;margin-bottom:16px;flex-wrap:wrap;
+  }
+  .agency-brand{display:flex;align-items:center;gap:10px;}
+  .agency-brand svg{flex-shrink:0;}
+  .agency-brand .name{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:1.25rem;letter-spacing:.02em;}
+  .agency-brand .tag{font-size:.72rem;color:#cbb98a;letter-spacing:.03em;}
+  .case-counter{font-size:.85rem;color:#cbb98a;white-space:nowrap;}
+  .case-counter b{color:var(--parchment);}
+
+  /* progress dots */
+  .progress{display:flex;gap:6px;justify-content:center;margin:6px 0 20px;flex-wrap:wrap;}
+  .dot{
+    width:30px;height:30px;border-radius:50%;
+    border:2px solid var(--parchment-dark);
+    background:var(--parchment);
+    display:flex;align-items:center;justify-content:center;
+    font-size:.78rem;font-weight:800;color:var(--ink-soft);
+    cursor:not-allowed;opacity:.55;transition:.2s;
+  }
+  .dot.enabled{cursor:pointer;opacity:1;border-color:var(--brass);}
+  .dot.enabled:hover{transform:translateY(-2px);}
+  .dot.active{background:var(--ink);color:var(--parchment);border-color:var(--ink);}
+  .dot.done{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+  /* ---------- CASE CARD ---------- */
+  .case{
+    display:none;background:#fbf7ec;border:1px solid var(--parchment-dark);
+    border-radius:14px;padding:28px 30px;box-shadow:var(--paper-shadow);
+    position:relative;overflow:hidden;
+  }
+  .case.active{display:block;animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .case::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:6px;
+    background:linear-gradient(90deg,var(--brass),var(--teal),var(--rust));
+  }
+  .kicker{
+    display:inline-block;font-family:'Cormorant Garamond',serif;font-weight:700;
+    color:var(--brass-dark);font-size:.95rem;letter-spacing:.04em;margin-bottom:4px;
+  }
+  .case h2{font-size:1.9rem;margin:0 0 14px;color:var(--ink);}
+  .case p{font-size:1.02rem;color:var(--ink-soft);}
+  .lead{font-size:1.08rem;}
+
+  .stamp{
+    position:absolute;top:24px;right:28px;border:3px solid var(--rust);color:var(--rust);
+    font-family:'Cormorant Garamond',serif;font-weight:700;text-transform:uppercase;
+    padding:6px 14px;border-radius:6px;transform:rotate(8deg);font-size:.85rem;
+    letter-spacing:.08em;opacity:.85;
+  }
+
+  .callout{
+    background:var(--parchment-dark);border-left:5px solid var(--teal);
+    border-radius:8px;padding:14px 16px;margin:16px 0;
+  }
+  .callout.history{border-left-color:var(--rust);}
+  .callout b{color:var(--ink);}
+
+  .timeline{display:flex;flex-direction:column;gap:10px;margin:18px 0;}
+  .tl-item{
+    display:flex;gap:14px;align-items:flex-start;background:#fff;
+    border:1px solid var(--parchment-dark);border-radius:10px;padding:12px 14px;
+  }
+  .tl-item .icon{font-size:1.6rem;line-height:1;}
+  .tl-item h4{margin:0 0 3px;font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--rust-dark);}
+  .tl-item p{margin:0;font-size:.94rem;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .info-box{
+    background:#fff;border:1px solid var(--parchment-dark);border-radius:10px;padding:14px 16px;
+  }
+  .info-box h4{margin:0 0 6px;font-family:'Cormorant Garamond',serif;font-size:1.2rem;}
+  .info-box.geo h4{color:var(--teal-dark);}
+  .info-box.hist h4{color:var(--rust-dark);}
+
+  /* ---------- ACTIVITY BLOCK ---------- */
+  .activity{
+    margin-top:22px;background:var(--ink);color:var(--parchment);
+    border-radius:12px;padding:18px 20px;
+  }
+  .activity h3{margin:0 0 4px;font-size:1.25rem;color:#f0e6c8;}
+  .activity .instr{font-size:.92rem;color:#cbb98a;margin-bottom:14px;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+  .chip{
+    background:#2c3e50;border:1px solid #4b5f73;color:var(--parchment);
+    padding:8px 14px;border-radius:20px;cursor:pointer;font-size:.92rem;font-weight:600;
+    transition:.15s;user-select:none;
+  }
+  .chip:hover{background:#3a4f63;}
+  .chip.picked{background:var(--brass);border-color:var(--brass);color:#241a05;}
+  .chip.correct{background:var(--ok);border-color:var(--ok);color:#fff;}
+  .chip.wrong{background:var(--bad);border-color:var(--bad);color:#fff;}
+
+  .q-block{background:#25384a;border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+  .q-block p.q-text{margin:0 0 12px;font-weight:700;color:#fff;font-size:1.18rem;}
+  .opt-row{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    background:#2c3e50;border:2px solid #5a7189;border-radius:8px;padding:13px 16px;
+    cursor:pointer;font-size:1.12rem;font-weight:600;color:#fbf7ec;transition:.15s;
+  }
+  .opt:hover{background:#3d5972;border-color:#7d97ae;}
+  .opt.correct{background:var(--ok);border-color:#8fd39f;color:#fff;}
+  .opt.wrong{background:var(--bad);border-color:#e79488;color:#fff;}
+  .opt.disabled{cursor:default;}
+  .feedback-line{font-size:1rem;font-weight:700;margin-top:8px;min-height:18px;color:#f0e6c8;}
+
+  select.match-select{
+    padding:6px 10px;border-radius:6px;border:1px solid #4b5f73;background:#1c2b39;color:#fff;font-size:.9rem;
+  }
+  .match-row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#25384a;padding:10px 14px;border-radius:8px;margin-bottom:8px;flex-wrap:wrap;}
+  .match-row .left{font-weight:700;color:#fff;flex:1;min-width:170px;}
+
+  .btn{
+    background:var(--brass);color:#241a05;border:none;padding:10px 20px;border-radius:8px;
+    font-weight:800;font-size:.94rem;cursor:pointer;letter-spacing:.02em;transition:.15s;
+  }
+  .btn:hover{background:var(--brass-dark);color:#fff;}
+  .btn.secondary{background:transparent;border:2px solid var(--parchment);color:var(--parchment);}
+  .btn.secondary:hover{background:var(--parchment);color:var(--ink);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+
+  .order-list{display:flex;flex-direction:column;gap:8px;margin:14px 0;}
+  .order-item{
+    background:#2c3e50;border:1px solid #4b5f73;border-radius:8px;padding:10px 14px;
+    display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none;transition:.15s;
+  }
+  .order-item:hover{background:#37516b;}
+  .order-item .num{
+    width:26px;height:26px;border-radius:50%;background:#4b5f73;color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;flex-shrink:0;
+  }
+  .order-item.picked .num{background:var(--brass);color:#241a05;}
+  .order-item.correct{background:var(--ok);}
+  .order-item.wrong{background:var(--bad);}
+
+  .checklist label{display:flex;gap:10px;align-items:flex-start;background:#25384a;padding:10px 12px;border-radius:8px;margin-bottom:8px;cursor:pointer;font-size:.94rem;}
+  .checklist input{margin-top:3px;}
+
+  .nav-buttons{display:flex;justify-content:space-between;margin-top:26px;}
+
+  /* ---------- TRIVIAL GAME ---------- */
+  .trivial-wrap{display:flex;gap:26px;flex-wrap:wrap;align-items:center;justify-content:center;margin:16px 0;}
+  .wheel-holder{position:relative;width:190px;height:190px;flex-shrink:0;}
+  .wheel-holder svg{width:100%;height:100%;}
+  .wheel-center{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+    text-align:center;font-family:'Cormorant Garamond',serif;font-weight:700;color:#fff;font-size:.85rem;
+  }
+  .cat-list{display:flex;flex-direction:column;gap:10px;min-width:230px;}
+  .cat-btn{
+    display:flex;align-items:center;gap:10px;background:#2c3e50;border:2px solid #4b5f73;
+    border-radius:10px;padding:10px 14px;cursor:pointer;color:#fff;font-weight:700;font-size:.92rem;
+  }
+  .cat-btn .swatch{width:16px;height:16px;border-radius:50%;flex-shrink:0;}
+  .cat-btn.finished{opacity:.55;cursor:default;border-color:var(--ok);}
+  .cat-btn:not(.finished):hover{background:#37516b;}
+
+  .flag-quiz{text-align:center;}
+  .flag-display{width:280px;margin:10px auto 20px;}
+  .flag-display svg{width:100%;height:auto;display:block;border:2px solid var(--ink);border-radius:6px;box-shadow:0 8px 18px rgba(31,46,61,.28);}
+  .score-banner{
+    text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;
+    margin-top:14px;color:var(--brass-dark);
+  }
+
+  .diploma{
+    text-align:center;padding:30px 20px;background:#fff;border:3px double var(--brass);border-radius:12px;
+  }
+  .diploma h2{font-size:2rem;margin:6px 0;}
+  .diploma .seal{font-size:3rem;}
+  .diploma input{
+    font-family:'Cormorant Garamond',serif;font-size:1.3rem;text-align:center;border:none;border-bottom:2px dashed var(--brass);
+    background:transparent;padding:6px;width:70%;margin:10px 0;color:var(--ink);
+  }
+  @media print{ .agency-bar,.progress,.nav-buttons,.no-print{display:none !important;} .case{display:block !important;box-shadow:none;} }
+
+  ::selection{background:var(--brass);color:#241a05;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="agency-bar">
+    <div class="agency-brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
+        <circle cx="17" cy="17" r="15.5" stroke="#cbb98a" stroke-width="1.5"/>
+        <path d="M17 3 L19.5 15 L31 17 L19.5 19 L17 31 L14.5 19 L3 17 L14.5 15 Z" fill="#cbb98a"/>
+        <circle cx="17" cy="17" r="3" fill="#1f2e3d"/>
+      </svg>
+      <div>
+        <div class="name">A.I.T.E.</div>
+        <div class="tag">Agencia de Investigación del Tiempo y el Espacio</div>
+      </div>
+    </div>
+    <div class="case-counter">Expediente <b id="case-now">00</b> / <span id="case-total">10</span></div>
+  </div>
+
+  <div class="progress" id="progress"></div>
+
+  <!-- ================= CASE 0 : PORTADA ================= -->
+  <section class="case" data-idx="0">
+    <span class="stamp">Alto secreto</span>
+    <span class="kicker">Expediente 00 — Convocatoria</span>
+    <h2>Bienvenido/a a la A.I.T.E.</h2>
+    <p class="lead">Esta agencia investiga dos cosas: <b>lo que ha pasado</b> (la Historia) y <b>dónde ha pasado</b> (la Geografía). A partir de hoy formas parte del equipo. Tu misión, a lo largo de este curso, será aprender a leer las pistas del pasado y del planeta como lo hace un buen investigador.</p>
+    <div class="grid2">
+      <div class="info-box hist">
+        <h4>🕰️ La Historia</h4>
+        <p>Estudia <b>cuándo</b> ocurrieron las cosas y <b>por qué</b>: guerras, inventos, reyes, revoluciones, vida cotidiana… Es la investigación del <b>tiempo</b>.</p>
+      </div>
+      <div class="info-box geo">
+        <h4>🧭 La Geografía</h4>
+        <p>Estudia <b>dónde</b> ocurren las cosas y <b>cómo es</b> ese lugar: montañas, ríos, climas, países, ciudades… Es la investigación del <b>espacio</b>.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <b>Spoiler del caso:</b> la Historia y la Geografía casi nunca van por separado. El lugar donde vives condiciona lo que te pasa, y lo que te pasa deja huellas en el lugar donde vives. Este expediente es la introducción a ese misterio: cómo el tiempo y el espacio se explican el uno al otro.
+    </div>
+    <div class="activity">
+      <h3>🎯 Primera pista</h3>
+      <p class="instr">Antes de empezar, marca lo que más te llame la atención de este curso. No hay respuestas malas.</p>
+      <div class="checklist" id="motiv-checklist"></div>
+      <p class="feedback-line" id="motiv-feedback"></p>
+    </div>
+    <div class="nav-buttons">
+      <div></div>
+      <button class="btn" onclick="goNext()">Aceptar la misión →</button>
+    </div>
+  </section>
+
+  <!-- ================= CASE 1 : QUE ES LA HISTORIA ================= -->
+  <section class="case" data-idx="1">
+    <span class="kicker">Expediente 01</span>
+    <h2>¿Qué es la Historia y cómo la investigamos?</h2>
+    <p>La Historia no se inventa: se <b>reconstruye</b> a partir de pistas que la gente del pasado dejó sin querer. A esas pistas las llamamos <b>fuentes históricas</b>, y son la materia prima de cualquier agente de esta agencia.</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="icon">📜</div><div><h4>Fuentes escritas</h4><p>Documentos, cartas, leyes, diarios, periódicos… cualquier texto que alguien escribió.</p></div></div>
+      <div class="tl-item"><div class="icon">🏺</div><div><h4>Fuentes materiales</h4><p>Objetos, monedas, herramientas, edificios, restos arqueológicos: cosas que se pueden tocar.</p></div></div>
+      <div class="tl-item"><div class="icon">🎙️</div><div><h4>Fuentes orales</h4><p>Testimonios, entrevistas, tradiciones contadas de generación en generación.</p></div></div>
+    </div>
+    <div class="callout history"><b>Dato de investigador:</b> cuanto más antiguo es un hecho, menos fuentes suelen quedar. Por eso la Prehistoria (sin escritura) se investiga casi solo con restos materiales.</div>
+    <div class="activity">
+      <h3>🔍 Clasifica las pruebas</h3>
+      <p class="instr">Cada objeto es una prueba encontrada en una excavación. Indica de qué tipo de fuente se trata.</p>
+      <div id="fuentes-match"></div>
+      <button class="btn" onclick="checkFuentes()">Comprobar</button>
+      <p class="feedback-line" id="fuentes-feedback"></p>
+    </div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Siguiente expediente →</button></div>
+  </section>
+
+  <!-- ================= CASE 2 : EDADES DE LA HISTORIA ================= -->
+  <section class="case" data-idx="2">
+    <span class="kicker">Expediente 02</span>
+    <h2>Las grandes edades de la Historia</h2>
+    <p>Para no perdernos en miles de años, los historiadores dividieron el tiempo en <b>cinco grandes etapas</b>. Es el mapa del tiempo que usaremos todo el curso: aquí tienes un primer vistazo a cada una, con su época y lo que encontrarás en ella.</p>
+    <div class="timeline" id="edades-timeline"></div>
+    <div class="callout history"><b>Reto mental:</b> si tuvieras que elegir viajar en el tiempo a una sola de estas etapas, ¿cuál elegirías y por qué? Coméntalo en clase antes de seguir.</div>
+    <div class="callout">
+      <b>🎬 Antes de seguir, un vídeo (menos de 5 minutos):</b>
+      <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:10px 0;">
+        <iframe src="https://www.youtube.com/embed/84pYAAsexDA" title="Introducción a la Historia Mundial" frameborder="0" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;"></iframe>
+      </div>
+      <p style="margin:6px 0 0;font-size:.88rem;">Si el vídeo no se reproduce, puedes verlo directamente en: <a href="https://youtu.be/84pYAAsexDA?si=PbVlo2MQ7Jwa7Xay" target="_blank" rel="noopener">https://youtu.be/84pYAAsexDA</a></p>
+    </div>
+    <div class="activity">
+      <h3>🧩 Ordena la línea del tiempo</h3>
+      <p class="instr">Las cinco edades están desordenadas. Haz clic en ellas siguiendo el orden correcto, de la más antigua a la más reciente.</p>
+      <div class="order-list" id="order-edades"></div>
+      <button class="btn" onclick="checkOrder()">Comprobar orden</button>
+      <button class="btn secondary" onclick="resetOrder()">Reiniciar</button>
+      <p class="feedback-line" id="order-feedback"></p>
+    </div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Siguiente expediente →</button></div>
+  </section>
+
+  <!-- ================= CASE 3 : QUE ES LA GEOGRAFIA ================= -->
+  <section class="case" data-idx="3">
+    <span class="kicker">Expediente 03</span>
+    <h2>¿Qué es la Geografía?</h2>
+    <p>La Geografía investiga el espacio donde vivimos desde dos ángulos:</p>
+    <div class="grid2">
+      <div class="info-box geo"><h4>🏔️ Geografía física</h4><p>El relieve (montañas, llanuras), el clima, los ríos, los mares… la "cara natural" del planeta.</p></div>
+      <div class="info-box geo"><h4>🏙️ Geografía humana y política</h4><p>Los países, las fronteras, las ciudades, la población… cómo nos organizamos los seres humanos sobre ese territorio.</p></div>
+    </div>
+    <div class="callout"><b>Para investigar el espacio</b> usamos mapas, planos, coordenadas y, sobre todo, mucha atención: un mapa cuenta tantas historias como un documento antiguo.</div>
+    <div class="activity">
+      <h3>🌍 Prueba de orientación</h3>
+      <p class="instr">Responde estas preguntas rápidas de geografía general antes de seguir investigando.</p>
+      <div id="geo-quiz"></div>
+    </div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Siguiente expediente →</button></div>
+  </section>
+
+  <!-- ================= CASE 4 : HISTORIA + GEOGRAFIA ================= -->
+  <section class="case" data-idx="4">
+    <span class="kicker">Expediente 04 — El cruce de pistas</span>
+    <h2>Historia y Geografía, aliadas inseparables</h2>
+    <p>Ningún hecho histórico ocurre "en el aire": ocurre <b>en un lugar concreto</b>, con un clima, un relieve y una posición determinados. Y ese lugar influye muchísimo en lo que allí sucede.</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="icon">🌊</div><div><h4>Egipto y el Nilo</h4><p>Sin el río Nilo y sus crecidas fértiles, no habría existido una de las civilizaciones más importantes de la Historia Antigua en pleno desierto.</p></div></div>
+      <div class="tl-item"><div class="icon">🏛️</div><div><h4>Grecia y sus montañas</h4><p>El territorio griego, lleno de montañas y costa, dificultaba los grandes imperios unidos y favoreció las ciudades-estado independientes (polis).</p></div></div>
+      <div class="tl-item"><div class="icon">⛵</div><div><h4>Roma y el Mediterráneo</h4><p>Roma llamó al Mediterráneo "Mare Nostrum" (nuestro mar): controlarlo le permitió construir un imperio gigantesco.</p></div></div>
+      <div class="tl-item"><div class="icon">🗺️</div><div><h4>España y América</h4><p>La posición de España, entre el Atlántico y el Mediterráneo, fue clave para que en 1492 partiera la expedición que llegó a América.</p></div></div>
+    </div>
+    <div class="activity">
+      <h3>🔗 Conecta cada pueblo con su geografía</h3>
+      <p class="instr">Elige, para cada civilización, el factor geográfico que más la marcó.</p>
+      <div id="geo-hist-match"></div>
+      <button class="btn" onclick="checkGeoHist()">Comprobar</button>
+      <p class="feedback-line" id="geohist-feedback"></p>
+    </div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Siguiente expediente →</button></div>
+  </section>
+
+  <!-- ================= CASE 5 : HISTORIA DE ESPAÑA ================= -->
+  <section class="case" data-idx="5">
+    <span class="kicker">Expediente 05</span>
+    <h2>Un vistazo rápido a la Historia de España</h2>
+    <p>La Península Ibérica ha sido cruce de caminos entre continentes, y eso se nota en su historia:</p>
+    <div class="timeline">
+      <div class="tl-item"><div class="icon">🖐️</div><div><h4>Prehistoria peninsular</h4><p>Restos como los de Atapuerca (Burgos) o las pinturas de Altamira están entre los más importantes del mundo.</p></div></div>
+      <div class="tl-item"><div class="icon">🏺</div><div><h4>Íberos, celtas y Roma</h4><p>Pueblos prerromanos y, después, siglos de dominio romano: Hispania se convierte en una provincia clave del Imperio.</p></div></div>
+      <div class="tl-item"><div class="icon">🌙</div><div><h4>Al-Ándalus y Reconquista</h4><p>Durante la Edad Media conviven reinos musulmanes y cristianos durante casi 800 años.</p></div></div>
+      <div class="tl-item"><div class="icon">🌎</div><div><h4>Imperio español</h4><p>En la Edad Moderna, España se convierte en el primer imperio con territorios en varios continentes.</p></div></div>
+      <div class="tl-item"><div class="icon">🗳️</div><div><h4>España contemporánea</h4><p>Siglos XIX y XX de cambios profundos: pérdida del imperio, guerra civil, dictadura y, finalmente, democracia.</p></div></div>
+    </div>
+    <div class="activity">
+      <h3>🕵️ Encaja cada etapa española en su edad del mundo</h3>
+      <p class="instr">Relaciona cada momento de la historia de España con la edad general a la que pertenece.</p>
+      <div id="spain-match"></div>
+      <button class="btn" onclick="checkSpain()">Comprobar</button>
+      <p class="feedback-line" id="spain-feedback"></p>
+    </div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Siguiente expediente →</button></div>
+  </section>
+
+  <!-- ================= CASE 6 : METODOLOGIA ================= -->
+  <section class="case" data-idx="6">
+    <span class="kicker">Expediente 06</span>
+    <h2>¿Cómo vamos a investigar este curso?</h2>
+    <p>Un buen agente de la A.I.T.E. usa siempre las mismas herramientas de trabajo:</p>
+    <div class="grid2">
+      <div class="info-box hist"><h4>📚 Fuentes y textos</h4><p>Leeremos documentos, imágenes y textos adaptados para sacar información, como haría un investigador de verdad.</p></div>
+      <div class="info-box geo"><h4>🗺️ Mapas</h4><p>Trabajaremos mapas físicos y políticos para situar cada hecho histórico en su lugar.</p></div>
+      <div class="info-box hist"><h4>⏳ Líneas del tiempo</h4><p>Construiremos líneas de tiempo propias para no perder nunca de vista el orden de los acontecimientos.</p></div>
+      <div class="info-box geo"><h4>🧠 Técnicas de estudio</h4><p>Iremos aprendiendo técnicas como el método EPL2R para estudiar mejor y con menos agobio.</p></div>
+    </div>
+    <div class="callout">Cada unidad de este curso será un nuevo <b>expediente</b> con su propia teoría, sus pistas y sus pruebas finales. ¡Vamos a por la primera prueba de fuego!</div>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Ir a las pruebas finales →</button></div>
+  </section>
+
+  <!-- ================= CASE 7 : TRIVIAL ================= -->
+  <section class="case" data-idx="7">
+    <span class="kicker">Prueba final I</span>
+    <h2>🎲 El Gran Trivial de la Historia</h2>
+    <p>Elige una categoría y responde sus tres preguntas. Si aciertas al menos dos de tres, esa parte de la ruleta se iluminará. ¡Completa las cuatro para superar la prueba!</p>
+    <div class="trivial-wrap">
+      <div class="wheel-holder">
+        <svg viewBox="0 0 100 100">
+          <path id="wedge0" d="M50,50 L50,5 A45,45 0 0,1 95,50 Z" fill="#3a4d61"/>
+          <path id="wedge1" d="M50,50 L95,50 A45,45 0 0,1 50,95 Z" fill="#3a4d61"/>
+          <path id="wedge2" d="M50,50 L50,95 A45,45 0 0,1 5,50 Z" fill="#3a4d61"/>
+          <path id="wedge3" d="M50,50 L5,50 A45,45 0 0,1 50,5 Z" fill="#3a4d61"/>
+          <circle cx="50" cy="50" r="16" fill="#1f2e3d"/>
+        </svg>
+        <div class="wheel-center" id="wheel-score">0/4</div>
+      </div>
+      <div class="cat-list" id="cat-list"></div>
+    </div>
+    <div id="trivial-question-area"></div>
+    <p class="score-banner" id="trivial-final-msg"></p>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Última prueba →</button></div>
+  </section>
+
+  <!-- ================= CASE 8 : BANDERAS ================= -->
+  <section class="case" data-idx="8">
+    <span class="kicker">Prueba final II</span>
+    <h2>🚩 Banderas Imposibles</h2>
+    <p>Nada de España, Francia o Portugal: estas banderas son de las que ponen a prueba a un auténtico agente de geografía. ¡Suerte!</p>
+    <div class="flag-quiz">
+      <svg width="0" height="0" style="position:absolute">
+        <defs>
+          <symbol id="starSym" viewBox="0 0 40 40">
+            <polygon points="20,2 24,15 38,15 27,23 31,36 20,28 9,36 13,23 2,15 16,15"/>
+          </symbol>
+        </defs>
+      </svg>
+      <div class="flag-display" id="flag-display"></div>
+      <div class="opt-row" id="flag-options" style="max-width:420px;margin:0 auto;"></div>
+      <p class="feedback-line" id="flag-feedback"></p>
+      <p style="margin-top:10px;font-weight:700;">Bandera <span id="flag-num">1</span> / <span id="flag-total">12</span></p>
+    </div>
+    <p class="score-banner" id="flag-final-msg"></p>
+    <div class="nav-buttons"><button class="btn secondary" onclick="goPrev()">← Atrás</button><button class="btn" onclick="goNext()">Ver diploma →</button></div>
+  </section>
+
+  <!-- ================= CASE 9 : DIPLOMA ================= -->
+  <section class="case" data-idx="9">
+    <div class="diploma">
+      <div class="seal">🧭📜🕰️</div>
+      <span class="kicker">A.I.T.E. — Certificado oficial</span>
+      <h2>Diploma de Agente Investigador/a</h2>
+      <p>Se certifica que</p>
+      <input type="text" placeholder="Escribe aquí tu nombre" id="diploma-name">
+      <p>ha completado con éxito el Expediente 00 y queda oficialmente incorporado/a al equipo de investigación de <b>Historia y Geografía</b> de 3º ESO.</p>
+      <p style="margin-top:18px;">🏅 ¡A por el Expediente 01!</p>
+      <button class="btn no-print" onclick="window.print()">Imprimir diploma</button>
+    </div>
+    <div class="nav-buttons no-print"><button class="btn secondary" onclick="goPrev()">← Atrás</button><div></div></div>
+  </section>
+
+</div>
+
+<script>
+/* ======================= NAVIGATION ======================= */
+const TOTAL_CASES = 10;
+let current = 0;
+let maxVisited = 0;
+document.getElementById('case-total').textContent = String(TOTAL_CASES-1).padStart(2,'0');
+
+function renderProgress(){
+  const p = document.getElementById('progress');
+  p.innerHTML = '';
+  for(let i=0;i<TOTAL_CASES;i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i<=maxVisited?' enabled':'') + (i===current?' active':'') + (i<current?' done':'');
+    d.textContent = i;
+    d.onclick = ()=>{ if(i<=maxVisited) showCase(i); };
+    p.appendChild(d);
+  }
+}
+function showCase(i){
+  document.querySelectorAll('.case').forEach(c=>c.classList.remove('active'));
+  document.querySelector(`.case[data-idx="${i}"]`).classList.add('active');
+  current = i;
+  if(i>maxVisited) maxVisited = i;
+  document.getElementById('case-now').textContent = String(i).padStart(2,'0');
+  renderProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goNext(){ if(current<TOTAL_CASES-1) showCase(current+1); }
+function goPrev(){ if(current>0) showCase(current-1); }
+
+/* ======================= CASE 0: MOTIVATION CHECKLIST ======================= */
+const motivItems = [
+  "Descubrir civilizaciones antiguas (Egipto, Roma, los griegos...)",
+  "Aprender a leer e interpretar mapas",
+  "Entender por qué el mundo es como es hoy",
+  "Conocer la historia de España y de mi tierra",
+  "Jugar y competir con pruebas tipo concurso"
+];
+(function(){
+  const box = document.getElementById('motiv-checklist');
+  motivItems.forEach((t,i)=>{
+    const lab = document.createElement('label');
+    lab.innerHTML = `<input type="checkbox" data-i="${i}"><span>${t}</span>`;
+    box.appendChild(lab);
+  });
+  box.addEventListener('change', ()=>{
+    const n = box.querySelectorAll('input:checked').length;
+    const f = document.getElementById('motiv-feedback');
+    f.textContent = n===0 ? '' : `¡Anotado! Tenemos ${n} pista(s) sobre lo que más te interesa. La agencia toma nota. 🕵️`;
+  });
+})();
+
+/* ======================= CASE 1: FUENTES MATCHING ======================= */
+const fuentesData = [
+  {item:"Una vasija de barro encontrada en una tumba", tipo:"material"},
+  {item:"Una carta escrita por un rey en el siglo XVI", tipo:"escrita"},
+  {item:"El relato de una abuela sobre su pueblo hace 60 años", tipo:"oral"},
+  {item:"Una moneda romana", tipo:"material"},
+  {item:"Un periódico de 1936", tipo:"escrita"}
+];
+(function(){
+  const box = document.getElementById('fuentes-match');
+  fuentesData.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className = 'match-row';
+    row.innerHTML = `<div class="left">${d.item}</div>
+      <select class="match-select" data-i="${i}">
+        <option value="">— elige —</option>
+        <option value="escrita">Fuente escrita</option>
+        <option value="material">Fuente material</option>
+        <option value="oral">Fuente oral</option>
+      </select>`;
+    box.appendChild(row);
+  });
+})();
+function checkFuentes(){
+  const selects = document.querySelectorAll('#fuentes-match select');
+  let correct=0;
+  selects.forEach(s=>{
+    const i = +s.dataset.i;
+    if(s.value === fuentesData[i].tipo){ s.style.borderColor='var(--ok)'; correct++; }
+    else if(s.value===''){ s.style.borderColor='#4b5f73'; }
+    else { s.style.borderColor='var(--bad)'; }
+  });
+  document.getElementById('fuentes-feedback').textContent = `Aciertos: ${correct} de ${fuentesData.length}. ${correct===fuentesData.length? '¡Pruebas clasificadas a la perfección! ✅' : 'Revisa las que están en rojo e inténtalo de nuevo.'}`;
+}
+
+/* ======================= CASE 2: EDADES TIMELINE + ORDER ======================= */
+const edades = [
+  {n:"Prehistoria", icon:"🪓", desc:"Desde los primeros seres humanos hasta la invención de la escritura: cazadores-recolectores que descubren el fuego, la piedra tallada y, más tarde, la agricultura y la ganadería."},
+  {n:"Edad Antigua", icon:"🐫", desc:"Desde la escritura hasta la caída del Imperio Romano de Occidente (476): nacen las primeras civilizaciones, como Mesopotamia, Egipto, Grecia y Roma."},
+  {n:"Edad Media", icon:"🏰", desc:"Desde el 476 hasta el descubrimiento de América (1492): castillos, señores feudales, monasterios y el mundo de Al-Ándalus conviven en Europa."},
+  {n:"Edad Moderna", icon:"🚢", desc:"Desde 1492 hasta la Revolución Francesa (1789): grandes viajes como el de Colón, el Renacimiento y el nacimiento de los grandes imperios."},
+  {n:"Edad Contemporánea", icon:"🏙️", desc:"Desde 1789 hasta hoy: revoluciones, industrias, guerras mundiales y el mundo globalizado en el que vivimos."}
+];
+(function(){
+  const tl = document.getElementById('edades-timeline');
+  edades.forEach(e=>{
+    const d = document.createElement('div');
+    d.className='tl-item';
+    d.innerHTML = `<div class="icon">${e.icon}</div><div><h4>${e.n}</h4><p>${e.desc}</p></div>`;
+    tl.appendChild(d);
+  });
+})();
+
+let orderPicks = [];
+let orderShuffled = [];
+function buildOrder(){
+  orderShuffled = edades.map((e,i)=>({...e, correctIndex:i})).sort(()=>Math.random()-0.5);
+  orderPicks = [];
+  const box = document.getElementById('order-edades');
+  box.innerHTML='';
+  orderShuffled.forEach((e,pos)=>{
+    const d = document.createElement('div');
+    d.className='order-item';
+    d.dataset.pos = pos;
+    d.innerHTML = `<span class="num">–</span><span>${e.icon} ${e.n}</span>`;
+    d.onclick = ()=>pickOrder(pos,d);
+    box.appendChild(d);
+  });
+  document.getElementById('order-feedback').textContent='';
+}
+function pickOrder(pos, el){
+  if(el.classList.contains('picked')) return;
+  orderPicks.push(pos);
+  el.classList.add('picked');
+  el.querySelector('.num').textContent = orderPicks.length;
+}
+function resetOrder(){ buildOrder(); }
+function checkOrder(){
+  if(orderPicks.length < edades.length){
+    document.getElementById('order-feedback').textContent = 'Todavía te faltan etapas por ordenar.';
+    return;
+  }
+  let correct = 0;
+  const items = document.querySelectorAll('#order-edades .order-item');
+  orderPicks.forEach((pos, orderIdx)=>{
+    const el = document.querySelector(`#order-edades .order-item[data-pos="${pos}"]`);
+    const isRight = orderShuffled[pos].correctIndex === orderIdx;
+    el.classList.add(isRight?'correct':'wrong');
+    if(isRight) correct++;
+  });
+  document.getElementById('order-feedback').textContent = `${correct} de ${edades.length} en su posición correcta. ${correct===edades.length? '¡Cronología perfecta! 🏆' : 'Pulsa "Reiniciar" para intentarlo de nuevo.'}`;
+}
+buildOrder();
+
+/* ======================= CASE 3: GEO QUIZ ======================= */
+const geoQuestions = [
+  {q:"¿Cuántos continentes se suelen distinguir habitualmente?", opts:["4","5 o 6 según el criterio","10"], correct:1},
+  {q:"¿Cuál es el océano más grande del planeta?", opts:["Atlántico","Índico","Pacífico"], correct:2},
+  {q:"¿Qué estudia principalmente la geografía física?", opts:["Fronteras y países","Relieve, clima y ríos","Idiomas y religiones"], correct:1},
+  {q:"¿Qué línea imaginaria divide la Tierra en el hemisferio norte y el hemisferio sur?", opts:["El meridiano de Greenwich","El Ecuador","El Trópico de Cáncer"], correct:1},
+  {q:"¿Qué es una cordillera?", opts:["Un tipo de río","Una cadena de montañas","Una ciudad costera"], correct:1}
+];
+(function(){
+  const box = document.getElementById('geo-quiz');
+  geoQuestions.forEach((q,qi)=>{
+    const qb = document.createElement('div');
+    qb.className='q-block';
+    qb.innerHTML = `<p class="q-text">${qi+1}. ${q.q}</p><div class="opt-row" id="geoq-${qi}"></div>`;
+    box.appendChild(qb);
+    const or = qb.querySelector(`#geoq-${qi}`);
+    q.opts.forEach((o,oi)=>{
+      const btn = document.createElement('div');
+      btn.className='opt';
+      btn.textContent = o;
+      btn.onclick = ()=>answerGeo(qi,oi,btn);
+      or.appendChild(btn);
+    });
+  });
+})();
+function answerGeo(qi,oi,btn){
+  const parent = btn.parentElement;
+  if(parent.dataset.answered) return;
+  parent.dataset.answered = '1';
+  const opts = parent.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.add('disabled'));
+  if(oi===geoQuestions[qi].correct){ btn.classList.add('correct'); }
+  else{ btn.classList.add('wrong'); opts[geoQuestions[qi].correct].classList.add('correct'); }
+}
+
+/* ======================= CASE 4: GEO-HIST MATCH ======================= */
+const geoHistData = [
+  {civ:"Antiguo Egipto", correct:"Un gran río que fertiliza el desierto con sus crecidas"},
+  {civ:"Antigua Grecia", correct:"Territorio muy montañoso y con mucha costa"},
+  {civ:"Imperio Romano", correct:"Control de un mar central que conecta tres continentes"},
+  {civ:"España del siglo XV", correct:"Posición estratégica entre el Atlántico y el Mediterráneo"}
+];
+const geoHistOptions = geoHistData.map(d=>d.correct);
+(function(){
+  const box = document.getElementById('geo-hist-match');
+  geoHistData.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className='match-row';
+    let opts = geoHistOptions.map(o=>`<option value="${o}">${o}</option>`).join('');
+    row.innerHTML = `<div class="left">${d.civ}</div>
+      <select class="match-select" data-i="${i}"><option value="">— elige —</option>${opts}</select>`;
+    box.appendChild(row);
+  });
+})();
+function checkGeoHist(){
+  const selects = document.querySelectorAll('#geo-hist-match select');
+  let correct=0;
+  selects.forEach(s=>{
+    const i=+s.dataset.i;
+    if(s.value===geoHistData[i].correct){ s.style.borderColor='var(--ok)'; correct++; }
+    else if(s.value===''){ s.style.borderColor='#4b5f73'; }
+    else{ s.style.borderColor='var(--bad)'; }
+  });
+  document.getElementById('geohist-feedback').textContent = `Conexiones correctas: ${correct} de ${geoHistData.length}. ${correct===geoHistData.length?'¡El territorio ya no tiene secretos para ti! 🌍':'Revisa las marcadas en rojo.'}`;
+}
+
+/* ======================= CASE 6: SPAIN-WORLD MATCH ======================= */
+const spainData = [
+  {etapa:"Hispania romana", correct:"Edad Antigua"},
+  {etapa:"Al-Ándalus y los reinos cristianos", correct:"Edad Media"},
+  {etapa:"Descubrimiento de América (1492)", correct:"Edad Moderna"},
+  {etapa:"Transición y democracia en España", correct:"Edad Contemporánea"}
+];
+const worldAges = ["Edad Antigua","Edad Media","Edad Moderna","Edad Contemporánea"];
+(function(){
+  const box = document.getElementById('spain-match');
+  spainData.forEach((d,i)=>{
+    const row = document.createElement('div');
+    row.className='match-row';
+    let opts = worldAges.map(o=>`<option value="${o}">${o}</option>`).join('');
+    row.innerHTML = `<div class="left">${d.etapa}</div>
+      <select class="match-select" data-i="${i}"><option value="">— elige —</option>${opts}</select>`;
+    box.appendChild(row);
+  });
+})();
+function checkSpain(){
+  const selects = document.querySelectorAll('#spain-match select');
+  let correct=0;
+  selects.forEach(s=>{
+    const i=+s.dataset.i;
+    if(s.value===spainData[i].correct){ s.style.borderColor='var(--ok)'; correct++; }
+    else if(s.value===''){ s.style.borderColor='#4b5f73'; }
+    else{ s.style.borderColor='var(--bad)'; }
+  });
+  document.getElementById('spain-feedback').textContent = `Encajes correctos: ${correct} de ${spainData.length}. ${correct===spainData.length?'¡España ya está bien situada en el tiempo! 🇪🇸🕰️':'Revisa las marcadas en rojo.'}`;
+}
+
+/* ======================= CASE 8: TRIVIAL GAME ======================= */
+const trivialCategories = [
+  {name:"Prehistoria y Edades", color:"#9b4530", wedge:"wedge0", qs:[
+    {q:"¿Con qué invento termina la Prehistoria?", opts:["La rueda","La escritura","El fuego"], c:1},
+    {q:"¿Cómo se alimentaban los humanos del Paleolítico?", opts:["Cazando y recolectando","Cultivando la tierra","Comprando en mercados"], c:0},
+    {q:"¿En qué edad vivimos actualmente?", opts:["Edad Moderna","Edad Contemporánea","Edad Media"], c:1}
+  ]},
+  {name:"Historia del Mundo", color:"#2e6b67", wedge:"wedge1", qs:[
+    {q:"¿Qué río fue clave para el Antiguo Egipto?", opts:["El Nilo","El Éufrates","El Ganges"], c:0},
+    {q:"¿Cómo se llamaban las ciudades-estado griegas?", opts:["Villas","Polis","Comunas"], c:1},
+    {q:"¿Qué imperio dominó el Mediterráneo durante siglos?", opts:["El Imperio Romano","El Imperio Persa","El Imperio Chino"], c:0}
+  ]},
+  {name:"Historia de España", color:"#b1832e", wedge:"wedge2", qs:[
+    {q:"¿Dónde se encontraron restos humanos muy antiguos y famosos en España?", opts:["Atapuerca","Sevilla","Bilbao"], c:0},
+    {q:"¿Cómo se llama el periodo de convivencia musulmana-cristiana en la Edad Media?", opts:["Al-Ándalus y Reconquista","Renacimiento","Ilustración"], c:0},
+    {q:"¿En qué año llegó Colón a América?", opts:["1492","1592","1392"], c:0}
+  ]},
+  {name:"Historia + Geografía", color:"#3a4d61", wedge:"wedge3", qs:[
+    {q:"¿Por qué Roma llamaba al Mediterráneo 'Mare Nostrum'?", opts:["Porque lo controlaba casi por completo","Porque era el único mar conocido","Porque allí nació Roma"], c:0},
+    {q:"¿Qué característica geográfica ayuda a explicar las ciudades-estado griegas?", opts:["Un territorio llano y unido","Montañas que separan el territorio","Un desierto central"], c:1},
+    {q:"¿Qué posición geográfica ayudó a España a explorar América?", opts:["Estar en el centro de Europa","Estar entre el Atlántico y el Mediterráneo","Estar rodeada de montañas"], c:1}
+  ]}
+];
+let trivialScore = 0;
+let trivialDone = new Set();
+function renderCatList(){
+  const box = document.getElementById('cat-list');
+  box.innerHTML='';
+  trivialCategories.forEach((c,i)=>{
+    const b = document.createElement('div');
+    b.className = 'cat-btn' + (trivialDone.has(i)?' finished':'');
+    b.innerHTML = `<span class="swatch" style="background:${c.color}"></span>${c.name} ${trivialDone.has(i)?'✅':''}`;
+    b.onclick = ()=>{ if(!trivialDone.has(i)) startCategory(i); };
+    box.appendChild(b);
+  });
+}
+function startCategory(ci){
+  const cat = trivialCategories[ci];
+  let qi = 0, hits = 0;
+  const area = document.getElementById('trivial-question-area');
+  function renderQ(){
+    if(qi>=cat.qs.length){
+      if(hits>=2){
+        trivialDone.add(ci);
+        document.getElementById(cat.wedge).setAttribute('fill', cat.color);
+        document.getElementById('wheel-score').textContent = `${trivialDone.size}/4`;
+      }
+      area.innerHTML = `<div class="q-block"><p class="q-text">${cat.name}: ${hits}/${cat.qs.length} aciertos. ${hits>=2?'¡Casilla superada! 🎉':'No ha llegado a 2 aciertos, puedes reintentar la categoría.'}</p></div>`;
+      renderCatList();
+      if(trivialDone.size===trivialCategories.length){
+        document.getElementById('trivial-final-msg').textContent = '🏆 ¡Enhorabuena, agente! Has completado el Gran Trivial de la Historia.';
+      }
+      return;
+    }
+    const q = cat.qs[qi];
+    area.innerHTML = `<div class="q-block"><p class="q-text">${cat.name} — Pregunta ${qi+1}/${cat.qs.length}: ${q.q}</p><div class="opt-row" id="triv-opts"></div></div>`;
+    const or = document.getElementById('triv-opts');
+    q.opts.forEach((o,oi)=>{
+      const d = document.createElement('div');
+      d.className='opt';
+      d.textContent=o;
+      d.onclick=()=>{
+        if(or.dataset.answered) return;
+        or.dataset.answered='1';
+        [...or.children].forEach(c=>c.classList.add('disabled'));
+        if(oi===q.c){ d.classList.add('correct'); hits++; }
+        else{ d.classList.add('wrong'); or.children[q.c].classList.add('correct'); }
+        setTimeout(()=>{ qi++; renderQ(); }, 900);
+      };
+      or.appendChild(d);
+    });
+  }
+  renderQ();
+}
+renderCatList();
+
+/* ======================= CASE 9: FLAGS GAME ======================= */
+const flagBank = [
+  {name:"Islandia", opts:["Noruega","Finlandia","Islandia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="200" fill="#02529C"/><rect x="0" y="80" width="300" height="40" fill="#fff"/><rect x="90" y="0" width="40" height="200" fill="#fff"/><rect x="0" y="90" width="300" height="20" fill="#DC1E35"/><rect x="100" y="0" width="20" height="200" fill="#DC1E35"/></svg>`},
+  {name:"Croacia", opts:["Croacia","Eslovenia","Serbia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="66" fill="#FF0000"/><rect width="300" height="68" y="66" fill="#fff"/><rect width="300" height="66" y="134" fill="#0093DD"/><rect x="130" y="70" width="40" height="40" fill="#fff" stroke="#0093DD" stroke-width="2"/><rect x="130" y="70" width="10" height="10" fill="#D40000"/><rect x="150" y="70" width="10" height="10" fill="#D40000"/><rect x="140" y="80" width="10" height="10" fill="#D40000"/><rect x="160" y="80" width="10" height="10" fill="#D40000"/><rect x="130" y="90" width="10" height="10" fill="#D40000"/><rect x="150" y="90" width="10" height="10" fill="#D40000"/><rect x="140" y="100" width="10" height="10" fill="#D40000"/><rect x="160" y="100" width="10" height="10" fill="#D40000"/></svg>`},
+  {name:"Serbia", opts:["Rusia","Eslovaquia","Serbia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#C6363C"/><rect width="300" height="66" y="67" fill="#0C4076"/><rect width="300" height="67" y="133" fill="#fff"/><g transform="translate(65,55)"><rect width="50" height="60" fill="#C6363C" stroke="#D4AF37" stroke-width="3"/><circle cx="25" cy="20" r="10" fill="#D4AF37"/></g></svg>`},
+  {name:"Eslovenia", opts:["Eslovaquia","Rusia","Eslovenia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#fff"/><rect width="300" height="66" y="67" fill="#0056B3"/><rect width="300" height="67" y="133" fill="#D62727"/><polygon points="55,75 75,45 95,75" fill="#0056B3" stroke="#D62727" stroke-width="3"/><use href="#starSym" x="45" y="30" width="12" height="12" fill="#D62727"/><use href="#starSym" x="65" y="18" width="12" height="12" fill="#D62727"/><use href="#starSym" x="85" y="30" width="12" height="12" fill="#D62727"/></svg>`},
+  {name:"Rumanía", opts:["Chad","Andorra","Rumanía"], svg:`<svg viewBox="0 0 300 200"><rect width="100" height="200" fill="#002B7F"/><rect width="100" height="200" x="100" fill="#FCD116"/><rect width="100" height="200" x="200" fill="#CE1126"/></svg>`},
+  {name:"Bulgaria", opts:["Irán","Hungría","Bulgaria"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#fff"/><rect width="300" height="66" y="67" fill="#00966E"/><rect width="300" height="67" y="133" fill="#D62612"/></svg>`},
+  {name:"Moldavia", opts:["Rumanía","Chad","Moldavia"], svg:`<svg viewBox="0 0 300 200"><rect width="100" height="200" fill="#003DA5"/><rect width="100" height="200" x="100" fill="#FFD200"/><rect width="100" height="200" x="200" fill="#CC092F"/><g transform="translate(150,100)"><path d="M-25,-15 L0,-30 L25,-15 L15,-5 L0,-10 L-15,-5 Z" fill="#7B3F00"/><rect x="-12" y="-5" width="24" height="28" fill="#CC092F" stroke="#8a6d3b" stroke-width="2"/><circle cx="0" cy="8" r="6" fill="#7B3F00"/></g></svg>`},
+  {name:"Estonia", opts:["Finlandia","Letonia","Estonia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#0072CE"/><rect width="300" height="66" y="67" fill="#000"/><rect width="300" height="67" y="133" fill="#fff"/></svg>`},
+  {name:"Letonia", opts:["Austria","Líbano","Letonia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="200" fill="#9E3039"/><rect width="300" height="40" y="80" fill="#fff"/></svg>`},
+  {name:"Lituania", opts:["Bolivia","Gabón","Lituania"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#FDB913"/><rect width="300" height="66" y="67" fill="#006A44"/><rect width="300" height="67" y="133" fill="#C1272D"/></svg>`},
+  {name:"Venezuela", opts:["Colombia","Ecuador","Venezuela"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="67" fill="#FCD116"/><rect width="300" height="66" y="67" fill="#003893"/><rect width="300" height="67" y="133" fill="#CF142B"/><use href="#starSym" x="95" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="111" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="127" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="143" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="159" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="175" y="92" width="16" height="16" fill="#fff"/><use href="#starSym" x="191" y="92" width="16" height="16" fill="#fff"/></svg>`},
+  {name:"México", opts:["Italia","Irlanda","México"], svg:`<svg viewBox="0 0 300 200"><rect width="100" height="200" fill="#006341"/><rect width="100" height="200" x="100" fill="#fff"/><rect width="100" height="200" x="200" fill="#CE1126"/><g transform="translate(150,100)"><path d="M-20,10 L0,-25 L20,10 Q0,-5 -20,10 Z" fill="#7B3F00"/><circle cx="0" cy="14" r="6" fill="#2E7D32"/></g></svg>`},
+  {name:"Colombia", opts:["Venezuela","Ecuador","Colombia"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="100" fill="#FCD116"/><rect width="300" height="50" y="100" fill="#003893"/><rect width="300" height="50" y="150" fill="#CE1126"/></svg>`},
+  {name:"Perú", opts:["Canadá","Austria","Perú"], svg:`<svg viewBox="0 0 300 200"><rect width="100" height="200" fill="#D91023"/><rect width="100" height="200" x="100" fill="#fff"/><rect width="100" height="200" x="200" fill="#D91023"/><rect x="128" y="70" width="44" height="55" fill="none" stroke="#D91023" stroke-width="3"/><circle cx="150" cy="90" r="8" fill="#8B5E3C"/><rect x="140" y="105" width="20" height="14" fill="#2E7D32"/></svg>`},
+  {name:"Chile", opts:["Liberia","Panamá","Chile"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="100" fill="#fff"/><rect width="300" height="100" y="100" fill="#D52B1E"/><rect width="100" height="100" fill="#0039A6"/><use href="#starSym" x="30" y="30" width="40" height="40" fill="#fff"/></svg>`},
+  {name:"Ecuador", opts:["Colombia","Venezuela","Ecuador"], svg:`<svg viewBox="0 0 300 200"><rect width="300" height="100" fill="#FCD116"/><rect width="300" height="50" y="100" fill="#0072CE"/><rect width="300" height="50" y="150" fill="#EF3340"/><circle cx="150" cy="100" r="22" fill="#fff" stroke="#0072CE" stroke-width="3"/><path d="M135,105 L150,80 L165,105 Z" fill="#6B4226"/><path d="M120,95 L150,100 L180,95" stroke="#1C1C1C" stroke-width="3" fill="none"/></svg>`}
+];
+let flagIdx = 0, flagScore = 0;
+document.getElementById('flag-total').textContent = flagBank.length;
+function shuffle(a){ return a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]); }
+function renderFlag(){
+  const fb = flagBank[flagIdx];
+  document.getElementById('flag-display').innerHTML = fb.svg;
+  document.getElementById('flag-num').textContent = flagIdx+1;
+  document.getElementById('flag-feedback').textContent = '';
+  const box = document.getElementById('flag-options');
+  box.innerHTML = '';
+  shuffle(fb.opts).forEach(o=>{
+    const d = document.createElement('div');
+    d.className='opt';
+    d.textContent = o;
+    d.onclick = ()=>{
+      if(box.dataset.answered) return;
+      box.dataset.answered='1';
+      [...box.children].forEach(c=>c.classList.add('disabled'));
+      if(o===fb.name){ d.classList.add('correct'); flagScore++; }
+      else{ d.classList.add('wrong'); [...box.children].find(c=>c.textContent===fb.name).classList.add('correct'); }
+      document.getElementById('flag-feedback').textContent = o===fb.name ? '¡Correcto!' : `Era ${fb.name}.`;
+      setTimeout(()=>{
+        flagIdx++;
+        if(flagIdx<flagBank.length){ box.dataset.answered=''; renderFlag(); }
+        else{
+          let rank = flagScore>=10 ? 'Agente Legendario 🕵️‍♀️' : flagScore>=7 ? 'Agente Experto/a 🥇' : flagScore>=4 ? 'Agente en prácticas 🥈' : 'Agente Novato/a 🥉';
+          document.getElementById('flag-display').innerHTML = '';
+          document.getElementById('flag-options').innerHTML='';
+          document.getElementById('flag-feedback').textContent='';
+          document.getElementById('flag-final-msg').textContent = `Resultado: ${flagScore}/${flagBank.length} — ${rank}`;
+        }
+      }, 1100);
+    };
+    box.appendChild(d);
+  });
+}
+renderFlag();
+
+/* ======================= INIT ======================= */
+showCase(0);
+</script>
+</body>
+</html>
