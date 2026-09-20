@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller de Resumen — Bachillerato</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1612;
+    --muted: #6b6258;
+    --accent: #c0392b;
+    --accent2: #2c6e49;
+    --accent3: #1d4e89;
+    --warm: #e8ddd0;
+    --card: #ffffff;
+    --border: #d4c8b8;
+    --phase1: #e8f4f8;
+    --phase2: #fef9e7;
+    --phase3: #eafaf1;
+    --phase4: #fdf2f8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 18px,
+      rgba(255,255,255,.04) 18px, rgba(255,255,255,.04) 19px
+    );
+  }
+  .header-tag {
+    display: inline-block;
+    font-size: .75rem; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: #c9a96e; margin-bottom: .75rem;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.2; margin-bottom: .5rem;
+  }
+  header p { color: rgba(255,255,255,.65); font-style: italic; font-size: .95rem; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--warm);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px 8px 8px 4px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    font-size: .95rem; color: #3d342b;
+    text-align: justify;
+  }
+  .intro-box strong { color: var(--accent); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { margin-bottom: 2.5rem; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: .8rem; color: var(--muted);
+    margin-bottom: .4rem; font-weight: 600;
+    letter-spacing: .05em; text-transform: uppercase;
+  }
+  .progress-bar-bg { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    height: 100%; border-radius: 99px; width: 0%; transition: width .6s ease;
+  }
+
+  /* ── TEXT CARD ── */
+  .text-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem; margin-bottom: 2.5rem;
+  }
+  .text-card-label {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    font-size: .7rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase;
+    padding: .25rem .75rem; border-radius: 3px; margin-bottom: 1rem;
+  }
+  .text-card p {
+    margin-bottom: .85rem;
+    font-size: .97rem;
+    text-align: justify;
+  }
+  .text-card p:last-of-type { margin-bottom: 0; }
+  .text-source { margin-top: 1.2rem; font-size: .83rem; color: var(--muted); font-style: italic; }
+
+  /* ── LINE NUMBERS ── */
+  .text-numbered {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0 .75rem;
+    font-size: .95rem;
+    line-height: 1.75;
+  }
+  .line-num {
+    color: #b0a89a;
+    font-size: .72rem;
+    text-align: right;
+    padding-top: .18em;
+    user-select: none;
+    font-style: normal;
+  }
+  .line-num.marked { color: var(--accent3); font-weight: 700; }
+  .line-text { text-align: justify; }
+
+  /* ── PHASES ── */
+  .phase {
+    border-radius: 12px; margin-bottom: 2rem;
+    overflow: hidden; border: 1.5px solid var(--border);
+    transition: border-color .3s;
+  }
+  .phase.active { border-color: var(--accent3); }
+  .phase.done   { border-color: var(--accent2); }
+
+  .phase-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.5rem; background: var(--card);
+    cursor: pointer; user-select: none;
+  }
+  .phase-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--warm); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif; font-size: 1rem;
+    font-weight: 700; color: var(--muted); flex-shrink: 0; transition: all .3s;
+  }
+  .phase.active .phase-num { background: var(--accent3); border-color: var(--accent3); color: #fff; }
+  .phase.done   .phase-num { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+
+  .phase-title-wrap { flex: 1; }
+  .phase-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+  .phase-subtitle { font-size: .8rem; color: var(--muted); font-style: italic; }
+
+  .phase-status {
+    font-size: .75rem; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; padding: .2rem .65rem;
+    border-radius: 99px; background: var(--warm); color: var(--muted);
+  }
+  .phase.active .phase-status { background: #ddeeff; color: var(--accent3); }
+  .phase.done   .phase-status { background: #d4edda; color: var(--accent2); }
+
+  .phase-body {
+    padding: 0 1.5rem 0; max-height: 0;
+    overflow: hidden; transition: max-height .6s ease, padding .3s;
+    background: var(--card);
+  }
+  .phase-body.open { padding: 0 1.5rem 1.5rem; max-height: 5000px; }
+
+  /* ── HINTS ── */
+  .hint {
+    border-radius: 8px; padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem; font-size: .92rem;
+    text-align: justify;
+  }
+  .hint-blue   { background: var(--phase1); border-left: 3px solid var(--accent3); }
+  .hint-yellow { background: var(--phase2); border-left: 3px solid #e6a817; }
+  .hint-green  { background: var(--phase3); border-left: 3px solid var(--accent2); }
+  .hint-red    { background: var(--phase4); border-left: 3px solid var(--accent); }
+  .hint strong { font-weight: 600; }
+  .hint ul { margin: .5rem 0 0 1.2rem; }
+  .hint ul li { margin-bottom: .3rem; text-align: justify; }
+
+  /* ── TASK BLOCKS ── */
+  .task-block {
+    background: var(--bg); border: 1px dashed var(--border);
+    border-radius: 8px; padding: 1.2rem; margin-bottom: 1.2rem;
+  }
+  .task-label {
+    font-size: .75rem; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .6rem;
+  }
+  .task-question { font-size: .97rem; margin-bottom: .8rem; color: var(--ink); text-align: justify; }
+  .task-question ul { margin: .4rem 0 0 1.2rem; }
+  .task-question ul li { margin-bottom: .25rem; text-align: justify; }
+
+  /* ── TEXTAREA ── */
+  textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    background: #fff; font-family: 'Source Serif 4', serif;
+    font-size: .93rem; line-height: 1.7; color: var(--ink);
+    padding: .8rem 1rem; resize: vertical;
+    transition: border-color .2s, box-shadow .2s; outline: none;
+    text-align: justify;
+  }
+  textarea:focus { border-color: var(--accent3); box-shadow: 0 0 0 3px rgba(29,78,137,.1); }
+  .char-count { text-align: right; font-size: .75rem; color: var(--muted); margin-top: .3rem; }
+
+  /* ── EXAMPLE TOGGLE ── */
+  .example-toggle {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: none; border: 1.5px solid var(--accent3);
+    color: var(--accent3); font-family: 'Source Serif 4', serif;
+    font-size: .83rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 99px;
+    cursor: pointer; margin-top: .4rem;
+    transition: background .2s, color .2s;
+  }
+  .example-toggle:hover { background: var(--accent3); color: #fff; }
+
+  .example-box {
+    display: none; background: #eef4fb;
+    border: 1px solid #b8d0ee; border-radius: 8px;
+    padding: 1rem 1.2rem; margin-top: .75rem;
+    font-size: .9rem; color: #1d3557;
+    font-style: italic; text-align: justify;
+  }
+  .example-box.visible { display: block; }
+  .example-box strong { font-style: normal; font-weight: 600; color: var(--accent3); }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; margin: .5rem 0 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: .7rem;
+    font-size: .93rem; padding: .4rem 0;
+    border-bottom: 1px solid var(--border);
+    text-align: justify;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist input[type="checkbox"] {
+    margin-top: .28rem; width: 16px; height: 16px;
+    accent-color: var(--accent2); flex-shrink: 0; cursor: pointer;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    background: var(--ink); color: #fff; border: none;
+    font-family: 'Source Serif 4', serif; font-size: .9rem;
+    font-weight: 600; padding: .7rem 1.8rem; border-radius: 6px;
+    cursor: pointer; transition: background .2s, transform .1s; letter-spacing: .04em;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+  .btn-green {
+    background: var(--accent2); color: #fff; border: none;
+    font-family: 'Source Serif 4', serif; font-size: .9rem;
+    font-weight: 600; padding: .7rem 1.8rem; border-radius: 6px;
+    cursor: pointer; transition: background .2s; letter-spacing: .04em;
+  }
+  .btn-green:hover { background: #245138; }
+  .btn-row { display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* ── CUATRO PUNTOS CARDINALES ── */
+  .cardinal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+    margin: 1rem 0 1.2rem;
+  }
+  @media(max-width:560px){ .cardinal-grid { grid-template-columns: 1fr; } }
+  .cardinal-card {
+    border-radius: 8px; padding: .85rem 1rem;
+    font-size: .9rem; text-align: justify;
+  }
+  .c-brevedad  { background: #dbeafe; border-left: 3px solid #1d4e89; }
+  .c-concision { background: #dcfce7; border-left: 3px solid #2c6e49; }
+  .c-claridad  { background: #fef9e7; border-left: 3px solid #e6a817; }
+  .c-novedad   { background: #fce7f3; border-left: 3px solid #9d174d; }
+  .cardinal-card strong { font-weight: 700; display: block; margin-bottom: .2rem; }
+
+  /* ── NORMAS DOS COLUMNAS ── */
+  .normas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media(max-width:560px){ .normas-grid { grid-template-columns: 1fr; } }
+  .normas-col { background: var(--bg); border-radius: 8px; padding: .85rem 1rem; font-size: .87rem; }
+  .normas-col-title {
+    font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; margin-bottom: .6rem; padding-bottom: .4rem;
+    border-bottom: 2px solid;
+  }
+  .normas-col.no .normas-col-title  { color: var(--accent);  border-color: var(--accent); }
+  .normas-col.si .normas-col-title  { color: var(--accent2); border-color: var(--accent2); }
+  .normas-col ul { list-style: none; }
+  .normas-col ul li {
+    padding: .3rem 0; border-bottom: 1px solid var(--border);
+    text-align: justify; line-height: 1.5;
+  }
+  .normas-col ul li:last-child { border-bottom: none; }
+  .normas-col.no ul li::before { content: '✗ '; color: var(--accent); font-weight: 700; }
+  .normas-col.si ul li::before { content: '✓ '; color: var(--accent2); font-weight: 700; }
+
+  /* ── PÁRRAFO HIGHLIGHT ── */
+  .parr-label {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    font-size: .65rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: .1rem .5rem; border-radius: 3px;
+    margin-bottom: .4rem; vertical-align: middle;
+  }
+  .parr-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: .9rem 1.1rem;
+    margin-bottom: .8rem; font-size: .91rem;
+    text-align: justify; line-height: 1.7;
+  }
+  .parr-block textarea {
+    margin-top: .6rem; min-height: 60px;
+    background: #faf7f2; font-size: .88rem;
+  }
+
+  /* ── TEMA FORMULA ── */
+  .tema-formula {
+    display: flex; align-items: center; gap: .6rem;
+    flex-wrap: wrap;
+    background: var(--ink); color: #fff;
+    border-radius: 8px; padding: .8rem 1.2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem; font-weight: 700;
+    margin: 1rem 0;
+  }
+  .tema-formula .op { color: #c9a96e; font-size: 1.1rem; }
+
+  /* ── FINAL PANEL ── */
+  .final-panel {
+    background: var(--ink); color: #fff;
+    border-radius: 12px; padding: 2rem;
+    text-align: center; display: none;
+  }
+  .final-panel.visible { display: block; }
+  .final-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: .75rem; }
+  .final-panel p { color: rgba(255,255,255,.75); font-size: .95rem; margin-bottom: 1.2rem; text-align: center; }
+  .final-score { font-family: 'Playfair Display', serif; font-size: 3rem; color: #c9a96e; line-height: 1; margin-bottom: .3rem; }
+  .final-label { font-size: .8rem; color: rgba(255,255,255,.5); letter-spacing: .1em; text-transform: uppercase; }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Lengua Castellana y Literatura · Bachillerato</div>
+  <h1>El Resumen<br><em>Taller guiado paso a paso</em></h1>
+  <p>Lee el texto, sigue las fases y construye tu propio resumen.</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-box">
+    <strong>¿Cómo funciona este taller?</strong> Seguirás <strong>cuatro fases</strong> que reproducen el proceso real de elaboración de un buen resumen: identificar el tema, analizar la estructura del texto, localizar las ideas principales de cada párrafo y, por último, redactar el resumen en un único párrafo. En cada fase encontrarás explicaciones, preguntas de guía y espacios para escribir.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progreso</span>
+      <span id="progress-text">0 / 4 fases</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- ══ TEXTO ══ -->
+  <div class="text-card">
+    <div class="text-card-label">Texto para resumir</div>
+
+    <div class="text-numbered">
+      <span class="line-num marked">1</span><span class="line-text">«Define con una palabra tu adolescencia». La pregunta la lanzaba esta semana la cuenta</span>
+      <span class="line-num"></span><span class="line-text">Freeda a su millón y medio de seguidores en Instagram. Y ha recibido 2.500 respuestas, la</span>
+      <span class="line-num"></span><span class="line-text">mayoría repetidísimas: «depresión, ansiedad, inseguridad, incomprensión, autodestrucción,</span>
+      <span class="line-num"></span><span class="line-text">complejos, frustración, <em>bullying</em>…». Por cada 20 palabras dolientes aparece algún «kalimotxo»</span>
+      <span class="line-num marked">5</span><span class="line-text">o algún «libre» despistados. Leerlas me ha recordado lo dolorosa que ha sido siempre la</span>
+      <span class="line-num"></span><span class="line-text">adolescencia, también cuando era analógica.</span>
+      <span class="line-num"></span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Y me ha hecho reflexionar sobre cómo los adultos nos hemos convertido en expertos en</span>
+      <span class="line-num"></span><span class="line-text">sentenciar el gran problema de los adolescentes y hemos dimitido de la responsabilidad de</span>
+      <span class="line-num marked">10</span><span class="line-text">acompañarlos en sus padecimientos. El gran problema, claro, es el móvil. O internet o las redes</span>
+      <span class="line-num"></span><span class="line-text">sociales. Es decir, la gran dificultad de los jóvenes es precisamente su cultura. ¿Y cuál es la</span>
+      <span class="line-num"></span><span class="line-text">solución que proponemos? Pues, básicamente, exigir que no tengan dispositivos o limiten su uso.</span>
+      <span class="line-num"></span><span class="line-text">Y por el camino olvidamos que el problema de la adolescencia ha sido y sigue siendo el dolor.</span>
+      <span class="line-num"></span><span class="line-text">Y la solución que los adultos podemos ofrecer es el acompañamiento como forma de consuelo.</span>
+      <span class="line-num marked">15</span><span class="line-text">Con esto no quiero decir que el móvil sea un dispositivo inocuo. Al contrario, lo vuelve todo más</span>
+      <span class="line-num"></span><span class="line-text">difícil. La relación con el propio cuerpo, con la comida, con la ropa, con el sexo, con el canon de</span>
+      <span class="line-num"></span><span class="line-text">belleza… Pero los adultos (sobre)protectores estamos tan agobiados con el cambio tecnológico</span>
+      <span class="line-num"></span><span class="line-text">que nos hemos olvidado de que la cultura, como la identidad, no se puede arrancar. Y que el</span>
+      <span class="line-num"></span><span class="line-text">origen del dolor no es otro que la propia vida.</span>
+      <span class="line-num marked">20</span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Hace unos meses formé parte de un programa donde trabajamos la relación entre salud mental</span>
+      <span class="line-num"></span><span class="line-text">y tecnología con chavales de distintos institutos. A pesar de llevar varias jornadas formándose</span>
+      <span class="line-num"></span><span class="line-text">sobre los riesgos de la tecnología, resultó que sus terrores no pasaban por su <em>smartphone</em>. De</span>
+      <span class="line-num"></span><span class="line-text">nuevo, las respuestas se repetían: «Miedo a que me hagan daño, a no gustar, a que me ignoren,</span>
+      <span class="line-num marked">25</span><span class="line-text">a perder la ilusión, a que me dejen, a que me engañen», declararon. Estoy convencida de que</span>
+      <span class="line-num"></span><span class="line-text">durante aquellos días si les hubiera preguntado a sus progenitores por los miedos que tenían</span>
+      <span class="line-num"></span><span class="line-text">sobre sus hijas e hijos, no habrían coincidido en nada.</span>
+      <span class="line-num"></span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Madres y padres presumimos de lo tarde que damos tal o cual dispositivo a nuestros retoños,</span>
+      <span class="line-num marked">30</span><span class="line-text">pero aumentar el tiempo de presencia y escucha a los adolescentes expuestos a la tecnología no</span>
+      <span class="line-num"></span><span class="line-text">forma parte de la fallida terapia colectiva y coercitiva. Nuestros adolescentes están tristes, solos</span>
+      <span class="line-num"></span><span class="line-text">y a menudo en peligro. Pero nosotros, los analógicos, tampoco fuimos felices. Y ese dolor</span>
+      <span class="line-num"></span><span class="line-text">compartido nos acerca más de lo que nos aleja cualquier dispositivo. Por eso, si tiene alguno</span>
+      <span class="line-num"></span><span class="line-text">cerca, no juzgue, no compare, no piense que su adolescencia fue mejor y escúchelo.</span>
+    </div>
+
+    <div class="text-source">Nuria Labari, <em>El País</em>, 04/11/2023</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 1 — QUÉ ES UN BUEN RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase1">
+    <div class="phase-header" onclick="togglePhase(1)">
+      <div class="phase-num">1</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">¿Qué es un buen resumen?</div>
+        <div class="phase-subtitle">Las cuatro claves y las normas esenciales</div>
+      </div>
+      <div class="phase-status" id="status1">En curso</div>
+    </div>
+    <div class="phase-body open" id="body1">
+
+      <div class="hint hint-blue">
+        <strong>📋 Definición.</strong> El resumen recoge las <strong>ideas esenciales</strong> de un texto y las presenta de manera <strong>objetiva, ordenada, clara y concisa</strong>, en un único párrafo redactado con tus propias palabras. Su función es que alguien que no hubiera leído el texto pueda saber de qué trata y cuáles son sus ideas principales con solo leer el resumen. La extensión debe oscilar entre el <strong>25-30 % del texto original</strong>.
+      </div>
+
+      <!-- Cuatro puntos cardinales -->
+      <p style="font-weight:600; margin-bottom:.7rem; font-size:.95rem;">Los cuatro puntos cardinales de un buen resumen:</p>
+      <div class="cardinal-grid">
+        <div class="cardinal-card c-brevedad">
+          <strong>BREVEDAD</strong>
+          Siempre es un texto más corto que el original. Elimina lo accesorio.
+        </div>
+        <div class="cardinal-card c-concision">
+          <strong>CONCISIÓN</strong>
+          Solo la información esencial: sin ejemplos, datos concretos ni enumeraciones.
+        </div>
+        <div class="cardinal-card c-claridad">
+          <strong>CLARIDAD</strong>
+          Texto cohesionado y coherente. Usa conectores para unir las ideas.
+        </div>
+        <div class="cardinal-card c-novedad">
+          <strong>NOVEDAD</strong>
+          Crea un texto nuevo con tus propias palabras. No copies frases del autor.
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Normas -->
+      <p style="font-weight:600; margin-bottom:.7rem; font-size:.95rem;">Normas de redacción:</p>
+      <div class="normas-grid">
+        <div class="normas-col no">
+          <div class="normas-col-title">✗ Lo que NO debes hacer</div>
+          <ul>
+            <li>Usar primera persona: «yo creo», «nosotros».</li>
+            <li>Copiar literalmente palabras o frases del autor.</li>
+            <li>Desarrollar ejemplos, datos concretos o enumeraciones.</li>
+            <li>Empezar con «En este texto…» o «El texto trata de…».</li>
+            <li>Dar tu opinión o interpretar ideas.</li>
+            <li>Usar fórmulas introductorias del tipo «El primer asunto que…».</li>
+            <li>Usar proposiciones subordinadas adjetivas: «una niña que estaba enferma» → «una niña enferma».</li>
+          </ul>
+        </div>
+        <div class="normas-col si">
+          <div class="normas-col-title">✓ ¡Bien hecho!</div>
+          <ul>
+            <li>Escribe en tercera persona del singular y en presente de indicativo.</li>
+            <li>Usa sinónimos para las palabras clave del texto.</li>
+            <li>Emplea sustantivos abstractos: «la inquietud», «la problemática».</li>
+            <li>Busca el hiperónimo que incluya varios términos relacionados.</li>
+            <li>Usa conectores textuales: «Asimismo,», «Sin embargo,», «Finalmente,».</li>
+            <li>Redacta en un único párrafo de extensión ajustada al 25-30 % del original.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(1)">✅ Entendido, siguiente fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 2 — TEMA E IDEA GENERAL
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase2">
+    <div class="phase-header" onclick="togglePhase(2)">
+      <div class="phase-num">2</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Identifica el tema</div>
+        <div class="phase-subtitle">La idea central del texto expresada en una frase nominal breve</div>
+      </div>
+      <div class="phase-status" id="status2">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body2">
+
+      <div class="hint hint-yellow">
+        <strong>🎯 El tema no es un simple asunto.</strong> Identificar el tema no consiste solo en decir de qué habla el texto («la adolescencia», «el móvil»). El tema debe recoger también la <strong>intención y la actitud de quien escribe</strong>. Para encontrarlo, responde a estas dos preguntas: <em>¿de qué trata el texto?</em> y <em>¿con qué intención lo ha escrito la autora?</em>
+      </div>
+
+      <div class="tema-formula">
+        <span>TEMA</span>
+        <span class="op">=</span>
+        <span>SUSTANTIVO ABSTRACTO</span>
+        <span class="op">+</span>
+        <span>MODIFICADOR/ES</span>
+        <span style="color:rgba(255,255,255,.5); font-family:'Source Serif 4',serif; font-size:.8rem; font-weight:400;">(frase nominal breve, máx. dos líneas)</span>
+      </div>
+
+      <div class="hint hint-blue" style="margin-bottom:1rem;">
+        <strong>Posibles sustantivos abstractos de partida:</strong> la denuncia… · la defensa… · la propuesta… · la reivindicación… · la crítica… · la importancia… · la necesidad… · el rechazo… · la llamada a…
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tarea 2.1 — Dos preguntas clave</div>
+        <div class="task-question">Antes de formular el tema, responde brevemente a estas dos preguntas:</div>
+        <p style="font-size:.9rem; margin-bottom:.4rem; font-weight:600;">¿De qué trata el texto?</p>
+        <textarea rows="2" id="t2_q1" placeholder="El texto trata sobre…" oninput="updateCount('t2_q1','c2_q1')"></textarea>
+        <div class="char-count" id="c2_q1">0 caracteres</div>
+        <p style="font-size:.9rem; margin:.8rem 0 .4rem; font-weight:600;">¿Con qué intención lo ha escrito Nuria Labari?</p>
+        <textarea rows="2" id="t2_q2" placeholder="La autora pretende…" oninput="updateCount('t2_q2','c2_q2')"></textarea>
+        <div class="char-count" id="c2_q2">0 caracteres</div>
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tarea 2.2 — Formula el tema</div>
+        <div class="task-question">Con las respuestas anteriores, escribe el tema del texto en una <strong>frase nominal breve</strong> (sin verbo conjugado). Recuerda: debe conjugar aquello de lo que se habla con la actitud de la autora.</div>
+        <textarea rows="2" id="t2_tema" placeholder="La reivindicación de…" oninput="updateCount('t2_tema','c2_tema')"></textarea>
+        <div class="char-count" id="c2_tema">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex2_tema')">💡 Ver ejemplo resuelto</button>
+        <div class="example-box" id="ex2_tema">
+          <strong>Ejemplo:</strong> La reivindicación del acompañamiento adulto como respuesta al sufrimiento adolescente frente a la culpabilización de la tecnología.
+          <br><br>
+          <strong>¿Por qué no basta con «La adolescencia y el móvil»?</strong> Porque no recoge la actitud crítica de la autora hacia los adultos ni su propuesta de cambio. El tema debe decir algo, no solo nombrar.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(2)">✅ Completar esta fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 3 — IDEAS POR PÁRRAFO
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase3">
+    <div class="phase-header" onclick="togglePhase(3)">
+      <div class="phase-num">3</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Ideas principales de cada párrafo</div>
+        <div class="phase-subtitle">Estructura del texto e ideas esenciales</div>
+      </div>
+      <div class="phase-status" id="status3">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body3">
+
+      <div class="hint hint-green">
+        <strong>🗂️ Localiza las ideas, no los detalles.</strong> En un artículo de opinión suelen distinguirse tres partes: <strong>introducción</strong> (exposición del tema), <strong>cuerpo argumentativo</strong> (argumentos a favor o en contra de una tesis) y <strong>conclusión</strong> (tesis final y llamada a la acción). Un artículo periodístico no suele tener más de tres o cuatro ideas principales. Si encuentras más, casi seguro que estás confundiendo ideas principales con datos o ejemplos.
+      </div>
+
+      <div class="hint hint-yellow" style="font-size:.88rem;">
+        <strong>⚠️ Recuerda:</strong> anota junto a cada párrafo la idea principal, <em>no</em> los ejemplos, ni las citas, ni los datos concretos. Usa siempre tus propias palabras. La frase debe ser breve: sustantivo + modificadores.
+      </div>
+
+      <!-- Párrafo 1 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 1 · Líneas 1-6</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Introducción</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">«Define con una palabra tu adolescencia» […] lo dolorosa que ha sido siempre la adolescencia, también cuando era analógica.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p1" placeholder="La adolescencia ha sido siempre una etapa dolorosa…" oninput="updateCount('t3_p1','c3_p1')"></textarea>
+        <div class="char-count" id="c3_p1">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p1')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p1">
+          <strong>Ejemplo:</strong> La adolescencia ha sido siempre una etapa dolorosa, independientemente de la época o la tecnología disponible.
+          <br><br><strong>Descartado como detalle:</strong> la referencia a la cuenta Freeda, el millón y medio de seguidores, las palabras concretas de las respuestas («kalimotxo», «bullying»…). Son ejemplos que ilustran la idea, no la idea en sí.
+        </div>
+      </div>
+
+      <!-- Párrafo 2 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 2 · Líneas 7-19</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Cuerpo argumentativo — Tesis y argumento principal</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">«Y me ha hecho reflexionar sobre cómo los adultos nos hemos convertido en expertos en sentenciar…» […] «el origen del dolor no es otro que la propia vida».</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p2" placeholder="Los adultos culpan erróneamente a la tecnología del malestar adolescente…" oninput="updateCount('t3_p2','c3_p2')"></textarea>
+        <div class="char-count" id="c3_p2">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p2')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p2">
+          <strong>Ejemplo:</strong> Los adultos, centrados en culpar a la tecnología del malestar juvenil, descuidan su verdadera responsabilidad: acompañar a los adolescentes en el dolor inherente a esa etapa de la vida.
+          <br><br><strong>Descartado como detalle:</strong> la ironía sobre «El gran problema, claro, es el móvil», la enumeración de dificultades que amplifican las redes (cuerpo, ropa, sexo…). Son datos secundarios que desarrollan la idea principal.
+        </div>
+      </div>
+
+      <!-- Párrafo 3 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 3 · Líneas 21-27</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Cuerpo argumentativo — Refuerzo con experiencia propia</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">«Hace unos meses formé parte de un programa…» […] «no habrían coincidido en nada».</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p3" placeholder="La experiencia directa con jóvenes confirma que sus miedos son emocionales, no tecnológicos…" oninput="updateCount('t3_p3','c3_p3')"></textarea>
+        <div class="char-count" id="c3_p3">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p3')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p3">
+          <strong>Ejemplo:</strong> La experiencia directa de la autora con adolescentes en un programa sobre salud mental y tecnología confirma que los miedos juveniles son de naturaleza emocional y relacional, no tecnológica, en contradicción con la percepción de sus progenitores.
+          <br><br><strong>Descartado como detalle:</strong> la duración del programa, las citas textuales de los jóvenes («a no gustar, a que me ignoren…»). Son ejemplos concretos que apoyan la idea.
+        </div>
+      </div>
+
+      <!-- Párrafo 4 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 4 · Líneas 29-34</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Conclusión — Llamada a la acción</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">«Madres y padres presumimos de lo tarde que damos tal o cual dispositivo…» […] «no juzgue, no compare, no piense que su adolescencia fue mejor y escúchelo».</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p4" placeholder="Restringir el uso del móvil no basta; los adultos deben escuchar y acompañar a los jóvenes…" oninput="updateCount('t3_p4','c3_p4')"></textarea>
+        <div class="char-count" id="c3_p4">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p4')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p4">
+          <strong>Ejemplo:</strong> Restringir el uso de dispositivos resulta insuficiente; la autora concluye que el dolor adolescente es universal y compartido, y apela a los adultos a sustituir el juicio por la escucha y la presencia real.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(3)">✅ Completar esta fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 4 — REDACTAR EL RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase4">
+    <div class="phase-header" onclick="togglePhase(4)">
+      <div class="phase-num">4</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Redacta el resumen</div>
+        <div class="phase-subtitle">Un único párrafo con tus propias palabras</div>
+      </div>
+      <div class="phase-status" id="status4">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body4">
+
+      <div class="hint hint-blue">
+        <strong>✍️ Ahora reúne todo lo que has trabajado.</strong> Combina las ideas principales de cada párrafo en un único texto cohesionado. El orden debe seguir el del artículo original. Usa conectores para enlazar las ideas y evita repetir las palabras exactas de la autora.
+      </div>
+
+      <div class="hint hint-green" style="font-size:.88rem;">
+        <strong>Conectores útiles para estructurar el resumen:</strong><br>
+        <span style="display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem;">
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">La autora parte de…</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">A continuación, sostiene que…</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Para reforzar esta idea…</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Asimismo,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Sin embargo,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Finalmente, concluye que…</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Por ello, apela a…</span>
+        </span>
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tu resumen</div>
+        <div class="task-question">Escribe aquí el resumen del artículo en un único párrafo. Ten en cuenta que el texto original tiene unas <strong>34 líneas</strong>; el resumen debería tener entre <strong>8 y 10 líneas</strong> aproximadamente (25-30 % del original).</div>
+        <textarea id="t4_resumen" rows="10" placeholder="Escribe aquí tu resumen en un único párrafo…" oninput="updateCount('t4_resumen','c4_resumen')"></textarea>
+        <div class="char-count" id="c4_resumen">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex4_resumen')">💡 Ver resumen resuelto</button>
+        <div class="example-box" id="ex4_resumen">
+          <strong>Resumen modelo:</strong> Nuria Labari parte de una encuesta en redes sociales en la que los adolescentes definen su etapa vital con términos que denotan sufrimiento para defender que el dolor ha sido siempre el rasgo definitorio de la adolescencia, con independencia de la época o la tecnología disponible. A continuación, sostiene que los adultos, al centrar el problema en el uso del móvil y las redes sociales, eluden su verdadera responsabilidad: la de acompañar emocionalmente a los jóvenes. Aunque reconoce que la tecnología amplifica ciertas dificultades, afirma que el origen del malestar no reside en los dispositivos, sino en la propia vida. Para reforzar esta idea, recurre a su experiencia directa en un programa sobre salud mental, donde comprobó que los temores de los adolescentes son de naturaleza emocional y relacional, no tecnológica. Finalmente, concluye que restringir el acceso a los dispositivos es una respuesta insuficiente, y apela a los adultos a sustituir el control por la escucha y la presencia real.
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- LISTA DE REVISIÓN -->
+      <p style="font-weight:600; margin-bottom:.8rem; font-size:.95rem;">🔍 Lista de revisión antes de entregar:</p>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>He redactado el resumen en <strong>un único párrafo</strong>, sin divisiones.</span></li>
+        <li><input type="checkbox"> <span>He escrito en <strong>tercera persona del singular</strong> y en <strong>presente de indicativo</strong>.</span></li>
+        <li><input type="checkbox"> <span>He usado <strong>mis propias palabras</strong>: no he copiado frases literales de la autora.</span></li>
+        <li><input type="checkbox"> <span>He incluido las <strong>ideas principales</strong> de los cuatro párrafos, en el orden del texto.</span></li>
+        <li><input type="checkbox"> <span>He <strong>descartado</strong> ejemplos, datos concretos, citas y enumeraciones.</span></li>
+        <li><input type="checkbox"> <span>He usado <strong>conectores textuales</strong> para enlazar las ideas.</span></li>
+        <li><input type="checkbox"> <span>He empleado algún <strong>sustantivo abstracto</strong> o <strong>hiperónimo</strong> para generalizar.</span></li>
+        <li><input type="checkbox"> <span>No he dado <strong>mi opinión</strong> ni he dejado entrever una valoración personal.</span></li>
+        <li><input type="checkbox"> <span>La extensión es <strong>aproximadamente el 25-30 %</strong> del texto original.</span></li>
+        <li><input type="checkbox"> <span>He revisado la <strong>ortografía y la puntuación</strong>.</span></li>
+      </ul>
+
+      <div class="task-block" style="margin-top:1.2rem;">
+        <div class="task-label">🪞 Autoevaluación</div>
+        <div class="task-question">¿Qué parte del resumen crees que has resuelto mejor? ¿Qué te ha resultado más difícil?</div>
+        <textarea rows="3" id="t4_auto" placeholder="Lo que mejor he hecho es… Lo que más me ha costado es…" oninput="updateCount('t4_auto','c4_auto')"></textarea>
+        <div class="char-count" id="c4_auto">0 caracteres</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="completePhase(4)">🎓 Finalizar el taller</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL FINAL -->
+  <div class="final-panel" id="finalPanel">
+    <h2>¡Resumen completado!</h2>
+    <p>Has recorrido las cuatro fases del proceso de síntesis. Identificar el tema, analizar la estructura, localizar las ideas principales y redactar con tus propias palabras son las habilidades que acabas de practicar.</p>
+    <div class="final-score" id="finalScore">4/4</div>
+    <div class="final-label">fases superadas</div>
+    <p style="margin-top:1.5rem; font-size:.85rem;">Guarda o imprime esta página para conservar tu trabajo antes de cerrar el navegador.</p>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  let completedPhases = 0;
+  const total = 4;
+
+  function updateCount(id, countId) {
+    const ta = document.getElementById(id);
+    const ct = document.getElementById(countId);
+    if (ta && ct) ct.textContent = ta.value.length + ' caracteres';
+  }
+
+  function toggleExample(id) {
+    const box = document.getElementById(id);
+    if (box) box.classList.toggle('visible');
+  }
+
+  function togglePhase(n) {
+    const body = document.getElementById('body' + n);
+    if (body) body.classList.toggle('open');
+  }
+
+  function completePhase(n) {
+    const phase  = document.getElementById('phase'  + n);
+    const status = document.getElementById('status' + n);
+    const body   = document.getElementById('body'   + n);
+
+    if (phase.classList.contains('done')) return;
+
+    phase.classList.remove('active');
+    phase.classList.add('done');
+    status.textContent = '✓ Completada';
+    body.classList.remove('open');
+
+    completedPhases++;
+    updateProgress();
+
+    const nextPhase = document.getElementById('phase' + (n + 1));
+    if (nextPhase) {
+      nextPhase.classList.add('active');
+      document.getElementById('status' + (n + 1)).textContent = 'En curso';
+      document.getElementById('body'   + (n + 1)).classList.add('open');
+      setTimeout(() => nextPhase.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    }
+
+    if (completedPhases === total) {
+      const panel = document.getElementById('finalPanel');
+      panel.classList.add('visible');
+      document.getElementById('finalScore').textContent = total + '/' + total;
+      setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+    }
+  }
+
+  function updateProgress() {
+    const pct = (completedPhases / total) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = completedPhases + ' / ' + total + ' fases';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('phase1').classList.add('active');
+    document.getElementById('status1').textContent = 'En curso';
+  });
+</script>
+
+</body>
+</html>
