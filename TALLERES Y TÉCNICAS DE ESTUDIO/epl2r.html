@@ -26,7 +26,7 @@
     background:var(--paper);
     color:var(--ink);
     font-family:'Atkinson Hyperlegible', sans-serif;
-    font-size:clamp(18px, 3.4vh, 29px);
+    font-size:clamp(19px, 3.4vh, 30px);
     line-height:1.5;
   }
   p{margin:0 0 0.55em;}
@@ -54,32 +54,63 @@
   .slide.active{display:flex;}
   .wrap{max-width:920px; width:100%; margin:0 auto; padding:0 clamp(18px,4vw,32px);}
 
-  .deckbar{
+  .topbar{
     flex:0 0 auto;
-    display:flex; align-items:center; justify-content:space-between;
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
     gap:16px;
-    padding:12px 24px;
-    border-top:1px solid var(--line);
+    padding:10px 90px;
+    border-bottom:1px solid var(--line);
     background:var(--paper);
   }
-  .deckbar .navbtn{
-    border:1px solid var(--line);
-    background:var(--white);
-    color:var(--teal-dark);
-    font-family:'Atkinson Hyperlegible', sans-serif;
-    font-weight:700; font-size:15px;
-    padding:9px 18px;
-    border-radius:999px;
-    cursor:pointer;
-    display:flex; align-items:center; gap:8px;
-    transition:background .15s ease, color .15s ease;
-  }
-  .deckbar .navbtn:hover{background:var(--teal); color:var(--white); border-color:var(--teal);}
-  .deckbar .navbtn:disabled{opacity:.35; cursor:default; background:var(--white); color:var(--teal-dark);}
   .dots{display:flex; gap:7px; flex-wrap:wrap; justify-content:center;}
   .dots button{width:10px; height:10px; border-radius:50%; border:none; background:var(--line); cursor:pointer; padding:0;}
   .dots button.on{background:var(--teal);}
-  .counter{font-size:13px; color:var(--ink-soft); min-width:52px; text-align:center;}
+  .counter{position:absolute; right:18px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--ink-soft); min-width:52px; text-align:center;}
+
+  /* ---- navegación lateral (anterior/siguiente) ---- */
+  .side-btn{
+    position:fixed; top:50%; transform:translateY(-50%);
+    z-index:30;
+    width:48px; height:48px; border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--teal-dark);
+    font-size:20px; line-height:1;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.14);
+    transition:background .15s ease, color .15s ease;
+  }
+  .side-btn:hover{background:var(--teal); color:var(--white); border-color:var(--teal);}
+  .side-btn:disabled{opacity:.3; cursor:default;}
+  .side-btn.prev{left:12px;}
+  .side-btn.next{right:12px;}
+
+  /* ---- barra lateral para subir/bajar la diapositiva ampliada ---- */
+  .scroll-nav{
+    position:fixed; right:14px; bottom:14px; z-index:30;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .scroll-nav button{
+    width:40px; height:40px; border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--white);
+    color:var(--teal-dark);
+    font-size:16px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 3px 10px rgba(0,0,0,.14);
+  }
+  .scroll-nav button:hover{background:var(--teal); color:var(--white); border-color:var(--teal);}
+
+  @media (max-width:640px){
+    .side-btn{width:38px; height:38px; font-size:16px;}
+    .side-btn.prev{left:6px;}
+    .side-btn.next{right:6px;}
+    .topbar{padding:10px 56px;}
+    .scroll-nav button{width:34px; height:34px;}
+  }
 
   /* ---- ilustraciones ---- */
   .illus{display:flex; justify-content:center; margin:0 0 clamp(8px,2vh,18px);}
@@ -105,12 +136,12 @@
   .play-btn:hover{background:var(--white);}
 
   /* ---- portada ---- */
-  .eyebrow{font-size:clamp(16px,2.6vh,21px); color:var(--teal); font-weight:700; margin-bottom:clamp(8px,1.6vh,16px);}
-  h1{font-size:clamp(38px,8.5vh,64px); line-height:1.08;}
-  .subt{margin-top:clamp(10px,2vh,20px); font-size:clamp(18px,3.4vh,28px); color:var(--ink-soft);}
+  .eyebrow{font-size:clamp(17px,2.6vh,22px); color:var(--teal); font-weight:700; margin-bottom:clamp(8px,1.6vh,16px);}
+  h1{font-size:clamp(39px,8.5vh,65px); line-height:1.08;}
+  .subt{margin-top:clamp(10px,2vh,20px); font-size:clamp(19px,3.4vh,29px); color:var(--ink-soft);}
 
   .kicker{
-    font-size:clamp(16px,2.5vh,20px); font-weight:700; color:var(--ink-soft); margin-bottom:clamp(8px,1.5vh,14px);
+    font-size:clamp(17px,2.5vh,21px); font-weight:700; color:var(--ink-soft); margin-bottom:clamp(8px,1.5vh,14px);
   }
   .highlight{
     background:var(--white);
@@ -125,22 +156,40 @@
     flex:0 0 auto;
     width:clamp(48px,8vh,70px); height:clamp(48px,8vh,70px); border-radius:14px;
     background:var(--teal); color:var(--white);
-    font-family:'Fraunces', serif; font-weight:700; font-size:clamp(22px,4.2vh,36px);
+    font-family:'Fraunces', serif; font-weight:700; font-size:clamp(23px,4.2vh,37px);
     display:flex; align-items:center; justify-content:center;
   }
-  .step-head h2{font-size:clamp(28px,5.6vh,46px); margin-bottom:4px;}
-  .step-head .verb{color:var(--ink-soft); font-size:clamp(16px,2.6vh,23px); font-style:italic;}
+  .step-head h2{font-size:clamp(29px,5.6vh,47px); margin-bottom:4px;}
+  .step-head .verb{color:var(--ink-soft); font-size:clamp(17px,2.6vh,24px); font-style:italic;}
   .pregunta{
-    font-family:'Fraunces', serif; font-style:italic; font-size:clamp(19px,3.8vh,30px);
+    font-family:'Fraunces', serif; font-style:italic; font-size:clamp(20px,3.8vh,31px);
     color:var(--teal-dark); margin:clamp(10px,2vh,18px) 0;
   }
   .tip{
     background:var(--paper-2); border-radius:10px;
     padding:clamp(12px,2vh,18px) clamp(16px,2.4vw,22px);
     margin-top:clamp(10px,2vh,18px);
-    font-size:clamp(16px,2.8vh,23px);
+    font-size:clamp(17px,2.8vh,24px);
   }
   .tip b{color:var(--brick);}
+
+  .sol-btn{
+    margin-top:12px;
+    background:var(--amber); color:var(--white); border:none; border-radius:999px;
+    padding:9px 18px; font-weight:700; font-size:15px; cursor:pointer;
+    font-family:'Atkinson Hyperlegible', sans-serif;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:background .15s ease;
+  }
+  .sol-btn:hover{background:var(--brick);}
+  .solution{
+    display:none; margin-top:10px;
+    background:var(--paper-2); border-left:4px solid var(--teal); border-radius:8px;
+    padding:12px 16px; font-size:clamp(16px,2.4vh,20px); color:var(--ink-soft);
+  }
+  .solution.open{display:block;}
+  .solution p{margin:0 0 6px;}
+  .solution p:last-child{margin-bottom:0;}
 
   /* ---- resumen visual ---- */
   .summary-row{display:flex; flex-wrap:wrap; gap:12px; margin:clamp(12px,2.4vh,24px) 0 6px;}
@@ -150,25 +199,25 @@
     border-radius:12px; padding:clamp(10px,1.8vh,16px) 18px;
     flex:1 1 150px;
   }
-  .summary-row .chip .n{font-family:'Fraunces', serif; font-weight:700; color:var(--teal); font-size:clamp(20px,3.6vh,28px);}
-  .summary-row .chip span.word{font-weight:700; font-size:clamp(18px,3vh,24px);}
+  .summary-row .chip .n{font-family:'Fraunces', serif; font-weight:700; color:var(--teal); font-size:clamp(21px,3.6vh,29px);}
+  .summary-row .chip span.word{font-weight:700; font-size:clamp(19px,3vh,25px);}
 
   /* ---- actividad ---- */
   .activity-text{
     background:var(--white); border:1px solid var(--line); border-radius:12px;
     padding:clamp(14px,2.4vh,24px) clamp(16px,2.4vw,26px);
-    font-size:clamp(16px,2.8vh,22px);
+    font-size:clamp(17px,2.8vh,23px);
   }
-  .activity-text h3{font-size:clamp(20px,3.2vh,26px); margin-bottom:8px;}
+  .activity-text h3{font-size:clamp(21px,3.2vh,27px); margin-bottom:8px;}
   .activity-text h4{
     font-family:'Fraunces', serif; font-weight:600; color:var(--teal-dark);
-    font-size:clamp(17px,2.6vh,21px); margin:16px 0 4px;
+    font-size:clamp(18px,2.6vh,22px); margin:16px 0 4px;
   }
   .activity-step{margin:clamp(12px,2.4vh,22px) 0;}
   .activity-step .step-label{
     display:inline-flex; align-items:center; gap:8px;
     font-family:'Fraunces', serif; font-weight:700; color:var(--teal-dark);
-    font-size:clamp(19px,3vh,25px); margin-bottom:10px;
+    font-size:clamp(20px,3vh,26px); margin-bottom:10px;
   }
   .activity-step .step-label .dot{
     width:24px; height:24px; border-radius:50%; background:var(--teal); color:var(--white);
@@ -176,17 +225,17 @@
   }
   .activity-step textarea{
     width:100%; min-height:clamp(44px,7vh,66px); margin-top:8px;
-    font-family:'Atkinson Hyperlegible', sans-serif; font-size:clamp(17px,2.6vh,21px);
+    font-family:'Atkinson Hyperlegible', sans-serif; font-size:clamp(18px,2.6vh,22px);
     padding:10px 12px; border-radius:8px; border:1px solid var(--line);
     background:var(--white); resize:vertical; color:var(--ink);
   }
   .checklist{display:flex; flex-direction:column; gap:6px; margin-top:6px;}
-  .checklist label{display:flex; align-items:center; gap:10px; font-size:clamp(17px,2.8vh,22px);}
+  .checklist label{display:flex; align-items:center; gap:10px; font-size:clamp(18px,2.8vh,23px);}
   .checklist input{width:17px; height:17px; accent-color:var(--teal); flex:0 0 auto;}
 
   /* ---- cierre ---- */
   .next-list{margin-top:clamp(12px,2.4vh,22px); padding:0; list-style:none; display:flex; flex-direction:column; gap:clamp(8px,1.8vh,14px);}
-  .next-list li{display:flex; align-items:center; gap:12px; font-size:clamp(18px,3vh,25px); color:var(--ink-soft);}
+  .next-list li{display:flex; align-items:center; gap:12px; font-size:clamp(19px,3vh,26px); color:var(--ink-soft);}
   .next-list li .b{width:8px; height:8px; border-radius:50%; background:var(--amber); flex:0 0 auto;}
 
   @media (max-width:600px){
@@ -196,6 +245,10 @@
 </head>
 <body>
 <div class="deck">
+<div class="topbar">
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter"></span>
+</div>
 <div class="slides" id="slides">
 
   <section class="slide" id="s0">
@@ -246,13 +299,13 @@
         </svg>
       </div>
       <div class="kicker">Un poco de historia</div>
-      <h2 style="font-size:clamp(27px,5.2vh,42px); margin-bottom:14px;">¿Quién inventó este método?</h2>
+      <h2 style="font-size:clamp(28px,5.2vh,43px); margin-bottom:14px;">¿Quién inventó este método?</h2>
       <p>El EPL2R lo creó <b>Francis P. Robinson</b>, psicólogo educativo estadounidense, y lo publicó en 1946 en su libro <i>Effective Study</i> — por eso también se le llama "método Robinson". Lo pensó para estudiantes universitarios, pero funciona igual de bien a cualquier edad.</p>
       <div class="video-wrap" id="videoFacade">
-        <img src="https://img.youtube.com/vi/w90up7J1cxQ/hqdefault.jpg" alt="Miniatura del vídeo sobre el método EPL2R" onclick="playVideo()">
+        <img src="https://img.youtube.com/vi/DU57RVY-jGo/hqdefault.jpg" alt="Miniatura del vídeo sobre el método EPL2R" onclick="playVideo()">
         <button class="play-btn" onclick="playVideo()" aria-label="Reproducir vídeo">▶</button>
       </div>
-      <a class="navbtn" style="display:inline-flex; margin-top:10px; text-decoration:none;" href="https://youtu.be/w90up7J1cxQ" target="_blank" rel="noopener">Ver en YouTube</a>
+      <a class="navbtn" style="display:inline-flex; margin-top:10px; text-decoration:none;" href="https://youtube.com/shorts/DU57RVY-jGo" target="_blank" rel="noopener">Ver en YouTube</a>
     </div>
   </section>
 
@@ -358,13 +411,13 @@
       <div class="step-head">
         <div class="letter">R</div>
         <div>
-          <h2>Recitar</h2>
+          <h2>Recitar o Responder</h2>
           <div class="verb">Sin mirar el texto</div>
         </div>
       </div>
       <p>Aparta el texto y responde en voz alta o por escrito, con tus propias palabras, a las preguntas que te hiciste. Si no puedes, es la señal de releer esa parte.</p>
       <p class="pregunta">¿Sería capaz de explicárselo a alguien ahora mismo?</p>
-      <div class="tip">Recordar cuesta, y ese esfuerzo es lo que hace que se te quede. Algunos materiales llaman a este paso "Responder" — es la misma idea.</div>
+      <div class="tip">Este paso consiste en <b>Recitar y Responder</b>, e ir un poco más allá intentando <b>esquematizar y resumir</b> lo que recuerdas. Algunos materiales llaman a este paso "Responder" — es la misma idea.</div>
     </div>
   </section>
 
@@ -387,9 +440,33 @@
           <div class="verb">Días después, no el mismo día</div>
         </div>
       </div>
-      <p>Vuelve sobre tus notas pasado un tiempo (al día siguiente, a la semana) con una lectura rápida, para comprobar que recuerdas el contenido. Aquí conviertes tus notas en un resumen o esquema.</p>
+      <p>Vuelve sobre tus notas pasado un tiempo (al día siguiente, a la semana) con una lectura rápida, para comprobar que recuerdas el contenido. Aprovecha ahora para, en los siguientes repasos, ir mejorando o rectificando tu esquema o resumen hasta conseguir el perfecto.</p>
       <p class="pregunta">¿Sigo sabiendo esto una semana después?</p>
-      <div class="tip">Repasar espaciado en el tiempo funciona mucho mejor que repasar todo la noche antes del examen.</div>
+      <div class="tip">
+        <svg viewBox="0 0 480 175" style="width:100%; max-width:460px; height:auto; display:block; margin:0 auto 6px;" xmlns="http://www.w3.org/2000/svg">
+          <line x1="38" y1="14" x2="38" y2="140" stroke="var(--ink-soft)" stroke-width="1.5"/>
+          <line x1="38" y1="140" x2="460" y2="140" stroke="var(--ink-soft)" stroke-width="1.5"/>
+          <line x1="38" y1="22" x2="460" y2="22" stroke="var(--brick)" stroke-width="1" stroke-dasharray="3 4"/>
+          <path d="M38,22 C68,58 88,98 108,112" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="108" y1="112" x2="108" y2="34" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <path d="M108,34 C148,62 188,86 218,104" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="218" y1="104" x2="218" y2="40" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <path d="M218,40 C258,54 298,72 348,90" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="348" y1="90" x2="348" y2="46" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <path d="M348,46 C380,52 420,58 460,66" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <circle cx="108" cy="112" r="3.5" fill="var(--brick)"/>
+          <circle cx="218" cy="104" r="3.5" fill="var(--brick)"/>
+          <circle cx="348" cy="90" r="3.5" fill="var(--brick)"/>
+          <text x="38" y="156" font-size="11" fill="var(--ink-soft)" text-anchor="middle">0</text>
+          <text x="108" y="156" font-size="11" fill="var(--ink-soft)" text-anchor="middle">1</text>
+          <text x="218" y="156" font-size="11" fill="var(--ink-soft)" text-anchor="middle">4</text>
+          <text x="348" y="156" font-size="11" fill="var(--ink-soft)" text-anchor="middle">10</text>
+          <text x="460" y="156" font-size="11" fill="var(--ink-soft)" text-anchor="middle">20+</text>
+          <text x="249" y="171" font-size="12" fill="var(--ink-soft)" text-anchor="middle">t (días)</text>
+          <text x="10" y="80" font-size="12" fill="var(--ink-soft)" text-anchor="middle" transform="rotate(-90 10 80)">R</text>
+        </svg>
+        Cada vez que repasas justo antes de olvidarlo del todo, la caída siguiente es más suave: la información dura más tiempo y cuesta menos recuperarla.
+      </div>
     </div>
   </section>
 
@@ -397,12 +474,12 @@
     <div class="wrap">
       <div class="kicker">Actividad (1/4) · lee el texto</div>
       <div class="activity-text">
-        <h3>El envejecimiento del rural gallego</h3>
-        <p>Galicia es una de las comunidades españolas donde más está notándose el paso del tiempo en el campo. Cada vez hay menos gente joven en las aldeas, y eso está cambiando por completo la vida en los pueblos del interior.</p>
-        <h4>Una despoblación que no para de crecer</h4>
-        <p>En muchas aldeas del interior, la mayoría de los vecinos que quedan tienen más de sesenta y cinco años. Los jóvenes se marchan a las ciudades o al extranjero buscando trabajo y estudios, y las escuelas y comercios de los pueblos van cerrando poco a poco. A este fenómeno se le llama despoblación rural, y lleva décadas produciéndose sin que se haya conseguido frenar del todo.</p>
-        <h4>Más que un problema económico</h4>
-        <p>El problema no afecta solo a la economía de estas zonas: también pone en riesgo tradiciones, formas de hablar y oficios antiguos que se transmitían de padres a hijos, como la cestería, la ganadería a pequeña escala o determinadas fiestas populares. Cuando un pueblo se queda sin gente, esa memoria colectiva corre el riesgo de perderse para siempre.</p>
+        <h3>El ocio adolescente en la era digital</h3>
+        <p>Hace treinta años, el ocio de un adolescente cabía en pocas palabras: quedar con los amigos en la calle, ver la tele o escuchar la radio. Hoy el panorama es mucho más amplio, y casi todo pasa, en algún momento, por una pantalla.</p>
+        <h4>El videojuego ya no se juega solo</h4>
+        <p>Los videojuegos han dejado de ser una afición solitaria. Títulos como Fortnite, Minecraft o Valorant se juegan en equipo, por voz, con amigos que a veces ni siquiera viven en la misma ciudad. Además, millones de adolescentes no solo juegan: también ven jugar a otros en directo, siguiendo a streamers en plataformas como Twitch o YouTube Gaming.</p>
+        <h4>Las redes sociales, el nuevo patio de recreo</h4>
+        <p>TikTok, Instagram o WhatsApp han sustituido al recreo como lugar donde se cuentan los cotilleos, se comparten bromas y se organiza casi cualquier plan. Los vídeos cortos, de apenas quince o treinta segundos, se han convertido en el formato favorito: rápidos, con humor y fáciles de reenviar a un grupo de amigos.</p>
       </div>
     </div>
   </section>
@@ -411,10 +488,10 @@
     <div class="wrap">
       <div class="kicker">Actividad (2/4) · sigue leyendo</div>
       <div class="activity-text">
-        <h4>Iniciativas para revertir la tendencia</h4>
-        <p>Algunos ayuntamientos intentan frenar esta situación ofreciendo ayudas a las familias que se instalan en pueblos pequeños, como vivienda gratuita o ventajas fiscales, y muchos apuestan por el turismo rural como fuente de ingresos alternativa. Aun así, los resultados todavía son limitados y el problema sigue muy presente en buena parte de Galicia.</p>
-        <h4>Un reto para el futuro</h4>
-        <p>Frenar la despoblación no depende solo de una medida aislada, sino de mejorar los servicios básicos del rural: transporte, internet, sanidad y educación. Sin esas condiciones, es difícil que los jóvenes decidan quedarse o volver, por mucho que quieran a su tierra.</p>
+        <h4>Maratones de series y creadores de contenido</h4>
+        <p>Las plataformas de streaming como Netflix o Disney+ han cambiado la forma de ver series: ya no se espera una semana entre capítulo y capítulo, se ven varios seguidos en una sola tarde. Al mismo tiempo, muchos adolescentes prefieren seguir a creadores de contenido —youtubers, streamers o tiktokers— antes que a actores de cine tradicionales.</p>
+        <h4>La vuelta a lo analógico</h4>
+        <p>Frente a tanta pantalla, también crece una tendencia curiosa: quedar para jugar a juegos de mesa, apuntarse a un equipo deportivo o simplemente desconectar el móvil una tarde con amigos. Cada vez más adolescentes valoran esos momentos "sin cobertura" como una forma distinta, y necesaria, de divertirse.</p>
       </div>
     </div>
   </section>
@@ -426,12 +503,28 @@
         <div class="step-label"><span class="dot">E</span> Explorar</div>
         <div class="checklist">
           <label><input type="checkbox"> He leído el título y los cuatro subtítulos</label>
-          <label><input type="checkbox"> Me hago una idea general del tema</label>
         </div>
+        <p style="margin:12px 0 4px;">Me hago una idea general del tema:</p>
+        <textarea placeholder="Escribe en una frase de qué crees que va a tratar el texto..."></textarea>
+        <button class="sol-btn" onclick="toggleSol(this)">💡 Ver posible solución</button>
+        <div class="solution"><p>El texto trata sobre cómo han cambiado las formas de divertirse de los adolescentes: videojuegos en línea y en directo, redes sociales, series en streaming y, como contraste, una vuelta a planes sin pantallas.</p></div>
       </div>
       <div class="activity-step">
         <div class="step-label"><span class="dot">P</span> Preguntar</div>
-        <textarea placeholder="Convierte uno de los subtítulos en una pregunta..."></textarea>
+        <p style="margin:0 0 6px;">Convierte el título y los subtítulos en preguntas:</p>
+        <textarea placeholder="Pregunta sobre el título..."></textarea>
+        <textarea placeholder="Pregunta 2..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Pregunta 3..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Pregunta 4..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Pregunta 5..." style="margin-top:8px;"></textarea>
+        <button class="sol-btn" onclick="toggleSol(this)">💡 Ver posible solución</button>
+        <div class="solution">
+          <p>¿Cómo se divierten hoy los adolescentes?</p>
+          <p>¿Por qué el videojuego ya no se juega solo?</p>
+          <p>¿Por qué las redes sociales son el nuevo patio de recreo?</p>
+          <p>¿Qué son las maratones de series y quiénes son los creadores de contenido?</p>
+          <p>¿En qué consiste la vuelta a lo analógico?</p>
+        </div>
       </div>
     </div>
   </section>
@@ -442,18 +535,53 @@
       <div class="activity-step" style="margin-top:0;">
         <div class="step-label"><span class="dot">L</span> Leer</div>
         <p style="margin:0 0 6px;">Escribe la idea principal de cada apartado, con tus palabras:</p>
-        <textarea placeholder="Una despoblación que no para de crecer..."></textarea>
-        <textarea placeholder="Más que un problema económico..." style="margin-top:8px;"></textarea>
-        <textarea placeholder="Iniciativas para revertir la tendencia..." style="margin-top:8px;"></textarea>
-        <textarea placeholder="Un reto para el futuro..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="El videojuego ya no se juega solo..."></textarea>
+        <textarea placeholder="Las redes sociales, el nuevo patio de recreo..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="Maratones de series y creadores de contenido..." style="margin-top:8px;"></textarea>
+        <textarea placeholder="La vuelta a lo analógico..." style="margin-top:8px;"></textarea>
+        <button class="sol-btn" onclick="toggleSol(this)">💡 Ver posible solución</button>
+        <div class="solution">
+          <p><b>El videojuego ya no se juega solo:</b> ahora se juega en equipo, por voz, con amigos de cualquier lugar, y también se ven a streamers jugar en directo.</p>
+          <p><b>Las redes sociales, el nuevo patio de recreo:</b> TikTok, Instagram o WhatsApp sustituyen al recreo como lugar de socialización, sobre todo con vídeos cortos.</p>
+          <p><b>Maratones de series y creadores de contenido:</b> el streaming permite ver varios capítulos seguidos, y se sigue más a youtubers o streamers que a actores tradicionales.</p>
+          <p><b>La vuelta a lo analógico:</b> crece la tendencia de desconectar y quedar para juegos de mesa, deporte o estar sin el móvil.</p>
+        </div>
       </div>
       <div class="activity-step">
-        <div class="step-label"><span class="dot">R</span> Recitar</div>
-        <textarea placeholder="Sin mirar el texto, responde a tu propia pregunta..."></textarea>
+        <div class="step-label"><span class="dot">R</span> Recitar / Responder</div>
+        <p style="margin:0 0 6px;">Sin mirar el texto, responde a tus preguntas y haz un esquema o resumen:</p>
+        <textarea placeholder="Responde con tus palabras y esquematiza o resume lo que recuerdas..." style="min-height:100px;"></textarea>
+        <button class="sol-btn" onclick="toggleSol(this)">💡 Ver posible solución</button>
+        <div class="solution"><p>El ocio adolescente ha cambiado mucho: los videojuegos ahora se juegan en equipo y también se ven en directo; las redes sociales (TikTok, Instagram, WhatsApp) funcionan como el nuevo patio de recreo; el streaming ha cambiado el consumo de series y ha creado nuevos referentes (youtubers, streamers); y, como reacción, cada vez más jóvenes valoran también los planes sin pantallas.</p></div>
       </div>
       <div class="activity-step">
         <div class="step-label"><span class="dot">R</span> Repasar</div>
-        <p style="margin:0;">Dentro de tres días, intenta responder de nuevo sin mirar. Si te cuesta, repasa el texto otra vez.</p>
+        <p style="margin:0 0 6px;">Dentro de tres días, intenta responder de nuevo sin mirar. Si te cuesta, repasa el texto otra vez. Aprovecha ahora para mejorar o rectificar tu esquema o resumen:</p>
+        <svg viewBox="0 0 480 155" style="width:100%; max-width:400px; height:auto; display:block; margin:4px auto 8px;" xmlns="http://www.w3.org/2000/svg">
+          <line x1="34" y1="10" x2="34" y2="120" stroke="var(--ink-soft)" stroke-width="1.5"/>
+          <line x1="34" y1="120" x2="460" y2="120" stroke="var(--ink-soft)" stroke-width="1.5"/>
+          <path d="M34,16 C64,55 84,92 104,102" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="104" y1="102" x2="104" y2="28" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <path d="M104,28 C154,54 194,76 224,92" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <line x1="224" y1="92" x2="224" y2="34" stroke="var(--teal)" stroke-width="1.5" stroke-dasharray="2 3"/>
+          <path d="M224,34 C280,50 340,64 460,72" fill="none" stroke="var(--teal)" stroke-width="3"/>
+          <circle cx="104" cy="102" r="3.5" fill="var(--brick)"/>
+          <circle cx="224" cy="92" r="3.5" fill="var(--brick)"/>
+          <text x="34" y="134" font-size="11" fill="var(--ink-soft)" text-anchor="middle">hoy</text>
+          <text x="104" y="134" font-size="11" fill="var(--ink-soft)" text-anchor="middle">día 3</text>
+          <text x="224" y="134" font-size="11" fill="var(--ink-soft)" text-anchor="middle">día 7</text>
+          <text x="460" y="134" font-size="11" fill="var(--ink-soft)" text-anchor="middle">día 14</text>
+          <text x="249" y="150" font-size="12" fill="var(--ink-soft)" text-anchor="middle">t (días)</text>
+        </svg>
+        <p style="margin:0 0 6px;">Fíjate en la curva: cuanto antes repases, menos cuesta y más dura el recuerdo. Escribe ahora tu plan de repaso para las próximas dos semanas (qué días vas a repasar y qué vas a repasar cada vez):</p>
+        <textarea placeholder="Día 3: repaso rápido de... / Día 7: repaso de... / Día 14: repaso final de..." style="min-height:110px;"></textarea>
+        <button class="sol-btn" onclick="toggleSol(this)">💡 Ver posible solución</button>
+        <div class="solution">
+          <p><b>Hoy:</b> releo mi esquema y me hago las preguntas sin mirar el texto.</p>
+          <p><b>Día 3:</b> repaso el esquema sin mirarlo; si fallo algo, lo repaso otra vez y lo anoto.</p>
+          <p><b>Día 7:</b> repaso de nuevo y amplío o mejoro el esquema con lo que aún se me olvida.</p>
+          <p><b>Día 14:</b> último repaso rápido, ya casi sin esfuerzo: la información se ha consolidado.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -468,7 +596,7 @@
           <line x1="40" y1="98" x2="80" y2="98" stroke="var(--amber)"/>
         </svg>
       </div>
-      <h2 style="font-size:clamp(27px,5.2vh,42px); margin-bottom:14px;">Y a partir de aquí...</h2>
+      <h2 style="font-size:clamp(28px,5.2vh,43px); margin-bottom:14px;">Y a partir de aquí...</h2>
       <p style="color:var(--ink-soft);">El EPL2R es la base. A lo largo del curso iremos sumando más técnicas, siempre con textos del ámbito lingüístico y social para practicarlas de verdad.</p>
       <ul class="next-list">
         <li><span class="b"></span> Cómo hacer un subrayado útil (y no subrayarlo todo)</li>
@@ -480,13 +608,14 @@
   </section>
 
 </div>
-
-<div class="deckbar">
-  <button class="navbtn" id="prevBtn" onclick="go(-1)">← Anterior</button>
-  <div class="dots" id="dots"></div>
-  <span class="counter" id="counter"></span>
-  <button class="navbtn" id="nextBtn" onclick="go(1)">Siguiente →</button>
 </div>
+
+<button class="side-btn prev" id="prevBtn" onclick="go(-1)" aria-label="Diapositiva anterior">←</button>
+<button class="side-btn next" id="nextBtn" onclick="go(1)" aria-label="Diapositiva siguiente">→</button>
+
+<div class="scroll-nav">
+  <button onclick="scrollSlide(-1)" aria-label="Subir en la diapositiva">▲</button>
+  <button onclick="scrollSlide(1)" aria-label="Bajar en la diapositiva">▼</button>
 </div>
 
 <script>
@@ -512,9 +641,20 @@
   }
   function go(delta){ show(current + delta); }
 
+  function toggleSol(btn){
+    var box = btn.nextElementSibling;
+    var open = box.classList.toggle('open');
+    btn.textContent = open ? '🙈 Ocultar solución' : '💡 Ver posible solución';
+  }
+
+  function scrollSlide(delta){
+    var active = document.querySelector('.slide.active');
+    if(active) active.scrollBy({ top: delta * 220, behavior: 'smooth' });
+  }
+
   function playVideo(){
     var wrap = document.getElementById('videoFacade');
-    wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/w90up7J1cxQ?autoplay=1" title="Método EPL2R" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
+    wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/DU57RVY-jGo?autoplay=1" title="Método EPL2R" allow="autoplay; encrypted-media" allowfullscreen></iframe>';
   }
 
   document.addEventListener('keydown', function(e){
