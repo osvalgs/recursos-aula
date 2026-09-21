@@ -121,11 +121,12 @@
   .text-numbered {
     display: grid;
     grid-template-columns: 2rem 1fr;
-    gap: 0 .75rem;
+    column-gap: .75rem;
+    row-gap: .9rem;
     font-size: .95rem;
     line-height: 1.75;
   }
-  .line-num {
+  .line-num-col {
     color: #b0a89a;
     font-size: .72rem;
     text-align: right;
@@ -133,8 +134,8 @@
     user-select: none;
     font-style: normal;
   }
-  .line-num.marked { color: var(--accent3); font-weight: 700; }
-  .line-text { text-align: justify; }
+  .line-num-col .ln-marked { color: var(--accent3); font-weight: 700; }
+  .line-text-col { text-align: justify; }
 
   /* ── PHASES ── */
   .phase {
@@ -394,49 +395,88 @@
     <div class="text-card-label">Texto para resumir</div>
 
     <div class="text-numbered">
-      <span class="line-num marked">1</span><span class="line-text">Alan Turing nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad</span>
-      <span class="line-num"></span><span class="line-text">extraordinaria para las matemáticas y la lógica, aunque en la escuela no siempre encajó con</span>
-      <span class="line-num"></span><span class="line-text">el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador</span>
-      <span class="line-num"></span><span class="line-text">(lo que en el mundo académico británico se llama <em>fellowship</em>) en el King's College de</span>
-      <span class="line-num marked">5</span><span class="line-text">Cambridge, y poco después viajó a la Universidad de Princeton, en Estados Unidos, donde</span>
-      <span class="line-num"></span><span class="line-text">completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en</span>
-      <span class="line-num"></span><span class="line-text">el que describía una máquina teórica capaz de resolver cualquier problema que pudiera</span>
-      <span class="line-num"></span><span class="line-text">expresarse mediante un algoritmo. Aquella idea, conocida hoy como máquina de Turing, se</span>
-      <span class="line-num"></span><span class="line-text">considera el fundamento teórico de los ordenadores actuales.</span>
-      <span class="line-num marked">10</span><span class="line-text">&nbsp;</span>
-      <span class="line-num"></span><span class="line-text">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park, el centro británico de</span>
-      <span class="line-num"></span><span class="line-text">descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con</span>
-      <span class="line-num"></span><span class="line-text">la máquina alemana Enigma, un avance que los historiadores consideran clave para acortar la</span>
-      <span class="line-num"></span><span class="line-text">guerra y salvar millones de vidas. Terminada la guerra, Turing no abandonó la investigación.</span>
-      <span class="line-num marked">15</span><span class="line-text">Diseñó el ACE (<em>Automatic Computing Engine</em>) en el Laboratorio Nacional de Física de Londres,</span>
-      <span class="line-num"></span><span class="line-text">uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la</span>
-      <span class="line-num"></span><span class="line-text">Universidad de Manchester para trabajar en una de las primeras máquinas con programa</span>
-      <span class="line-num"></span><span class="line-text">almacenado en memoria, un antecesor directo de los ordenadores actuales.</span>
-      <span class="line-num"></span><span class="line-text">&nbsp;</span>
-      <span class="line-num marked">20</span><span class="line-text">Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina</span>
-      <span class="line-num"></span><span class="line-text">pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento</span>
-      <span class="line-num"></span><span class="line-text">práctico que hoy se conoce como el test de Turing: si una persona conversa con una máquina y</span>
-      <span class="line-num"></span><span class="line-text">no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta</span>
-      <span class="line-num"></span><span class="line-text">idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</span>
-      <span class="line-num marked">25</span><span class="line-text">&nbsp;</span>
-      <span class="line-num"></span><span class="line-text">Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue procesado judicialmente</span>
-      <span class="line-num"></span><span class="line-text">por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un</span>
-      <span class="line-num"></span><span class="line-text">tratamiento hormonal forzoso que además le hizo perder su acreditación de seguridad y, con</span>
-      <span class="line-num"></span><span class="line-text">ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954,</span>
-      <span class="line-num marked">30</span><span class="line-text">su asistenta lo encontró muerto en su casa de Wilmslow, cerca de Manchester. El veredicto</span>
-      <span class="line-num"></span><span class="line-text">oficial de la época fue suicidio por envenenamiento con cianuro; junto a su cuerpo se halló</span>
-      <span class="line-num"></span><span class="line-text">una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el</span>
-      <span class="line-num"></span><span class="line-text">cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con</span>
-      <span class="line-num"></span><span class="line-text">el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en</span>
-      <span class="line-num marked">35</span><span class="line-text">casa un pequeño laboratorio químico y que la muerte pudo deberse a una inhalación accidental</span>
-      <span class="line-num"></span><span class="line-text">de vapores de cianuro. Tenía 41 años.</span>
-      <span class="line-num"></span><span class="line-text">&nbsp;</span>
-      <span class="line-num"></span><span class="line-text">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que</span>
-      <span class="line-num"></span><span class="line-text">recibió, y en 2013 la reina Isabel II le concedió un indulto real. Desde 2021, su rostro</span>
-      <span class="line-num marked">40</span><span class="line-text">aparece en el billete de 50 libras esterlinas, y desde 1966 la Association for Computing</span>
-      <span class="line-num"></span><span class="line-text">Machinery entrega anualmente el Premio Turing, considerado el galardón más prestigioso de la</span>
-      <span class="line-num"></span><span class="line-text">informática mundial —una especie de «Nobel de la computación»—, un reconocimiento tardío a</span>
-      <span class="line-num"></span><span class="line-text">quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</span>
+      <div class="line-num-col"><span class="ln-marked">1</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span class="ln-marked">5</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span></div>
+      <div class="line-text-col">Alan Turing nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad<br>
+        extraordinaria para las matemáticas y la lógica, aunque en la escuela no siempre encajó con<br>
+        el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador<br>
+        (lo que en el mundo académico británico se llama <em>fellowship</em>) en el King's College de<br>
+        Cambridge, y poco después viajó a la Universidad de Princeton, en Estados Unidos, donde<br>
+        completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en<br>
+        el que describía una máquina teórica capaz de resolver cualquier problema que pudiera<br>
+        expresarse mediante un algoritmo. Aquella idea, conocida hoy como máquina de Turing, se<br>
+        considera el fundamento teórico de los ordenadores actuales.</div>
+
+      <div class="line-num-col"><span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span class="ln-marked">15</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span></div>
+      <div class="line-text-col">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park, el centro británico de<br>
+        descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con<br>
+        la máquina alemana Enigma, un avance que los historiadores consideran clave para acortar la<br>
+        guerra y salvar millones de vidas. Terminada la guerra, Turing no abandonó la investigación.<br>
+        Diseñó el ACE (<em>Automatic Computing Engine</em>) en el Laboratorio Nacional de Física de Londres,<br>
+        uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la<br>
+        Universidad de Manchester para trabajar en una de las primeras máquinas con programa<br>
+        almacenado en memoria, un antecesor directo de los ordenadores actuales.</div>
+
+      <div class="line-num-col"><span class="ln-marked">20</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span></div>
+      <div class="line-text-col">Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina<br>
+        pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento<br>
+        práctico que hoy se conoce como el test de Turing: si una persona conversa con una máquina y<br>
+        no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta<br>
+        idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</div>
+
+      <div class="line-num-col"><span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span class="ln-marked">30</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span><br>
+        <span class="ln-marked">35</span><br>
+        <span></span></div>
+      <div class="line-text-col">Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue procesado judicialmente<br>
+        por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un<br>
+        tratamiento hormonal forzoso que además le hizo perder su acreditación de seguridad y, con<br>
+        ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954,<br>
+        su asistenta lo encontró muerto en su casa de Wilmslow, cerca de Manchester. El veredicto<br>
+        oficial de la época fue suicidio por envenenamiento con cianuro; junto a su cuerpo se halló<br>
+        una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el<br>
+        cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con<br>
+        el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en<br>
+        casa un pequeño laboratorio químico y que la muerte pudo deberse a una inhalación accidental<br>
+        de vapores de cianuro. Tenía 41 años.</div>
+
+      <div class="line-num-col"><span></span><br>
+        <span></span><br>
+        <span class="ln-marked">40</span><br>
+        <span></span><br>
+        <span></span><br>
+        <span></span></div>
+      <div class="line-text-col">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que<br>
+        recibió, y en 2013 la reina Isabel II le concedió un indulto real. Desde 2021, su rostro<br>
+        aparece en el billete de 50 libras esterlinas, y desde 1966 la Association for Computing<br>
+        Machinery entrega anualmente el Premio Turing, considerado el galardón más prestigioso de la<br>
+        informática mundial —una especie de «Nobel de la computación»—, un reconocimiento tardío a<br>
+        quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</div>
     </div>
 
     <div class="text-source">Biografía de Alan Turing (texto de elaboración propia con fines didácticos)</div>
