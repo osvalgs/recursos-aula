@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller de Resumen — ESO</title>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --ink: #1a1612;
+    --muted: #6b6258;
+    --accent: #c0392b;
+    --accent2: #2c6e49;
+    --accent3: #1d4e89;
+    --warm: #e8ddd0;
+    --card: #ffffff;
+    --border: #d4c8b8;
+    --phase1: #e8f4f8;
+    --phase2: #fef9e7;
+    --phase3: #eafaf1;
+    --phase4: #fdf2f8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 113%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Jost', 'Century Gothic', 'Questrial', 'Trebuchet MS', sans-serif;
+    font-size: 19px;
+    line-height: 1.75;
+    min-height: 100vh;
+    text-align: justify;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg, transparent, transparent 18px,
+      rgba(255,255,255,.04) 18px, rgba(255,255,255,.04) 19px
+    );
+  }
+  .header-tag {
+    display: inline-block;
+    font-size: .75rem; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: #c9a96e; margin-bottom: .75rem;
+  }
+  header h1 {
+    font-family: 'Jost', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    line-height: 1.2; margin-bottom: .5rem;
+  }
+  header p { color: rgba(255,255,255,.65); font-style: italic; font-size: .95rem; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  /* ── INTRO BOX ── */
+  .intro-box {
+    background: var(--warm);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px 8px 8px 4px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 2.5rem;
+    font-size: .95rem; color: #3d342b;
+    text-align: justify;
+  }
+  .intro-box strong { color: var(--accent); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { margin-bottom: 2.5rem; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: .8rem; color: var(--muted);
+    margin-bottom: .4rem; font-weight: 600;
+    letter-spacing: .05em; text-transform: uppercase;
+  }
+  .progress-bar-bg { background: var(--border); border-radius: 99px; height: 8px; overflow: hidden; }
+  .progress-bar-fill {
+    background: linear-gradient(90deg, var(--accent2), var(--accent3));
+    height: 100%; border-radius: 99px; width: 0%; transition: width .6s ease;
+  }
+
+  /* ── TEXT CARD ── */
+  .text-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem; margin-bottom: 2.5rem;
+  }
+  .text-card-label {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    font-size: .7rem; font-weight: 600;
+    letter-spacing: .18em; text-transform: uppercase;
+    padding: .25rem .75rem; border-radius: 3px; margin-bottom: 1rem;
+  }
+  .text-card p {
+    margin-bottom: .85rem;
+    font-size: .97rem;
+    text-align: justify;
+  }
+  .text-card p:last-of-type { margin-bottom: 0; }
+  .text-source { margin-top: 1.2rem; font-size: .83rem; color: var(--muted); font-style: italic; }
+
+  /* ── LINE NUMBERS ── */
+  .text-numbered {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0 .75rem;
+    font-size: .95rem;
+    line-height: 1.75;
+  }
+  .line-num {
+    color: #b0a89a;
+    font-size: .72rem;
+    text-align: right;
+    padding-top: .18em;
+    user-select: none;
+    font-style: normal;
+  }
+  .line-num.marked { color: var(--accent3); font-weight: 700; }
+  .line-text { text-align: justify; }
+
+  /* ── PHASES ── */
+  .phase {
+    border-radius: 12px; margin-bottom: 2rem;
+    overflow: hidden; border: 1.5px solid var(--border);
+    transition: border-color .3s;
+  }
+  .phase.active { border-color: var(--accent3); }
+  .phase.done   { border-color: var(--accent2); }
+
+  .phase-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1rem 1.5rem; background: var(--card);
+    cursor: pointer; user-select: none;
+  }
+  .phase-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--warm); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Jost', sans-serif; font-size: 1rem;
+    font-weight: 700; color: var(--muted); flex-shrink: 0; transition: all .3s;
+  }
+  .phase.active .phase-num { background: var(--accent3); border-color: var(--accent3); color: #fff; }
+  .phase.done   .phase-num { background: var(--accent2); border-color: var(--accent2); color: #fff; }
+
+  .phase-title-wrap { flex: 1; }
+  .phase-title { font-family: 'Jost', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); }
+  .phase-subtitle { font-size: .8rem; color: var(--muted); font-style: italic; }
+
+  .phase-status {
+    font-size: .75rem; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; padding: .2rem .65rem;
+    border-radius: 99px; background: var(--warm); color: var(--muted);
+  }
+  .phase.active .phase-status { background: #ddeeff; color: var(--accent3); }
+  .phase.done   .phase-status { background: #d4edda; color: var(--accent2); }
+
+  .phase-body {
+    padding: 0 1.5rem 0; max-height: 0;
+    overflow: hidden; transition: max-height .6s ease, padding .3s;
+    background: var(--card);
+  }
+  .phase-body.open { padding: 0 1.5rem 1.5rem; max-height: 6000px; }
+
+  /* ── HINTS ── */
+  .hint {
+    border-radius: 8px; padding: 1rem 1.2rem;
+    margin-bottom: 1.2rem; font-size: .92rem;
+    text-align: justify;
+  }
+  .hint-blue   { background: var(--phase1); border-left: 3px solid var(--accent3); }
+  .hint-yellow { background: var(--phase2); border-left: 3px solid #e6a817; }
+  .hint-green  { background: var(--phase3); border-left: 3px solid var(--accent2); }
+  .hint-red    { background: var(--phase4); border-left: 3px solid var(--accent); }
+  .hint strong { font-weight: 600; }
+  .hint ul { margin: .5rem 0 0 1.2rem; }
+  .hint ul li { margin-bottom: .3rem; text-align: justify; }
+
+  /* ── TASK BLOCKS ── */
+  .task-block {
+    background: var(--bg); border: 1px dashed var(--border);
+    border-radius: 8px; padding: 1.2rem; margin-bottom: 1.2rem;
+  }
+  .task-label {
+    font-size: .75rem; font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .6rem;
+  }
+  .task-question { font-size: .97rem; margin-bottom: .8rem; color: var(--ink); text-align: justify; }
+  .task-question ul { margin: .4rem 0 0 1.2rem; }
+  .task-question ul li { margin-bottom: .25rem; text-align: justify; }
+
+  /* ── TEXTAREA ── */
+  textarea {
+    width: 100%; border: 1.5px solid var(--border); border-radius: 6px;
+    background: #fff; font-family: 'Jost', sans-serif;
+    font-size: .93rem; line-height: 1.7; color: var(--ink);
+    padding: .8rem 1rem; resize: vertical;
+    transition: border-color .2s, box-shadow .2s; outline: none;
+    text-align: justify;
+  }
+  textarea:focus { border-color: var(--accent3); box-shadow: 0 0 0 3px rgba(29,78,137,.1); }
+  .char-count { text-align: right; font-size: .75rem; color: var(--muted); margin-top: .3rem; }
+
+  /* ── EXAMPLE TOGGLE ── */
+  .example-toggle {
+    display: inline-flex; align-items: center; gap: .4rem;
+    background: none; border: 1.5px solid var(--accent3);
+    color: var(--accent3); font-family: 'Jost', sans-serif;
+    font-size: .83rem; font-weight: 600;
+    padding: .35rem .9rem; border-radius: 99px;
+    cursor: pointer; margin-top: .4rem;
+    transition: background .2s, color .2s;
+  }
+  .example-toggle:hover { background: var(--accent3); color: #fff; }
+
+  .example-box {
+    display: none; background: #eef4fb;
+    border: 1px solid #b8d0ee; border-radius: 8px;
+    padding: 1rem 1.2rem; margin-top: .75rem;
+    font-size: .9rem; color: #1d3557;
+    font-style: italic; text-align: justify;
+  }
+  .example-box.visible { display: block; }
+  .example-box strong { font-style: normal; font-weight: 600; color: var(--accent3); }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; margin: .5rem 0 0; }
+  .checklist li {
+    display: flex; align-items: flex-start; gap: .7rem;
+    font-size: .93rem; padding: .4rem 0;
+    border-bottom: 1px solid var(--border);
+    text-align: justify;
+  }
+  .checklist li:last-child { border-bottom: none; }
+  .checklist input[type="checkbox"] {
+    margin-top: .28rem; width: 16px; height: 16px;
+    accent-color: var(--accent2); flex-shrink: 0; cursor: pointer;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    background: var(--ink); color: #fff; border: none;
+    font-family: 'Jost', sans-serif; font-size: .9rem;
+    font-weight: 600; padding: .7rem 1.8rem; border-radius: 6px;
+    cursor: pointer; transition: background .2s, transform .1s; letter-spacing: .04em;
+  }
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+  .btn-green {
+    background: var(--accent2); color: #fff; border: none;
+    font-family: 'Jost', sans-serif; font-size: .9rem;
+    font-weight: 600; padding: .7rem 1.8rem; border-radius: 6px;
+    cursor: pointer; transition: background .2s; letter-spacing: .04em;
+  }
+  .btn-green:hover { background: #245138; }
+  .btn-row { display: flex; gap: 1rem; margin-top: 1.2rem; flex-wrap: wrap; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+  /* ── CUATRO PUNTOS CARDINALES ── */
+  .cardinal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .8rem;
+    margin: 1rem 0 1.2rem;
+  }
+  @media(max-width:560px){ .cardinal-grid { grid-template-columns: 1fr; } }
+  .cardinal-card {
+    border-radius: 8px; padding: .85rem 1rem;
+    font-size: .9rem; text-align: justify;
+  }
+  .c-brevedad  { background: #dbeafe; border-left: 3px solid #1d4e89; }
+  .c-concision { background: #dcfce7; border-left: 3px solid #2c6e49; }
+  .c-claridad  { background: #fef9e7; border-left: 3px solid #e6a817; }
+  .c-novedad   { background: #fce7f3; border-left: 3px solid #9d174d; }
+  .cardinal-card strong { font-weight: 700; display: block; margin-bottom: .2rem; }
+
+  /* ── NORMAS DOS COLUMNAS ── */
+  .normas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media(max-width:560px){ .normas-grid { grid-template-columns: 1fr; } }
+  .normas-col { background: var(--bg); border-radius: 8px; padding: .85rem 1rem; font-size: .87rem; }
+  .normas-col-title {
+    font-size: .72rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; margin-bottom: .6rem; padding-bottom: .4rem;
+    border-bottom: 2px solid;
+  }
+  .normas-col.no .normas-col-title  { color: var(--accent);  border-color: var(--accent); }
+  .normas-col.si .normas-col-title  { color: var(--accent2); border-color: var(--accent2); }
+  .normas-col ul { list-style: none; }
+  .normas-col ul li {
+    padding: .3rem 0; border-bottom: 1px solid var(--border);
+    text-align: justify; line-height: 1.5;
+  }
+  .normas-col ul li:last-child { border-bottom: none; }
+  .normas-col.no ul li::before { content: '✗ '; color: var(--accent); font-weight: 700; }
+  .normas-col.si ul li::before { content: '✓ '; color: var(--accent2); font-weight: 700; }
+
+  /* ── PÁRRAFO HIGHLIGHT ── */
+  .parr-label {
+    display: inline-block;
+    background: var(--ink); color: #fff;
+    font-size: .65rem; font-weight: 700;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: .1rem .5rem; border-radius: 3px;
+    margin-bottom: .4rem; vertical-align: middle;
+  }
+  .parr-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: .9rem 1.1rem;
+    margin-bottom: .8rem; font-size: .91rem;
+    text-align: justify; line-height: 1.7;
+  }
+  .parr-block textarea {
+    margin-top: .6rem; min-height: 60px;
+    background: #faf7f2; font-size: .88rem;
+  }
+
+  /* ── TEMA FORMULA ── */
+  .tema-formula {
+    display: flex; align-items: center; gap: .6rem;
+    flex-wrap: wrap;
+    background: var(--ink); color: #fff;
+    border-radius: 8px; padding: .8rem 1.2rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    margin: 1rem 0;
+  }
+  .tema-formula .op { color: #c9a96e; font-size: 1.1rem; }
+
+  /* ── FINAL PANEL ── */
+  .final-panel {
+    background: var(--ink); color: #fff;
+    border-radius: 12px; padding: 2rem;
+    text-align: center; display: none;
+  }
+  .final-panel.visible { display: block; }
+  .final-panel h2 { font-family: 'Jost', sans-serif; font-size: 1.5rem; margin-bottom: .75rem; }
+  .final-panel p { color: rgba(255,255,255,.75); font-size: .95rem; margin-bottom: 1.2rem; text-align: center; }
+  .final-score { font-family: 'Jost', sans-serif; font-size: 3rem; color: #c9a96e; line-height: 1; margin-bottom: .3rem; }
+  .final-label { font-size: .8rem; color: rgba(255,255,255,.5); letter-spacing: .1em; text-transform: uppercase; }
+
+  html { scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Lengua Castellana y Literatura · ESO</div>
+  <h1>El Resumen<br><em>Taller guiado paso a paso</em></h1>
+  <p>Textos narrativos, explicativos y biográficos — lee, sigue las fases y construye tu resumen.</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-box">
+    <strong>¿Cómo funciona este taller?</strong> Un texto narrativo (real o ficticio, incluida una biografía) <strong>cuenta hechos</strong>, normalmente en el orden en que suceden. Seguirás <strong>cuatro fases</strong>: identificar el tema, analizar cómo se organiza el texto, localizar la idea principal de cada párrafo y, por último, redactar el resumen en un único párrafo, con tus propias palabras.
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Progreso</span>
+      <span id="progress-text">0 / 4 fases</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- ══ TEXTO ══ -->
+  <div class="text-card">
+    <div class="text-card-label">Texto para resumir</div>
+
+    <div class="text-numbered">
+      <span class="line-num marked">1</span><span class="line-text">Alan Turing nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad</span>
+      <span class="line-num"></span><span class="line-text">extraordinaria para las matemáticas y la lógica, aunque en la escuela no siempre encajó con</span>
+      <span class="line-num"></span><span class="line-text">el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador</span>
+      <span class="line-num"></span><span class="line-text">(lo que en el mundo académico británico se llama <em>fellowship</em>) en el King's College de</span>
+      <span class="line-num marked">5</span><span class="line-text">Cambridge, y poco después viajó a la Universidad de Princeton, en Estados Unidos, donde</span>
+      <span class="line-num"></span><span class="line-text">completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en</span>
+      <span class="line-num"></span><span class="line-text">el que describía una máquina teórica capaz de resolver cualquier problema que pudiera</span>
+      <span class="line-num"></span><span class="line-text">expresarse mediante un algoritmo. Aquella idea, conocida hoy como máquina de Turing, se</span>
+      <span class="line-num"></span><span class="line-text">considera el fundamento teórico de los ordenadores actuales.</span>
+      <span class="line-num marked">10</span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park, el centro británico de</span>
+      <span class="line-num"></span><span class="line-text">descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con</span>
+      <span class="line-num"></span><span class="line-text">la máquina alemana Enigma, un avance que los historiadores consideran clave para acortar la</span>
+      <span class="line-num"></span><span class="line-text">guerra y salvar millones de vidas. Terminada la guerra, Turing no abandonó la investigación.</span>
+      <span class="line-num marked">15</span><span class="line-text">Diseñó el ACE (<em>Automatic Computing Engine</em>) en el Laboratorio Nacional de Física de Londres,</span>
+      <span class="line-num"></span><span class="line-text">uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la</span>
+      <span class="line-num"></span><span class="line-text">Universidad de Manchester para trabajar en una de las primeras máquinas con programa</span>
+      <span class="line-num"></span><span class="line-text">almacenado en memoria, un antecesor directo de los ordenadores actuales.</span>
+      <span class="line-num"></span><span class="line-text">&nbsp;</span>
+      <span class="line-num marked">20</span><span class="line-text">Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina</span>
+      <span class="line-num"></span><span class="line-text">pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento</span>
+      <span class="line-num"></span><span class="line-text">práctico que hoy se conoce como el test de Turing: si una persona conversa con una máquina y</span>
+      <span class="line-num"></span><span class="line-text">no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta</span>
+      <span class="line-num"></span><span class="line-text">idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</span>
+      <span class="line-num marked">25</span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue procesado judicialmente</span>
+      <span class="line-num"></span><span class="line-text">por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un</span>
+      <span class="line-num"></span><span class="line-text">tratamiento hormonal forzoso que además le hizo perder su acreditación de seguridad y, con</span>
+      <span class="line-num"></span><span class="line-text">ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954,</span>
+      <span class="line-num marked">30</span><span class="line-text">su asistenta lo encontró muerto en su casa de Wilmslow, cerca de Manchester. El veredicto</span>
+      <span class="line-num"></span><span class="line-text">oficial de la época fue suicidio por envenenamiento con cianuro; junto a su cuerpo se halló</span>
+      <span class="line-num"></span><span class="line-text">una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el</span>
+      <span class="line-num"></span><span class="line-text">cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con</span>
+      <span class="line-num"></span><span class="line-text">el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en</span>
+      <span class="line-num marked">35</span><span class="line-text">casa un pequeño laboratorio químico y que la muerte pudo deberse a una inhalación accidental</span>
+      <span class="line-num"></span><span class="line-text">de vapores de cianuro. Tenía 41 años.</span>
+      <span class="line-num"></span><span class="line-text">&nbsp;</span>
+      <span class="line-num"></span><span class="line-text">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que</span>
+      <span class="line-num"></span><span class="line-text">recibió, y en 2013 la reina Isabel II le concedió un indulto real. Desde 2021, su rostro</span>
+      <span class="line-num marked">40</span><span class="line-text">aparece en el billete de 50 libras esterlinas, y desde 1966 la Association for Computing</span>
+      <span class="line-num"></span><span class="line-text">Machinery entrega anualmente el Premio Turing, considerado el galardón más prestigioso de la</span>
+      <span class="line-num"></span><span class="line-text">informática mundial —una especie de «Nobel de la computación»—, un reconocimiento tardío a</span>
+      <span class="line-num"></span><span class="line-text">quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</span>
+    </div>
+
+    <div class="text-source">Biografía de Alan Turing (texto de elaboración propia con fines didácticos)</div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 1 — QUÉ ES UN BUEN RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase1">
+    <div class="phase-header" onclick="togglePhase(1)">
+      <div class="phase-num">1</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">¿Qué es un buen resumen?</div>
+        <div class="phase-subtitle">Las cuatro claves y las normas esenciales</div>
+      </div>
+      <div class="phase-status" id="status1">En curso</div>
+    </div>
+    <div class="phase-body open" id="body1">
+
+      <div class="hint hint-blue">
+        <strong>📋 Definición.</strong> Resumir es contar, con <strong>tus propias palabras</strong> y de forma <strong>breve, ordenada y clara</strong>, lo esencial de un texto en un único párrafo. Alguien que no haya leído el texto original debe poder entender, solo con tu resumen, de qué o de quién trata y qué es lo más importante que le sucede. La extensión debe rondar el <strong>25-30 % del texto original</strong>.
+      </div>
+
+      <div class="hint hint-yellow">
+        <strong>🧭 En un texto narrativo</strong> lo esencial son los <strong>hechos más importantes</strong>: quién es el protagonista, qué hizo, cuándo y por qué fue relevante. Los datos secundarios (fechas exactas, nombres de lugares concretos, anécdotas curiosas) casi siempre se pueden eliminar del resumen.
+      </div>
+
+      <!-- Cuatro puntos cardinales -->
+      <p style="font-weight:600; margin-bottom:.7rem; font-size:.95rem;">Los cuatro puntos cardinales de un buen resumen:</p>
+      <div class="cardinal-grid">
+        <div class="cardinal-card c-brevedad">
+          <strong>BREVEDAD</strong>
+          Siempre es un texto más corto que el original. Elimina lo accesorio.
+        </div>
+        <div class="cardinal-card c-concision">
+          <strong>CONCISIÓN</strong>
+          Solo la información esencial: sin fechas exactas, anécdotas ni datos sueltos.
+        </div>
+        <div class="cardinal-card c-claridad">
+          <strong>CLARIDAD</strong>
+          Texto cohesionado y coherente. Usa conectores para unir las ideas.
+        </div>
+        <div class="cardinal-card c-novedad">
+          <strong>NOVEDAD</strong>
+          Crea un texto nuevo con tus propias palabras. No copies frases del original.
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Normas -->
+      <p style="font-weight:600; margin-bottom:.7rem; font-size:.95rem;">Normas de redacción:</p>
+      <div class="normas-grid">
+        <div class="normas-col no">
+          <div class="normas-col-title">✗ Lo que NO debes hacer</div>
+          <ul>
+            <li>Usar primera persona: «yo creo», «me parece».</li>
+            <li>Copiar literalmente frases del texto original.</li>
+            <li>Incluir fechas exactas, cifras o anécdotas secundarias.</li>
+            <li>Empezar con «Este texto trata de…» o «En este texto…».</li>
+            <li>Dar tu opinión sobre los hechos que se cuentan.</li>
+            <li>Enumerar todos los datos en el mismo orden que el original sin sintetizar.</li>
+          </ul>
+        </div>
+        <div class="normas-col si">
+          <div class="normas-col-title">✓ ¡Bien hecho!</div>
+          <ul>
+            <li>Escribe en tercera persona y en presente de indicativo (aunque el texto esté en pasado).</li>
+            <li>Usa sinónimos para las palabras clave del texto.</li>
+            <li>Agrupa varios hechos concretos bajo una idea general.</li>
+            <li>Respeta el orden cronológico de los hechos.</li>
+            <li>Usa conectores textuales: «En primer lugar,», «A continuación,», «Finalmente,».</li>
+            <li>Redacta en un único párrafo de extensión ajustada al 25-30 % del original.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(1)">✅ Entendido, siguiente fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 2 — TEMA E IDEA GENERAL
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase2">
+    <div class="phase-header" onclick="togglePhase(2)">
+      <div class="phase-num">2</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Identifica el tema</div>
+        <div class="phase-subtitle">La idea central del texto expresada en una frase nominal breve</div>
+      </div>
+      <div class="phase-status" id="status2">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body2">
+
+      <div class="hint hint-yellow">
+        <strong>🎯 En un texto biográfico, el tema no es solo «la vida de X».</strong> Debe recoger también <strong>qué aspecto</strong> de esa vida destaca especialmente el texto. Para encontrarlo, responde a estas dos preguntas: <em>¿de quién trata el texto?</em> y <em>¿qué es lo más importante que se cuenta sobre esa persona?</em>
+      </div>
+
+      <div class="tema-formula">
+        <span>TEMA</span>
+        <span class="op">=</span>
+        <span>SUSTANTIVO</span>
+        <span class="op">+</span>
+        <span>MODIFICADOR/ES</span>
+        <span style="color:rgba(255,255,255,.5); font-family:'Jost',sans-serif; font-size:.8rem; font-weight:400;">(frase nominal breve, máx. dos líneas)</span>
+      </div>
+
+      <div class="hint hint-blue" style="margin-bottom:1rem;">
+        <strong>Posibles sustantivos de partida:</strong> la biografía de… · la trayectoria de… · la vida de… · el retrato de… · la historia de… · las aportaciones de…
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tarea 2.1 — Dos preguntas clave</div>
+        <div class="task-question">Antes de formular el tema, responde brevemente a estas dos preguntas:</div>
+        <p style="font-size:.9rem; margin-bottom:.4rem; font-weight:600;">¿De quién trata el texto?</p>
+        <textarea rows="2" id="t2_q1" placeholder="El texto trata sobre…" oninput="updateCount('t2_q1','c2_q1')"></textarea>
+        <div class="char-count" id="c2_q1">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex2_q1')">💡 Ver posible respuesta</button>
+        <div class="example-box" id="ex2_q1">
+          <strong>Posible respuesta:</strong> El texto trata sobre la vida de Alan Turing, un matemático británico.
+        </div>
+        <p style="font-size:.9rem; margin:.8rem 0 .4rem; font-weight:600;">¿Qué aspectos de su vida se destacan (sus logros, su final, su reconocimiento posterior…)?</p>
+        <textarea rows="2" id="t2_q2" placeholder="El texto destaca…" oninput="updateCount('t2_q2','c2_q2')"></textarea>
+        <div class="char-count" id="c2_q2">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex2_q2')">💡 Ver posible respuesta</button>
+        <div class="example-box" id="ex2_q2">
+          <strong>Posible respuesta:</strong> Se destacan sus logros científicos (las bases de la informática y de la inteligencia artificial), su papel en la Segunda Guerra Mundial, la persecución que sufrió por ser homosexual y el reconocimiento que recibió después de su muerte.
+        </div>
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tarea 2.2 — Formula el tema</div>
+        <div class="task-question">Con las respuestas anteriores, escribe el tema del texto en una <strong>frase nominal breve</strong> (sin verbo conjugado).</div>
+        <textarea rows="2" id="t2_tema" placeholder="La biografía de…" oninput="updateCount('t2_tema','c2_tema')"></textarea>
+        <div class="char-count" id="c2_tema">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex2_tema')">💡 Ver ejemplo resuelto</button>
+        <div class="example-box" id="ex2_tema">
+          <strong>Ejemplo:</strong> La biografía de Alan Turing, centrada en sus aportaciones a la informática y a la inteligencia artificial, la persecución que sufrió por su condición sexual y el reconocimiento póstumo de su figura.
+          <br><br>
+          <strong>¿Por qué no basta con «Alan Turing»?</strong> Porque no nombra ni un solo aspecto de lo que cuenta el texto sobre él. El tema debe decir algo del contenido, no solo el nombre del protagonista.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(2)">✅ Completar esta fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 3 — IDEAS POR PÁRRAFO
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase3">
+    <div class="phase-header" onclick="togglePhase(3)">
+      <div class="phase-num">3</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Idea principal de cada párrafo</div>
+        <div class="phase-subtitle">Estructura del texto e ideas esenciales</div>
+      </div>
+      <div class="phase-status" id="status3">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body3">
+
+      <div class="hint hint-green">
+        <strong>🗂️ Localiza los hechos clave, no los detalles.</strong> En un texto biográfico suele distinguirse una <strong>introducción</strong> (presentación del personaje y sus primeros pasos), un <strong>desarrollo cronológico</strong> (sus logros y hechos más importantes, en orden de tiempo) y un <strong>desenlace o cierre</strong> (cómo termina su historia y qué huella deja). Fíjate en que cada párrafo de este texto corresponde a una etapa distinta de la vida de Turing.
+      </div>
+
+      <div class="hint hint-yellow" style="font-size:.88rem;">
+        <strong>⚠️ Recuerda:</strong> anota junto a cada párrafo el hecho principal, <em>no</em> las fechas exactas, ni los nombres de lugares concretos, ni las anécdotas curiosas (como la manzana). Usa siempre tus propias palabras. La frase debe ser breve.
+      </div>
+
+      <!-- Párrafo 1 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 1 · Líneas 1-9</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Introducción — Formación</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Alan Turing nació en Londres en 1912… […] se considera el fundamento teórico de los ordenadores actuales.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p1" placeholder="Turing mostró desde joven un enorme talento matemático que le llevó a formular las bases teóricas de la informática…" oninput="updateCount('t3_p1','c3_p1')"></textarea>
+        <div class="char-count" id="c3_p1">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p1')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p1">
+          <strong>Ejemplo:</strong> Turing destacó desde joven por su talento matemático, estudió en Cambridge y Princeton y formuló, en 1936, la idea teórica que hoy se considera la base de los ordenadores.
+          <br><br><strong>Descartado como detalle:</strong> la fecha exacta de nacimiento, el nombre concreto del King's College, la palabra <em>fellowship</em>. Son datos concretos que ilustran la idea, no la idea en sí.
+        </div>
+      </div>
+
+      <!-- Párrafo 2 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 2 · Líneas 11-18</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desarrollo — Papel en la Segunda Guerra Mundial</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park… […] un antecesor directo de los ordenadores actuales.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p2" placeholder="Turing descifró el código Enigma durante la guerra y después siguió diseñando los primeros ordenadores…" oninput="updateCount('t3_p2','c3_p2')"></textarea>
+        <div class="char-count" id="c3_p2">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p2')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p2">
+          <strong>Ejemplo:</strong> Durante la guerra, Turing lideró el equipo que descifró el código Enigma, un logro decisivo para acortar el conflicto, y tras ella continuó trabajando en los primeros ordenadores electrónicos.
+          <br><br><strong>Descartado como detalle:</strong> el nombre exacto del centro (Bletchley Park), el nombre del proyecto ACE, la ubicación en Manchester. Son datos concretos que apoyan la idea principal.
+        </div>
+      </div>
+
+      <!-- Párrafo 3 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 3 · Líneas 20-24</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desarrollo — El test de Turing</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Años después, en 1950, planteó una pregunta que sigue vigente hoy… […] bases de la inteligencia artificial que usamos en la actualidad.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p3" placeholder="Turing propuso una prueba para saber si una máquina podía pensar, idea que hoy sustenta la inteligencia artificial…" oninput="updateCount('t3_p3','c3_p3')"></textarea>
+        <div class="char-count" id="c3_p3">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p3')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p3">
+          <strong>Ejemplo:</strong> En 1950 propuso una prueba, conocida como el test de Turing, para determinar si una máquina podía pensar, idea que hoy fundamenta la inteligencia artificial.
+          <br><br><strong>Descartado como detalle:</strong> la explicación literal de cómo funciona la prueba paso a paso. Basta con nombrarla y decir su importancia.
+        </div>
+      </div>
+
+      <!-- Párrafo 4 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 4 · Líneas 26-36</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desenlace — Persecución y muerte</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Sin embargo, la vida de Turing terminó de forma trágica… […] Tenía 41 años.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p4" placeholder="Turing fue perseguido judicialmente por su homosexualidad, lo que arruinó su carrera, y murió poco después en circunstancias que aún se discuten…" oninput="updateCount('t3_p4','c3_p4')"></textarea>
+        <div class="char-count" id="c3_p4">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p4')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p4">
+          <strong>Ejemplo:</strong> En 1952 fue condenado por su homosexualidad, lo que le costó su carrera, y en 1954 fue hallado muerto, aunque hoy se discute si aquella muerte fue realmente un suicidio o un accidente.
+          <br><br><strong>Descartado como detalle:</strong> la manzana a medio comer, la referencia a Blancanieves, el nombre de la localidad de Wilmslow. Son datos anecdóticos que no cambian la idea principal.
+        </div>
+      </div>
+
+      <!-- Párrafo 5 -->
+      <div class="parr-block">
+        <div>
+          <span class="parr-label">Párrafo 5 · Líneas 38-43</span>
+          <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Cierre — Reconocimiento póstumo</span>
+        </div>
+        <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas… […] de la informática y de la inteligencia artificial.</p>
+        <p style="font-size:.87rem; font-weight:600; margin-bottom:.3rem;">¿Cuál es la idea principal de este párrafo? (en tus palabras)</p>
+        <textarea rows="2" id="t3_p5" placeholder="Con el tiempo, Turing ha recibido un reconocimiento oficial que antes se le negó…" oninput="updateCount('t3_p5','c3_p5')"></textarea>
+        <div class="char-count" id="c3_p5">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex3_p5')">💡 Ver ejemplo</button>
+        <div class="example-box" id="ex3_p5">
+          <strong>Ejemplo:</strong> Décadas después, el Reino Unido pidió disculpas y le concedió un indulto oficial, y hoy Turing es homenajeado y reconocido como una figura clave de la informática y la inteligencia artificial.
+          <br><br><strong>Descartado como detalle:</strong> los años exactos de cada homenaje, el nombre concreto del premio o del billete. Basta con transmitir que hubo un reconocimiento oficial y posterior.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(3)">✅ Completar esta fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 4 — REDACTAR EL RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase4">
+    <div class="phase-header" onclick="togglePhase(4)">
+      <div class="phase-num">4</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Redacta el resumen</div>
+        <div class="phase-subtitle">Un único párrafo con tus propias palabras</div>
+      </div>
+      <div class="phase-status" id="status4">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body4">
+
+      <div class="hint hint-blue">
+        <strong>✍️ Ahora reúne todo lo que has trabajado.</strong> Combina las ideas principales de cada párrafo en un único texto cohesionado. El orden debe seguir el orden cronológico del texto original (igual que la vida de Turing). Usa conectores para enlazar las ideas y evita repetir las palabras exactas del texto.
+      </div>
+
+      <div class="hint hint-green" style="font-size:.88rem;">
+        <strong>Conectores útiles para organizar un resumen narrativo:</strong><br>
+        <span style="display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.5rem;">
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">En primer lugar,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Durante…</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">A continuación,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Más tarde,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Sin embargo,</span>
+          <span style="background:#fff; border:1px solid var(--border); padding:.2rem .6rem; border-radius:99px; font-size:.82rem;">Finalmente,</span>
+        </span>
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tu resumen</div>
+        <div class="task-question">Escribe aquí el resumen del texto en un único párrafo. Ten en cuenta que el texto original tiene unas <strong>43 líneas</strong>; el resumen debería tener entre <strong>10 y 13 líneas</strong> aproximadamente (25-30 % del original).</div>
+        <textarea id="t4_resumen" rows="10" placeholder="Escribe aquí tu resumen en un único párrafo…" oninput="updateCount('t4_resumen','c4_resumen')"></textarea>
+        <div class="char-count" id="c4_resumen">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex4_resumen')">💡 Ver resumen resuelto</button>
+        <div class="example-box" id="ex4_resumen">
+          <strong>Resumen modelo:</strong> Alan Turing destacó desde joven por su enorme talento matemático, que desarrolló en Cambridge y Princeton hasta formular, en 1936, la idea teórica que hoy se considera la base de los ordenadores. Durante la Segunda Guerra Mundial lideró el equipo que logró descifrar el código Enigma, un logro decisivo para acortar el conflicto, y tras la guerra continuó trabajando en el diseño de los primeros ordenadores electrónicos. En 1950 propuso, además, una prueba para determinar si una máquina podía pensar, conocida como el test de Turing, que hoy fundamenta la inteligencia artificial. Sin embargo, su vida terminó de forma trágica: en 1952 fue condenado judicialmente por su homosexualidad, lo que le costó su carrera, y dos años después fue hallado muerto en circunstancias que todavía hoy se discuten. Décadas más tarde, el Reino Unido pidió disculpas públicas y le concedió un indulto oficial, y en la actualidad se le reconoce como una de las figuras fundamentales de la informática y la inteligencia artificial.
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- LISTA DE REVISIÓN -->
+      <p style="font-weight:600; margin-bottom:.8rem; font-size:.95rem;">🔍 Lista de revisión antes de entregar:</p>
+      <ul class="checklist">
+        <li><input type="checkbox"> <span>He redactado el resumen en <strong>un único párrafo</strong>, sin divisiones.</span></li>
+        <li><input type="checkbox"> <span>He escrito en <strong>tercera persona</strong> y, preferiblemente, en <strong>presente de indicativo</strong>.</span></li>
+        <li><input type="checkbox"> <span>He usado <strong>mis propias palabras</strong>: no he copiado frases literales del texto.</span></li>
+        <li><input type="checkbox"> <span>He incluido los <strong>hechos principales</strong> de los cinco párrafos, en el orden del texto.</span></li>
+        <li><input type="checkbox"> <span>He <strong>descartado</strong> fechas exactas, cifras y anécdotas secundarias (como la manzana).</span></li>
+        <li><input type="checkbox"> <span>He usado <strong>conectores textuales</strong> para enlazar las ideas.</span></li>
+        <li><input type="checkbox"> <span>He respetado el <strong>orden cronológico</strong> de los hechos.</span></li>
+        <li><input type="checkbox"> <span>No he dado <strong>mi opinión</strong> sobre lo que le sucedió a Turing.</span></li>
+        <li><input type="checkbox"> <span>La extensión es <strong>aproximadamente el 25-30 %</strong> del texto original.</span></li>
+        <li><input type="checkbox"> <span>He revisado la <strong>ortografía y la puntuación</strong>.</span></li>
+      </ul>
+
+      <div class="task-block" style="margin-top:1.2rem;">
+        <div class="task-label">🪞 Autoevaluación</div>
+        <div class="task-question">¿Qué parte del resumen crees que has resuelto mejor? ¿Qué te ha resultado más difícil?</div>
+        <textarea rows="3" id="t4_auto" placeholder="Lo que mejor he hecho es… Lo que más me ha costado es…" oninput="updateCount('t4_auto','c4_auto')"></textarea>
+        <div class="char-count" id="c4_auto">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex4_auto')">💡 Ver un ejemplo de respuesta</button>
+        <div class="example-box" id="ex4_auto">
+          <strong>Ejemplo:</strong> Creo que he identificado bien el tema y las ideas principales de cada párrafo, porque el texto está muy ordenado. Lo que más me ha costado es no repetir las mismas palabras del texto original al redactar el resumen final.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="completePhase(4)">🎓 Finalizar el taller</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL FINAL -->
+  <div class="final-panel" id="finalPanel">
+    <h2>¡Resumen completado!</h2>
+    <p>Has recorrido las cuatro fases del proceso de síntesis. Identificar el tema, analizar la estructura, localizar los hechos principales y redactar con tus propias palabras son las habilidades que acabas de practicar.</p>
+    <div class="final-score" id="finalScore">4/4</div>
+    <div class="final-label">fases superadas</div>
+    <p style="margin-top:1.5rem; font-size:.85rem;">Guarda o imprime esta página para conservar tu trabajo antes de cerrar el navegador.</p>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  let completedPhases = 0;
+  const total = 4;
+
+  function updateCount(id, countId) {
+    const ta = document.getElementById(id);
+    const ct = document.getElementById(countId);
+    if (ta && ct) ct.textContent = ta.value.length + ' caracteres';
+  }
+
+  function toggleExample(id) {
+    const box = document.getElementById(id);
+    if (box) box.classList.toggle('visible');
+  }
+
+  function togglePhase(n) {
+    const body = document.getElementById('body' + n);
+    if (body) body.classList.toggle('open');
+  }
+
+  function completePhase(n) {
+    const phase  = document.getElementById('phase'  + n);
+    const status = document.getElementById('status' + n);
+    const body   = document.getElementById('body'   + n);
+
+    if (phase.classList.contains('done')) return;
+
+    const nextPhase = document.getElementById('phase' + (n + 1));
+    const nextBody  = nextPhase ? document.getElementById('body' + (n + 1)) : null;
+
+    // Desactivamos temporalmente las transiciones de altura/padding
+    // para que el cambio de layout sea instantáneo y el scroll no
+    // tenga que perseguir un objetivo que se sigue moviendo.
+    body.style.transition = 'none';
+    if (nextBody) nextBody.style.transition = 'none';
+
+    phase.classList.remove('active');
+    phase.classList.add('done');
+    status.textContent = '✓ Completada';
+    body.classList.remove('open');
+
+    completedPhases++;
+    updateProgress();
+
+    if (nextPhase) {
+      nextPhase.classList.add('active');
+      document.getElementById('status' + (n + 1)).textContent = 'En curso';
+      nextBody.classList.add('open');
+
+      // Forzamos el layout final antes de hacer scroll, así el
+      // destino ya es definitivo y no se producen saltos.
+      void nextBody.offsetHeight;
+
+      // html tiene scroll-behavior:smooth global; lo desactivamos
+      // un instante para que este salto sea realmente inmediato.
+      const prevScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      nextPhase.scrollIntoView({ behavior: 'auto', block: 'start' });
+      document.documentElement.style.scrollBehavior = prevScrollBehavior;
+
+      // Restauramos las transiciones para que el plegado/desplegado
+      // manual (togglePhase) siga animándose con normalidad.
+      requestAnimationFrame(() => {
+        body.style.transition = '';
+        if (nextBody) nextBody.style.transition = '';
+      });
+    }
+
+    if (completedPhases === total) {
+      const panel = document.getElementById('finalPanel');
+      panel.classList.add('visible');
+      document.getElementById('finalScore').textContent = total + '/' + total;
+      setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+    }
+  }
+
+  function updateProgress() {
+    const pct = (completedPhases / total) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = completedPhases + ' / ' + total + ' fases';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('phase1').classList.add('active');
+    document.getElementById('status1').textContent = 'En curso';
+  });
+</script>
+
+</body>
+</html>
