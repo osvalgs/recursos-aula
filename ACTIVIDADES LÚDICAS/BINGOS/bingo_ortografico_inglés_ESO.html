@@ -874,6 +874,17 @@
     }
   });
 
+  // Busca una palabra (sin importar mayúsculas/minúsculas) en todo el WORD_BANK
+  // para poder recuperar su significado y sinónimos si el profesorado la escribe a mano.
+  function findWordInBank(text){
+    const target = text.trim().toLowerCase();
+    for(const cat in WORD_BANK){
+      const hit = WORD_BANK[cat].find(w=>w.word.toLowerCase()===target);
+      if(hit) return hit;
+    }
+    return null;
+  }
+
   function renderWordBank(){
     wordBankPreview.innerHTML = words.map(item=>
       '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
@@ -884,6 +895,18 @@
         const newVal = el.textContent.trim();
         const entry = words.find(w=>w.n===n);
         if(entry && newVal){
+          if(newVal.toLowerCase() !== entry.word.toLowerCase()){
+            const match = findWordInBank(newVal);
+            if(match){
+              entry.defEn = match.defEn;
+              entry.defEs = match.defEs;
+              entry.syn = match.syn.slice();
+            } else {
+              entry.defEn = '';
+              entry.defEs = '';
+              entry.syn = [];
+            }
+          }
           entry.word = newVal;
           renderCards();
           saveWordsToStorage();
