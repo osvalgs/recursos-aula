@@ -118,24 +118,30 @@
   .text-source { margin-top: 1.2rem; font-size: .83rem; color: var(--muted); font-style: italic; }
 
   /* ── LINE NUMBERS ── */
-  .text-numbered {
-    display: grid;
-    grid-template-columns: 2rem 1fr;
-    column-gap: .75rem;
-    row-gap: .9rem;
-    font-size: .95rem;
-    line-height: 1.75;
+  .text-numbered-dynamic {
+    display: flex;
+    gap: .75rem;
+    position: relative;
   }
-  .line-num-col {
-    color: #b0a89a;
-    font-size: .72rem;
+  .num-gutter {
+    position: relative;
+    width: 2.2rem;
+    flex-shrink: 0;
+  }
+  .num-gutter .ln-mark {
+    position: absolute;
+    right: 0;
+    left: 0;
     text-align: right;
-    padding-top: .18em;
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--accent3);
+    line-height: 1.6625rem;
     user-select: none;
-    font-style: normal;
   }
-  .line-num-col .ln-marked { color: var(--accent3); font-weight: 700; }
-  .line-text-col { text-align: justify; }
+  .text-flow { flex: 1; font-size: .95rem; line-height: 1.6625rem; min-width: 0; }
+  .text-flow p { text-align: justify; margin: 0 0 .9rem; }
+  .text-flow p:last-child { margin-bottom: 0; }
 
   /* ── PHASES ── */
   .phase {
@@ -377,13 +383,13 @@
 <div class="container">
 
   <div class="intro-box">
-    <strong>¿Cómo funciona este taller?</strong> Un texto narrativo (real o ficticio, incluida una biografía) <strong>cuenta hechos</strong>, normalmente en el orden en que suceden. Seguirás <strong>cuatro fases</strong>: identificar el tema, analizar cómo se organiza el texto, localizar la idea principal de cada párrafo y, por último, redactar el resumen en un único párrafo, con tus propias palabras.
+    <strong>¿Cómo funciona este taller?</strong> Un texto narrativo (real o ficticio, incluida una biografía) <strong>cuenta hechos</strong>, normalmente en el orden en que suceden. Seguirás <strong>cinco fases</strong>: identificar el tema, localizar la idea principal de cada párrafo, dividir el texto en tres partes y, por último, redactar el resumen en un único párrafo, con tus propias palabras.
   </div>
 
   <div class="progress-wrap">
     <div class="progress-label">
       <span>Progreso</span>
-      <span id="progress-text">0 / 4 fases</span>
+      <span id="progress-text">0 / 5 fases</span>
     </div>
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progress-fill"></div>
@@ -394,89 +400,15 @@
   <div class="text-card">
     <div class="text-card-label">Texto para resumir</div>
 
-    <div class="text-numbered">
-      <div class="line-num-col"><span class="ln-marked">1</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span class="ln-marked">5</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span></div>
-      <div class="line-text-col">Alan Turing nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad<br>
-        extraordinaria para las matemáticas y la lógica, aunque en la escuela no siempre encajó con<br>
-        el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador<br>
-        (lo que en el mundo académico británico se llama <em>fellowship</em>) en el King's College de<br>
-        Cambridge, y poco después viajó a la Universidad de Princeton, en Estados Unidos, donde<br>
-        completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en<br>
-        el que describía una máquina teórica capaz de resolver cualquier problema que pudiera<br>
-        expresarse mediante un algoritmo. Aquella idea, conocida hoy como máquina de Turing, se<br>
-        considera el fundamento teórico de los ordenadores actuales.</div>
-
-      <div class="line-num-col"><span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span class="ln-marked">15</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span></div>
-      <div class="line-text-col">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park, el centro británico de<br>
-        descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con<br>
-        la máquina alemana Enigma, un avance que los historiadores consideran clave para acortar la<br>
-        guerra y salvar millones de vidas. Terminada la guerra, Turing no abandonó la investigación.<br>
-        Diseñó el ACE (<em>Automatic Computing Engine</em>) en el Laboratorio Nacional de Física de Londres,<br>
-        uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la<br>
-        Universidad de Manchester para trabajar en una de las primeras máquinas con programa<br>
-        almacenado en memoria, un antecesor directo de los ordenadores actuales.</div>
-
-      <div class="line-num-col"><span class="ln-marked">20</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span></div>
-      <div class="line-text-col">Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina<br>
-        pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento<br>
-        práctico que hoy se conoce como el test de Turing: si una persona conversa con una máquina y<br>
-        no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta<br>
-        idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</div>
-
-      <div class="line-num-col"><span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span class="ln-marked">30</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span><br>
-        <span class="ln-marked">35</span><br>
-        <span></span></div>
-      <div class="line-text-col">Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue procesado judicialmente<br>
-        por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un<br>
-        tratamiento hormonal forzoso que además le hizo perder su acreditación de seguridad y, con<br>
-        ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954,<br>
-        su asistenta lo encontró muerto en su casa de Wilmslow, cerca de Manchester. El veredicto<br>
-        oficial de la época fue suicidio por envenenamiento con cianuro; junto a su cuerpo se halló<br>
-        una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el<br>
-        cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con<br>
-        el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en<br>
-        casa un pequeño laboratorio químico y que la muerte pudo deberse a una inhalación accidental<br>
-        de vapores de cianuro. Tenía 41 años.</div>
-
-      <div class="line-num-col"><span></span><br>
-        <span></span><br>
-        <span class="ln-marked">40</span><br>
-        <span></span><br>
-        <span></span><br>
-        <span></span></div>
-      <div class="line-text-col">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que<br>
-        recibió, y en 2013 la reina Isabel II le concedió un indulto real. Desde 2021, su rostro<br>
-        aparece en el billete de 50 libras esterlinas, y desde 1966 la Association for Computing<br>
-        Machinery entrega anualmente el Premio Turing, considerado el galardón más prestigioso de la<br>
-        informática mundial —una especie de «Nobel de la computación»—, un reconocimiento tardío a<br>
-        quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</div>
+    <div class="text-numbered-dynamic" id="textNumbered">
+      <div class="num-gutter" id="numGutter"></div>
+      <div class="text-flow" id="textFlow">
+    <p>Alan Turing nació en Londres el 23 de junio de 1912. Desde joven mostró una capacidad extraordinaria para las matemáticas y la lógica, aunque en la escuela no siempre encajó con el sistema tradicional de enseñanza. Con solo 22 años consiguió una plaza de investigador (lo que en el mundo académico británico se llama <em>fellowship</em>) en el King's College de Cambridge, y poco después viajó a la Universidad de Princeton, en Estados Unidos, donde completó su doctorado. En 1936 publicó, precisamente en esos años, un artículo científico en el que describía una máquina teórica capaz de resolver cualquier problema que pudiera expresarse mediante un algoritmo. Aquella idea, conocida hoy como máquina de Turing, se considera el fundamento teórico de los ordenadores actuales.</p>
+    <p>Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park, el centro británico de descifrado de códigos. Allí lideró el equipo que logró descifrar los mensajes cifrados con la máquina alemana Enigma, un avance que los historiadores consideran clave para acortar la guerra y salvar millones de vidas. Terminada la guerra, Turing no abandonó la investigación. Diseñó el ACE (<em>Automatic Computing Engine</em>) en el Laboratorio Nacional de Física de Londres, uno de los primeros proyectos de ordenador electrónico, y más tarde se trasladó a la Universidad de Manchester para trabajar en una de las primeras máquinas con programa almacenado en memoria, un antecesor directo de los ordenadores actuales.</p>
+    <p>Años después, en 1950, planteó una pregunta que sigue vigente hoy: ¿puede una máquina pensar? Para responderla sin caer en discusiones filosóficas eternas, propuso un experimento práctico que hoy se conoce como el test de Turing: si una persona conversa con una máquina y no logra distinguirla de un ser humano, esa máquina podría considerarse inteligente. Esta idea es una de las bases de la inteligencia artificial que usamos en la actualidad.</p>
+    <p>Sin embargo, la vida de Turing terminó de forma trágica. En 1952 fue procesado judicialmente por ser homosexual, algo que entonces era ilegal en el Reino Unido, y fue condenado a un tratamiento hormonal forzoso que además le hizo perder su acreditación de seguridad y, con ella, la posibilidad de seguir trabajando para el gobierno británico. El 8 de junio de 1954, su asistenta lo encontró muerto en su casa de Wilmslow, cerca de Manchester. El veredicto oficial de la época fue suicidio por envenenamiento con cianuro; junto a su cuerpo se halló una manzana a medio comer, un detalle que algunos han relacionado con su fascinación por el cuento de Blancanieves, aunque nunca se confirmó que fuera el medio del envenenamiento. Con el tiempo, varios historiadores han cuestionado ese veredicto, señalando que Turing tenía en casa un pequeño laboratorio químico y que la muerte pudo deberse a una inhalación accidental de vapores de cianuro. Tenía 41 años.</p>
+    <p>Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas por el trato que recibió, y en 2013 la reina Isabel II le concedió un indulto real. Desde 2021, su rostro aparece en el billete de 50 libras esterlinas, y desde 1966 la Association for Computing Machinery entrega anualmente el Premio Turing, considerado el galardón más prestigioso de la informática mundial —una especie de «Nobel de la computación»—, un reconocimiento tardío a quien hoy se considera uno de los padres de la informática y de la inteligencia artificial.</p>
+      </div>
     </div>
 
     <div class="text-source">Biografía de Alan Turing (texto de elaboración propia con fines didácticos)</div>
@@ -654,7 +586,7 @@
       <!-- Párrafo 1 -->
       <div class="parr-block">
         <div>
-          <span class="parr-label">Párrafo 1 · Líneas 1-9</span>
+          <span class="parr-label">Párrafo 1 · <span data-parr-range="1">líneas 1-10</span></span>
           <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Introducción — Formación</span>
         </div>
         <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Alan Turing nació en Londres en 1912… […] se considera el fundamento teórico de los ordenadores actuales.</p>
@@ -671,7 +603,7 @@
       <!-- Párrafo 2 -->
       <div class="parr-block">
         <div>
-          <span class="parr-label">Párrafo 2 · Líneas 11-18</span>
+          <span class="parr-label">Párrafo 2 · <span data-parr-range="2">líneas 11-19</span></span>
           <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desarrollo — Papel en la Segunda Guerra Mundial</span>
         </div>
         <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Durante la Segunda Guerra Mundial, Turing trabajó en Bletchley Park… […] un antecesor directo de los ordenadores actuales.</p>
@@ -688,7 +620,7 @@
       <!-- Párrafo 3 -->
       <div class="parr-block">
         <div>
-          <span class="parr-label">Párrafo 3 · Líneas 20-24</span>
+          <span class="parr-label">Párrafo 3 · <span data-parr-range="3">líneas 20-25</span></span>
           <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desarrollo — El test de Turing</span>
         </div>
         <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Años después, en 1950, planteó una pregunta que sigue vigente hoy… […] bases de la inteligencia artificial que usamos en la actualidad.</p>
@@ -705,7 +637,7 @@
       <!-- Párrafo 4 -->
       <div class="parr-block">
         <div>
-          <span class="parr-label">Párrafo 4 · Líneas 26-36</span>
+          <span class="parr-label">Párrafo 4 · <span data-parr-range="4">líneas 26-37</span></span>
           <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Desenlace — Persecución y muerte</span>
         </div>
         <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Sin embargo, la vida de Turing terminó de forma trágica… […] Tenía 41 años.</p>
@@ -722,7 +654,7 @@
       <!-- Párrafo 5 -->
       <div class="parr-block">
         <div>
-          <span class="parr-label">Párrafo 5 · Líneas 38-43</span>
+          <span class="parr-label">Párrafo 5 · <span data-parr-range="5">líneas 38-44</span></span>
           <span style="font-size:.8rem; color:var(--muted); margin-left:.5rem; font-style:italic;">Cierre — Reconocimiento póstumo</span>
         </div>
         <p style="font-size:.9rem; color:#444; margin:.4rem 0 .6rem; text-align:justify;">Décadas más tarde, en 2009, el gobierno británico pidió disculpas públicas… […] de la informática y de la inteligencia artificial.</p>
@@ -743,18 +675,68 @@
   </div>
 
   <!-- ══════════════════════════════════════
-       FASE 4 — REDACTAR EL RESUMEN
+       FASE 4 — DIVISIÓN EN TRES PARTES
   ══════════════════════════════════════ -->
   <div class="phase" id="phase4">
     <div class="phase-header" onclick="togglePhase(4)">
       <div class="phase-num">4</div>
       <div class="phase-title-wrap">
-        <div class="phase-title">Redacta el resumen</div>
-        <div class="phase-subtitle">Un único párrafo con tus propias palabras</div>
+        <div class="phase-title">Divide el texto en tres partes</div>
+        <div class="phase-subtitle">Introducción, desarrollo y desenlace</div>
       </div>
       <div class="phase-status" id="status4">Pendiente</div>
     </div>
     <div class="phase-body" id="body4">
+
+      <div class="hint hint-blue">
+        <strong>🧩 Además de identificar la idea de cada párrafo,</strong> es útil ver cómo se organiza el texto en su conjunto. La mayoría de los textos narrativos y biográficos se pueden dividir en <strong>tres grandes partes</strong>: una <strong>introducción</strong> (se presenta al protagonista), un <strong>desarrollo</strong> (los hechos más importantes de su trayectoria) y un <strong>desenlace</strong> (cómo termina la historia y qué sucede después). Estas tres partes agrupan varios párrafos cada una.
+      </div>
+
+      <div class="task-block">
+        <div class="task-label">✏️ Tarea — Marca las tres partes</div>
+        <div class="task-question">Vuelve a mirar los 5 párrafos que has trabajado en la fase anterior y decide qué líneas forman cada una de las tres partes del texto. Escribe, para cada parte, qué líneas abarca y de qué trata:</div>
+
+        <p style="font-size:.9rem; margin-bottom:.3rem; font-weight:600;">Parte 1 — Introducción (¿qué líneas? ¿de qué trata?)</p>
+        <textarea rows="2" id="t35_parte1" placeholder="Líneas… — presenta a Turing y su formación…" oninput="updateCount('t35_parte1','c35_parte1')"></textarea>
+        <div class="char-count" id="c35_parte1">0 caracteres</div>
+
+        <p style="font-size:.9rem; margin:.8rem 0 .3rem; font-weight:600;">Parte 2 — Desarrollo (¿qué líneas? ¿de qué trata?)</p>
+        <textarea rows="2" id="t35_parte2" placeholder="Líneas… — sus logros: Enigma y el test de Turing…" oninput="updateCount('t35_parte2','c35_parte2')"></textarea>
+        <div class="char-count" id="c35_parte2">0 caracteres</div>
+
+        <p style="font-size:.9rem; margin:.8rem 0 .3rem; font-weight:600;">Parte 3 — Desenlace (¿qué líneas? ¿de qué trata?)</p>
+        <textarea rows="2" id="t35_parte3" placeholder="Líneas… — su persecución, muerte y reconocimiento posterior…" oninput="updateCount('t35_parte3','c35_parte3')"></textarea>
+        <div class="char-count" id="c35_parte3">0 caracteres</div>
+
+        <button class="example-toggle" onclick="toggleExample('ex35_partes')">💡 Ver propuesta</button>
+        <div class="example-box" id="ex35_partes">
+          <strong>Propuesta:</strong><br>
+          <strong>Parte 1 — Introducción (párrafo 1):</strong> presenta a Alan Turing, su talento matemático y su formación académica.<br>
+          <strong>Parte 2 — Desarrollo (párrafos 2 y 3):</strong> sus logros: el papel decisivo en la Segunda Guerra Mundial (descifrado de Enigma) y su aportación teórica con el test de Turing.<br>
+          <strong>Parte 3 — Desenlace (párrafos 4 y 5):</strong> su persecución y muerte, y el reconocimiento que recibió después, ya fallecido.
+          <br><br>Otras divisiones razonadas también son válidas: lo importante es justificar por qué esas líneas forman un bloque con sentido propio.
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-green" onclick="completePhase(4)">✅ Completar esta fase →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       FASE 5 — REDACTAR EL RESUMEN
+  ══════════════════════════════════════ -->
+  <div class="phase" id="phase5">
+    <div class="phase-header" onclick="togglePhase(5)">
+      <div class="phase-num">5</div>
+      <div class="phase-title-wrap">
+        <div class="phase-title">Redacta el resumen</div>
+        <div class="phase-subtitle">Un único párrafo con tus propias palabras</div>
+      </div>
+      <div class="phase-status" id="status5">Pendiente</div>
+    </div>
+    <div class="phase-body" id="body5">
 
       <div class="hint hint-blue">
         <strong>✍️ Ahora reúne todo lo que has trabajado.</strong> Combina las ideas principales de cada párrafo en un único texto cohesionado. El orden debe seguir el orden cronológico del texto original (igual que la vida de Turing). Usa conectores para enlazar las ideas y evita repetir las palabras exactas del texto.
@@ -772,13 +754,14 @@
         </span>
       </div>
 
+
       <div class="task-block">
         <div class="task-label">✏️ Tu resumen</div>
-        <div class="task-question">Escribe aquí el resumen del texto en un único párrafo. Ten en cuenta que el texto original tiene unas <strong>43 líneas</strong>; el resumen debería tener entre <strong>10 y 13 líneas</strong> aproximadamente (25-30 % del original).</div>
-        <textarea id="t4_resumen" rows="10" placeholder="Escribe aquí tu resumen en un único párrafo…" oninput="updateCount('t4_resumen','c4_resumen')"></textarea>
-        <div class="char-count" id="c4_resumen">0 caracteres</div>
-        <button class="example-toggle" onclick="toggleExample('ex4_resumen')">💡 Ver resumen resuelto</button>
-        <div class="example-box" id="ex4_resumen">
+        <div class="task-question">Escribe aquí el resumen del texto en un único párrafo. Ten en cuenta que el texto original tiene unas <strong><span data-total-lines>44</span> líneas</strong>; el resumen debería tener entre <strong><span data-resumen-range>11 y 13</span> líneas</strong> aproximadamente (25-30 % del original).</div>
+        <textarea id="t5_resumen" rows="10" placeholder="Escribe aquí tu resumen en un único párrafo…" oninput="updateCount('t5_resumen','c5_resumen')"></textarea>
+        <div class="char-count" id="c5_resumen">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex5_resumen')">💡 Ver resumen resuelto</button>
+        <div class="example-box" id="ex5_resumen">
           <strong>Resumen modelo:</strong> Turing, nacido en Londres a principios del siglo XX, destacó desde joven por su talento matemático, que le llevó a formular las bases teóricas de la informática moderna. Durante la Segunda Guerra Mundial lideró el equipo que logró descifrar el código Enigma, un logro decisivo para acortar el conflicto, y más tarde ideó el test de Turing, una prueba para determinar si una máquina podía pensar que hoy fundamenta la inteligencia artificial. Sin embargo, fue condenado judicialmente por su homosexualidad, lo que le costó su carrera, y murió poco después en circunstancias que todavía se discuten. Con el tiempo ha sido rehabilitado oficialmente y hoy se le reconoce como una figura fundamental de la informática y la inteligencia artificial.
         </div>
       </div>
@@ -803,16 +786,16 @@
       <div class="task-block" style="margin-top:1.2rem;">
         <div class="task-label">🪞 Autoevaluación</div>
         <div class="task-question">¿Qué parte del resumen crees que has resuelto mejor? ¿Qué te ha resultado más difícil?</div>
-        <textarea rows="3" id="t4_auto" placeholder="Lo que mejor he hecho es… Lo que más me ha costado es…" oninput="updateCount('t4_auto','c4_auto')"></textarea>
-        <div class="char-count" id="c4_auto">0 caracteres</div>
-        <button class="example-toggle" onclick="toggleExample('ex4_auto')">💡 Ver un ejemplo de respuesta</button>
-        <div class="example-box" id="ex4_auto">
+        <textarea rows="3" id="t5_auto" placeholder="Lo que mejor he hecho es… Lo que más me ha costado es…" oninput="updateCount('t5_auto','c5_auto')"></textarea>
+        <div class="char-count" id="c5_auto">0 caracteres</div>
+        <button class="example-toggle" onclick="toggleExample('ex5_auto')">💡 Ver un ejemplo de respuesta</button>
+        <div class="example-box" id="ex5_auto">
           <strong>Ejemplo:</strong> Creo que he identificado bien el tema y las ideas principales de cada párrafo, porque el texto está muy ordenado. Lo que más me ha costado es no repetir las mismas palabras del texto original al redactar el resumen final.
         </div>
       </div>
 
       <div class="btn-row">
-        <button class="btn-primary" onclick="completePhase(4)">🎓 Finalizar el taller</button>
+        <button class="btn-primary" onclick="completePhase(5)">🎓 Finalizar el taller</button>
       </div>
     </div>
   </div>
@@ -820,8 +803,8 @@
   <!-- PANEL FINAL -->
   <div class="final-panel" id="finalPanel">
     <h2>¡Resumen completado!</h2>
-    <p>Has recorrido las cuatro fases del proceso de síntesis. Identificar el tema, analizar la estructura, localizar los hechos principales y redactar con tus propias palabras son las habilidades que acabas de practicar.</p>
-    <div class="final-score" id="finalScore">4/4</div>
+    <p>Has recorrido las cinco fases del proceso de síntesis. Identificar el tema, localizar las ideas principales, reconocer la estructura del texto y redactar con tus propias palabras son las habilidades que acabas de practicar.</p>
+    <div class="final-score" id="finalScore">5/5</div>
     <div class="final-label">fases superadas</div>
     <p style="margin-top:1.5rem; font-size:.85rem;">Guarda o imprime esta página para conservar tu trabajo antes de cerrar el navegador.</p>
   </div>
@@ -830,7 +813,7 @@
 
 <script>
   let completedPhases = 0;
-  const total = 4;
+  const total = 5;
 
   function updateCount(id, countId) {
     const ta = document.getElementById(id);
@@ -910,9 +893,84 @@
     document.getElementById('progress-text').textContent = completedPhases + ' / ' + total + ' fases';
   }
 
+  // ── NUMERACIÓN DINÁMICA DE LÍNEAS ──
+  // En vez de partir el texto a mano (frágil: depende de la fuente exacta,
+  // el ancho de pantalla y el navegador), dejamos que el texto fluya con
+  // párrafos normales y calculamos en tiempo real, con el propio navegador,
+  // dónde cae cada línea visual. Así el resultado es siempre correcto,
+  // sea cual sea el dispositivo, la fuente cargada o el tamaño de ventana.
+  function layoutLineNumbers() {
+    const container = document.getElementById('textNumbered');
+    const gutter = document.getElementById('numGutter');
+    const flow = document.getElementById('textFlow');
+    if (!container || !gutter || !flow) return;
+
+    gutter.innerHTML = '';
+    const containerTop = container.getBoundingClientRect().top;
+    let globalLine = 0;
+    const paraRanges = [];
+
+    flow.querySelectorAll('p').forEach((p) => {
+      const range = document.createRange();
+      range.selectNodeContents(p);
+      const rects = Array.from(range.getClientRects());
+      const startLine = globalLine + 1;
+      let lastTop = null;
+      rects.forEach((r) => {
+        // Un párrafo con cursivas u otro formato interno puede devolver
+        // varios fragmentos (rects) para una misma línea visual (uno por
+        // cada cambio de formato). Solo contamos una línea nueva cuando
+        // la posición vertical cambia de verdad.
+        if (lastTop !== null && Math.abs(r.top - lastTop) < 1) return;
+        lastTop = r.top;
+        globalLine++;
+        if (globalLine % 5 === 0) {
+          const mark = document.createElement('span');
+          mark.className = 'ln-mark';
+          mark.textContent = globalLine;
+          mark.style.top = (r.top - containerTop) + 'px';
+          gutter.appendChild(mark);
+        }
+      });
+      paraRanges.push({ start: startLine, end: globalLine });
+    });
+
+    document.querySelectorAll('[data-parr-range]').forEach((el) => {
+      const idx = parseInt(el.getAttribute('data-parr-range'), 10) - 1;
+      if (paraRanges[idx]) {
+        el.textContent = 'líneas ' + paraRanges[idx].start + '-' + paraRanges[idx].end;
+      }
+    });
+    document.querySelectorAll('[data-total-lines]').forEach((el) => {
+      el.textContent = globalLine;
+    });
+    document.querySelectorAll('[data-resumen-range]').forEach((el) => {
+      const lo = Math.round(globalLine * 0.25);
+      const hi = Math.round(globalLine * 0.30);
+      el.textContent = lo + ' y ' + hi;
+    });
+  }
+
+  function scheduleLineLayout() {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(layoutLineNumbers);
+    } else {
+      layoutLineNumbers();
+    }
+  }
+
+  let lineLayoutResizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(lineLayoutResizeTimer);
+    lineLayoutResizeTimer = setTimeout(layoutLineNumbers, 200);
+  });
+  window.addEventListener('beforeprint', layoutLineNumbers);
+  window.addEventListener('load', scheduleLineLayout);
+
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('phase1').classList.add('active');
     document.getElementById('status1').textContent = 'En curso';
+    scheduleLineLayout();
   });
 </script>
 
