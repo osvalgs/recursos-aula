@@ -207,6 +207,9 @@
   }
   .wb-word:hover{ border-color:#d8cfb8; }
   .wb-word:focus{ outline:none; border-color:var(--marigold); background:#fffdf8; }
+  .wb-def{ font-size:12px; color:var(--muted); margin:0 0 6px 24px; line-height:1.4; }
+  .wb-def i{ color:var(--coral); font-style:normal; }
+  .wb-def-empty{ color:#a3352a; }
 
   #cardsPreview{ margin-top:30px; }
   .cards-page{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
@@ -236,6 +239,7 @@
   .result-item{ font-size:14px; line-height:1.5; padding:9px 0; border-bottom:1px solid var(--paper-line); }
   .result-item b{ color:var(--coral); display:block; margin-bottom:2px; }
   .result-item .def{ color:var(--ink); }
+  .result-item .syn{ color:var(--muted); font-size:12.5px; display:block; margin-top:2px; }
 
   /* =====================================================
      VISTA 2 — SORTEO (pizarra, solo el número)
@@ -421,6 +425,11 @@
         <div class="hint" style="margin-top:8px;">Esto solo sirve para volver a imprimir las mismas tarjetas en <b>otro ordenador</b>. La pantalla de <i>«Sorteo»</i> es independiente y no necesita este archivo: solo le tienes que decir cuántas palabras tiene el bingo (por defecto, 12).</div>
 
         <div class="status-msg" id="statusMsg"></div>
+
+        <div class="actions-row" style="margin-top:14px;">
+          <button class="btn secondary" id="printCardsBtn">Imprimir tarjetas (alumnado)</button>
+          <button class="btn secondary" id="printResultBtn">Imprimir hoja de corrección y significados</button>
+        </div>
       </div>
 
       <div class="panel">
@@ -512,162 +521,170 @@
   // ---------------- word bank by orthographic difficulty ----------------
   const WORD_BANK = {
     "b / v": [
-      {word:"vehículo", def:"Medio de transporte, generalmente con ruedas, que sirve para trasladar personas o cosas de un lugar a otro."},
-      {word:"amortiguador", def:"Dispositivo mecánico que absorbe las vibraciones y sacudidas producidas por las irregularidades del terreno."},
-      {word:"embrague", def:"Mecanismo que acopla o desacopla el motor de la caja de cambios para interrumpir o transmitir el movimiento."},
-      {word:"batería", def:"Acumulador eléctrico que almacena energía y la suministra para el arranque y los sistemas eléctricos del vehículo."},
-      {word:"bujía", def:"Pieza que produce la chispa eléctrica necesaria para encender la mezcla de aire y combustible en el cilindro."},
-      {word:"válvula", def:"Pieza que regula el paso de un fluido o gas, abriendo o cerrando un conducto en el momento adecuado."},
-      {word:"combustible", def:"Sustancia que, al arder, produce la energía necesaria para poner en marcha un motor."},
-      {word:"carburador", def:"Dispositivo que mezcla el aire con el combustible en la proporción adecuada antes de introducirlo en el cilindro."},
-      {word:"vibración", def:"Movimiento oscilatorio y repetido de un cuerpo o de una pieza mecánica."},
-      {word:"abrazadera", def:"Pieza metálica o de plástico que sujeta o ciñe un tubo, una manguera o un cable."},
-      {word:"bobina", def:"Componente eléctrico formado por un hilo enrollado que genera la alta tensión necesaria para la chispa de las bujías."},
-      {word:"revisión", def:"Examen o comprobación periódica del estado y funcionamiento de un vehículo."},
-      {word:"avería", def:"Fallo o desperfecto que impide el funcionamiento normal de un vehículo."},
-      {word:"volante", def:"Elemento circular que el conductor gira para dirigir el vehículo."},
-      {word:"ventilador", def:"Dispositivo que hace circular aire para refrigerar el motor u otros componentes."},
-      {word:"vástago", def:"Varilla que forma parte de una pieza móvil, como la de una válvula o un amortiguador."},
-      {word:"varilla", def:"Barra delgada usada, por ejemplo, para medir el nivel de aceite del motor."},
-      {word:"bomba", def:"Dispositivo que impulsa un líquido, como el agua, el aceite o el combustible, por un circuito."},
-      {word:"boquilla", def:"Pieza estrecha por donde sale un líquido o un gas de forma controlada."},
-      {word:"buje", def:"Pieza cilíndrica que reduce el rozamiento entre dos elementos que giran o se deslizan."},
-      {word:"biela", def:"Pieza que une el pistón con el cigüeñal y transmite el movimiento entre ambos."},
-      {word:"bastidor", def:"Estructura metálica que soporta la carrocería y los principales componentes del vehículo."},
-      {word:"barra estabilizadora", def:"Elemento de la suspensión que reduce la inclinación de la carrocería en las curvas."},
-      {word:"brazo de suspensión", def:"Pieza que une la rueda con el chasis y permite su movimiento vertical."},
-      {word:"bandeja de suspensión", def:"Pieza que sujeta el brazo de suspensión al chasis del vehículo."},
-      {word:"ballesta", def:"Muelle formado por láminas de acero curvadas que amortigua el peso del vehículo."},
-      {word:"convertidor catalítico", def:"Dispositivo que reduce los gases contaminantes del escape antes de expulsarlos."},
-      {word:"viscosidad", def:"Propiedad de un líquido, como el aceite, que mide su resistencia a fluir."},
-      {word:"banda de distribución", def:"Correa dentada que sincroniza el giro del cigüeñal con el de los árboles de levas."},
-      {word:"vaho", def:"Vapor de agua que se condensa en el cristal, reduciendo la visibilidad."}
+      {word:"vehículo", def:"Medio de transporte, generalmente con ruedas, que sirve para trasladar personas o cosas de un lugar a otro.", syn:["automóvil","coche"]},
+      {word:"amortiguador", def:"Dispositivo mecánico que absorbe las vibraciones y sacudidas producidas por las irregularidades del terreno.", syn:["absorbedor de impactos","suspensor"]},
+      {word:"embrague", def:"Mecanismo que acopla o desacopla el motor de la caja de cambios para interrumpir o transmitir el movimiento.", syn:["acoplamiento","disco de embrague"]},
+      {word:"batería", def:"Acumulador eléctrico que almacena energía y la suministra para el arranque y los sistemas eléctricos del vehículo.", syn:["acumulador","pila"]},
+      {word:"bujía", def:"Pieza que produce la chispa eléctrica necesaria para encender la mezcla de aire y combustible en el cilindro.", syn:["candela","electrodo de encendido"]},
+      {word:"válvula", def:"Pieza que regula el paso de un fluido o gas, abriendo o cerrando un conducto en el momento adecuado.", syn:["compuerta","obturador"]},
+      {word:"combustible", def:"Sustancia que, al arder, produce la energía necesaria para poner en marcha un motor.", syn:["carburante","gasolina"]},
+      {word:"carburador", def:"Dispositivo que mezcla el aire con el combustible en la proporción adecuada antes de introducirlo en el cilindro.", syn:["mezclador de combustible","alimentador"]},
+      {word:"vibración", def:"Movimiento oscilatorio y repetido de un cuerpo o de una pieza mecánica.", syn:["trepidación","oscilación"]},
+      {word:"abrazadera", def:"Pieza metálica o de plástico que sujeta o ciñe un tubo, una manguera o un cable.", syn:["sujeción","grapa"]},
+      {word:"bobina", def:"Componente eléctrico formado por un hilo enrollado que genera la alta tensión necesaria para la chispa de las bujías.", syn:["inductor","arrollamiento eléctrico"]},
+      {word:"revisión", def:"Examen o comprobación periódica del estado y funcionamiento de un vehículo.", syn:["inspección","chequeo"]},
+      {word:"avería", def:"Fallo o desperfecto que impide el funcionamiento normal de un vehículo.", syn:["fallo","desperfecto"]},
+      {word:"volante", def:"Elemento circular que el conductor gira para dirigir el vehículo.", syn:["manubrio","timón de dirección"]},
+      {word:"ventilador", def:"Dispositivo que hace circular aire para refrigerar el motor u otros componentes.", syn:["aspa refrigerante","hélice de refrigeración"]},
+      {word:"vástago", def:"Varilla que forma parte de una pieza móvil, como la de una válvula o un amortiguador.", syn:["varilla móvil","eje de la pieza"]},
+      {word:"varilla", def:"Barra delgada usada, por ejemplo, para medir el nivel de aceite del motor.", syn:["vara","barra fina"]},
+      {word:"bomba", def:"Dispositivo que impulsa un líquido, como el agua, el aceite o el combustible, por un circuito.", syn:["impulsor de fluido","propulsor"]},
+      {word:"boquilla", def:"Pieza estrecha por donde sale un líquido o un gas de forma controlada.", syn:["tobera","surtidor"]},
+      {word:"buje", def:"Pieza cilíndrica que reduce el rozamiento entre dos elementos que giran o se deslizan.", syn:["casquillo","cojinete"]},
+      {word:"biela", def:"Pieza que une el pistón con el cigüeñal y transmite el movimiento entre ambos.", syn:["brazo de transmisión","palanca de acoplamiento"]},
+      {word:"bastidor", def:"Estructura metálica que soporta la carrocería y los principales componentes del vehículo.", syn:["chasis","armazón"]},
+      {word:"barra estabilizadora", def:"Elemento de la suspensión que reduce la inclinación de la carrocería en las curvas.", syn:["barra antivuelco","estabilizador"]},
+      {word:"brazo de suspensión", def:"Pieza que une la rueda con el chasis y permite su movimiento vertical.", syn:["brazo oscilante","triángulo de suspensión"]},
+      {word:"bandeja de suspensión", def:"Pieza que sujeta el brazo de suspensión al chasis del vehículo.", syn:["soporte de suspensión","triángulo inferior"]},
+      {word:"ballesta", def:"Muelle formado por láminas de acero curvadas que amortigua el peso del vehículo.", syn:["muelle de láminas","resorte de suspensión"]},
+      {word:"convertidor catalítico", def:"Dispositivo que reduce los gases contaminantes del escape antes de expulsarlos.", syn:["catalizador","depurador de gases"]},
+      {word:"viscosidad", def:"Propiedad de un líquido, como el aceite, que mide su resistencia a fluir.", syn:["densidad","espesor"]},
+      {word:"banda de distribución", def:"Correa dentada que sincroniza el giro del cigüeñal con el de los árboles de levas.", syn:["correa de distribución","cadena de distribución"]},
+      {word:"vaho", def:"Vapor de agua que se condensa en el cristal, reduciendo la visibilidad.", syn:["condensación","empañamiento"]}
     ],
     "g / j": [
-      {word:"garaje", def:"Local o recinto destinado a guardar o reparar vehículos."},
-      {word:"engranaje", def:"Conjunto de piezas dentadas que encajan entre sí para transmitir movimiento de un eje a otro."},
-      {word:"junta", def:"Pieza que se coloca entre dos superficies para asegurar el cierre hermético e impedir fugas."},
-      {word:"reglaje", def:"Operación de ajustar o poner a punto los elementos de un mecanismo para que funcione correctamente."},
-      {word:"desajuste", def:"Falta de ajuste o coincidencia entre las piezas de un mecanismo."},
-      {word:"engrase", def:"Acción de aplicar grasa o aceite lubricante a las piezas de un mecanismo para reducir el rozamiento."},
-      {word:"geometría", def:"Conjunto de ángulos y medidas que determinan la correcta alineación de las ruedas."},
-      {word:"gasolinera", def:"Establecimiento donde se vende combustible para vehículos."},
-      {word:"juego de válvulas", def:"Holgura o separación entre dos piezas de un mecanismo."},
-      {word:"urgente", def:"Que requiere atención o solución inmediata, sin demora."},
-      {word:"gestión", def:"Conjunto de trámites y actuaciones necesarias para organizar o administrar una actividad, como un taller."},
-      {word:"jaula de rodamientos", def:"Pieza que mantiene separadas y en su posición las bolas o rodillos de un rodamiento."},
-      {word:"ajuste", def:"Operación mediante la cual se regula una pieza para que funcione correctamente."},
-      {word:"desengrasante", def:"Producto químico que elimina la grasa y la suciedad de las piezas."},
-      {word:"gasoil", def:"Combustible derivado del petróleo utilizado en los motores diésel."},
-      {word:"gestor electrónico", def:"Sistema que controla electrónicamente el funcionamiento del motor."},
-      {word:"garantía", def:"Compromiso del fabricante de reparar o sustituir gratuitamente un vehículo defectuoso."},
-      {word:"rejilla", def:"Estructura con aberturas que protege un componente y permite el paso del aire."},
-      {word:"guantera", def:"Compartimento situado en el salpicadero para guardar objetos pequeños."},
-      {word:"gancho de remolque", def:"Pieza que permite enganchar el vehículo para ser remolcado."},
-      {word:"engranar", def:"Encajar los dientes de dos piezas dentadas para transmitir movimiento."},
-      {word:"guardabarros", def:"Pieza que cubre la rueda para evitar que salpique agua o barro."},
-      {word:"gato hidráulico", def:"Herramienta que permite levantar el vehículo mediante presión hidráulica."},
-      {word:"gomas", def:"Nombre coloquial que se da a los neumáticos del vehículo."}
+      {word:"garaje", def:"Local o recinto destinado a guardar o reparar vehículos.", syn:["cochera","taller"]},
+      {word:"engranaje", def:"Conjunto de piezas dentadas que encajan entre sí para transmitir movimiento de un eje a otro.", syn:["mecanismo dentado","rueda dentada"]},
+      {word:"junta", def:"Pieza que se coloca entre dos superficies para asegurar el cierre hermético e impedir fugas.", syn:["empaquetadura","sello"]},
+      {word:"reglaje", def:"Operación de ajustar o poner a punto los elementos de un mecanismo para que funcione correctamente.", syn:["ajuste","puesta a punto"]},
+      {word:"desajuste", def:"Falta de ajuste o coincidencia entre las piezas de un mecanismo.", syn:["desequilibrio","descoordinación"]},
+      {word:"engrase", def:"Acción de aplicar grasa o aceite lubricante a las piezas de un mecanismo para reducir el rozamiento.", syn:["lubricación","aceitado"]},
+      {word:"geometría", def:"Conjunto de ángulos y medidas que determinan la correcta alineación de las ruedas.", syn:["alineación de ruedas","angulación"]},
+      {word:"gasolinera", def:"Establecimiento donde se vende combustible para vehículos.", syn:["estación de servicio","surtidor"]},
+      {word:"juego de válvulas", def:"Holgura o separación entre dos piezas de un mecanismo.", syn:["holgura de válvulas","tolerancia mecánica"]},
+      {word:"urgente", def:"Que requiere atención o solución inmediata, sin demora.", syn:["inmediato","apremiante"]},
+      {word:"gestión", def:"Conjunto de trámites y actuaciones necesarias para organizar o administrar una actividad, como un taller.", syn:["administración","trámite"]},
+      {word:"jaula de rodamientos", def:"Pieza que mantiene separadas y en su posición las bolas o rodillos de un rodamiento.", syn:["separador de bolas","retén de rodamientos"]},
+      {word:"ajuste", def:"Operación mediante la cual se regula una pieza para que funcione correctamente.", syn:["regulación","calibración"]},
+      {word:"desengrasante", def:"Producto químico que elimina la grasa y la suciedad de las piezas.", syn:["disolvente de grasa","limpiador"]},
+      {word:"gasoil", def:"Combustible derivado del petróleo utilizado en los motores diésel.", syn:["gasóleo","diésel"]},
+      {word:"gestor electrónico", def:"Sistema que controla electrónicamente el funcionamiento del motor.", syn:["unidad de control","centralita"]},
+      {word:"garantía", def:"Compromiso del fabricante de reparar o sustituir gratuitamente un vehículo defectuoso.", syn:["aval","cobertura del fabricante"]},
+      {word:"rejilla", def:"Estructura con aberturas que protege un componente y permite el paso del aire.", syn:["parrilla","celosía"]},
+      {word:"guantera", def:"Compartimento situado en el salpicadero para guardar objetos pequeños.", syn:["compartimento","portaobjetos"]},
+      {word:"gancho de remolque", def:"Pieza que permite enganchar el vehículo para ser remolcado.", syn:["enganche de remolque","argolla de remolque"]},
+      {word:"engranar", def:"Encajar los dientes de dos piezas dentadas para transmitir movimiento.", syn:["acoplar","encajar"]},
+      {word:"guardabarros", def:"Pieza que cubre la rueda para evitar que salpique agua o barro.", syn:["aleta","salpicadera"]},
+      {word:"gato hidráulico", def:"Herramienta que permite levantar el vehículo mediante presión hidráulica.", syn:["elevador hidráulico","cric"]},
+      {word:"gomas", def:"Nombre coloquial que se da a los neumáticos del vehículo.", syn:["neumáticos","ruedas"]}
     ],
     "h / sin h": [
-      {word:"hidráulico", def:"Que funciona mediante la presión de un líquido, generalmente aceite."},
-      {word:"herramienta", def:"Instrumento que se utiliza manualmente para realizar un trabajo mecánico."},
-      {word:"horquilla", def:"Pieza en forma de U que sujeta o guía otra pieza móvil, como la de la suspensión."},
-      {word:"habitáculo", def:"Espacio interior de un vehículo destinado a los ocupantes."},
-      {word:"hermético", def:"Que cierra por completo, sin dejar pasar el aire, el agua u otro fluido."},
-      {word:"hollín", def:"Sustancia negra y untuosa que se forma por la combustión incompleta y se deposita en los conductos de escape."},
-      {word:"ahorro", def:"Reducción del gasto, por ejemplo, de combustible."},
-      {word:"hidrocarburo", def:"Compuesto orgánico formado por carbono e hidrógeno, presente en los combustibles derivados del petróleo."},
-      {word:"deshinchado", def:"Que ha perdido aire o presión, dicho especialmente de un neumático."},
-      {word:"hélice", def:"Pieza giratoria de aspas que impulsa el aire, como la del ventilador de refrigeración."},
-      {word:"horómetro", def:"Instrumento que mide las horas de funcionamiento de un motor o una máquina."},
-      {word:"huella del neumático", def:"Dibujo del neumático que está en contacto con el suelo."},
-      {word:"humedad", def:"Cantidad de vapor de agua presente en el aire, que puede afectar al motor."},
-      {word:"holgura", def:"Espacio libre que existe entre dos piezas que deben ajustar entre sí."},
-      {word:"horario de taller", def:"Franja de tiempo en la que un taller presta sus servicios."},
-      {word:"hidrómetro", def:"Instrumento que mide la densidad del líquido de una batería."},
-      {word:"ahumado", def:"Dicho de un cristal, que tiene un tono oscuro que reduce la visibilidad desde fuera."},
-      {word:"hebilla del cinturón", def:"Pieza que sujeta y ajusta el cinturón de seguridad."},
-      {word:"hendidura", def:"Corte o grieta estrecha en la superficie de una pieza."},
-      {word:"alcohol", def:"Líquido que se usa, entre otros usos, en el limpiaparabrisas para evitar la congelación."},
-      {word:"deshielo", def:"Sistema que elimina el hielo o el vaho de las lunas del vehículo."},
-      {word:"inhibidor", def:"Dispositivo que impide el arranque del motor en determinadas condiciones."}
+      {word:"hidráulico", def:"Que funciona mediante la presión de un líquido, generalmente aceite.", syn:["oleohidráulico","accionado por líquido"]},
+      {word:"herramienta", def:"Instrumento que se utiliza manualmente para realizar un trabajo mecánico.", syn:["utensilio","instrumento de trabajo"]},
+      {word:"horquilla", def:"Pieza en forma de U que sujeta o guía otra pieza móvil, como la de la suspensión.", syn:["soporte en U","guía de la pieza"]},
+      {word:"habitáculo", def:"Espacio interior de un vehículo destinado a los ocupantes.", syn:["interior del vehículo","cabina"]},
+      {word:"hermético", def:"Que cierra por completo, sin dejar pasar el aire, el agua u otro fluido.", syn:["estanco","sellado"]},
+      {word:"hollín", def:"Sustancia negra y untuosa que se forma por la combustión incompleta y se deposita en los conductos de escape.", syn:["carbonilla","tizne"]},
+      {word:"ahorro", def:"Reducción del gasto, por ejemplo, de combustible.", syn:["reducción de gasto","economía"]},
+      {word:"hidrocarburo", def:"Compuesto orgánico formado por carbono e hidrógeno, presente en los combustibles derivados del petróleo.", syn:["derivado del petróleo","compuesto orgánico"]},
+      {word:"deshinchado", def:"Que ha perdido aire o presión, dicho especialmente de un neumático.", syn:["desinflado","sin presión"]},
+      {word:"hélice", def:"Pieza giratoria de aspas que impulsa el aire, como la del ventilador de refrigeración.", syn:["aspa giratoria","rotor"]},
+      {word:"horómetro", def:"Instrumento que mide las horas de funcionamiento de un motor o una máquina.", syn:["contador de horas","cronómetro de uso"]},
+      {word:"huella del neumático", def:"Dibujo del neumático que está en contacto con el suelo.", syn:["dibujo del neumático","banda de rodadura"]},
+      {word:"humedad", def:"Cantidad de vapor de agua presente en el aire, que puede afectar al motor.", syn:["condensación ambiental","vapor de agua"]},
+      {word:"holgura", def:"Espacio libre que existe entre dos piezas que deben ajustar entre sí.", syn:["juego mecánico","separación entre piezas"]},
+      {word:"horario de taller", def:"Franja de tiempo en la que un taller presta sus servicios.", syn:["horario laboral","jornada de apertura"]},
+      {word:"hidrómetro", def:"Instrumento que mide la densidad del líquido de una batería.", syn:["densímetro","medidor de densidad"]},
+      {word:"ahumado", def:"Dicho de un cristal, que tiene un tono oscuro que reduce la visibilidad desde fuera.", syn:["tintado","oscurecido"]},
+      {word:"hebilla del cinturón", def:"Pieza que sujeta y ajusta el cinturón de seguridad.", syn:["broche del cinturón","cierre de seguridad"]},
+      {word:"hendidura", def:"Corte o grieta estrecha en la superficie de una pieza.", syn:["grieta","ranura"]},
+      {word:"alcohol", def:"Líquido que se usa, entre otros usos, en el limpiaparabrisas para evitar la congelación.", syn:["etanol","líquido anticongelante"]},
+      {word:"deshielo", def:"Sistema que elimina el hielo o el vaho de las lunas del vehículo.", syn:["descongelación","eliminación del vaho"]},
+      {word:"inhibidor", def:"Dispositivo que impide el arranque del motor en determinadas condiciones.", syn:["bloqueador","limitador de arranque"]}
     ],
     "ll / y": [
-      {word:"taller", def:"Lugar donde se reparan o mantienen vehículos y maquinaria."},
-      {word:"llave", def:"Herramienta que sirve para apretar o aflojar tuercas y tornillos."},
-      {word:"llanta", def:"Círculo metálico sobre el que se monta el neumático de una rueda."},
-      {word:"inyección", def:"Sistema que introduce el combustible en el motor a presión y de forma dosificada."},
-      {word:"inyector", def:"Dispositivo que pulveriza el combustible dentro del cilindro o del colector de admisión."},
-      {word:"estallido", def:"Rotura brusca y violenta de una pieza o de un neumático, acompañada de un ruido fuerte."},
-      {word:"sello", def:"Pieza que impide el paso de un fluido entre dos superficies o piezas en movimiento."},
-      {word:"rodillo", def:"Pieza cilíndrica que gira sobre su eje y sirve de apoyo o de transmisión en un mecanismo."},
-      {word:"trayecto", def:"Distancia o recorrido que se hace de un punto a otro."},
-      {word:"ensayo", def:"Prueba que se realiza para comprobar el funcionamiento de una pieza o de un sistema."},
-      {word:"llenado", def:"Acción de llenar un depósito de combustible o de líquido."},
-      {word:"llama de soldadura", def:"Fuego producido por un soplete, utilizado para soldar o cortar metal."},
-      {word:"trayectoria", def:"Línea que describe un vehículo en movimiento."},
-      {word:"yugo del diferencial", def:"Pieza que transmite el giro entre el diferencial y el semieje."},
-      {word:"rayado", def:"Marca o raya producida en la pintura de la carrocería."},
-      {word:"destello", def:"Luz breve e intensa, como la del intermitente."},
-      {word:"rellenar", def:"Volver a llenar un depósito o un nivel que ha bajado."},
-      {word:"desarrollo del motor", def:"Proceso de diseño y mejora técnica de un motor."},
-      {word:"ensayar", def:"Probar el funcionamiento de una pieza o de un sistema antes de darlo por bueno."},
-      {word:"ayuda a la frenada", def:"Sistema que refuerza la fuerza de frenado en una emergencia."},
-      {word:"inyectar", def:"Introducir un líquido, como el combustible, a presión en un conducto o cilindro."},
-      {word:"valla de seguridad", def:"Barrera que protege un tramo de carretera peligroso."}
+      {word:"taller", def:"Lugar donde se reparan o mantienen vehículos y maquinaria.", syn:["garaje de reparación","nave mecánica"]},
+      {word:"llave", def:"Herramienta que sirve para apretar o aflojar tuercas y tornillos.", syn:["llave fija","herramienta de apriete"]},
+      {word:"llanta", def:"Círculo metálico sobre el que se monta el neumático de una rueda.", syn:["aro de la rueda","rin"]},
+      {word:"inyección", def:"Sistema que introduce el combustible en el motor a presión y de forma dosificada.", syn:["alimentación a presión","suministro de combustible"]},
+      {word:"inyector", def:"Dispositivo que pulveriza el combustible dentro del cilindro o del colector de admisión.", syn:["pulverizador","boquilla de inyección"]},
+      {word:"estallido", def:"Rotura brusca y violenta de una pieza o de un neumático, acompañada de un ruido fuerte.", syn:["reventón","explosión súbita"]},
+      {word:"sello", def:"Pieza que impide el paso de un fluido entre dos superficies o piezas en movimiento.", syn:["junta","retén"]},
+      {word:"rodillo", def:"Pieza cilíndrica que gira sobre su eje y sirve de apoyo o de transmisión en un mecanismo.", syn:["cilindro giratorio","tambor"]},
+      {word:"trayecto", def:"Distancia o recorrido que se hace de un punto a otro.", syn:["recorrido","ruta"]},
+      {word:"ensayo", def:"Prueba que se realiza para comprobar el funcionamiento de una pieza o de un sistema.", syn:["prueba","comprobación"]},
+      {word:"llenado", def:"Acción de llenar un depósito de combustible o de líquido.", syn:["repostaje","carga de combustible"]},
+      {word:"llama de soldadura", def:"Fuego producido por un soplete, utilizado para soldar o cortar metal.", syn:["fuego de soplete","chorro de combustión"]},
+      {word:"trayectoria", def:"Línea que describe un vehículo en movimiento.", syn:["recorrido del vehículo","línea de desplazamiento"]},
+      {word:"yugo del diferencial", def:"Pieza que transmite el giro entre el diferencial y el semieje.", syn:["horquilla del diferencial","acoplador del semieje"]},
+      {word:"rayado", def:"Marca o raya producida en la pintura de la carrocería.", syn:["arañazo","raya en la pintura"]},
+      {word:"destello", def:"Luz breve e intensa, como la del intermitente.", syn:["fogonazo","resplandor breve"]},
+      {word:"rellenar", def:"Volver a llenar un depósito o un nivel que ha bajado.", syn:["reponer","recargar"]},
+      {word:"desarrollo del motor", def:"Proceso de diseño y mejora técnica de un motor.", syn:["evolución del motor","mejora técnica del motor"]},
+      {word:"ensayar", def:"Probar el funcionamiento de una pieza o de un sistema antes de darlo por bueno.", syn:["probar","comprobar el funcionamiento"]},
+      {word:"ayuda a la frenada", def:"Sistema que refuerza la fuerza de frenado en una emergencia.", syn:["asistencia al frenado","refuerzo de frenada"]},
+      {word:"inyectar", def:"Introducir un líquido, como el combustible, a presión en un conducto o cilindro.", syn:["introducir a presión","suministrar a presión"]},
+      {word:"valla de seguridad", def:"Barrera que protege un tramo de carretera peligroso.", syn:["barrera de protección","quitamiedos"]}
     ],
     "x / s": [
-      {word:"escape", def:"Sistema de tubos por el que salen al exterior los gases producidos por la combustión del motor."},
-      {word:"extractor", def:"Dispositivo que sirve para extraer o sacar una pieza, un fluido o un gas."},
-      {word:"extintor", def:"Aparato portátil que sirve para apagar pequeños incendios."},
-      {word:"suspensión", def:"Conjunto de elementos que absorben las irregularidades del terreno y sujetan la carrocería a las ruedas."},
-      {word:"esquema", def:"Representación gráfica y simplificada de un sistema, como el eléctrico de un vehículo."},
-      {word:"extracción", def:"Acción de sacar o retirar una pieza de su alojamiento."},
-      {word:"expulsión", def:"Acción de arrojar hacia el exterior los gases o residuos producidos por el motor."},
-      {word:"sistema", def:"Conjunto ordenado de elementos que funcionan de manera coordinada para cumplir una función."},
-      {word:"extremos de dirección", def:"Piezas articuladas situadas en los extremos de la barra de dirección que la unen con las ruedas."},
-      {word:"esfuerzo", def:"Fuerza que se aplica o se soporta en un elemento mecánico."},
-      {word:"exceso de velocidad", def:"Cantidad que sobrepasa el límite de velocidad permitido."},
-      {word:"vaso de expansión", def:"Depósito que absorbe el aumento de volumen del líquido refrigerante al calentarse."},
-      {word:"extraer", def:"Sacar una pieza de su alojamiento."},
-      {word:"exterior", def:"Parte de fuera de la carrocería del vehículo."},
-      {word:"extensión de garantía", def:"Ampliación del período de cobertura de la garantía del vehículo."},
-      {word:"expulsar", def:"Arrojar hacia el exterior los gases o residuos de la combustión."},
-      {word:"sensor", def:"Dispositivo que detecta una magnitud física y la convierte en una señal eléctrica."},
-      {word:"soporte de motor", def:"Pieza de goma y metal que fija el motor al chasis y absorbe sus vibraciones."},
-      {word:"estanqueidad", def:"Capacidad de un sistema para no dejar escapar un líquido o un gas."},
-      {word:"sustitución", def:"Acción de cambiar una pieza gastada o averiada por otra nueva."},
-      {word:"estabilidad", def:"Capacidad de un vehículo para mantener su trayectoria sin volcar ni derrapar."},
-      {word:"estático", def:"Que está en reposo, sin movimiento, como el equilibrado estático de una rueda."},
-      {word:"servofreno", def:"Dispositivo que amplifica la fuerza que el conductor aplica al pedal de freno."},
-      {word:"servodirección", def:"Sistema que reduce el esfuerzo necesario para girar el volante."},
-      {word:"sincronización", def:"Ajuste que hace coincidir en el tiempo el movimiento de varias piezas del motor."},
-      {word:"sujeción", def:"Elemento que fija una pieza en su posición para que no se mueva."}
+      {word:"escape", def:"Sistema de tubos por el que salen al exterior los gases producidos por la combustión del motor.", syn:["tubo de salida de gases","silenciador"]},
+      {word:"extractor", def:"Dispositivo que sirve para extraer o sacar una pieza, un fluido o un gas.", syn:["dispositivo de extracción","sacador"]},
+      {word:"extintor", def:"Aparato portátil que sirve para apagar pequeños incendios.", syn:["matafuegos","aparato antiincendios"]},
+      {word:"suspensión", def:"Conjunto de elementos que absorben las irregularidades del terreno y sujetan la carrocería a las ruedas.", syn:["amortiguación","sistema de muelles"]},
+      {word:"esquema", def:"Representación gráfica y simplificada de un sistema, como el eléctrico de un vehículo.", syn:["diagrama","plano simplificado"]},
+      {word:"extracción", def:"Acción de sacar o retirar una pieza de su alojamiento.", syn:["retirada","saca de una pieza"]},
+      {word:"expulsión", def:"Acción de arrojar hacia el exterior los gases o residuos producidos por el motor.", syn:["salida forzada","evacuación"]},
+      {word:"sistema", def:"Conjunto ordenado de elementos que funcionan de manera coordinada para cumplir una función.", syn:["conjunto","mecanismo coordinado"]},
+      {word:"extremos de dirección", def:"Piezas articuladas situadas en los extremos de la barra de dirección que la unen con las ruedas.", syn:["rótulas de dirección","terminales de dirección"]},
+      {word:"esfuerzo", def:"Fuerza que se aplica o se soporta en un elemento mecánico.", syn:["tensión mecánica","carga soportada"]},
+      {word:"exceso de velocidad", def:"Cantidad que sobrepasa el límite de velocidad permitido.", syn:["sobrevelocidad","velocidad excesiva"]},
+      {word:"vaso de expansión", def:"Depósito que absorbe el aumento de volumen del líquido refrigerante al calentarse.", syn:["depósito de expansión","tanque de compensación"]},
+      {word:"extraer", def:"Sacar una pieza de su alojamiento.", syn:["sacar","retirar de su alojamiento"]},
+      {word:"exterior", def:"Parte de fuera de la carrocería del vehículo.", syn:["parte externa","carrocería exterior"]},
+      {word:"extensión de garantía", def:"Ampliación del período de cobertura de la garantía del vehículo.", syn:["ampliación de cobertura","garantía adicional"]},
+      {word:"expulsar", def:"Arrojar hacia el exterior los gases o residuos de la combustión.", syn:["arrojar hacia fuera","evacuar"]},
+      {word:"sensor", def:"Dispositivo que detecta una magnitud física y la convierte en una señal eléctrica.", syn:["detector","captador"]},
+      {word:"soporte de motor", def:"Pieza de goma y metal que fija el motor al chasis y absorbe sus vibraciones.", syn:["anclaje del motor","silentbloc"]},
+      {word:"estanqueidad", def:"Capacidad de un sistema para no dejar escapar un líquido o un gas.", syn:["hermeticidad","capacidad de sellado"]},
+      {word:"sustitución", def:"Acción de cambiar una pieza gastada o averiada por otra nueva.", syn:["cambio","reemplazo"]},
+      {word:"estabilidad", def:"Capacidad de un vehículo para mantener su trayectoria sin volcar ni derrapar.", syn:["equilibrio","firmeza"]},
+      {word:"estático", def:"Que está en reposo, sin movimiento, como el equilibrado estático de una rueda.", syn:["inmóvil","en reposo"]},
+      {word:"servofreno", def:"Dispositivo que amplifica la fuerza que el conductor aplica al pedal de freno.", syn:["amplificador de frenado","asistencia de frenado"]},
+      {word:"servodirección", def:"Sistema que reduce el esfuerzo necesario para girar el volante.", syn:["dirección asistida","asistencia de dirección"]},
+      {word:"sincronización", def:"Ajuste que hace coincidir en el tiempo el movimiento de varias piezas del motor.", syn:["coordinación temporal","ajuste de tiempos"]},
+      {word:"sujeción", def:"Elemento que fija una pieza en su posición para que no se mueva.", syn:["fijación","anclaje"]}
     ],
     "consonantes dobles / difíciles": [
-      {word:"combustión", def:"Reacción química de oxidación de un combustible que produce calor y energía."},
-      {word:"transmisión", def:"Conjunto de mecanismos que transfieren el movimiento del motor a las ruedas."},
-      {word:"compresión", def:"Fase del ciclo del motor en la que la mezcla de aire y combustible se comprime dentro del cilindro."},
-      {word:"succión", def:"Acción de aspirar o absorber un fluido o un gas hacia el interior de un conducto."},
-      {word:"fricción", def:"Resistencia que se opone al movimiento entre dos superficies en contacto."},
-      {word:"obstrucción", def:"Impedimento u obstáculo que dificulta o cierra el paso de un fluido por un conducto, como un filtro."},
-      {word:"instalación", def:"Conjunto de aparatos, conductos o cables dispuestos para un servicio, como el eléctrico de un vehículo."},
-      {word:"adherencia", def:"Capacidad de un neumático para mantener el contacto y el agarre con el firme."},
-      {word:"inspección", def:"Examen detenido que se hace de algo para comprobar su estado."},
-      {word:"obstáculo", def:"Elemento que dificulta o impide el paso o el funcionamiento de algo."},
-      {word:"circulación del aceite", def:"Movimiento del aceite por los conductos del motor para lubricarlo."},
-      {word:"construcción de la carrocería", def:"Proceso de fabricación de la estructura exterior del vehículo."},
-      {word:"destrucción del vehículo", def:"Daño total que deja un vehículo inutilizable, por ejemplo tras un accidente."},
-      {word:"reconstrucción", def:"Proceso de reparar y volver a montar un vehículo o un motor dañado."},
-      {word:"absorción de impactos", def:"Capacidad de un elemento, como el paragolpes, de reducir el efecto de un golpe."},
-      {word:"transferencia (caja de)", def:"Mecanismo que reparte el movimiento entre los dos ejes en un vehículo 4x4."},
-      {word:"descompresión", def:"Reducción de la presión dentro de un cilindro o de un sistema."},
-      {word:"inscripción del vehículo", def:"Registro oficial de un vehículo a nombre de su propietario."},
-      {word:"prescripción del fabricante", def:"Instrucción u obligación de mantenimiento indicada por el fabricante."},
-      {word:"transacción", def:"Operación de compra, venta o cambio de un vehículo o de una pieza."}
+      {word:"combustión", def:"Reacción química de oxidación de un combustible que produce calor y energía.", syn:["quema","oxidación del combustible"]},
+      {word:"transmisión", def:"Conjunto de mecanismos que transfieren el movimiento del motor a las ruedas.", syn:["caja de cambios","mecanismo de transmisión"]},
+      {word:"compresión", def:"Fase del ciclo del motor en la que la mezcla de aire y combustible se comprime dentro del cilindro.", syn:["presión interna","apriete de la mezcla"]},
+      {word:"succión", def:"Acción de aspirar o absorber un fluido o un gas hacia el interior de un conducto.", syn:["aspiración","absorción"]},
+      {word:"fricción", def:"Resistencia que se opone al movimiento entre dos superficies en contacto.", syn:["rozamiento","resistencia al movimiento"]},
+      {word:"obstrucción", def:"Impedimento u obstáculo que dificulta o cierra el paso de un fluido por un conducto, como un filtro.", syn:["atasco","bloqueo del conducto"]},
+      {word:"instalación", def:"Conjunto de aparatos, conductos o cables dispuestos para un servicio, como el eléctrico de un vehículo.", syn:["montaje","conjunto de conductos"]},
+      {word:"adherencia", def:"Capacidad de un neumático para mantener el contacto y el agarre con el firme.", syn:["agarre","tracción sobre el firme"]},
+      {word:"inspección", def:"Examen detenido que se hace de algo para comprobar su estado.", syn:["revisión","examen técnico"]},
+      {word:"obstáculo", def:"Elemento que dificulta o impide el paso o el funcionamiento de algo.", syn:["impedimento","estorbo"]},
+      {word:"circulación del aceite", def:"Movimiento del aceite por los conductos del motor para lubricarlo.", syn:["flujo de aceite","recorrido del lubricante"]},
+      {word:"construcción de la carrocería", def:"Proceso de fabricación de la estructura exterior del vehículo.", syn:["fabricación de la carrocería","montaje de la carrocería"]},
+      {word:"destrucción del vehículo", def:"Daño total que deja un vehículo inutilizable, por ejemplo tras un accidente.", syn:["siniestro total","pérdida total"]},
+      {word:"reconstrucción", def:"Proceso de reparar y volver a montar un vehículo o un motor dañado.", syn:["reparación integral","restauración"]},
+      {word:"absorción de impactos", def:"Capacidad de un elemento, como el paragolpes, de reducir el efecto de un golpe.", syn:["amortiguación de golpes","atenuación de impactos"]},
+      {word:"transferencia (caja de)", def:"Mecanismo que reparte el movimiento entre los dos ejes en un vehículo 4x4.", syn:["repartidor de par","caja transfer"]},
+      {word:"descompresión", def:"Reducción de la presión dentro de un cilindro o de un sistema.", syn:["alivio de presión","reducción de presión"]},
+      {word:"inscripción del vehículo", def:"Registro oficial de un vehículo a nombre de su propietario.", syn:["matriculación","registro del vehículo"]},
+      {word:"prescripción del fabricante", def:"Instrucción u obligación de mantenimiento indicada por el fabricante.", syn:["recomendación del fabricante","indicación técnica"]},
+      {word:"transacción", def:"Operación de compra, venta o cambio de un vehículo o de una pieza.", syn:["operación de compraventa","gestión comercial"]}
     ]
   };
+
+  // ---- diccionario plano de todas las palabras del banco, para buscar significado y sinónimos al editar a mano ----
+  const WORD_LOOKUP = {};
+  Object.values(WORD_BANK).forEach(list=>{
+    list.forEach(item=>{
+      WORD_LOOKUP[item.word.trim().toLowerCase()] = { def: item.def, syn: item.syn || [] };
+    });
+  });
 
   // ---- histórico de palabras ya usadas (para no repetir hasta agotar el banco) ----
   const USED_WORDS_KEY = 'bingoUsedWordsHistory_v1';
@@ -786,7 +803,8 @@
     words = list.map((w,i)=>({
       n:i+1,
       word: (typeof w === 'string' ? w : w.word),
-      def: (typeof w === 'string' ? '' : w.def)
+      def: (typeof w === 'string' ? '' : w.def),
+      syn: (typeof w === 'string' ? [] : (w.syn || []))
     }));
     showStatus(words.length+' palabras numeradas del 1 al '+words.length+'. Las tarjetas están listas y el sorteo ya puede girar. Se han guardado en este navegador: al volver a abrir el archivo aquí mismo, seguirán cargadas.', 'ok');
     renderWordBank();
@@ -817,9 +835,16 @@
     }
   });
 
+  function wbInfoHTML(item){
+    if(!item.def) return '<div class="wb-def wb-def-empty" id="wbdef-'+item.n+'">Definición no disponible (palabra editada a mano que no está en el banco).</div>';
+    const synTxt = (item.syn && item.syn.length) ? ' <i>· Sinónimos: '+item.syn.join(', ')+'</i>' : '';
+    return '<div class="wb-def" id="wbdef-'+item.n+'">'+item.def+synTxt+'</div>';
+  }
+
   function renderWordBank(){
     wordBankPreview.innerHTML = words.map(item=>
       '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
+      + wbInfoHTML(item)
     ).join('');
     wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
       el.addEventListener('blur', ()=>{
@@ -828,6 +853,11 @@
         const entry = words.find(w=>w.n===n);
         if(entry && newVal){
           entry.word = newVal;
+          const found = WORD_LOOKUP[newVal.toLowerCase()];
+          entry.def = found ? found.def : '';
+          entry.syn = found ? found.syn : [];
+          const infoEl = document.getElementById('wbdef-'+n);
+          if(infoEl) infoEl.outerHTML = wbInfoHTML(entry);
           renderCards();
           saveWordsToStorage();
         } else if(entry){
@@ -872,8 +902,10 @@
   function buildResultSheet(){
     const includeDefs = document.getElementById('includeMeanings').checked;
     const items = words.map(item=>{
-      const defHtml = includeDefs ? '<span class="def">'+(item.def || 'Definición no disponible (palabra editada a mano).')+'</span>' : '';
-      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+'</div>';
+      if(!includeDefs) return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b></div>';
+      const defHtml = '<span class="def">'+(item.def || 'Definición no disponible (palabra editada a mano).')+'</span>';
+      const synHtml = (item.syn && item.syn.length) ? '<span class="syn">Sinónimos: '+item.syn.join(', ')+'</span>' : '';
+      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+synHtml+'</div>';
     }).join('');
     return `
       <div class="result-banner">HOJA DE CORRECCIÓN${includeDefs ? ' Y SIGNIFICADOS' : ''} — para el profesorado y para repasar con el alumnado al terminar</div>
@@ -888,27 +920,27 @@
     for(let i=0;i<count;i++){ html += buildCardHTML(); }
     html += '</div>';
     html += `<div class="result-sheet" id="resultSheet">${buildResultSheet()}</div>`;
-    html += `<div class="actions-row" style="margin-top:22px;">
-        <button class="btn secondary" id="printCardsBtn">Imprimir tarjetas (alumnado)</button>
-        <button class="btn secondary" id="printResultBtn">Imprimir hoja de corrección y significados</button>
-      </div>`;
     cardsPreview.innerHTML = html;
-
-    document.getElementById('printCardsBtn').addEventListener('click', ()=> window.print());
-    document.getElementById('printResultBtn').addEventListener('click', ()=>{
-      const cardsPage = document.getElementById('cardsPage');
-      const sheet = document.getElementById('resultSheet');
-      cardsPage.style.display = 'none';
-      sheet.classList.add('showing');
-      window.print();
-      const restore = ()=>{
-        cardsPage.style.display = '';
-        sheet.classList.remove('showing');
-        window.removeEventListener('afterprint', restore);
-      };
-      window.addEventListener('afterprint', restore);
-    });
   }
+
+  document.getElementById('printCardsBtn').addEventListener('click', ()=>{
+    if(!document.getElementById('cardsPage')){ showStatus('Primero genera las palabras para poder imprimir las tarjetas.', 'error'); return; }
+    window.print();
+  });
+  document.getElementById('printResultBtn').addEventListener('click', ()=>{
+    const cardsPage = document.getElementById('cardsPage');
+    const sheet = document.getElementById('resultSheet');
+    if(!cardsPage || !sheet){ showStatus('Primero genera las palabras para poder imprimir la hoja.', 'error'); return; }
+    cardsPage.style.display = 'none';
+    sheet.classList.add('showing');
+    window.print();
+    const restore = ()=>{
+      cardsPage.style.display = '';
+      sheet.classList.remove('showing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+  });
 
   document.getElementById('clearBtn').addEventListener('click', ()=>{
     suggestMeta.textContent = '';
