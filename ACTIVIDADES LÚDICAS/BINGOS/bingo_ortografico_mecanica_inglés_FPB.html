@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Ortográfico FPB Vehículos (Inglés)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1f2a24;
+    --chalkboard:#1f3b33;
+    --chalkboard-2:#284a40;
+    --chalk:#f5f1e8;
+    --marigold:#f2a73b;
+    --marigold-dark:#c9860f;
+    --coral:#e2574c;
+    --paper:#fbf7ee;
+    --paper-line:#c9d6cf;
+    --paper-margin:#e2a39c;
+    --muted:#6b7a72;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo 2', sans-serif;
+  }
+
+  /* ---------- Top bar / tabs ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    background:var(--paper);
+    border-bottom:3px solid var(--ink);
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .display{ font-size:24px; font-weight:800; letter-spacing:.3px; }
+  .brand .display span{ color:var(--coral); }
+  .brand small{ color:var(--muted); font-size:12.5px; }
+
+  .topbar-right{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+
+  .tabs{ display:flex; gap:6px; background:#eee6d6; padding:5px; border-radius:999px; }
+  .tab-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:9px 18px;
+    border:none;
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .tab-btn.active{ background:var(--ink); color:var(--paper); }
+  .tab-btn:not(.active):hover{ background:#e3d9c2; }
+  .tab-btn.hidden-tab{ display:none; }
+
+  .proj-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--muted);
+    background:#fff;
+    border:1.5px solid #d8cfb8;
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .proj-toggle .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:#c7bfa6;
+    transition:background .15s ease;
+  }
+  .proj-toggle.on{ border-color:var(--coral); color:var(--coral); font-weight:600; }
+  .proj-toggle.on .dot{ background:var(--coral); }
+
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* =====================================================
+     VISTA 0 — CÓMO SE JUEGA (para proyectar a la clase)
+  ===================================================== */
+  .rules-wrap{
+    background:var(--chalkboard);
+    min-height:calc(100vh - 74px);
+    color:var(--chalk);
+    padding:46px 24px 60px;
+  }
+  .rules-inner{ max-width:820px; margin:0 auto; }
+  .rules-inner h2{
+    font-size:15px;
+    letter-spacing:1.5px;
+    color:#bcd0c6;
+    font-weight:500;
+    margin:0 0 8px;
+    text-align:center;
+  }
+  .rules-title{
+    font-size:36px;
+    font-weight:800;
+    margin:0 0 40px;
+    text-align:center;
+  }
+  .rules-steps{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .rule-step{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    background:var(--chalkboard-2);
+    border:2px solid #3f6357;
+    border-radius:16px;
+    padding:20px 22px;
+  }
+  .rule-step .num{
+    font-family:'Baloo 2', sans-serif;
+    font-size:26px;
+    font-weight:800;
+    color:var(--marigold);
+    flex-shrink:0;
+    width:40px;
+    text-align:center;
+  }
+  .rule-step p{ margin:0; font-size:18px; line-height:1.55; }
+  .rule-step b{ color:var(--marigold); }
+
+  /* =====================================================
+     VISTA 1 — PREPARAR (solo profesorado, antes de clase)
+  ===================================================== */
+  .setup-wrap{ max-width:960px; margin:0 auto; padding:32px 24px 64px; }
+  .private-banner{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fbe3e0;
+    color:#a3352a;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.3px;
+    padding:7px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .setup-intro h2{ font-size:22px; margin:0 0 6px; }
+  .setup-intro p{ color:var(--muted); margin:0 0 26px; font-size:15px; line-height:1.5; max-width:64ch; }
+
+  .setup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media (max-width:760px){ .setup-grid{ grid-template-columns:1fr; } }
+
+  .panel{ background:#fff; border:2px solid var(--ink); border-radius:14px; padding:20px 22px; }
+  .panel label{ display:block; font-weight:600; font-size:14px; margin-bottom:8px; }
+  textarea{
+    width:100%; min-height:220px; resize:vertical;
+    font-family:'Work Sans', sans-serif; font-size:14.5px; line-height:1.7;
+    padding:12px 14px; border-radius:8px; border:1.5px solid #d8cfb8;
+    background:#fffdf8; color:var(--ink);
+  }
+  textarea:focus{ outline:2px solid var(--marigold); border-color:transparent; }
+  .hint{ font-size:12.5px; color:var(--muted); margin-top:8px; }
+
+  .num-row{ display:flex; align-items:center; gap:10px; margin-top:16px; }
+  .num-row input{ width:70px; padding:8px 10px; font-size:14.5px; border-radius:8px; border:1.5px solid #d8cfb8; font-family:'Work Sans', sans-serif; }
+
+  .btn{
+    font-family:'Work Sans', sans-serif; font-weight:700; font-size:14px;
+    padding:11px 20px; border-radius:10px; border:2px solid var(--ink);
+    background:var(--marigold); color:var(--ink); cursor:pointer;
+    transition:transform .1s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn.secondary{ background:#fff; }
+  .btn.ghost{ background:transparent; border-color:#d8cfb8; color:var(--muted); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+  .btn.suggest{ background:var(--chalkboard); color:var(--chalk); border-color:var(--chalkboard); width:100%; margin-bottom:14px; }
+
+  .actions-row{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+
+  .status-msg{ font-size:13.5px; margin-top:12px; padding:9px 12px; border-radius:8px; display:none; }
+  .status-msg.show{ display:block; }
+  .status-msg.error{ background:#fbe3e0; color:#a3352a; }
+  .status-msg.ok{ background:#e6efe6; color:#2c5c3a; }
+
+  .word-bank-preview{ display:flex; flex-direction:column; gap:4px; margin-top:14px; font-size:14.5px; }
+  .word-bank-preview .wb-row{ display:flex; gap:8px; align-items:baseline; }
+  .word-bank-preview .wb-row b{ color:var(--coral); min-width:20px; }
+  .wb-word{
+    padding:2px 4px; border-radius:4px; cursor:text;
+    border:1px solid transparent;
+  }
+  .wb-word:hover{ border-color:#d8cfb8; }
+  .wb-word:focus{ outline:none; border-color:var(--marigold); background:#fffdf8; }
+  .wb-def{ font-size:12px; color:var(--muted); margin:0 0 6px 24px; line-height:1.4; }
+  .wb-def i{ color:var(--coral); font-style:normal; }
+  .wb-def-empty{ color:#a3352a; }
+  .wb-es{ color:var(--muted); font-style:italic; }
+
+  #cardsPreview{ margin-top:30px; }
+  .cards-page{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:600px){ .cards-page{ grid-template-columns:1fr; } }
+
+  .bingo-card{ background:#fffdf8; border:2px solid var(--ink); border-radius:10px; padding:16px 18px 18px; break-inside:avoid; page-break-inside:avoid; }
+  .bingo-card h3{ text-align:center; font-size:19px; letter-spacing:.5px; margin:0 0 12px; }
+  .card-name{ font-size:12.5px; display:flex; gap:6px; align-items:baseline; margin-bottom:14px; color:var(--muted); }
+  .card-name .line{ flex:1; border-bottom:1px solid var(--ink); height:14px; }
+  .card-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .word-list{ position:relative; padding-left:14px; border-left:2px solid var(--paper-margin); }
+  .word-list .col-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px; }
+  .ruled-line{ display:flex; gap:5px; align-items:baseline; border-bottom:1px solid var(--paper-line); padding:5px 0; font-size:12.5px; }
+  .ruled-line .n{ color:var(--muted); width:16px; flex-shrink:0; }
+  .ruled-line .write-space{ flex:1; }
+
+  .pick-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .pick-rows{ display:flex; flex-direction:column; gap:9px; }
+  .pick-row{ display:flex; align-items:center; gap:8px; border-bottom:1.5px solid var(--ink); padding-bottom:5px; }
+  .pick-num{ font-size:10.5px; color:var(--muted); border:1px solid var(--paper-line); border-radius:4px; padding:2px 5px; flex-shrink:0; }
+  .pick-line{ flex:1; height:16px; }
+
+  .result-sheet{ display:none; }
+  .result-sheet.showing{ display:block; }
+  .result-banner{ background:var(--marigold); color:var(--ink); font-weight:700; font-size:13px; letter-spacing:.5px; padding:10px 16px; border-radius:8px; margin-bottom:18px; display:inline-block; }
+  .result-grid{ display:flex; flex-direction:column; gap:2px; max-width:760px; }
+  .result-item{ font-size:14px; line-height:1.5; padding:9px 0; border-bottom:1px solid var(--paper-line); }
+  .result-item b{ color:var(--coral); display:block; margin-bottom:2px; }
+  .result-item .def{ color:var(--ink); }
+  .result-item .syn{ color:var(--muted); font-size:12.5px; display:block; margin-top:2px; }
+
+  /* =====================================================
+     VISTA 2 — SORTEO (pizarra, solo el número)
+  ===================================================== */
+  .stage-wrap{ background:var(--chalkboard); min-height:calc(100vh - 74px); padding:40px 20px 60px; color:var(--chalk); }
+  .stage-inner{ max-width:820px; margin:0 auto; text-align:center; }
+  .stage-inner h2{ font-size:16px; letter-spacing:1px; color:#bcd0c6; font-weight:500; margin:0 0 6px; }
+  .stage-title{ font-size:34px; font-weight:800; margin:0 0 34px; }
+
+  .reveal-box{
+    background:var(--chalkboard-2); border:3px solid #3f6357; border-radius:26px;
+    padding:44px 30px; margin:0 auto 26px; max-width:340px;
+    box-shadow:0 10px 0 rgba(0,0,0,.18);
+  }
+  .reveal-label{ font-size:14px; letter-spacing:2px; color:#bcd0c6; font-weight:600; margin-bottom:10px; }
+  .reveal-number{
+    font-family:'Baloo 2', sans-serif; font-size:104px; font-weight:800; color:var(--marigold);
+    line-height:1; min-height:110px; display:flex; align-items:center; justify-content:center;
+  }
+  .reveal-number.placeholder{ color:#5d7a70; font-size:22px; font-family:'Work Sans',sans-serif; font-weight:500; }
+  .reveal-number.pop{ animation:pop .38s ease; }
+  @keyframes pop{ 0%{ transform:scale(.8); opacity:.4; } 60%{ transform:scale(1.08); opacity:1; } 100%{ transform:scale(1); } }
+  .reveal-number.spinning{ color:#9db6ac; }
+
+  .stage-controls{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:34px; }
+  .btn.stage-btn{ border:2px solid var(--chalk); background:var(--marigold); color:var(--chalkboard); }
+  .btn.stage-btn.secondary{ background:transparent; color:var(--chalk); }
+  .btn.stage-btn:disabled{ opacity:.35; }
+
+  .stage-meta{ display:flex; justify-content:center; gap:28px; font-size:13.5px; color:#bcd0c6; margin-bottom:30px; }
+  .stage-meta b{ color:var(--chalk); font-size:16px; display:block; }
+
+  .history-title{ font-size:13px; letter-spacing:1px; color:#bcd0c6; margin-bottom:12px; text-align:left; }
+  .history-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start; }
+  .history-chip{ background:#0f261f; border:1px solid #3f6357; border-radius:8px; padding:8px 14px; font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700; color:var(--marigold); }
+  .empty-note{ color:#7f988e; font-size:13.5px; text-align:left; }
+
+  .meanings-stage{ margin-top:38px; text-align:left; }
+  .meanings-stage-list{ display:flex; flex-direction:column; gap:12px; margin-top:22px; }
+  .meanings-stage-item{ background:var(--chalkboard-2); border:2px solid #3f6357; border-radius:12px; padding:14px 18px; }
+  .meanings-stage-item b{ font-family:'Baloo 2', sans-serif; color:var(--marigold); font-size:17px; display:block; margin-bottom:4px; }
+  .meanings-stage-item span{ font-size:14.5px; line-height:1.5; color:var(--chalk); }
+
+  /* =====================================================
+     VISTA 3 — GANADORES
+  ===================================================== */
+  .winners-wrap{ max-width:820px; margin:0 auto; padding:32px 24px 64px; }
+  .winners-form{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .winners-form .field{ display:flex; flex-direction:column; gap:6px; }
+  .winners-form label{ font-size:12.5px; font-weight:600; color:var(--muted); }
+  .winners-form input[type="date"], .winners-form input[type="text"]{
+    padding:9px 12px; border-radius:8px; border:1.5px solid #d8cfb8;
+    font-family:'Work Sans', sans-serif; font-size:14px;
+  }
+  .winners-form input[type="text"]{ min-width:260px; flex:1; }
+  .winners-form .field.grow{ flex:1; }
+
+  .winners-table-wrap{ margin-top:26px; }
+  .winners-print-title{ display:none; }
+  table.winners-table{ width:100%; border-collapse:collapse; font-size:14.5px; }
+  table.winners-table th{
+    text-align:left; font-size:12px; letter-spacing:.3px; color:var(--muted);
+    border-bottom:2px solid var(--ink); padding:8px 6px;
+  }
+  table.winners-table td{ padding:10px 6px; border-bottom:1px solid var(--paper-line); }
+  table.winners-table td.date-col{ white-space:nowrap; color:var(--muted); width:110px; }
+  .row-del{
+    background:none; border:none; color:var(--coral); cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .winners-empty{ color:var(--muted); font-size:14px; margin-top:16px; }
+
+  @media print{
+    .topbar, .setup-intro, .private-banner, .panel, .actions-row, .status-msg, .winners-form, .winners-actions, .row-del{ display:none !important; }
+    body{ background:#fff; }
+    #cardsPreview{ margin:0; }
+
+    /* Tarjetas: 2 tarjetas apaisadas por hoja, más grandes */
+    .cards-page{
+      display:block;
+      page: cards-landscape;
+    }
+    .bingo-card{
+      border-color:#000;
+      box-sizing:border-box;
+      width:100%;
+      min-height:88mm;
+      padding:7mm 10mm;
+      margin-bottom:8mm;
+      page-break-inside:avoid;
+    }
+    .bingo-card:nth-child(2n){ page-break-after:always; }
+    .bingo-card h3{ font-size:18px; margin:0 0 5mm; }
+    .bingo-card .card-name{ font-size:11px; margin-bottom:5mm; }
+    .bingo-card .card-name .line{ height:12px; }
+    .bingo-card .card-cols{ gap:16mm; }
+    .bingo-card .word-list{ padding-left:10px; }
+    .bingo-card .word-list .col-title,
+    .bingo-card .pick-title{ font-size:9.5px; margin-bottom:3mm; }
+    .bingo-card .ruled-line{ font-size:12px; padding:2.5px 0; }
+    .bingo-card .ruled-line .n{ width:16px; }
+    .bingo-card .pick-row{ padding-bottom:3px; gap:8px; }
+    .bingo-card .pick-num{ font-size:10px; padding:2px 4px; }
+    .bingo-card .pick-line{ height:12px; }
+
+    .winners-print-title{ display:block; font-size:22px; margin:0 0 18px; }
+    @page{ margin:14mm; }
+    @page cards-landscape{ size: landscape; margin:10mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="display">Bingo<span>Ortográfico</span></div>
+    <small>FPB · Vehículos · Inglés</small>
+  </div>
+  <div class="topbar-right">
+    <div class="proj-toggle" id="projToggle"><span class="dot"></span><span id="projToggleLabel">Modo proyección: apagado</span></div>
+    <div class="tabs">
+      <button class="tab-btn" data-view="setup" id="tabSetup">Preparar (privado)</button>
+      <button class="tab-btn active" data-view="rules">Cómo se juega</button>
+      <button class="tab-btn" data-view="stage">Sorteo</button>
+      <button class="tab-btn" data-view="winners">Ganadores</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 0: CÓMO SE JUEGA ================= -->
+<div class="view active" id="view-rules">
+  <div class="rules-wrap">
+    <div class="rules-inner">
+      <h2>ANTES DE EMPEZAR</h2>
+      <div class="rules-title">¿En qué consiste el Bingo Ortográfico?</div>
+      <div class="rules-steps">
+        <div class="rule-step"><span class="num">1</span><p>El profesor o profesora os entrega una hoja con los <b>«cartones» o «tarjetas de bingo»</b> (o ya os la ha entregado antes).</p></div>
+        <div class="rule-step"><span class="num">2</span><p>El profesor o profesora <b>dicta 12 palabras en inglés</b>, una a una, <b>repitiendo cada una dos veces</b>, sin deletrearlas.</p></div>
+        <div class="rule-step"><span class="num">3</span><p>Escribes cada palabra <b>tal como creas que se escribe</b>, numerada del 1 al 12, en el orden del dictado.</p></div>
+        <div class="rule-step"><span class="num">4</span><p>Eliges las <b>6 palabras</b> que creas que has escrito bien y las copias en tu tarjeta, anotando el número de cada una.</p></div>
+        <div class="rule-step"><span class="num">5</span><p>El profesor va sacando <b>números al azar, sin repetir</b>. Si tienes ese número entre tus 6, lo marcas.</p></div>
+        <div class="rule-step"><span class="num">6</span><p>En cuanto tengas tus <b>6 números marcados</b>, canta bien alto: <b>¡BINGO!</b></p></div>
+        <div class="rule-step"><span class="num">7</span><p>El profesor revisa tu tarjeta. Si las <b>6 palabras están bien escritas, ganas</b>. Si alguna tiene una falta, el bingo no vale y el juego sigue hasta el próximo bingo válido.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 1: PREPARAR ================= -->
+<div class="view" id="view-setup">
+  <div class="setup-wrap">
+    <div class="private-banner">🔒 Solo para el profesorado — prepara esto antes de clase</div>
+    <div class="setup-intro">
+      <h2>Banco de palabras</h2>
+      <p>Genera 12 palabras en inglés con dificultades ortográficas típicas del vocabulario de mecánica y talleres de mantenimiento de vehículos, o escribe las tuyas, en el orden en que las vas a dictar. El alumnado no verá nunca esta pantalla.</p>
+    </div>
+
+    <div class="setup-grid">
+      <div class="panel">
+        <label>Palabras para dictar</label>
+        <button class="btn suggest" id="suggestBtn">🎲 Generar 12 palabras en inglés del taller con dificultad ortográfica</button>
+        <div id="suggestMeta" class="hint" style="margin-bottom:4px;"></div>
+        <div class="word-bank-preview" id="wordBankPreview"></div>
+        <div class="hint" style="margin-top:10px;">Puedes hacer clic sobre cualquier palabra para corregirla a mano.</div>
+
+        <div class="num-row">
+          <label style="margin:0;">Nº de tarjetas a imprimir</label>
+          <input type="number" id="cardCount" min="1" max="60" value="24">
+        </div>
+
+        <div class="hint" style="margin-top:14px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="includeMeanings" checked style="width:auto; margin:0;">
+          <label for="includeMeanings" style="margin:0; font-weight:600; color:var(--ink); cursor:pointer;">Incluir significados en inglés (con glosa breve en español) para revelarlos o repartirlos al terminar el bingo</label>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn ghost" id="clearBtn">Vaciar</button>
+          <button class="btn ghost" id="resetHistoryBtn" title="Olvida qué palabras se han usado ya, para empezar un nuevo curso o ciclo">Reiniciar histórico (nuevo curso)</button>
+          <button class="btn ghost" id="exportWordsBtn">Exportar palabras (archivo)</button>
+          <button class="btn ghost" id="importWordsBtn">Importar palabras (archivo)</button>
+          <input type="file" id="importWordsFile" accept="application/json" style="display:none;">
+        </div>
+
+        <div class="hint" style="margin-top:8px;">Esto solo sirve para volver a imprimir las mismas tarjetas en <b>otro ordenador</b>. La pantalla de <i>«Sorteo»</i> es independiente y no necesita este archivo: solo le tienes que decir cuántas palabras tiene el bingo (por defecto, 12).</div>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="actions-row" style="margin-top:14px;">
+          <button class="btn secondary" id="printCardsBtn">Imprimir tarjetas (alumnado)</button>
+          <button class="btn secondary" id="printResultBtn">Imprimir hoja de corrección y significados</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <label style="margin-bottom:14px;">Cómo se usa esta pestaña</label>
+        <div style="font-size:14px; line-height:1.75; color:var(--ink);">
+          <p style="margin:0 0 12px;"><b>1.</b> Antes de clase, pulsa <i>«Generar 12 palabras»</i> (o escribe las tuyas en inglés); las tarjetas se preparan solas para imprimir.</p>
+          <p style="margin:0 0 12px;"><b>2.</b> Imprime las tarjetas en blanco para el alumnado y, aparte, la <i>hoja de corrección y significados</i>: te sirve a ti para corregir y también para repasar el vocabulario con la clase al terminar.</p>
+          <p style="margin:0 0 12px;"><b>3.</b> Activa <i>«Modo proyección»</i> arriba a la derecha antes de proyectar: esta pestaña desaparece de la vista y solo queda «Cómo se juega» y «Sorteo».</p>
+          <p style="margin:0;"><b>4.</b> Al terminar, desactiva el modo proyección para volver a editar tu banco de palabras.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="cardsPreview"></div>
+  </div>
+</div>
+
+<!-- ================= VISTA 2: SORTEO ================= -->
+<div class="view" id="view-stage">
+  <div class="stage-wrap">
+    <div class="stage-inner">
+      <h2>SORTEO EN DIRECTO</h2>
+      <div class="stage-title">¡Bingo Ortográfico!</div>
+
+      <div class="total-numbers-row" style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:22px;">
+        <label for="totalNumbersInput" style="font-size:13px; color:#bcd0c6;">Números del bingo (según las tarjetas impresas):</label>
+        <input type="number" id="totalNumbersInput" min="1" max="99" value="12" style="width:70px; padding:6px 8px; border-radius:6px; border:1px solid #3f6357; background:#0f261f; color:#fff; text-align:center; font-size:15px;">
+      </div>
+
+      <div class="reveal-box">
+        <div class="reveal-label">NÚMERO</div>
+        <div class="reveal-number placeholder" id="revealNumber">?</div>
+      </div>
+
+      <div class="stage-controls">
+        <button class="btn stage-btn" id="spinBtn">Girar</button>
+        <button class="btn stage-btn secondary" id="undoBtn">Deshacer última</button>
+        <button class="btn stage-btn secondary" id="finishBtn">🏆 ¡Bingo cantado! Finalizar ronda</button>
+        <button class="btn stage-btn secondary" id="resetBtn">Reiniciar ronda</button>
+        <button class="btn stage-btn secondary" id="soundToggleBtn">🔊 Sonido</button>
+      </div>
+
+      <div class="stage-meta">
+        <div><b id="drawnCount">0</b>salidos</div>
+        <div><b id="remainingCount">0</b>quedan</div>
+        <div><b id="totalCount">0</b>en total</div>
+      </div>
+
+      <div class="history-title">NÚMEROS YA SALIDOS</div>
+      <div class="history-list" id="historyList"></div>
+      <div class="empty-note" id="emptyNote">Todavía no ha salido ningún número.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 3: GANADORES ================= -->
+<div class="view" id="view-winners">
+  <div class="winners-wrap">
+    <h2 class="winners-print-title">Ganadores — Bingo Ortográfico</h2>
+    <div class="setup-intro">
+      <h2>Tabla de ganadores del trimestre</h2>
+      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). La tabla se mantiene mientras no cierres esta pestaña; usa «Exportar datos» al terminar la clase y «Cargar datos» la próxima vez para seguir sumando en la misma tabla.</p>
+    </div>
+
+    <div class="panel winners-form">
+      <div class="field">
+        <label for="winnerDate">Fecha</label>
+        <input type="date" id="winnerDate">
+      </div>
+      <div class="field grow">
+        <label for="winnerNames">Ganador/a (o varios, separados por coma)</label>
+        <input type="text" id="winnerNames" placeholder="Nombre y apellido">
+      </div>
+      <button class="btn" id="addWinnerBtn">Añadir</button>
+    </div>
+
+    <div class="actions-row winners-actions">
+      <button class="btn secondary" id="exportWinnersBtn">Exportar datos (.json)</button>
+      <button class="btn secondary" id="importWinnersBtn">Cargar datos (.json)</button>
+      <input type="file" id="importWinnersFile" accept="application/json" style="display:none;">
+      <button class="btn ghost" id="printWinnersBtn">Guardar tabla en PDF</button>
+    </div>
+
+    <div class="winners-table-wrap" id="winnersTableWrap"></div>
+  </div>
+</div>
+
+<script>
+  // ---------------- word bank by orthographic difficulty ----------------
+  const WORD_BANK = {
+    "Consonantes dobles": [
+      {word:"battery", defEn:"A device that stores electrical energy and supplies power to start the engine and run electrical systems.", defEs:"Batería (acumulador eléctrico).", syn:["accumulator","cell"]},
+      {word:"accelerator", defEn:"The pedal that controls the speed of the engine by regulating the fuel supply.", defEs:"Acelerador (pedal).", syn:["gas pedal","throttle pedal"]},
+      {word:"muffler", defEn:"A device fitted to the exhaust system that reduces the noise made by the engine.", defEs:"Silenciador del tubo de escape.", syn:["silencer","exhaust box"]},
+      {word:"grille", defEn:"The front panel with openings that lets air reach the radiator and engine.", defEs:"Rejilla delantera del vehículo.", syn:["grill","front vent"]},
+      {word:"mirror", defEn:"A piece of glass that lets the driver see the traffic behind or beside the vehicle.", defEs:"Espejo (retrovisor).", syn:["looking glass","rear-view glass"]},
+      {word:"hammer", defEn:"A hand tool used to strike or shape metal parts in the workshop.", defEs:"Martillo.", syn:["mallet","sledge"]},
+      {word:"drill", defEn:"A tool used to make holes in metal, wood or other materials.", defEs:"Taladro.", syn:["borer","driller"]},
+      {word:"pressure", defEn:"The force that a gas or a liquid, such as air in a tyre or oil in a circuit, exerts on its container.", defEs:"Presión (del aire, del aceite...).", syn:["force","tension"]},
+      {word:"taillight", defEn:"The red light at the back of a vehicle that shows its position and braking.", defEs:"Piloto trasero.", syn:["rear light","brake light"]},
+      {word:"wheel", defEn:"The round part fitted with a tyre that allows the vehicle to move and turn.", defEs:"Rueda.", syn:["tyre assembly","disc wheel"]},
+      {word:"steering wheel", defEn:"The round control that the driver turns to change the direction of the vehicle.", defEs:"Volante.", syn:["wheel","helm"]},
+      {word:"bonnet", defEn:"The hinged cover over the engine at the front of a car (British English for 'hood').", defEs:"Capó (inglés británico).", syn:["hood","engine cover"]},
+      {word:"windscreen", defEn:"The front window of a vehicle that protects the driver from wind and weather (British English for 'windshield').", defEs:"Parabrisas (inglés británico).", syn:["windshield","front glass"]},
+      {word:"spanner", defEn:"A hand tool used to turn nuts and bolts (British English for 'wrench').", defEs:"Llave inglesa (inglés británico).", syn:["wrench","nut key"]},
+      {word:"differential", defEn:"A set of gears that allows the wheels on the same axle to turn at different speeds.", defEs:"Diferencial.", syn:["gear set","drive gear"]},
+      {word:"millimetre", defEn:"A small unit of length used, for example, to measure tyre tread depth.", defEs:"Milímetro (unidad de medida).", syn:["mm","small unit"]},
+      {word:"wheel alignment", defEn:"The adjustment of the angles of the wheels so the vehicle drives in a straight line.", defEs:"Alineación de las ruedas.", syn:["tracking","wheel tracking"]},
+      {word:"compressor", defEn:"A device that increases the pressure of a gas, such as the one in an air-conditioning system.", defEs:"Compresor (del aire acondicionado).", syn:["pump","booster"]},
+      {word:"carrier", defEn:"A frame or rack fitted to a vehicle to transport extra luggage or equipment.", defEs:"Portaequipajes / bastidor de carga.", syn:["rack","holder"]},
+      {word:"wheel arch", defEn:"The curved part of the bodywork that covers the top of the wheel.", defEs:"Arco de la rueda / paso de rueda.", syn:["fender","wheel housing"]}
+    ],
+    "Letras mudas": [
+      {word:"wrench", defEn:"A tool used to turn nuts and bolts (American English for 'spanner').", defEs:"Llave inglesa (inglés americano).", syn:["spanner","tool"]},
+      {word:"wrist pin", defEn:"The pin that connects the piston to the connecting rod inside the engine.", defEs:"Bulón / eje del pistón.", syn:["gudgeon pin","piston pin"]},
+      {word:"knuckle", defEn:"The part that connects the suspension to the wheel hub and allows it to turn.", defEs:"Mangueta de la dirección.", syn:["hub carrier","steering knuckle"]},
+      {word:"knob", defEn:"A small round handle used to operate a control, such as the gear lever.", defEs:"Pomo (de la palanca de cambios).", syn:["handle","dial"]},
+      {word:"knock", defEn:"An abnormal noise from the engine, often caused by early ignition of the fuel.", defEs:"Golpeteo del motor (autoencendido).", syn:["pinking","detonation"]},
+      {word:"exhaust", defEn:"The system of pipes that carries burnt gases away from the engine.", defEs:"Sistema de escape.", syn:["exhaust pipe","tailpipe"]},
+      {word:"chassis", defEn:"The frame that supports the body and the main mechanical parts of the vehicle.", defEs:"Chasis (bastidor).", syn:["frame","undercarriage"]},
+      {word:"debris", defEn:"Broken or scattered pieces left on the road after an accident or a repair.", defEs:"Restos / escombros en la calzada.", syn:["wreckage","fragments"]},
+      {word:"gauge", defEn:"An instrument that measures and shows a quantity, such as fuel, oil or speed.", defEs:"Indicador / medidor.", syn:["meter","indicator"]},
+      {word:"brake", defEn:"The system used to slow down or stop a vehicle.", defEs:"Freno.", syn:["stopper","retarder"]},
+      {word:"weight", defEn:"The heaviness of a vehicle or a part, usually measured in kilograms.", defEs:"Peso.", syn:["mass","load"]},
+      {word:"height", defEn:"The distance from the ground to the top of the vehicle.", defEs:"Altura.", syn:["elevation","stature"]},
+      {word:"lightweight", defEn:"Describing a part or material that weighs less than usual, to improve performance.", defEs:"Ligero / de bajo peso.", syn:["light","low-weight"]},
+      {word:"half shaft", defEn:"A short driveshaft that transmits power from the differential to a wheel.", defEs:"Semieje.", syn:["axle shaft","drive shaft"]},
+      {word:"wheelbase", defEn:"The distance between the centres of the front and rear wheels.", defEs:"Distancia entre ejes.", syn:["axle span","wheel spacing"]},
+      {word:"whiplash", defEn:"A neck injury caused by a sudden jerk of the head, often in a rear collision.", defEs:"Latigazo cervical.", syn:["neck strain","neck injury"]},
+      {word:"caulk", defEn:"A flexible material used to seal joints and stop water or air getting through.", defEs:"Masilla selladora.", syn:["sealant","filler"]},
+      {word:"wrap", defEn:"A vinyl film applied over the bodywork to change its colour or protect the paint.", defEs:"Vinilo / envoltura protectora.", syn:["vinyl film","covering"]},
+      {word:"write-off", defEn:"A vehicle so badly damaged that repairing it costs more than it is worth.", defEs:"Vehículo siniestro total.", syn:["total loss","wreck"]},
+      {word:"sign", defEn:"A board on the road giving drivers information or instructions.", defEs:"Señal de tráfico.", syn:["signal","roadsign"]}
+    ],
+    "Terminaciones -tion / -sion": [
+      {word:"transmission", defEn:"The set of gears that transmits the engine's power to the wheels.", defEs:"Transmisión / caja de cambios.", syn:["gearbox","drivetrain"]},
+      {word:"suspension", defEn:"The system of springs and dampers that absorbs bumps in the road.", defEs:"Suspensión.", syn:["springing","damping system"]},
+      {word:"combustion", defEn:"The chemical reaction in which fuel burns to produce the energy that moves the engine.", defEs:"Combustión.", syn:["burning","ignition process"]},
+      {word:"compression", defEn:"The stage in the engine cycle when the air-fuel mixture is squeezed inside the cylinder.", defEs:"Compresión.", syn:["squeezing","pressurising"]},
+      {word:"ignition", defEn:"The system that starts the engine and produces the spark to burn the fuel.", defEs:"Encendido.", syn:["starting system","spark system"]},
+      {word:"acceleration", defEn:"The increase in the speed of a vehicle over time.", defEs:"Aceleración.", syn:["speeding up","pickup"]},
+      {word:"deceleration", defEn:"The decrease in the speed of a vehicle over time.", defEs:"Deceleración / frenado progresivo.", syn:["slowing down","braking"]},
+      {word:"calibration", defEn:"The process of adjusting an instrument so that it gives correct readings.", defEs:"Calibración.", syn:["adjustment","setting"]},
+      {word:"lubrication", defEn:"The process of applying oil or grease to reduce friction between moving parts.", defEs:"Lubricación.", syn:["oiling","greasing"]},
+      {word:"corrosion", defEn:"The gradual damage of metal caused by rust or chemical reaction.", defEs:"Corrosión / oxidación.", syn:["rust","oxidation"]},
+      {word:"collision", defEn:"An accident in which two or more vehicles crash into each other.", defEs:"Colisión / choque.", syn:["crash","impact"]},
+      {word:"traction", defEn:"The grip that the tyres have on the road surface.", defEs:"Tracción / agarre.", syn:["grip","adherence"]},
+      {word:"friction", defEn:"The resistance produced when two surfaces rub against each other.", defEs:"Fricción / rozamiento.", syn:["rubbing","resistance"]},
+      {word:"injection", defEn:"The system that delivers fuel into the engine under pressure.", defEs:"Inyección.", syn:["fuel delivery","spraying"]},
+      {word:"ventilation", defEn:"The system that lets fresh air circulate inside the cabin.", defEs:"Ventilación.", syn:["airflow","air circulation"]},
+      {word:"rotation", defEn:"The turning movement of a wheel, shaft or other round part.", defEs:"Rotación / giro.", syn:["turning","spinning"]},
+      {word:"vibration", defEn:"A fast shaking movement, often caused by an unbalanced part.", defEs:"Vibración.", syn:["shaking","trembling"]},
+      {word:"inspection", defEn:"A careful examination of a vehicle to check its condition.", defEs:"Inspección / revisión.", syn:["check-up","examination"]},
+      {word:"registration", defEn:"The official record of a vehicle with the traffic authorities, shown on its plate.", defEs:"Matriculación.", syn:["licensing","plate number"]},
+      {word:"emission", defEn:"The gases released into the air by the exhaust system.", defEs:"Emisión (de gases).", syn:["exhaust gas","discharge"]}
+    ],
+    "Sonidos c / k / ck": [
+      {word:"clutch", defEn:"The mechanism that connects or disconnects the engine from the gearbox.", defEs:"Embrague.", syn:["coupling","disconnect mechanism"]},
+      {word:"crankshaft", defEn:"The shaft that converts the up-and-down movement of the pistons into rotation.", defEs:"Cigüeñal.", syn:["crank","main shaft"]},
+      {word:"camshaft", defEn:"The shaft with lobes that opens and closes the engine valves at the right time.", defEs:"Árbol de levas.", syn:["valve shaft","cam"]},
+      {word:"cylinder", defEn:"The tube-shaped chamber inside the engine where the piston moves up and down.", defEs:"Cilindro.", syn:["chamber","bore"]},
+      {word:"coolant", defEn:"The liquid that circulates through the engine to keep its temperature under control.", defEs:"Refrigerante / anticongelante.", syn:["antifreeze","cooling fluid"]},
+      {word:"socket", defEn:"A tool that fits over a nut or bolt head to turn it with a wrench.", defEs:"Vaso (de llave de carraca).", syn:["nut driver","socket head"]},
+      {word:"bracket", defEn:"A metal piece used to support or fix another part in place.", defEs:"Soporte / ménsula.", syn:["support","mount"]},
+      {word:"sprocket", defEn:"A toothed wheel that engages with a chain to transmit movement.", defEs:"Piñón (de cadena).", syn:["cog","gear wheel"]},
+      {word:"jack", defEn:"A tool used to lift a vehicle off the ground so a wheel can be changed.", defEs:"Gato (elevador).", syn:["lift","hoist"]},
+      {word:"kickstart", defEn:"A lever, usually on a motorbike, that is pushed down with the foot to start the engine.", defEs:"Pedal de arranque (moto).", syn:["starter lever","kick lever"]},
+      {word:"clunk", defEn:"A dull, heavy noise made by a loose or worn part.", defEs:"Golpe seco / ruido metálico.", syn:["thud","bang"]},
+      {word:"spark plug", defEn:"The part that produces the electric spark needed to ignite the fuel mixture.", defEs:"Bujía.", syn:["igniter","plug"]},
+      {word:"cylinder head", defEn:"The part that seals the top of the cylinders and holds the valves.", defEs:"Culata del motor.", syn:["engine head","valve cover base"]},
+      {word:"clip", defEn:"A small fastener used to hold cables, hoses or trim panels in place.", defEs:"Clip / grapa de sujeción.", syn:["fastener","retainer"]},
+      {word:"clamp", defEn:"A device used to hold or tighten a hose or a pipe firmly.", defEs:"Abrazadera.", syn:["fastener","hose clip"]},
+      {word:"crank", defEn:"To turn the engine over with the starter motor before it fires up.", defEs:"Arrancar / hacer girar el motor.", syn:["turn over","start"]},
+      {word:"cable", defEn:"A wire, often covered in plastic, used to carry electricity or to operate a mechanism.", defEs:"Cable.", syn:["wire","lead"]},
+      {word:"kit", defEn:"A set of tools or parts sold together for a specific repair job.", defEs:"Kit / juego de piezas.", syn:["set","pack"]},
+      {word:"choke", defEn:"A control that reduces air intake to help start a cold engine.", defEs:"Estárter / mando de aire.", syn:["air control","starter valve"]},
+      {word:"check valve", defEn:"A valve that allows a fluid to flow in only one direction.", defEs:"Válvula antirretorno.", syn:["non-return valve","one-way valve"]}
+    ],
+    "Vocales dobles oo / ou": [
+      {word:"ground", defEn:"The electrical connection to the metal body of the vehicle, used as a return path.", defEs:"Toma de masa / tierra.", syn:["earth","chassis connection"]},
+      {word:"mount", defEn:"A rubber and metal support that holds the engine in place and absorbs vibration.", defEs:"Soporte del motor.", syn:["bracket","support"]},
+      {word:"counterweight", defEn:"A mass added to the crankshaft to balance the movement of the pistons.", defEs:"Contrapeso.", syn:["balance weight","ballast"]},
+      {word:"outlet", defEn:"The point where a liquid or gas leaves a system, such as the coolant outlet.", defEs:"Salida (de un circuito).", syn:["exit","discharge point"]},
+      {word:"output", defEn:"The power or energy produced by the engine, usually measured in horsepower.", defEs:"Potencia entregada.", syn:["power","performance"]},
+      {word:"bounce", defEn:"The up-and-down movement of the suspension after going over a bump.", defEs:"Rebote de la suspensión.", syn:["rebound","spring back"]},
+      {word:"pound", defEn:"A unit used together with feet to measure torque (pound-feet).", defEs:"Libra (unidad de par motor).", syn:["lb","unit of force"]},
+      {word:"hoop", defEn:"A curved metal bar fitted as part of a safety cage.", defEs:"Arco de seguridad.", syn:["bar","ring"]},
+      {word:"loose", defEn:"Not fixed firmly, describing a bolt, wire or part that needs tightening.", defEs:"Suelto / flojo.", syn:["slack","unfastened"]},
+      {word:"tool", defEn:"An instrument used by hand to build, repair or adjust something.", defEs:"Herramienta.", syn:["instrument","implement"]},
+      {word:"cool", defEn:"At a low temperature, describing an engine or a system that is not overheating.", defEs:"Frío / fresco.", syn:["chilled","cold"]},
+      {word:"boost", defEn:"The extra air pressure produced by a turbocharger to increase engine power.", defEs:"Sobrealimentación / presión turbo.", syn:["turbo pressure","forced induction"]},
+      {word:"groove", defEn:"A narrow channel cut into a surface, such as the pattern on a tyre.", defEs:"Ranura / surco del neumático.", syn:["channel","slot"]},
+      {word:"smooth", defEn:"Running evenly, without vibration or jerks, describing an engine or a ride.", defEs:"Suave / uniforme.", syn:["even","steady"]},
+      {word:"proof", defEn:"Resistant to something harmful, as in rustproof or waterproof.", defEs:"Resistente a (óxido, agua...).", syn:["resistant","protected"]},
+      {word:"tooth", defEn:"One of the small projections on a gear that engages with another gear.", defEs:"Diente (de un engranaje).", syn:["cog tooth","gear tooth"]},
+      {word:"hood", defEn:"The hinged cover over the engine at the front of a car (American English for 'bonnet').", defEs:"Capó (inglés americano).", syn:["bonnet","engine cover"]},
+      {word:"mould", defEn:"A hollow shape used to give form to a rubber or plastic part, such as a tyre.", defEs:"Molde.", syn:["cast","form"]},
+      {word:"sound", defEn:"The noise made by the engine or another part of the vehicle.", defEs:"Sonido / ruido.", syn:["noise","tone"]},
+      {word:"spool", defEn:"The moment when a turbocharger starts spinning fast enough to produce boost.", defEs:"Puesta en marcha del turbo.", syn:["spin-up","wind-up"]}
+    ],
+    "Grupos consonánticos": [
+      {word:"throttle", defEn:"The valve that controls how much air and fuel enters the engine.", defEs:"Acelerador / mariposa de admisión.", syn:["accelerator","gas control"]},
+      {word:"thread", defEn:"The spiral groove cut into a screw or a bolt.", defEs:"Rosca (de un tornillo).", syn:["screw groove","spiral groove"]},
+      {word:"thrust", defEn:"A forward force produced by an engine or applied along a shaft.", defEs:"Empuje.", syn:["push","force"]},
+      {word:"through", defEn:"Moving from one side of something to the other, as in a through-flow radiator.", defEs:"A través de.", syn:["via","across"]},
+      {word:"strut", defEn:"A rigid suspension part that combines a spring and a damper in one unit.", defEs:"Amortiguador de tipo McPherson.", syn:["shock absorber","suspension leg"]},
+      {word:"stroke", defEn:"One complete movement of a piston inside the cylinder.", defEs:"Carrera del pistón.", syn:["piston movement","cycle"]},
+      {word:"strap", defEn:"A strong band used to hold or fasten something securely, such as a battery strap.", defEs:"Correa de sujeción.", syn:["band","tie"]},
+      {word:"scratch", defEn:"A shallow mark or line made on the paintwork by a sharp object.", defEs:"Rayón / arañazo en la pintura.", syn:["scrape","mark"]},
+      {word:"screw", defEn:"A metal fastener with a spiral thread, turned to fix parts together.", defEs:"Tornillo.", syn:["bolt","fastener"]},
+      {word:"screwdriver", defEn:"A tool used to turn screws.", defEs:"Destornillador.", syn:["driver","turnscrew"]},
+      {word:"scraper", defEn:"A tool used to remove ice, paint or old gasket material from a surface.", defEs:"Rasqueta.", syn:["scraping tool","blade tool"]},
+      {word:"spring", defEn:"A coiled metal part that stretches or compresses to absorb movement.", defEs:"Muelle / resorte.", syn:["coil","resort"]},
+      {word:"spray", defEn:"A fine mist of liquid, such as paint or water, applied under pressure.", defEs:"Pulverización / spray.", syn:["mist","aerosol"]},
+      {word:"splash guard", defEn:"A flexible panel fitted behind a wheel to stop mud and water being thrown up.", defEs:"Guardabarros / faldilla.", syn:["mud flap","fender liner"]},
+      {word:"splice", defEn:"To join two wires or cables together by twisting or connecting their ends.", defEs:"Empalmar (cables).", syn:["join","connect"]},
+      {word:"switch", defEn:"A device used to turn an electrical circuit on or off.", defEs:"Interruptor.", syn:["button","control"]},
+      {word:"swivel", defEn:"A joint that allows a part to turn freely in different directions.", defEs:"Rótula / junta giratoria.", syn:["pivot","joint"]},
+      {word:"sway bar", defEn:"A bar that reduces the body's leaning movement when the vehicle turns a corner.", defEs:"Barra estabilizadora.", syn:["anti-roll bar","stabiliser bar"]},
+      {word:"squeal", defEn:"A high-pitched noise, often made by worn brake pads.", defEs:"Chirrido (de los frenos).", syn:["screech","high-pitched noise"]},
+      {word:"squeak", defEn:"A short, sharp, high noise made by a dry or worn part.", defEs:"Chirrido corto / crujido.", syn:["creak","chirp"]}
+    ]
+  };
+
+  // ---- diccionario plano de todas las palabras del banco, para buscar significado y sinónimos al editar a mano ----
+  const WORD_LOOKUP = {};
+  Object.values(WORD_BANK).forEach(list=>{
+    list.forEach(item=>{
+      WORD_LOOKUP[item.word.trim().toLowerCase()] = { defEn: item.defEn, defEs: item.defEs, syn: item.syn || [] };
+    });
+  });
+
+  // ---- histórico de palabras ya usadas (para no repetir hasta agotar el banco) ----
+  const USED_WORDS_KEY = 'bingoUsedWordsHistoryEnFPB_v1';
+
+  function loadUsedWords(){
+    try{
+      const raw = localStorage.getItem(USED_WORDS_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return (parsed && typeof parsed === 'object') ? parsed : {};
+    }catch(e){ return {}; }
+  }
+
+  function saveUsedWords(used){
+    try{ localStorage.setItem(USED_WORDS_KEY, JSON.stringify(used)); }catch(e){}
+  }
+
+  function proposeTwelveWords(){
+    const cats = Object.keys(WORD_BANK); // 6 categorías × 2 palabras = 12
+    const used = loadUsedWords();
+    const chosen = [];
+    const usedCats = [];
+    let recycledCats = [];
+    cats.forEach(cat=>{
+      const fullBank = WORD_BANK[cat];
+      const usedList = used[cat] || [];
+      let available = fullBank.filter(item => !usedList.includes(item.word));
+      if(available.length < 2){
+        // se han usado ya todas las palabras nuevas de esta categoría: empieza un nuevo ciclo
+        used[cat] = [];
+        available = [...fullBank];
+        recycledCats.push(cat);
+      }
+      const pool = [...available];
+      for(let k=0;k<2;k++){
+        const idx = Math.floor(Math.random()*pool.length);
+        const picked = pool[idx];
+        chosen.push(picked);
+        pool.splice(idx,1);
+        used[cat] = used[cat] || [];
+        used[cat].push(picked.word);
+      }
+      usedCats.push(cat);
+    });
+    saveUsedWords(used);
+    // shuffle so the dictation order doesn't reveal the category pattern
+    for(let i=chosen.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [chosen[i],chosen[j]] = [chosen[j],chosen[i]];
+    }
+    return { words: chosen, cats: usedCats, recycled: recycledCats };
+  }
+
+  // ---------------- state ----------------
+  let words = [];
+  let pool = [];
+  let history = [];
+  let spinning = false;
+  let projectionMode = false;
+
+  // ---------------- tabs ----------------
+  const tabSetup = document.getElementById('tabSetup');
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.classList.contains('hidden-tab')) return;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    });
+  });
+
+  const projToggle = document.getElementById('projToggle');
+  const projToggleLabel = document.getElementById('projToggleLabel');
+  projToggle.addEventListener('click', ()=>{
+    projectionMode = !projectionMode;
+    projToggle.classList.toggle('on', projectionMode);
+    projToggleLabel.textContent = 'Modo proyección: ' + (projectionMode ? 'activado' : 'apagado');
+    tabSetup.classList.toggle('hidden-tab', projectionMode);
+    if(projectionMode && tabSetup.classList.contains('active')){
+      tabSetup.classList.remove('active');
+      document.getElementById('view-setup').classList.remove('active');
+      const rulesTab = document.querySelector('.tab-btn[data-view="rules"]');
+      rulesTab.classList.add('active');
+      document.getElementById('view-rules').classList.add('active');
+    }
+  });
+
+  // ---------------- setup view ----------------
+  const statusMsg = document.getElementById('statusMsg');
+  const wordBankPreview = document.getElementById('wordBankPreview');
+  const cardsPreview = document.getElementById('cardsPreview');
+  const suggestMeta = document.getElementById('suggestMeta');
+
+  function showStatus(msg, type){
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg show ' + type;
+  }
+
+  const WORDS_STORAGE_KEY = 'bingoOrtograficoWordsEnFPB_v1';
+
+  function saveWordsToStorage(){
+    try{ localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(words)); }catch(e){}
+  }
+
+  function loadWordsFromStorage(){
+    try{
+      const raw = localStorage.getItem(WORDS_STORAGE_KEY);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length>0) return parsed;
+    }catch(e){}
+    return null;
+  }
+
+  function setWords(list){
+    words = list.map((w,i)=>({
+      n:i+1,
+      word: (typeof w === 'string' ? w : w.word),
+      defEn: (typeof w === 'string' ? '' : w.defEn),
+      defEs: (typeof w === 'string' ? '' : w.defEs),
+      syn: (typeof w === 'string' ? [] : (w.syn || []))
+    }));
+    showStatus(words.length+' palabras numeradas del 1 al '+words.length+'. Las tarjetas están listas y el sorteo ya puede girar. Se han guardado en este navegador: al volver a abrir el archivo aquí mismo, seguirán cargadas.', 'ok');
+    renderWordBank();
+    renderCards();
+    resetGameState();
+    saveWordsToStorage();
+  }
+
+  document.getElementById('suggestBtn').addEventListener('click', ()=>{
+    const { words: proposed, cats, recycled } = proposeTwelveWords();
+    let meta = 'Dificultades cubiertas: ' + cats.join(' · ');
+    if(recycled && recycled.length>0){
+      meta += ' ⚠️ Ya se han usado todas las palabras nuevas de: ' + recycled.join(', ') + '. Esa(s) categoría(s) empieza(n) un nuevo ciclo.';
+    }
+    suggestMeta.textContent = meta;
+    setWords(proposed);
+  });
+
+  document.getElementById('resetHistoryBtn').addEventListener('click', ()=>{
+    try{ localStorage.removeItem(USED_WORDS_KEY); }catch(e){}
+    showStatus('Histórico de palabras usadas reiniciado. La próxima vez que generes, todas las palabras vuelven a estar disponibles.', 'ok');
+  });
+
+  document.getElementById('includeMeanings').addEventListener('change', ()=>{
+    if(words.length>0){
+      renderCards();
+      updateStageButtons();
+    }
+  });
+
+  function wbInfoHTML(item){
+    if(!item.defEn) return '<div class="wb-def wb-def-empty" id="wbdef-'+item.n+'">No meaning available (hand-typed word not found in the bank).</div>';
+    const synTxt = (item.syn && item.syn.length) ? ' <i>· Synonyms: '+item.syn.join(', ')+'</i>' : '';
+    return '<div class="wb-def" id="wbdef-'+item.n+'">'+item.defEn+' <span class="wb-es">(ES: '+item.defEs+')</span>'+synTxt+'</div>';
+  }
+
+  function renderWordBank(){
+    wordBankPreview.innerHTML = words.map(item=>
+      '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
+      + wbInfoHTML(item)
+    ).join('');
+    wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
+      el.addEventListener('blur', ()=>{
+        const n = parseInt(el.dataset.n);
+        const newVal = el.textContent.trim();
+        const entry = words.find(w=>w.n===n);
+        if(entry && newVal){
+          entry.word = newVal;
+          const found = WORD_LOOKUP[newVal.toLowerCase()];
+          entry.defEn = found ? found.defEn : '';
+          entry.defEs = found ? found.defEs : '';
+          entry.syn = found ? found.syn : [];
+          const infoEl = document.getElementById('wbdef-'+n);
+          if(infoEl) infoEl.outerHTML = wbInfoHTML(entry);
+          renderCards();
+          saveWordsToStorage();
+        } else if(entry){
+          el.textContent = entry.word;
+        }
+      });
+      el.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter'){ e.preventDefault(); el.blur(); }
+      });
+    });
+  }
+
+  function buildCardHTML(){
+    const half = Math.ceil(words.length/2);
+    const colA = words.slice(0, half);
+    const colB = words.slice(half);
+    const rowsHTML = (col)=> col.map(item=>
+      '<div class="ruled-line"><span class="n">'+item.n+'.</span><span class="write-space">&nbsp;</span></div>'
+    ).join('');
+
+    const pickRows = Array.from({length:6}).map(()=>`
+      <div class="pick-row"><span class="pick-num">Nº</span><span class="pick-line"></span></div>`).join('');
+
+    return `
+      <div class="bingo-card">
+        <h3>BINGO ORTOGRÁFICO (INGLÉS)</h3>
+        <div class="card-name"><span>Nombre:</span><span class="line"></span></div>
+        <div class="card-cols">
+          <div class="word-list">
+            <div class="col-title">ESCRIBE LO QUE DICTA EL PROFESOR</div>
+            ${rowsHTML(colA)}
+            ${rowsHTML(colB)}
+          </div>
+          <div>
+            <div class="pick-title">TUS 6 PALABRAS (LAS QUE CREES QUE ESTÁN BIEN)</div>
+            <div class="pick-rows">${pickRows}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildResultSheet(){
+    const includeDefs = document.getElementById('includeMeanings').checked;
+    const items = words.map(item=>{
+      if(!includeDefs) return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b></div>';
+      const defEn = item.defEn || 'No meaning available (hand-typed word).';
+      const defEs = item.defEs ? ' <span class="wb-es">(ES: '+item.defEs+')</span>' : '';
+      const defHtml = '<span class="def">'+defEn+defEs+'</span>';
+      const synHtml = (item.syn && item.syn.length) ? '<span class="syn">Synonyms: '+item.syn.join(', ')+'</span>' : '';
+      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+synHtml+'</div>';
+    }).join('');
+    return `
+      <div class="result-banner">HOJA DE CORRECCIÓN${includeDefs ? ' Y SIGNIFICADOS (EN INGLÉS)' : ''} — para el profesorado y para repasar con el alumnado al terminar</div>
+      <h3 style="margin:0 0 16px;">Palabras del dictado${includeDefs ? ' y su significado en inglés' : ''}</h3>
+      <div class="result-grid">${items}</div>`;
+  }
+
+  function renderCards(){
+    if(words.length===0){ cardsPreview.innerHTML = ''; return; }
+    const count = Math.max(1, Math.min(60, parseInt(document.getElementById('cardCount').value) || 1));
+    let html = '<div class="cards-page" id="cardsPage">';
+    for(let i=0;i<count;i++){ html += buildCardHTML(); }
+    html += '</div>';
+    html += `<div class="result-sheet" id="resultSheet">${buildResultSheet()}</div>`;
+    cardsPreview.innerHTML = html;
+  }
+
+  document.getElementById('printCardsBtn').addEventListener('click', ()=>{
+    if(!document.getElementById('cardsPage')){ showStatus('Primero genera las palabras para poder imprimir las tarjetas.', 'error'); return; }
+    window.print();
+  });
+  document.getElementById('printResultBtn').addEventListener('click', ()=>{
+    const cardsPage = document.getElementById('cardsPage');
+    const sheet = document.getElementById('resultSheet');
+    if(!cardsPage || !sheet){ showStatus('Primero genera las palabras para poder imprimir la hoja.', 'error'); return; }
+    cardsPage.style.display = 'none';
+    sheet.classList.add('showing');
+    window.print();
+    const restore = ()=>{
+      cardsPage.style.display = '';
+      sheet.classList.remove('showing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    suggestMeta.textContent = '';
+    words = [];
+    wordBankPreview.innerHTML = '';
+    cardsPreview.innerHTML = '';
+    statusMsg.className = 'status-msg';
+    resetGameState();
+    try{ localStorage.removeItem(WORDS_STORAGE_KEY); }catch(e){}
+  });
+
+  document.getElementById('exportWordsBtn').addEventListener('click', ()=>{
+    if(words.length===0){
+      showStatus('Primero genera o escribe las palabras; todavía no hay ninguna que exportar.', 'error');
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ words }, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo-ortografico-palabras.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const importWordsFile = document.getElementById('importWordsFile');
+  document.getElementById('importWordsBtn').addEventListener('click', ()=> importWordsFile.click());
+  importWordsFile.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const loaded = Array.isArray(data.words) ? data.words : null;
+        if(!loaded || loaded.length===0) throw new Error('vacío');
+        words = loaded;
+        renderWordBank();
+        renderCards();
+        resetGameState();
+        saveWordsToStorage();
+        showStatus(words.length+' palabras importadas correctamente desde el archivo. El sorteo ya puede girar en este ordenador.', 'ok');
+      }catch(err){
+        showStatus('No se ha podido leer ese archivo. Comprueba que sea un .json exportado desde esta misma herramienta.', 'error');
+      }
+    };
+    reader.readAsText(file);
+    importWordsFile.value = '';
+  });
+
+  // ---------------- stage / sorteo view (independiente del resto) ----------------
+  const revealNumber = document.getElementById('revealNumber');
+  const spinBtn = document.getElementById('spinBtn');
+  const undoBtn = document.getElementById('undoBtn');
+  const finishBtn = document.getElementById('finishBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const historyList = document.getElementById('historyList');
+  const emptyNote = document.getElementById('emptyNote');
+  const drawnCount = document.getElementById('drawnCount');
+  const remainingCount = document.getElementById('remainingCount');
+  const totalCount = document.getElementById('totalCount');
+  const totalNumbersInput = document.getElementById('totalNumbersInput');
+  let manualFinish = false;
+  let totalNumbers = 12;
+
+  function getTotalNumbersInput(){
+    const val = Math.max(1, Math.min(99, parseInt(totalNumbersInput.value) || 12));
+    totalNumbersInput.value = val;
+    return val;
+  }
+
+  function resetGameState(){
+    totalNumbers = getTotalNumbersInput();
+    pool = Array.from({length: totalNumbers}, (_, i)=> i+1);
+    history = [];
+    spinning = false;
+    manualFinish = false;
+    revealNumber.textContent = '?';
+    revealNumber.className = 'reveal-number placeholder';
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function updateMeta(){
+    drawnCount.textContent = history.length;
+    remainingCount.textContent = pool.length;
+    totalCount.textContent = totalNumbers;
+  }
+
+  function updateStageButtons(){
+    const finished = pool.length===0 || manualFinish;
+    spinBtn.disabled = spinning || pool.length===0 || manualFinish;
+    undoBtn.disabled = spinning || history.length===0;
+    finishBtn.disabled = spinning || finished || history.length===0;
+    resetBtn.disabled = spinning;
+    if(pool.length===0 && !manualFinish){
+      revealNumber.textContent = '¡Fin!';
+      revealNumber.className = 'reveal-number placeholder';
+    } else if(manualFinish){
+      revealNumber.textContent = '¡Bingo!';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+  }
+
+  function renderHistory(){
+    historyList.innerHTML = '';
+    if(history.length===0){ emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+    history.forEach(n=>{
+      const chip = document.createElement('div');
+      chip.className = 'history-chip';
+      chip.textContent = n;
+      historyList.appendChild(chip);
+    });
+  }
+
+  // ---- sonido (Web Audio API, sin archivos externos) ----
+  let audioCtx = null;
+  let soundEnabled = true;
+
+  function getAudioCtx(){
+    if(!audioCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return null;
+      audioCtx = new Ctx();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function playTick(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 680;
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.05);
+    }catch(e){}
+  }
+
+  function playFinalSound(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i)=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const start = now + i*0.09;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+      });
+    }catch(e){}
+  }
+
+  function spin(){
+    if(spinning || pool.length===0) return;
+    spinning = true;
+    updateStageButtons();
+
+    let ticks = 0;
+    const maxTicks = 14;
+    revealNumber.className = 'reveal-number spinning';
+
+    const interval = setInterval(()=>{
+      const randNum = pool[Math.floor(Math.random()*pool.length)];
+      revealNumber.textContent = randNum;
+      playTick();
+      ticks++;
+      if(ticks >= maxTicks){
+        clearInterval(interval);
+        const finalPos = Math.floor(Math.random()*pool.length);
+        const finalNum = pool[finalPos];
+        pool.splice(finalPos,1);
+        history.push(finalNum);
+
+        revealNumber.textContent = finalNum;
+        revealNumber.className = 'reveal-number pop';
+        playFinalSound();
+
+        updateMeta();
+        renderHistory();
+        spinning = false;
+        updateStageButtons();
+      }
+    }, 80);
+  }
+
+  function undo(){
+    if(spinning) return;
+    if(manualFinish){
+      manualFinish = false;
+      updateStageButtons();
+      return;
+    }
+    if(history.length===0) return;
+    const lastN = history.pop();
+    pool.push(lastN);
+    if(history.length>0){
+      revealNumber.textContent = history[history.length-1];
+      revealNumber.className = 'reveal-number';
+    } else {
+      revealNumber.textContent = '?';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function finishRound(){
+    if(spinning || history.length===0 || manualFinish || pool.length===0) return;
+    manualFinish = true;
+    updateStageButtons();
+  }
+
+  spinBtn.addEventListener('click', spin);
+  undoBtn.addEventListener('click', undo);
+  finishBtn.addEventListener('click', finishRound);
+  resetBtn.addEventListener('click', resetGameState);
+  totalNumbersInput.addEventListener('change', resetGameState);
+
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  soundToggleBtn.addEventListener('click', ()=>{
+    soundEnabled = !soundEnabled;
+    soundToggleBtn.textContent = soundEnabled ? '🔊 Sonido' : '🔇 Sonido';
+    if(soundEnabled) getAudioCtx();
+  });
+
+  // ---------------- winners ----------------
+  let winners = [];
+  let winnerIdSeq = 1;
+
+  const winnerDate = document.getElementById('winnerDate');
+  const winnerNames = document.getElementById('winnerNames');
+  const winnersTableWrap = document.getElementById('winnersTableWrap');
+
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function formatDate(iso){
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return d+'/'+m+'/'+y;
+  }
+  winnerDate.value = todayISO();
+
+  function renderWinners(){
+    if(winners.length===0){
+      winnersTableWrap.innerHTML = '<div class="winners-empty">Todavía no hay ganadores registrados.</div>';
+      return;
+    }
+    const rows = winners.map(w=>
+      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
+    ).join('');
+    winnersTableWrap.innerHTML = `
+      <table class="winners-table">
+        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    winnersTableWrap.querySelectorAll('.row-del').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = parseInt(btn.dataset.id);
+        winners = winners.filter(w=>w.id!==id);
+        renderWinners();
+      });
+    });
+  }
+
+  document.getElementById('addWinnerBtn').addEventListener('click', ()=>{
+    const names = winnerNames.value.trim();
+    if(!names) return;
+    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names });
+    winnerNames.value = '';
+    renderWinners();
+  });
+
+  document.getElementById('exportWinnersBtn').addEventListener('click', ()=>{
+    const data = JSON.stringify({ winners }, null, 2);
+    const blob = new Blob([data], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo-ortografico-ganadores.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const importWinnersFile = document.getElementById('importWinnersFile');
+  document.getElementById('importWinnersBtn').addEventListener('click', ()=> importWinnersFile.click());
+  importWinnersFile.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const loaded = Array.isArray(data.winners) ? data.winners : [];
+        loaded.forEach(w=>{
+          winners.push({ id: winnerIdSeq++, date: w.date || '', names: w.names || '' });
+        });
+        renderWinners();
+      }catch(err){
+        alert('No se ha podido leer ese archivo. Comprueba que sea un .json exportado desde esta misma herramienta.');
+      }
+    };
+    reader.readAsText(file);
+    importWinnersFile.value = '';
+  });
+
+  document.getElementById('printWinnersBtn').addEventListener('click', ()=> window.print());
+
+  renderWinners();
+
+  // ---------------- init ----------------
+  const restoredWords = loadWordsFromStorage();
+  if(restoredWords){
+    words = restoredWords;
+    renderWordBank();
+    renderCards();
+    showStatus(words.length+' palabras recuperadas de la sesión anterior en este navegador. Si quieres otras nuevas, pulsa "Generar" o "Vaciar".', 'ok');
+  }
+  resetGameState();
+</script>
+
+</body>
+</html>
