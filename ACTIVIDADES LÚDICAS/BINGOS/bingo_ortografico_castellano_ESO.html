@@ -198,9 +198,12 @@
   .status-msg.error{ background:#fbe3e0; color:#a3352a; }
   .status-msg.ok{ background:#e6efe6; color:#2c5c3a; }
 
-  .word-bank-preview{ display:flex; flex-direction:column; gap:4px; margin-top:14px; font-size:14.5px; }
-  .word-bank-preview .wb-row{ display:flex; gap:8px; align-items:baseline; }
-  .word-bank-preview .wb-row b{ color:var(--coral); min-width:20px; }
+  .word-bank-preview{ display:flex; flex-direction:column; gap:10px; margin-top:14px; font-size:14.5px; }
+  .word-bank-preview .wb-row{ display:flex; flex-direction:column; gap:2px; }
+  .word-bank-preview .wb-row-top{ display:flex; gap:8px; align-items:baseline; }
+  .word-bank-preview .wb-row-top b{ color:var(--coral); min-width:20px; }
+  .wb-meaning{ margin-left:28px; font-size:13px; color:#5a5648; line-height:1.5; }
+  .wb-meaning .wb-syn{ font-style:italic; color:#847f6d; }
   .wb-word{
     padding:2px 4px; border-radius:4px; cursor:text;
     border:1px solid transparent;
@@ -236,6 +239,7 @@
   .result-item{ font-size:14px; line-height:1.5; padding:9px 0; border-bottom:1px solid var(--paper-line); }
   .result-item b{ color:var(--coral); display:block; margin-bottom:2px; }
   .result-item .def{ color:var(--ink); }
+  .result-item .syn{ display:block; color:#6b6b6b; font-size:.92em; margin-top:2px; font-style:italic; }
 
   /* =====================================================
      VISTA 2 — SORTEO (pizarra, solo el número)
@@ -407,7 +411,7 @@
 
         <div class="hint" style="margin-top:14px; display:flex; align-items:center; gap:8px;">
           <input type="checkbox" id="includeMeanings" checked style="width:auto; margin:0;">
-          <label for="includeMeanings" style="margin:0; font-weight:600; color:var(--ink); cursor:pointer;">Incluir significados (estilo DRAE) para revelarlos o repartirlos al terminar el bingo</label>
+          <label for="includeMeanings" style="margin:0; font-weight:600; color:var(--ink); cursor:pointer;">Incluir significados (estilo DRAE) y sinónimos para revelarlos o repartirlos al terminar el bingo</label>
         </div>
 
         <div class="actions-row">
@@ -421,6 +425,11 @@
         <div class="hint" style="margin-top:8px;">Esto solo sirve para volver a imprimir las mismas tarjetas en <b>otro ordenador</b>. La pantalla de <i>«Sorteo»</i> es independiente y no necesita este archivo: solo le tienes que decir cuántas palabras tiene el bingo (por defecto, 12).</div>
 
         <div class="status-msg" id="statusMsg"></div>
+
+        <div class="actions-row" style="margin-top:18px;">
+          <button class="btn secondary" id="printCardsBtn" disabled>Imprimir tarjetas (alumnado)</button>
+          <button class="btn secondary" id="printResultBtn" disabled>Imprimir hoja de corrección y significados</button>
+        </div>
       </div>
 
       <div class="panel">
@@ -512,207 +521,207 @@
   // ---------------- word bank by orthographic difficulty ----------------
   const WORD_BANK = {
     "b / v": [
-      {word:"exuberante", def:"Que tiene o produce abundancia extraordinaria de algo, como la vegetación."},
-      {word:"vehemente", def:"Que actúa o se manifiesta con mucha intensidad y pasión."},
-      {word:"absorber", def:"Atraer un cuerpo y retener en su masa las moléculas de un fluido."},
-      {word:"disolver", def:"Hacer que una sustancia se mezcle y desaparezca en un líquido."},
-      {word:"vestíbulo", def:"Espacio de entrada situado a la entrada de un edificio o vivienda."},
-      {word:"hervir", def:"Producir burbujas un líquido al alcanzar cierta temperatura por efecto del calor."},
-      {word:"vándalo", def:"Persona que destruye o causa destrozos de forma injustificada."},
-      {word:"obviar", def:"Evitar una dificultad o inconveniente, apartándolo con anticipación."},
-      {word:"subvención", def:"Cantidad de dinero que concede una institución para ayudar a una actividad o proyecto."},
-      {word:"vislumbrar", def:"Ver algo de forma confusa o a lo lejos, o intuirlo por indicios."},
-      {word:"adverbio", def:"Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio."},
-      {word:"convivencia", def:"Acción de vivir en compañía de otros, compartiendo espacio y relaciones."},
-      {word:"absolver", def:"Declarar libre de culpa o de una obligación a alguien."},
-      {word:"abstenerse", def:"Privarse voluntariamente de hacer algo."},
-      {word:"vagabundo", def:"Persona que va de un lugar a otro sin domicilio fijo."},
-      {word:"vaivén", def:"Movimiento alternativo de ida y vuelta."},
-      {word:"objetivo", def:"Fin o propósito que se pretende alcanzar."},
-      {word:"obtener", def:"Conseguir o alcanzar algo que se desea."},
-      {word:"absurdo", def:"Que carece de sentido o de lógica."},
-      {word:"vencer", def:"Ganar o derrotar a alguien en una lucha o competición."},
-      {word:"avanzar", def:"Moverse o progresar hacia delante."},
-      {word:"envidia", def:"Sentimiento de tristeza por el bien ajeno."},
-      {word:"movilidad", def:"Capacidad de moverse o de ser movido."},
-      {word:"vivienda", def:"Lugar destinado a ser habitado por personas."},
-      {word:"benevolencia", def:"Actitud de bondad y buena voluntad hacia los demás."},
-      {word:"envolver", def:"Cubrir algo por completo con un material."},
-      {word:"devolver", def:"Volver a dar algo a quien lo tenía antes."},
-      {word:"provocar", def:"Causar o dar motivo para algo."},
-      {word:"privilegio", def:"Ventaja especial que disfruta una persona."},
-      {word:"obstinado", def:"Que se mantiene firme en una idea o actitud."},
-      {word:"objeción", def:"Razón que se opone a una opinión o propuesta."},
-      {word:"vulnerable", def:"Que puede ser fácilmente dañado o afectado."}
+      {word:"exuberante", def:"Que tiene o produce abundancia extraordinaria de algo, como la vegetación.", syn:["frondoso","profuso"]},
+      {word:"vehemente", def:"Que actúa o se manifiesta con mucha intensidad y pasión.", syn:["apasionado","fogoso"]},
+      {word:"absorber", def:"Atraer un cuerpo y retener en su masa las moléculas de un fluido.", syn:["embeber","aspirar"]},
+      {word:"disolver", def:"Hacer que una sustancia se mezcle y desaparezca en un líquido.", syn:["diluir","deshacer"]},
+      {word:"vestíbulo", def:"Espacio de entrada situado a la entrada de un edificio o vivienda.", syn:["recibidor","antesala"]},
+      {word:"hervir", def:"Producir burbujas un líquido al alcanzar cierta temperatura por efecto del calor.", syn:["bullir","cocer"]},
+      {word:"vándalo", def:"Persona que destruye o causa destrozos de forma injustificada.", syn:["gamberro","destructor"]},
+      {word:"obviar", def:"Evitar una dificultad o inconveniente, apartándolo con anticipación.", syn:["evitar","soslayar"]},
+      {word:"subvención", def:"Cantidad de dinero que concede una institución para ayudar a una actividad o proyecto.", syn:["subsidio","ayuda"]},
+      {word:"vislumbrar", def:"Ver algo de forma confusa o a lo lejos, o intuirlo por indicios.", syn:["entrever","atisbar"]},
+      {word:"adverbio", def:"Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio.", syn:["modificador","partícula"]},
+      {word:"convivencia", def:"Acción de vivir en compañía de otros, compartiendo espacio y relaciones.", syn:["coexistencia","cohabitación"]},
+      {word:"absolver", def:"Declarar libre de culpa o de una obligación a alguien.", syn:["exculpar","perdonar"]},
+      {word:"abstenerse", def:"Privarse voluntariamente de hacer algo.", syn:["privarse","renunciar"]},
+      {word:"vagabundo", def:"Persona que va de un lugar a otro sin domicilio fijo.", syn:["vago","trotamundos"]},
+      {word:"vaivén", def:"Movimiento alternativo de ida y vuelta.", syn:["oscilación","bamboleo"]},
+      {word:"objetivo", def:"Fin o propósito que se pretende alcanzar.", syn:["meta","propósito"]},
+      {word:"obtener", def:"Conseguir o alcanzar algo que se desea.", syn:["conseguir","lograr"]},
+      {word:"absurdo", def:"Que carece de sentido o de lógica.", syn:["ilógico","disparatado"]},
+      {word:"vencer", def:"Ganar o derrotar a alguien en una lucha o competición.", syn:["derrotar","ganar"]},
+      {word:"avanzar", def:"Moverse o progresar hacia delante.", syn:["progresar","adelantar"]},
+      {word:"envidia", def:"Sentimiento de tristeza por el bien ajeno.", syn:["celos","resentimiento"]},
+      {word:"movilidad", def:"Capacidad de moverse o de ser movido.", syn:["desplazamiento","tránsito"]},
+      {word:"vivienda", def:"Lugar destinado a ser habitado por personas.", syn:["casa","morada"]},
+      {word:"benevolencia", def:"Actitud de bondad y buena voluntad hacia los demás.", syn:["bondad","indulgencia"]},
+      {word:"envolver", def:"Cubrir algo por completo con un material.", syn:["cubrir","empaquetar"]},
+      {word:"devolver", def:"Volver a dar algo a quien lo tenía antes.", syn:["restituir","reintegrar"]},
+      {word:"provocar", def:"Causar o dar motivo para algo.", syn:["causar","ocasionar"]},
+      {word:"privilegio", def:"Ventaja especial que disfruta una persona.", syn:["prerrogativa","ventaja"]},
+      {word:"obstinado", def:"Que se mantiene firme en una idea o actitud.", syn:["terco","testarudo"]},
+      {word:"objeción", def:"Razón que se opone a una opinión o propuesta.", syn:["reparo","pega"]},
+      {word:"vulnerable", def:"Que puede ser fácilmente dañado o afectado.", syn:["frágil","indefenso"]}
     ],
     "g / j": [
-      {word:"exigir", def:"Pedir o reclamar algo de manera imperativa por tener derecho a ello."},
-      {word:"recoger", def:"Coger o juntar algo que está separado o disperso."},
-      {word:"monje", def:"Persona que vive en un monasterio bajo una regla religiosa."},
-      {word:"cónyuge", def:"Persona unida a otra en matrimonio, respecto de ella."},
-      {word:"extranjero", def:"Que es o procede de un país distinto del propio."},
-      {word:"ingerir", def:"Introducir alimentos, bebidas u otras sustancias por la boca hacia el estómago."},
-      {word:"crujiente", def:"Que produce un sonido seco y áspero al romperse o masticarse."},
-      {word:"garaje", def:"Local o recinto destinado a guardar vehículos."},
-      {word:"urgencia", def:"Cualidad de urgente, es decir, que necesita atención o solución inmediata."},
-      {word:"apogeo", def:"Punto culminante o momento de mayor esplendor de algo."},
-      {word:"refugio", def:"Lugar que sirve para protegerse de un peligro o de las inclemencias del tiempo."},
-      {word:"salvaje", def:"Que se produce o vive en estado natural, sin domesticar ni cultivar."},
-      {word:"jirafa", def:"Animal africano de cuello muy largo."},
-      {word:"jerarquía", def:"Orden de personas o cosas según su importancia o rango."},
-      {word:"geografía", def:"Ciencia que estudia la superficie de la Tierra."},
-      {word:"gigante", def:"Ser de tamaño extraordinariamente grande."},
-      {word:"generoso", def:"Que da o comparte con los demás sin esperar nada a cambio."},
-      {word:"jubilarse", def:"Dejar de trabajar al alcanzar la edad establecida."},
-      {word:"juzgar", def:"Formar una opinión sobre algo o alguien."},
-      {word:"injusto", def:"Que no actúa con justicia o equidad."},
-      {word:"jerga", def:"Lenguaje especial usado por un grupo determinado."},
-      {word:"gemelo", def:"Cada uno de los hermanos nacidos del mismo parto."},
-      {word:"vigente", def:"Que está en vigor o en uso en la actualidad."},
-      {word:"exagerar", def:"Presentar algo como mayor o más grave de lo que es."},
-      {word:"corregir", def:"Señalar o enmendar los errores de algo."},
-      {word:"proteger", def:"Cuidar o defender a alguien o algo de un daño."},
-      {word:"sugerir", def:"Proponer una idea de forma indirecta."},
-      {word:"viajero", def:"Persona que realiza un viaje."},
-      {word:"lenguaje", def:"Sistema de comunicación mediante signos o palabras."},
-      {word:"coraje", def:"Valor o valentía para afrontar una dificultad."},
-      {word:"masaje", def:"Manipulación del cuerpo con fines terapéuticos o relajantes."},
-      {word:"paisaje", def:"Extensión de terreno considerada en su aspecto visual."}
+      {word:"exigir", def:"Pedir o reclamar algo de manera imperativa por tener derecho a ello.", syn:["reclamar","demandar"]},
+      {word:"recoger", def:"Coger o juntar algo que está separado o disperso.", syn:["juntar","recolectar"]},
+      {word:"monje", def:"Persona que vive en un monasterio bajo una regla religiosa.", syn:["fraile","religioso"]},
+      {word:"cónyuge", def:"Persona unida a otra en matrimonio, respecto de ella.", syn:["consorte","pareja"]},
+      {word:"extranjero", def:"Que es o procede de un país distinto del propio.", syn:["foráneo","forastero"]},
+      {word:"ingerir", def:"Introducir alimentos, bebidas u otras sustancias por la boca hacia el estómago.", syn:["tragar","consumir"]},
+      {word:"crujiente", def:"Que produce un sonido seco y áspero al romperse o masticarse.", syn:["quebradizo","crocante"]},
+      {word:"garaje", def:"Local o recinto destinado a guardar vehículos.", syn:["cochera","aparcamiento"]},
+      {word:"urgencia", def:"Cualidad de urgente, es decir, que necesita atención o solución inmediata.", syn:["emergencia","premura"]},
+      {word:"apogeo", def:"Punto culminante o momento de mayor esplendor de algo.", syn:["culminación","esplendor"]},
+      {word:"refugio", def:"Lugar que sirve para protegerse de un peligro o de las inclemencias del tiempo.", syn:["amparo","cobijo"]},
+      {word:"salvaje", def:"Que se produce o vive en estado natural, sin domesticar ni cultivar.", syn:["silvestre","feroz"]},
+      {word:"jirafa", def:"Animal africano de cuello muy largo.", syn:["rumiante","cuadrúpedo"]},
+      {word:"jerarquía", def:"Orden de personas o cosas según su importancia o rango.", syn:["orden","escalafón"]},
+      {word:"geografía", def:"Ciencia que estudia la superficie de la Tierra.", syn:["topografía","cartografía"]},
+      {word:"gigante", def:"Ser de tamaño extraordinariamente grande.", syn:["coloso","titán"]},
+      {word:"generoso", def:"Que da o comparte con los demás sin esperar nada a cambio.", syn:["dadivoso","desprendido"]},
+      {word:"jubilarse", def:"Dejar de trabajar al alcanzar la edad establecida.", syn:["retirarse","cesar"]},
+      {word:"juzgar", def:"Formar una opinión sobre algo o alguien.", syn:["evaluar","valorar"]},
+      {word:"injusto", def:"Que no actúa con justicia o equidad.", syn:["inequitativo","arbitrario"]},
+      {word:"jerga", def:"Lenguaje especial usado por un grupo determinado.", syn:["argot","lenguaje técnico"]},
+      {word:"gemelo", def:"Cada uno de los hermanos nacidos del mismo parto.", syn:["mellizo","doble"]},
+      {word:"vigente", def:"Que está en vigor o en uso en la actualidad.", syn:["actual","en vigor"]},
+      {word:"exagerar", def:"Presentar algo como mayor o más grave de lo que es.", syn:["abultar","magnificar"]},
+      {word:"corregir", def:"Señalar o enmendar los errores de algo.", syn:["enmendar","rectificar"]},
+      {word:"proteger", def:"Cuidar o defender a alguien o algo de un daño.", syn:["defender","resguardar"]},
+      {word:"sugerir", def:"Proponer una idea de forma indirecta.", syn:["proponer","insinuar"]},
+      {word:"viajero", def:"Persona que realiza un viaje.", syn:["pasajero","turista"]},
+      {word:"lenguaje", def:"Sistema de comunicación mediante signos o palabras.", syn:["idioma","habla"]},
+      {word:"coraje", def:"Valor o valentía para afrontar una dificultad.", syn:["valentía","valor"]},
+      {word:"masaje", def:"Manipulación del cuerpo con fines terapéuticos o relajantes.", syn:["fricción","amasamiento"]},
+      {word:"paisaje", def:"Extensión de terreno considerada en su aspecto visual.", syn:["panorama","vista"]}
     ],
     "h / sin h": [
-      {word:"exhausto", def:"Muy cansado o falto de fuerzas."},
-      {word:"ahínco", def:"Empeño o interés grande con que se hace algo."},
-      {word:"deshielo", def:"Proceso por el cual el hielo o la nieve se convierten en agua al aumentar la temperatura."},
-      {word:"hierba", def:"Planta pequeña de tallo tierno que se seca después de dar semilla."},
-      {word:"armonía", def:"Correspondencia adecuada y agradable entre las partes de un todo."},
-      {word:"exuberancia", def:"Cualidad de exuberante, es decir, de abundancia extraordinaria."},
-      {word:"hipérbole", def:"Figura retórica que consiste en exagerar aquello de lo que se habla."},
-      {word:"hospicio", def:"Establecimiento benéfico donde se recogía a niños huérfanos o abandonados."},
-      {word:"exhortar", def:"Incitar a alguien con razones o ruegos a hacer algo."},
-      {word:"desahogo", def:"Alivio de una pena, un trabajo o una necesidad."},
-      {word:"almohada", def:"Pieza rellena y blanda que sirve para reclinar la cabeza al dormir."},
-      {word:"hiedra", def:"Planta trepadora de hoja perenne que se agarra a los muros o árboles."},
-      {word:"huracán", def:"Viento muy fuerte y giratorio, típico de zonas tropicales."},
-      {word:"hazaña", def:"Acción heroica o difícil de realizar."},
-      {word:"hallazgo", def:"Cosa que se encuentra, especialmente algo valioso."},
-      {word:"hectárea", def:"Unidad de superficie equivalente a 10 000 metros cuadrados."},
-      {word:"hipnotizar", def:"Provocar en alguien un estado de sueño o trance."},
-      {word:"adherir", def:"Pegar o unir una cosa a otra."},
-      {word:"alarmar", def:"Provocar inquietud o temor ante un peligro."},
-      {word:"ahogar", def:"Impedir la respiración a alguien por falta de aire o inmersión."},
-      {word:"exhibir", def:"Mostrar algo en público."},
-      {word:"inhalar", def:"Aspirar aire u otra sustancia hacia los pulmones."},
-      {word:"prohibir", def:"No permitir que se haga algo."},
-      {word:"rehacer", def:"Volver a hacer algo que estaba mal hecho o deshecho."},
-      {word:"deshacer", def:"Destruir o desbaratar algo que estaba hecho."},
-      {word:"exhumar", def:"Desenterrar un cadáver o unos restos."},
-      {word:"inherente", def:"Que es propio o inseparable de algo."},
-      {word:"coherencia", def:"Relación lógica y adecuada entre las partes de algo."},
-      {word:"hostil", def:"Contrario o enemigo de algo o alguien."},
-      {word:"hipoteca", def:"Préstamo con el que se garantiza el pago mediante un bien inmueble."},
-      {word:"horizonte", def:"Línea que separa el cielo de la tierra o del mar."},
-      {word:"exhalar", def:"Despedir gases, vapores u olores."}
+      {word:"exhausto", def:"Muy cansado o falto de fuerzas.", syn:["agotado","extenuado"]},
+      {word:"ahínco", def:"Empeño o interés grande con que se hace algo.", syn:["empeño","tesón"]},
+      {word:"deshielo", def:"Proceso por el cual el hielo o la nieve se convierten en agua al aumentar la temperatura.", syn:["fusión","derretimiento"]},
+      {word:"hierba", def:"Planta pequeña de tallo tierno que se seca después de dar semilla.", syn:["pasto","césped"]},
+      {word:"armonía", def:"Correspondencia adecuada y agradable entre las partes de un todo.", syn:["concordia","equilibrio"]},
+      {word:"exuberancia", def:"Cualidad de exuberante, es decir, de abundancia extraordinaria.", syn:["abundancia","profusión"]},
+      {word:"hipérbole", def:"Figura retórica que consiste en exagerar aquello de lo que se habla.", syn:["exageración","ponderación"]},
+      {word:"hospicio", def:"Establecimiento benéfico donde se recogía a niños huérfanos o abandonados.", syn:["orfanato","asilo"]},
+      {word:"exhortar", def:"Incitar a alguien con razones o ruegos a hacer algo.", syn:["incitar","animar"]},
+      {word:"desahogo", def:"Alivio de una pena, un trabajo o una necesidad.", syn:["alivio","descanso"]},
+      {word:"almohada", def:"Pieza rellena y blanda que sirve para reclinar la cabeza al dormir.", syn:["cojín","almohadón"]},
+      {word:"hiedra", def:"Planta trepadora de hoja perenne que se agarra a los muros o árboles.", syn:["enredadera","trepadora"]},
+      {word:"huracán", def:"Viento muy fuerte y giratorio, típico de zonas tropicales.", syn:["ciclón","tifón"]},
+      {word:"hazaña", def:"Acción heroica o difícil de realizar.", syn:["proeza","gesta"]},
+      {word:"hallazgo", def:"Cosa que se encuentra, especialmente algo valioso.", syn:["descubrimiento","encuentro"]},
+      {word:"hectárea", def:"Unidad de superficie equivalente a 10 000 metros cuadrados.", syn:["superficie","extensión"]},
+      {word:"hipnotizar", def:"Provocar en alguien un estado de sueño o trance.", syn:["sugestionar","adormecer"]},
+      {word:"adherir", def:"Pegar o unir una cosa a otra.", syn:["pegar","unir"]},
+      {word:"alarmar", def:"Provocar inquietud o temor ante un peligro.", syn:["asustar","inquietar"]},
+      {word:"ahogar", def:"Impedir la respiración a alguien por falta de aire o inmersión.", syn:["asfixiar","sofocar"]},
+      {word:"exhibir", def:"Mostrar algo en público.", syn:["mostrar","exponer"]},
+      {word:"inhalar", def:"Aspirar aire u otra sustancia hacia los pulmones.", syn:["aspirar","respirar"]},
+      {word:"prohibir", def:"No permitir que se haga algo.", syn:["vetar","impedir"]},
+      {word:"rehacer", def:"Volver a hacer algo que estaba mal hecho o deshecho.", syn:["reconstruir","restaurar"]},
+      {word:"deshacer", def:"Destruir o desbaratar algo que estaba hecho.", syn:["desbaratar","destruir"]},
+      {word:"exhumar", def:"Desenterrar un cadáver o unos restos.", syn:["desenterrar","extraer"]},
+      {word:"inherente", def:"Que es propio o inseparable de algo.", syn:["intrínseco","propio"]},
+      {word:"coherencia", def:"Relación lógica y adecuada entre las partes de algo.", syn:["consistencia","lógica"]},
+      {word:"hostil", def:"Contrario o enemigo de algo o alguien.", syn:["agresivo","enemigo"]},
+      {word:"hipoteca", def:"Préstamo con el que se garantiza el pago mediante un bien inmueble.", syn:["préstamo","crédito"]},
+      {word:"horizonte", def:"Línea que separa el cielo de la tierra o del mar.", syn:["confín","límite"]},
+      {word:"exhalar", def:"Despedir gases, vapores u olores.", syn:["despedir","emitir"]}
     ],
     "ll / y": [
-      {word:"proyectar", def:"Idear un plan o programa para llevarlo a cabo."},
-      {word:"trayecto", def:"Distancia o recorrido que se hace de un punto a otro."},
-      {word:"ensayo", def:"Prueba que se realiza antes de dar algo por definitivo, o escrito reflexivo sobre un tema."},
-      {word:"yacimiento", def:"Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos."},
-      {word:"valla", def:"Cercado de tablas, estacas u otro material que delimita un terreno."},
-      {word:"cónyuge", def:"Persona unida a otra en matrimonio, respecto de ella."},
-      {word:"ayuntamiento", def:"Corporación que administra un municipio, y edificio donde tiene su sede."},
-      {word:"estallar", def:"Reventar o romperse algo de golpe y con estruendo."},
-      {word:"atalaya", def:"Torre alta situada en un lugar elevado para vigilar el campo."},
-      {word:"muralla", def:"Muro grueso y alto que rodea una ciudad o fortaleza para su defensa."},
-      {word:"aleluya", def:"Voz de júbilo que se usa en la liturgia cristiana para expresar alegría."},
-      {word:"bullicio", def:"Ruido y agitación producidos por mucha gente reunida."},
-      {word:"yacer", def:"Estar tendido o enterrado en un lugar."},
-      {word:"yema", def:"Parte central y amarilla del huevo, o brote de una planta."},
-      {word:"yerno", def:"Marido de la hija de una persona, respecto de esta."},
-      {word:"llamativo", def:"Que atrae mucho la atención."},
-      {word:"llanura", def:"Extensión de terreno plano."},
-      {word:"llovizna", def:"Lluvia fina y suave."},
-      {word:"ensayista", def:"Persona que escribe ensayos literarios."},
-      {word:"proyectil", def:"Objeto lanzado con fuerza hacia un objetivo."},
-      {word:"inyectar", def:"Introducir un líquido a presión en el interior de algo."},
-      {word:"trayectoria", def:"Línea o camino que sigue algo o alguien en su recorrido."},
-      {word:"rayo", def:"Descarga eléctrica que se produce durante una tormenta."},
-      {word:"ayudante", def:"Persona que colabora con otra en su trabajo."},
-      {word:"yeso", def:"Material blanco usado en construcción y en escultura."},
-      {word:"callejón", def:"Calle estrecha entre dos edificios."},
-      {word:"destello", def:"Resplandor breve y repentino."},
-      {word:"rayado", def:"Que tiene rayas o líneas trazadas sobre una superficie."},
-      {word:"yodo", def:"Elemento químico usado, entre otros usos, como desinfectante."},
-      {word:"ballena", def:"Mamífero marino de gran tamaño."},
-      {word:"yegua", def:"Hembra del caballo."},
-      {word:"rayar", def:"Hacer rayas sobre algo o, en sentido figurado, llegar casi a un límite."}
+      {word:"proyectar", def:"Idear un plan o programa para llevarlo a cabo.", syn:["planear","idear"]},
+      {word:"trayecto", def:"Distancia o recorrido que se hace de un punto a otro.", syn:["recorrido","itinerario"]},
+      {word:"ensayo", def:"Prueba que se realiza antes de dar algo por definitivo, o escrito reflexivo sobre un tema.", syn:["prueba","experimento"]},
+      {word:"yacimiento", def:"Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos.", syn:["depósito","filón"]},
+      {word:"valla", def:"Cercado de tablas, estacas u otro material que delimita un terreno.", syn:["cercado","vallado"]},
+      {word:"cónyuge", def:"Persona unida a otra en matrimonio, respecto de ella.", syn:["consorte","pareja"]},
+      {word:"ayuntamiento", def:"Corporación que administra un municipio, y edificio donde tiene su sede.", syn:["municipio","consistorio"]},
+      {word:"estallar", def:"Reventar o romperse algo de golpe y con estruendo.", syn:["reventar","explotar"]},
+      {word:"atalaya", def:"Torre alta situada en un lugar elevado para vigilar el campo.", syn:["torre","mirador"]},
+      {word:"muralla", def:"Muro grueso y alto que rodea una ciudad o fortaleza para su defensa.", syn:["muro","fortificación"]},
+      {word:"aleluya", def:"Voz de júbilo que se usa en la liturgia cristiana para expresar alegría.", syn:["júbilo","alegría"]},
+      {word:"bullicio", def:"Ruido y agitación producidos por mucha gente reunida.", syn:["alboroto","jaleo"]},
+      {word:"yacer", def:"Estar tendido o enterrado en un lugar.", syn:["reposar","descansar"]},
+      {word:"yema", def:"Parte central y amarilla del huevo, o brote de una planta.", syn:["brote","retoño"]},
+      {word:"yerno", def:"Marido de la hija de una persona, respecto de esta.", syn:["hijo político","consorte de la hija"]},
+      {word:"llamativo", def:"Que atrae mucho la atención.", syn:["vistoso","chillón"]},
+      {word:"llanura", def:"Extensión de terreno plano.", syn:["planicie","explanada"]},
+      {word:"llovizna", def:"Lluvia fina y suave.", syn:["chispeo","calabobos"]},
+      {word:"ensayista", def:"Persona que escribe ensayos literarios.", syn:["escritor","autor"]},
+      {word:"proyectil", def:"Objeto lanzado con fuerza hacia un objetivo.", syn:["munición","dardo"]},
+      {word:"inyectar", def:"Introducir un líquido a presión en el interior de algo.", syn:["introducir","inocular"]},
+      {word:"trayectoria", def:"Línea o camino que sigue algo o alguien en su recorrido.", syn:["recorrido","rumbo"]},
+      {word:"rayo", def:"Descarga eléctrica que se produce durante una tormenta.", syn:["relámpago","centella"]},
+      {word:"ayudante", def:"Persona que colabora con otra en su trabajo.", syn:["asistente","colaborador"]},
+      {word:"yeso", def:"Material blanco usado en construcción y en escultura.", syn:["escayola","estuco"]},
+      {word:"callejón", def:"Calle estrecha entre dos edificios.", syn:["pasadizo","callejuela"]},
+      {word:"destello", def:"Resplandor breve y repentino.", syn:["resplandor","fulgor"]},
+      {word:"rayado", def:"Que tiene rayas o líneas trazadas sobre una superficie.", syn:["listado","estriado"]},
+      {word:"yodo", def:"Elemento químico usado, entre otros usos, como desinfectante.", syn:["antiséptico","desinfectante"]},
+      {word:"ballena", def:"Mamífero marino de gran tamaño.", syn:["cetáceo","mamífero marino"]},
+      {word:"yegua", def:"Hembra del caballo.", syn:["equina","caballo hembra"]},
+      {word:"rayar", def:"Hacer rayas sobre algo o, en sentido figurado, llegar casi a un límite.", syn:["marcar","trazar"]}
     ],
     "x / s": [
-      {word:"excéntrico", def:"Que se aparta de lo habitual o común, dicho de una persona o de sus costumbres."},
-      {word:"esparcir", def:"Extender o separar lo que estaba junto o amontonado."},
-      {word:"extraño", def:"Que resulta raro o poco habitual, o que es ajeno a algo."},
-      {word:"esquivo", def:"Que evita el trato con los demás o rehúye una situación."},
-      {word:"exquisito", def:"De singular y extraordinaria calidad o gusto."},
-      {word:"espontáneo", def:"Que se produce de manera natural, sin premeditación ni obligación."},
-      {word:"excavación", def:"Acción de abrir un hueco en el terreno extrayendo la tierra."},
-      {word:"esplendor", def:"Brillo, resplandor o grandeza de algo."},
-      {word:"esbelto", def:"Que tiene un cuerpo alto, delgado y de proporciones armoniosas."},
-      {word:"exento", def:"Libre de una obligación o carga, o que no está sujeto a ella."},
-      {word:"estricto", def:"Que se ajusta rigurosamente a una norma, sin admitir excepciones."},
-      {word:"exponer", def:"Presentar algo para que sea visto o conocido por otros."},
-      {word:"expresar", def:"Manifestar con palabras o gestos un pensamiento o sentimiento."},
-      {word:"extenderse", def:"Ocupar un espacio mayor, o alargarse en el tiempo."},
-      {word:"exclusivo", def:"Que excluye a otros o que es único de algo o alguien."},
-      {word:"explorar", def:"Reconocer un lugar desconocido con detenimiento."},
-      {word:"extremar", def:"Llevar algo a su grado más alto."},
-      {word:"espejismo", def:"Ilusión óptica producida por el calor, o engaño de los sentidos."},
-      {word:"espeso", def:"Que tiene mucha densidad o consistencia."},
-      {word:"estirar", def:"Alargar algo tirando de sus extremos."},
-      {word:"esbozar", def:"Trazar las líneas generales de algo, sin detalles."},
-      {word:"esclavitud", def:"Situación de una persona sometida sin libertad."},
-      {word:"esencial", def:"Que constituye la parte más importante de algo."},
-      {word:"espontaneidad", def:"Cualidad de lo que se hace de forma natural, sin premeditación."},
-      {word:"exhibición", def:"Presentación pública de algo para ser visto."},
-      {word:"extinguir", def:"Hacer que algo, como el fuego, deje de existir."},
-      {word:"expulsión", def:"Acción de echar a alguien o algo fuera de un lugar."},
-      {word:"esquivar", def:"Evitar un golpe, un obstáculo o una situación."},
-      {word:"estrafalario", def:"Que resulta extravagante o fuera de lo común."},
-      {word:"extravagante", def:"Que se sale de lo común o de lo razonable."},
-      {word:"espabilar", def:"Despertar o volverse más despierto y activo."}
+      {word:"excéntrico", def:"Que se aparta de lo habitual o común, dicho de una persona o de sus costumbres.", syn:["extravagante","peculiar"]},
+      {word:"esparcir", def:"Extender o separar lo que estaba junto o amontonado.", syn:["dispersar","difundir"]},
+      {word:"extraño", def:"Que resulta raro o poco habitual, o que es ajeno a algo.", syn:["raro","insólito"]},
+      {word:"esquivo", def:"Que evita el trato con los demás o rehúye una situación.", syn:["huraño","arisco"]},
+      {word:"exquisito", def:"De singular y extraordinaria calidad o gusto.", syn:["delicioso","refinado"]},
+      {word:"espontáneo", def:"Que se produce de manera natural, sin premeditación ni obligación.", syn:["natural","instintivo"]},
+      {word:"excavación", def:"Acción de abrir un hueco en el terreno extrayendo la tierra.", syn:["zanja","hoyo"]},
+      {word:"esplendor", def:"Brillo, resplandor o grandeza de algo.", syn:["brillo","magnificencia"]},
+      {word:"esbelto", def:"Que tiene un cuerpo alto, delgado y de proporciones armoniosas.", syn:["delgado","estilizado"]},
+      {word:"exento", def:"Libre de una obligación o carga, o que no está sujeto a ella.", syn:["libre","dispensado"]},
+      {word:"estricto", def:"Que se ajusta rigurosamente a una norma, sin admitir excepciones.", syn:["riguroso","severo"]},
+      {word:"exponer", def:"Presentar algo para que sea visto o conocido por otros.", syn:["mostrar","presentar"]},
+      {word:"expresar", def:"Manifestar con palabras o gestos un pensamiento o sentimiento.", syn:["manifestar","comunicar"]},
+      {word:"extenderse", def:"Ocupar un espacio mayor, o alargarse en el tiempo.", syn:["alargarse","prolongarse"]},
+      {word:"exclusivo", def:"Que excluye a otros o que es único de algo o alguien.", syn:["único","privativo"]},
+      {word:"explorar", def:"Reconocer un lugar desconocido con detenimiento.", syn:["investigar","reconocer"]},
+      {word:"extremar", def:"Llevar algo a su grado más alto.", syn:["intensificar","agudizar"]},
+      {word:"espejismo", def:"Ilusión óptica producida por el calor, o engaño de los sentidos.", syn:["ilusión","engaño"]},
+      {word:"espeso", def:"Que tiene mucha densidad o consistencia.", syn:["denso","grueso"]},
+      {word:"estirar", def:"Alargar algo tirando de sus extremos.", syn:["alargar","extender"]},
+      {word:"esbozar", def:"Trazar las líneas generales de algo, sin detalles.", syn:["bosquejar","delinear"]},
+      {word:"esclavitud", def:"Situación de una persona sometida sin libertad.", syn:["servidumbre","sometimiento"]},
+      {word:"esencial", def:"Que constituye la parte más importante de algo.", syn:["fundamental","primordial"]},
+      {word:"espontaneidad", def:"Cualidad de lo que se hace de forma natural, sin premeditación.", syn:["naturalidad","franqueza"]},
+      {word:"exhibición", def:"Presentación pública de algo para ser visto.", syn:["muestra","exposición"]},
+      {word:"extinguir", def:"Hacer que algo, como el fuego, deje de existir.", syn:["apagar","sofocar"]},
+      {word:"expulsión", def:"Acción de echar a alguien o algo fuera de un lugar.", syn:["destierro","eyección"]},
+      {word:"esquivar", def:"Evitar un golpe, un obstáculo o una situación.", syn:["evitar","eludir"]},
+      {word:"estrafalario", def:"Que resulta extravagante o fuera de lo común.", syn:["extravagante","ridículo"]},
+      {word:"extravagante", def:"Que se sale de lo común o de lo razonable.", syn:["excéntrico","chocante"]},
+      {word:"espabilar", def:"Despertar o volverse más despierto y activo.", syn:["despertar","avivarse"]}
     ],
     "consonantes dobles / difíciles": [
-      {word:"irascible", def:"Que se irrita o enfada con facilidad."},
-      {word:"gestión", def:"Conjunto de trámites y actuaciones necesarias para resolver un asunto."},
-      {word:"zanahoria", def:"Planta hortícola de raíz comestible, de color anaranjado."},
-      {word:"absceso", def:"Acumulación de pus en una cavidad formada por la inflamación de un tejido."},
-      {word:"transgredir", def:"Quebrantar o incumplir una ley o una norma."},
-      {word:"subrayar", def:"Trazar una línea debajo de una palabra o frase para destacarla."},
-      {word:"obstrucción", def:"Impedimento u obstáculo que dificulta o cierra el paso de algo."},
-      {word:"perspicaz", def:"Que tiene agudeza e ingenio para comprender las cosas con rapidez."},
-      {word:"inhóspito", def:"Que no ofrece condiciones agradables o de seguridad para vivir."},
-      {word:"circunspecto", def:"Que actúa con prudencia y mesura, sobre todo al hablar."},
-      {word:"abstracción", def:"Acción de considerar algo de forma aislada, separándolo de otras cosas o del entorno."},
-      {word:"prescindir", def:"Dejar de contar con algo o alguien, renunciando a ello."},
-      {word:"transcurrir", def:"Pasar el tiempo."},
-      {word:"transportar", def:"Llevar algo de un lugar a otro."},
-      {word:"transformar", def:"Cambiar la forma o el aspecto de algo."},
-      {word:"inspección", def:"Examen detenido que se hace de algo."},
-      {word:"constante", def:"Que se mantiene igual o no varía."},
-      {word:"instrucción", def:"Conjunto de conocimientos que se enseñan a alguien, o indicación que se da."},
-      {word:"adscribir", def:"Asignar a alguien o algo a un lugar, grupo o función."},
-      {word:"suscribir", def:"Firmar al final de un escrito, o abonarse a una publicación."},
-      {word:"constreñir", def:"Obligar a alguien a hacer algo en contra de su voluntad."},
-      {word:"transcribir", def:"Copiar un texto o representar por escrito lo que se oye."},
-      {word:"circunstancia", def:"Situación o conjunto de hechos que rodean algo."},
-      {word:"perspectiva", def:"Punto de vista desde el que se considera algo."},
-      {word:"abstemio", def:"Que no bebe alcohol."},
-      {word:"transitar", def:"Pasar por un lugar."},
-      {word:"constitución", def:"Ley fundamental de un Estado, o modo en que está formado algo."},
-      {word:"instrumento", def:"Objeto fabricado para realizar un trabajo o producir sonidos."},
-      {word:"transacción", def:"Operación de compra, venta o acuerdo entre dos partes."},
-      {word:"construir", def:"Fabricar o edificar algo siguiendo un plan."},
-      {word:"abstraer", def:"Considerar algo por separado, aislándolo mentalmente del resto."},
-      {word:"transmitir", def:"Comunicar o hacer llegar algo, como una señal, una enfermedad o un mensaje."}
+      {word:"irascible", def:"Que se irrita o enfada con facilidad.", syn:["colérico","iracundo"]},
+      {word:"gestión", def:"Conjunto de trámites y actuaciones necesarias para resolver un asunto.", syn:["trámite","administración"]},
+      {word:"zanahoria", def:"Planta hortícola de raíz comestible, de color anaranjado.", syn:["hortaliza","raíz comestible"]},
+      {word:"absceso", def:"Acumulación de pus en una cavidad formada por la inflamación de un tejido.", syn:["inflamación","furúnculo"]},
+      {word:"transgredir", def:"Quebrantar o incumplir una ley o una norma.", syn:["infringir","quebrantar"]},
+      {word:"subrayar", def:"Trazar una línea debajo de una palabra o frase para destacarla.", syn:["destacar","resaltar"]},
+      {word:"obstrucción", def:"Impedimento u obstáculo que dificulta o cierra el paso de algo.", syn:["impedimento","bloqueo"]},
+      {word:"perspicaz", def:"Que tiene agudeza e ingenio para comprender las cosas con rapidez.", syn:["agudo","sagaz"]},
+      {word:"inhóspito", def:"Que no ofrece condiciones agradables o de seguridad para vivir.", syn:["hostil","inhabitable"]},
+      {word:"circunspecto", def:"Que actúa con prudencia y mesura, sobre todo al hablar.", syn:["prudente","cauto"]},
+      {word:"abstracción", def:"Acción de considerar algo de forma aislada, separándolo de otras cosas o del entorno.", syn:["generalización","idealización"]},
+      {word:"prescindir", def:"Dejar de contar con algo o alguien, renunciando a ello.", syn:["renunciar","omitir"]},
+      {word:"transcurrir", def:"Pasar el tiempo.", syn:["pasar","discurrir"]},
+      {word:"transportar", def:"Llevar algo de un lugar a otro.", syn:["trasladar","acarrear"]},
+      {word:"transformar", def:"Cambiar la forma o el aspecto de algo.", syn:["cambiar","convertir"]},
+      {word:"inspección", def:"Examen detenido que se hace de algo.", syn:["examen","revisión"]},
+      {word:"constante", def:"Que se mantiene igual o no varía.", syn:["continuo","invariable"]},
+      {word:"instrucción", def:"Conjunto de conocimientos que se enseñan a alguien, o indicación que se da.", syn:["enseñanza","formación"]},
+      {word:"adscribir", def:"Asignar a alguien o algo a un lugar, grupo o función.", syn:["asignar","atribuir"]},
+      {word:"suscribir", def:"Firmar al final de un escrito, o abonarse a una publicación.", syn:["firmar","abonarse"]},
+      {word:"constreñir", def:"Obligar a alguien a hacer algo en contra de su voluntad.", syn:["obligar","coartar"]},
+      {word:"transcribir", def:"Copiar un texto o representar por escrito lo que se oye.", syn:["copiar","trasladar"]},
+      {word:"circunstancia", def:"Situación o conjunto de hechos que rodean algo.", syn:["situación","coyuntura"]},
+      {word:"perspectiva", def:"Punto de vista desde el que se considera algo.", syn:["punto de vista","enfoque"]},
+      {word:"abstemio", def:"Que no bebe alcohol.", syn:["sobrio","no bebedor"]},
+      {word:"transitar", def:"Pasar por un lugar.", syn:["circular","pasar"]},
+      {word:"constitución", def:"Ley fundamental de un Estado, o modo en que está formado algo.", syn:["carta magna","estatuto"]},
+      {word:"instrumento", def:"Objeto fabricado para realizar un trabajo o producir sonidos.", syn:["herramienta","utensilio"]},
+      {word:"transacción", def:"Operación de compra, venta o acuerdo entre dos partes.", syn:["operación","negociación"]},
+      {word:"construir", def:"Fabricar o edificar algo siguiendo un plan.", syn:["edificar","fabricar"]},
+      {word:"abstraer", def:"Considerar algo por separado, aislándolo mentalmente del resto.", syn:["aislar","separar"]},
+      {word:"transmitir", def:"Comunicar o hacer llegar algo, como una señal, una enfermedad o un mensaje.", syn:["comunicar","difundir"]}
     ]
   };
 
@@ -730,6 +739,11 @@
   function saveUsedWords(used){
     try{ localStorage.setItem(USED_WORDS_KEY, JSON.stringify(used)); }catch(e){}
   }
+
+  const DATA_BY_WORD = {};
+  Object.values(WORD_BANK).forEach(list=>{
+    list.forEach(item=>{ DATA_BY_WORD[item.word.toLowerCase()] = { def:item.def, syn:item.syn || [] }; });
+  });
 
   function proposeTwelveWords(){
     const cats = Object.keys(WORD_BANK); // 6 categorías × 2 palabras = 12
@@ -833,7 +847,8 @@
     words = list.map((w,i)=>({
       n:i+1,
       word: (typeof w === 'string' ? w : w.word),
-      def: (typeof w === 'string' ? '' : w.def)
+      def: (typeof w === 'string' ? '' : w.def),
+      syn: (typeof w === 'string' ? [] : (w.syn || []))
     }));
     showStatus(words.length+' palabras numeradas del 1 al '+words.length+'. Las tarjetas están listas y el sorteo ya puede girar. Se han guardado en este navegador: al volver a abrir el archivo aquí mismo, seguirán cargadas.', 'ok');
     renderWordBank();
@@ -864,9 +879,18 @@
     }
   });
 
+  function meaningHtml(item){
+    if(!item.def) return 'Definición no disponible (palabra editada a mano).';
+    const synHtml = (item.syn && item.syn.length) ? ' <span class="wb-syn">· Sinónimos: '+item.syn.join(', ')+'</span>' : '';
+    return item.def + synHtml;
+  }
+
   function renderWordBank(){
     wordBankPreview.innerHTML = words.map(item=>
-      '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
+      '<div class="wb-row">'+
+        '<div class="wb-row-top"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'+
+        '<div class="wb-meaning" data-meaning-n="'+item.n+'">'+meaningHtml(item)+'</div>'+
+      '</div>'
     ).join('');
     wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
       el.addEventListener('blur', ()=>{
@@ -875,6 +899,11 @@
         const entry = words.find(w=>w.n===n);
         if(entry && newVal){
           entry.word = newVal;
+          const match = DATA_BY_WORD[newVal.toLowerCase()];
+          entry.def = match ? match.def : '';
+          entry.syn = match ? match.syn.slice() : [];
+          const meaningEl = wordBankPreview.querySelector('[data-meaning-n="'+n+'"]');
+          if(meaningEl) meaningEl.innerHTML = meaningHtml(entry);
           renderCards();
           saveWordsToStorage();
         } else if(entry){
@@ -919,8 +948,13 @@
   function buildResultSheet(){
     const includeDefs = document.getElementById('includeMeanings').checked;
     const items = words.map(item=>{
-      const defHtml = includeDefs ? '<span class="def">'+(item.def || 'Definición no disponible (palabra editada a mano).')+'</span>' : '';
-      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+'</div>';
+      if(!includeDefs) return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b></div>';
+      const hasDef = !!item.def;
+      const defHtml = '<span class="def">'+(item.def || 'Definición no disponible (palabra editada a mano).')+'</span>';
+      const synHtml = (hasDef && item.syn && item.syn.length)
+        ? '<span class="syn">Sinónimos: '+item.syn.join(', ')+'</span>'
+        : '';
+      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+synHtml+'</div>';
     }).join('');
     return `
       <div class="result-banner">HOJA DE CORRECCIÓN${includeDefs ? ' Y SIGNIFICADOS' : ''} — para el profesorado y para repasar con el alumnado al terminar</div>
@@ -928,34 +962,44 @@
       <div class="result-grid">${items}</div>`;
   }
 
+  const printCardsBtn = document.getElementById('printCardsBtn');
+  const printResultBtn = document.getElementById('printResultBtn');
+
   function renderCards(){
-    if(words.length===0){ cardsPreview.innerHTML = ''; return; }
+    if(words.length===0){
+      cardsPreview.innerHTML = '';
+      printCardsBtn.disabled = true;
+      printResultBtn.disabled = true;
+      return;
+    }
     const count = Math.max(1, Math.min(60, parseInt(document.getElementById('cardCount').value) || 1));
     let html = '<div class="cards-page" id="cardsPage">';
     for(let i=0;i<count;i++){ html += buildCardHTML(); }
     html += '</div>';
     html += `<div class="result-sheet" id="resultSheet">${buildResultSheet()}</div>`;
-    html += `<div class="actions-row" style="margin-top:22px;">
-        <button class="btn secondary" id="printCardsBtn">Imprimir tarjetas (alumnado)</button>
-        <button class="btn secondary" id="printResultBtn">Imprimir hoja de corrección y significados</button>
-      </div>`;
     cardsPreview.innerHTML = html;
-
-    document.getElementById('printCardsBtn').addEventListener('click', ()=> window.print());
-    document.getElementById('printResultBtn').addEventListener('click', ()=>{
-      const cardsPage = document.getElementById('cardsPage');
-      const sheet = document.getElementById('resultSheet');
-      cardsPage.style.display = 'none';
-      sheet.classList.add('showing');
-      window.print();
-      const restore = ()=>{
-        cardsPage.style.display = '';
-        sheet.classList.remove('showing');
-        window.removeEventListener('afterprint', restore);
-      };
-      window.addEventListener('afterprint', restore);
-    });
+    printCardsBtn.disabled = false;
+    printResultBtn.disabled = false;
   }
+
+  printCardsBtn.addEventListener('click', ()=>{
+    if(words.length===0) return;
+    window.print();
+  });
+  printResultBtn.addEventListener('click', ()=>{
+    if(words.length===0) return;
+    const cardsPage = document.getElementById('cardsPage');
+    const sheet = document.getElementById('resultSheet');
+    cardsPage.style.display = 'none';
+    sheet.classList.add('showing');
+    window.print();
+    const restore = ()=>{
+      cardsPage.style.display = '';
+      sheet.classList.remove('showing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+  });
 
   document.getElementById('clearBtn').addEventListener('click', ()=>{
     suggestMeta.textContent = '';
@@ -963,6 +1007,8 @@
     wordBankPreview.innerHTML = '';
     cardsPreview.innerHTML = '';
     statusMsg.className = 'status-msg';
+    printCardsBtn.disabled = true;
+    printResultBtn.disabled = true;
     resetGameState();
     try{ localStorage.removeItem(WORDS_STORAGE_KEY); }catch(e){}
   });

@@ -198,9 +198,13 @@
   .status-msg.error{ background:#fbe3e0; color:#a3352a; }
   .status-msg.ok{ background:#e6efe6; color:#2c5c3a; }
 
-  .word-bank-preview{ display:flex; flex-direction:column; gap:4px; margin-top:14px; font-size:14.5px; }
-  .word-bank-preview .wb-row{ display:flex; gap:8px; align-items:baseline; }
-  .word-bank-preview .wb-row b{ color:var(--coral); min-width:20px; }
+  .word-bank-preview{ display:flex; flex-direction:column; gap:10px; margin-top:14px; font-size:14.5px; }
+  .word-bank-preview .wb-row{ display:flex; flex-direction:column; gap:2px; }
+  .word-bank-preview .wb-row-top{ display:flex; gap:8px; align-items:baseline; }
+  .word-bank-preview .wb-row-top b{ color:var(--coral); min-width:20px; }
+  .wb-meaning{ margin-left:28px; font-size:13px; color:#5a5648; line-height:1.5; }
+  .wb-meaning .wb-es{ font-style:italic; }
+  .wb-meaning .wb-syn{ font-style:italic; color:#847f6d; }
   .wb-word{
     padding:2px 4px; border-radius:4px; cursor:text;
     border:1px solid transparent;
@@ -885,9 +889,19 @@
     return null;
   }
 
+  function meaningHtml(item){
+    if(!item.defEn) return 'No definition available (word edited by hand).';
+    const esHtml = item.defEs ? ' <span class="wb-es">(ES: '+item.defEs+')</span>' : '';
+    const synHtml = (item.syn && item.syn.length) ? ' <span class="wb-syn">· Synonyms: '+item.syn.join(', ')+'</span>' : '';
+    return item.defEn + esHtml + synHtml;
+  }
+
   function renderWordBank(){
     wordBankPreview.innerHTML = words.map(item=>
-      '<div class="wb-row"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'
+      '<div class="wb-row">'+
+        '<div class="wb-row-top"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'+
+        '<div class="wb-meaning" data-meaning-n="'+item.n+'">'+meaningHtml(item)+'</div>'+
+      '</div>'
     ).join('');
     wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
       el.addEventListener('blur', ()=>{
@@ -908,6 +922,8 @@
             }
           }
           entry.word = newVal;
+          const meaningEl = wordBankPreview.querySelector('[data-meaning-n="'+n+'"]');
+          if(meaningEl) meaningEl.innerHTML = meaningHtml(entry);
           renderCards();
           saveWordsToStorage();
         } else if(entry){
