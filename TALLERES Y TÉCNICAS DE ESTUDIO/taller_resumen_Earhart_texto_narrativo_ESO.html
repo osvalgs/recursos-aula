@@ -433,6 +433,10 @@
   <div class="text-card">
     <div class="text-card-label">Texto para resumir</div>
 
+    <div class="hint hint-yellow" style="margin-top:1rem;">
+      <strong>📝 Antes de leer:</strong> numera las líneas del texto de 5 en 5, como se ve aquí (si trabajas sobre una copia impresa, escribe tú mismo los números en el margen izquierdo).
+    </div>
+
     <div class="text-numbered-dynamic" id="textNumbered">
       <div class="num-gutter" id="numGutter"></div>
       <div class="text-flow" id="textFlow">
@@ -958,7 +962,14 @@
       range.selectNodeContents(p);
       const rects = Array.from(range.getClientRects());
       const startLine = globalLine + 1;
+      let lastTop = null;
       rects.forEach((r) => {
+        // Un párrafo con cursivas u otro formato interno puede devolver
+        // varios fragmentos (rects) para una misma línea visual (uno por
+        // cada cambio de formato). Solo contamos una línea nueva cuando
+        // la posición vertical cambia de verdad.
+        if (lastTop !== null && Math.abs(r.top - lastTop) < 1) return;
+        lastTop = r.top;
         globalLine++;
         if (globalLine % 5 === 0) {
           const mark = document.createElement('span');
