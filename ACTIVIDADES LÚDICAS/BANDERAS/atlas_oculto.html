@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atlas oculto: juego de banderas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E4EAE5;--paper-2:#D3DCD6;--card:#F3F6F3;--ink:#1C2733;--ink-2:#4A5866;
+  --sea:#2C5A78;--sea-2:#22495F;--red:#B23A2E;--gold:#D4A72C;--leaf:#2F7048;
+  --grid:rgba(28,39,51,.06);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#15202A;--paper-2:#223140;--card:#1C2936;--ink:#E4EAE5;--ink-2:#A6B3BE;
+    --sea:#3A7096;--sea-2:#2F5E7E;--red:#E0685C;--leaf:#6FBF8A;--grid:rgba(228,234,229,.05);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15202A;--paper-2:#223140;--card:#1C2936;--ink:#E4EAE5;--ink-2:#A6B3BE;
+  --sea:#3A7096;--sea-2:#2F5E7E;--red:#E0685C;--leaf:#6FBF8A;--grid:rgba(228,234,229,.05);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0;background-color:var(--paper);color:var(--ink);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:56px 56px;
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:17px;line-height:1.45;
+}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+[hidden]{display:none!important}
+
+.top{max-width:1200px;margin:0 auto;padding:28px 24px 6px;display:flex;align-items:baseline;gap:8px 22px;flex-wrap:wrap}
+h1{font-stretch:125%;font-weight:800;font-size:clamp(2.2rem,5vw,3.6rem);letter-spacing:-.02em;margin:0;line-height:1}
+.top p{margin:0;color:var(--ink-2);font-size:1.05rem}
+main{max-width:1200px;margin:0 auto;padding:18px 24px 48px}
+
+.primary{background:var(--ink);color:var(--paper);border:0;padding:14px 26px;font-weight:700;font-size:1.05rem;border-radius:4px}
+.secondary{background:transparent;color:var(--ink);border:2px solid var(--ink);padding:10px 16px;font-weight:650;border-radius:4px}
+.secondary:disabled{opacity:.4;cursor:default}
+.link{background:none;border:0;color:var(--ink-2);text-decoration:underline;padding:6px 0;justify-self:start}
+
+.seg{display:inline-flex;flex-wrap:wrap;border:2px solid var(--ink);border-radius:4px;overflow:hidden}
+.seg button{background:transparent;border:0;padding:10px 18px;color:var(--ink);font-weight:650}
+.seg button+button{border-left:2px solid var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.setup{background:var(--card);border:2px solid var(--ink);border-radius:6px;padding:28px;max-width:780px;display:grid;gap:26px}
+.setup h2{font-size:1.1rem;margin:0 0 10px}
+.names{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+input{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:4px;background:var(--paper);color:var(--ink);min-width:0}
+.names input{width:180px;border-left:10px solid var(--tc)}
+.help{color:var(--ink-2);margin:10px 0 0;max-width:62ch}
+
+.bar{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;margin-bottom:14px;color:var(--ink-2);font-weight:650}
+.bar .link{margin-left:auto}
+.play{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.play{grid-template-columns:1fr}}
+
+.stage{position:relative;aspect-ratio:3/2;background:var(--paper-2);border:3px solid var(--ink);border-radius:4px;overflow:hidden}
+.flag{position:absolute;inset:7%}
+.flag svg{width:100%;height:100%;display:block}
+.tiles{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr)}
+.tile{
+  border:0;margin:0;background:var(--sea);color:rgba(255,255,255,.55);
+  font-weight:700;font-stretch:85%;font-size:clamp(.75rem,1.5vw,1.05rem);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16);
+  display:flex;align-items:flex-start;justify-content:flex-start;padding:6px 9px;
+  transition:opacity .45s ease,transform .45s ease,background-color .15s;
+}
+.tile:hover{background:var(--sea-2);color:#fff}
+.tile.open{opacity:0;transform:scale(.35) rotate(-10deg);pointer-events:none}
+.stage.locked .tile{cursor:default}
+.stage.locked .tile:hover{background:var(--sea);color:rgba(255,255,255,.55)}
+
+.panel{display:grid;gap:18px}
+.value{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:12px}
+.value .num{font-size:4.2rem;font-weight:800;font-stretch:115%;line-height:.9}
+.value .lbl{color:var(--ink-2);font-weight:650}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.clues{margin:0;padding-left:1.4em;display:grid;gap:10px;font-family:'Newsreader',Georgia,serif;font-size:1.14rem;line-height:1.5}
+.clues li::marker{font-family:'Archivo',sans-serif;font-weight:800;color:var(--sea)}
+.hints{font-family:'Newsreader',Georgia,serif;font-size:1.14rem;border-left:4px solid var(--gold);padding-left:12px;display:grid;gap:4px}
+.clues:empty,.hints:empty{display:none}
+.guess label{font-weight:700;display:block;margin-bottom:6px}
+.guess .row{display:flex;gap:8px}
+.guess input{flex:1}
+.msg{min-height:1.5em;margin:8px 0 0;font-weight:650}
+.msg.ok{color:var(--leaf)}
+.msg.no{color:var(--red)}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+.teams{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.team{flex:1 1 200px;border:2px solid var(--ink);border-top:10px solid var(--tc);background:var(--card);border-radius:4px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center}
+.tname{font-weight:700}
+.tscore{font-size:2.1rem;font-weight:800;font-stretch:115%;grid-row:span 2;line-height:1}
+.team button{justify-self:start;background:var(--tc);color:#fff;border:0;padding:6px 12px;border-radius:4px;font-weight:700}
+.team button:disabled{opacity:.3;cursor:default}
+.teams.awaiting .team button:not(:disabled){animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+
+.solution{margin-top:28px;background:var(--card);border:3px solid var(--ink);border-radius:6px;padding:28px}
+.kicker{margin:0 0 6px;color:var(--ink-2);font-weight:650}
+.country{font-size:clamp(2.4rem,6vw,4.4rem);font-weight:800;font-stretch:125%;margin:0 0 22px;line-height:1;letter-spacing:-.02em}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px 24px;margin:0 0 26px}
+.facts dt{font-size:.92rem;color:var(--ink-2);font-weight:650}
+.facts dd{margin:2px 0 0;font-weight:700;font-size:1.15rem}
+.prose{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-bottom:26px}
+.prose h3{margin:0 0 6px;font-size:1.02rem}
+.prose p{margin:0;font-family:'Newsreader',Georgia,serif;font-size:1.14rem;line-height:1.55;max-width:60ch}
+
+.end{display:grid;gap:22px}
+.end h2{font-size:2rem;font-stretch:115%;margin:0}
+.ranking{margin:0;padding:0;list-style:none;display:grid;gap:10px;max-width:560px}
+.ranking li{display:flex;justify-content:space-between;align-items:center;border:2px solid var(--ink);border-left:12px solid var(--tc);background:var(--card);padding:12px 16px;border-radius:4px;font-weight:700;font-size:1.2rem}
+.ranking li:first-child{font-size:1.5rem}
+.recap{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.recap figure{margin:0}
+.recap .mini{aspect-ratio:3/2;background:var(--paper-2);padding:8px;border:2px solid var(--ink);border-radius:3px}
+.recap .mini svg{width:100%;height:100%;display:block}
+.recap figcaption{font-weight:650;margin-top:4px}
+.recap small{display:block;color:var(--ink-2);font-weight:500}
+footer{max-width:1200px;margin:0 auto;padding:0 24px 32px;color:var(--ink-2);font-size:.9rem}
+
+@media (prefers-reduced-motion:reduce){
+  .tile{transition:none}
+  .teams.awaiting .team button,.shake{animation:none}
+}
+
+/* Pantalla de inicio centrada */
+body:has(#setup:not([hidden])) .top{flex-direction:column;align-items:center;text-align:center;gap:10px}
+.setup{margin:0 auto;text-align:center;justify-items:center}
+.setup .names{justify-content:center}
+.setup .help{margin-left:auto;margin-right:auto}
+.rules{width:100%;border-top:2px solid var(--ink);padding-top:18px}
+.rules summary{cursor:pointer;font-weight:800;font-size:1.25rem;font-stretch:115%;list-style-position:inside}
+.rules-body{display:grid;gap:22px;margin-top:18px}
+.rule h3{margin:0 0 8px;font-size:1.05rem;color:var(--sea)}
+.rule p{margin:0 auto 8px;max-width:62ch;font-family:'Newsreader',Georgia,serif;font-size:1.1rem;line-height:1.5}
+.rule p:last-child{margin-bottom:0}
+
+/* Diapositivas de la solución */
+.prose>div{cursor:pointer;border:2px solid transparent;border-radius:6px;padding:10px;margin:-10px;transition:border-color .15s}
+.prose>div:hover{border-color:var(--ink)}
+.prose h3::after{content:" ⤢";color:var(--ink-2);font-weight:400}
+.solution .btns{display:flex;flex-wrap:wrap;gap:10px}
+.slides{position:fixed;inset:0;z-index:50;background:var(--paper);display:flex;flex-direction:column;
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 20px calc(env(safe-area-inset-bottom,0px) + 16px)}
+.slides-top{display:flex;justify-content:space-between;align-items:center;gap:12px;color:var(--ink-2);font-weight:650}
+.slides-close{background:none;border:2px solid var(--ink);color:var(--ink);border-radius:4px;padding:6px 14px;font-weight:700}
+.slides-stage{flex:1;display:flex;align-items:center;justify-content:center;gap:12px;min-height:0}
+.slides-nav{background:var(--ink);color:var(--paper);border:0;border-radius:50%;width:56px;height:56px;font-size:1.8rem;flex:none;line-height:1}
+.slides-nav:disabled{opacity:.2;cursor:default}
+.slide{flex:1;max-width:1150px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:clamp(14px,3vh,30px);overflow:auto;padding:10px}
+.slide .skicker{margin:0;font-weight:800;font-stretch:115%;color:var(--sea);font-size:clamp(1rem,2vw,1.4rem);text-transform:uppercase;letter-spacing:.06em}
+.slide h2{margin:0;font-size:clamp(2rem,5vw,4rem);font-weight:800;font-stretch:125%;line-height:1;letter-spacing:-.02em}
+.slide p{margin:0;font-family:'Newsreader',Georgia,serif;font-size:clamp(1.3rem,2.8vw,2.3rem);line-height:1.4;max-width:42ch}
+.slide .bigflag{width:min(70vw,58vh*1.5,720px);aspect-ratio:3/2;border:3px solid var(--ink);background:var(--paper-2);padding:3%}
+.slide .bigflag svg{width:100%;height:100%;display:block}
+.slide .icon{font-size:clamp(3rem,9vh,6rem);line-height:1}
+.slide .portrait{width:min(40vh,60vw,340px);aspect-ratio:3/4;border:3px solid var(--ink);border-radius:6px;background:var(--paper-2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none}
+.slide .portrait img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.slide .portrait .ini{font-size:clamp(3rem,10vh,6rem);font-weight:800;font-stretch:125%;color:var(--ink-2)}
+.slide .credit{font-size:.85rem;color:var(--ink-2);margin-top:-8px}
+.slide.person{flex-direction:row;gap:clamp(20px,4vw,56px);text-align:left}
+.slide.person .ptext{display:flex;flex-direction:column;gap:clamp(12px,2.5vh,24px)}
+@media (max-width:760px),(max-aspect-ratio:1/1){.slide.person{flex-direction:column;text-align:center}.slide.person .ptext{align-items:center}}
+.dots{display:flex;justify-content:center;gap:10px;padding-top:10px}
+.dots button{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);background:transparent;padding:0}
+.dots button[aria-current="true"]{background:var(--ink)}
+@media (max-width:600px){.slides-nav{width:44px;height:44px;font-size:1.4rem}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>Atlas oculto</h1>
+  <p>Destapa la bandera casilla a casilla y adivina el país.</p>
+</header>
+
+<main>
+  <!-- CONFIGURACIÓN -->
+  <section id="setup" class="setup">
+    <div>
+      <h2>Equipos</h2>
+      <div class="seg" id="teamCount" role="group" aria-label="Número de equipos"></div>
+      <div class="names" id="teamNames"></div>
+    </div>
+    <div>
+      <h2>Modo de juego</h2>
+      <div class="seg" id="modeSel" role="group" aria-label="Modo de juego">
+        <button data-v="flag">Bandera oculta</button>
+        <button data-v="clues">Pistas</button>
+        <button data-v="alt">Alternar</button>
+      </div>
+      <p class="help" id="modeHelp"></p>
+    </div>
+    <div>
+      <h2>Número de banderas</h2>
+      <div class="seg" id="roundSel" role="group" aria-label="Número de banderas">
+        <button data-v="10">10</button>
+        <button data-v="20">20</button>
+        <button data-v="99" id="allBtn">Todas</button>
+      </div>
+    </div>
+    <details class="rules" open>
+      <summary>Cómo se juega</summary>
+      <div class="rules-body">
+        <div class="rule">
+          <h3>Cómo se responde</h3>
+          <p>Los equipos dicen el país en voz alta. El profesor lo escribe y pulsa «Comprobar». Si es correcto, pulsa «Acierto» en el equipo que lo dijo y este suma los puntos.</p>
+        </div>
+        <div class="rule">
+          <h3>Bandera oculta</h3>
+          <p>La bandera está tapada por casillas. Se empieza con <strong>10 puntos</strong> y cada casilla que se destapa resta 1. Pedir el continente o la capital resta 2.</p>
+        </div>
+        <div class="rule">
+          <h3>Pistas</h3>
+          <p>Se leen cuatro pistas: dato curioso (<strong>8</strong>), personaje (<strong>6</strong>), continente y capital (<strong>4</strong>) y lengua (<strong>2</strong>). Si nadie acierta, se destapa la bandera y vale 1 punto.</p>
+        </div>
+        <div class="rule">
+          <h3>Alternar</h3>
+          <p>Una ronda de bandera oculta y otra de pistas, sucesivamente.</p>
+        </div>
+        <div class="rule">
+          <h3>Final</h3>
+          <p>Gana el equipo con más puntos al acabar las banderas.</p>
+        </div>
+      </div>
+    </details>
+    <div><button id="startBtn" class="primary">Empezar partida</button></div>
+  </section>
+
+  <!-- JUEGO -->
+  <section id="game" hidden>
+    <div class="bar">
+      <span id="roundInfo"></span>
+      <span id="modeInfo"></span>
+      <button id="quitBtn" class="link">Terminar partida</button>
+    </div>
+    <div class="play">
+      <div class="stage" id="stage">
+        <div class="flag" id="flag"></div>
+        <div class="tiles" id="tiles"></div>
+      </div>
+      <aside class="panel">
+        <div class="value"><span class="num" id="valNum">10</span><span class="lbl" id="valLbl">puntos en juego</span></div>
+        <div class="actions">
+          <button id="revealBtn" class="secondary">Destapar casilla al azar</button>
+          <button id="clueBtn" class="secondary">Siguiente pista</button>
+          <button id="hintBtn" class="secondary">Pista: continente (−2)</button>
+        </div>
+        <ol class="clues" id="clues"></ol>
+        <div class="hints" id="hints"></div>
+        <div class="guess">
+          <label for="guessIn">¿Qué país es?</label>
+          <div class="row">
+            <input id="guessIn" autocomplete="off" spellcheck="false" placeholder="Escribe el país">
+            <button id="checkBtn" class="secondary">Comprobar</button>
+          </div>
+          <p class="msg" id="msg" role="status"></p>
+        </div>
+        <button id="solveBtn" class="link">Mostrar la solución sin puntos</button>
+      </aside>
+    </div>
+    <div class="teams" id="teams"></div>
+    <section class="solution" id="solution" hidden aria-live="polite"></section>
+  </section>
+
+  <!-- FINAL -->
+  <section id="end" class="end" hidden>
+    <h2>Clasificación final</h2>
+    <ol class="ranking" id="ranking"></ol>
+    <h2>Banderas de la partida</h2>
+    <div class="recap" id="recap"></div>
+    <div><button id="againBtn" class="primary">Nueva partida</button></div>
+  </section>
+</main>
+<div class="slides" id="slides" hidden role="dialog" aria-modal="true" aria-label="Información de la bandera">
+  <div class="slides-top"><span id="slidesInfo"></span><button class="slides-close" id="slidesClose">Cerrar ✕</button></div>
+  <div class="slides-stage">
+    <button class="slides-nav" id="slidePrev" aria-label="Anterior">‹</button>
+    <div class="slide" id="slide" aria-live="polite"></div>
+    <button class="slides-nav" id="slideNext" aria-label="Siguiente">›</button>
+  </div>
+  <div class="dots" id="dots"></div>
+</div>
+<footer>Atajos: barra espaciadora para destapar o pasar de pista, Intro para comprobar, N para la siguiente bandera. Banderas dibujadas de forma simplificada.</footer>
+
+<script>
+/* ---------- utilidades de dibujo ---------- */
+function star(cx,cy,R,r,n,rot){
+  r = (r===undefined||r===null) ? R*0.382 : r; n = n||5; rot = (rot===undefined)?-90:rot;
+  const p=[];
+  for(let i=0;i<2*n;i++){
+    const a=(rot+i*180/n)*Math.PI/180, rr=i%2?r:R;
+    p.push((cx+rr*Math.cos(a)).toFixed(2)+','+(cy+rr*Math.sin(a)).toFixed(2));
+  }
+  return p.join(' ');
+}
+function trigram(theta,pat){
+  const ys=[-2,-0.5,1];
+  let s=`<g transform="translate(18 12) rotate(${theta}) translate(0 -11)" fill="#000">`;
+  pat.forEach((p,i)=>{
+    const y=ys[i];
+    s+= p ? `<rect x="-3" y="${y}" width="6" height="1"/>`
+          : `<rect x="-3" y="${y}" width="2.75" height="1"/><rect x="0.25" y="${y}" width="2.75" height="1"/>`;
+  });
+  return s+'</g>';
+}
+function indiaWheel(){
+  let s='';
+  for(let i=0;i<24;i++){
+    const a=i*15*Math.PI/180;
+    s+=`<line x1="15" y1="10" x2="${(15+2.9*Math.cos(a)).toFixed(2)}" y2="${(10+2.9*Math.sin(a)).toFixed(2)}"/>`;
+  }
+  return s;
+}
+
+function uj(p,sc){
+  return `<defs><clipPath id="${p}A"><rect width="60" height="30"/></clipPath><clipPath id="${p}B"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath></defs><g transform="scale(${sc})" clip-path="url(#${p}A)"><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${p}B)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g>`;
+}
+function usStars(){
+  let s='';
+  for(let i=0;i<9;i++){const y=(i+1)*5.385,n=i%2?5:6;for(let k=0;k<n;k++){const x=(i%2?2*k+2:2*k+1)*6.333;s+=`<polygon points="${star(x,y,3.08)}"/>`;}}
+  return s;
+}
+function uniq(svg){const r='r'+Math.random().toString(36).slice(2,7);return svg.replace(/id="([^"]+)"/g,'id="$1'+r+'"').replace(/url\(#([^)]+)\)/g,'url(#$1'+r+')');}
+
+/* ---------- datos ---------- */
+const C=[
+{n:'Grecia',a:['greece','hellas'],cont:'Europa',cap:'Atenas',pob:'≈ 10,4 millones',len:'Griego',
+ band:'Las nueve franjas se asocian a las nueve sílabas del lema «Libertad o muerte» (Eleftheria i Thanatos). La cruz representa la fe ortodoxa.',
+ dato:'Es la cuna de la democracia, del teatro y de los Juegos Olímpicos. Tiene unas 6.000 islas e islotes, aunque solo unas 200 están habitadas.',
+ per:['Pericles','Gobernó en el siglo V a. C., en la época dorada de su ciudad: consolidó la democracia e impulsó la construcción del Partenón.'],
+ svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#0D5EAF"/><g fill="#fff"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#0D5EAF"/><rect x="4" width="2" height="10" fill="#fff"/><rect y="4" width="10" height="2" fill="#fff"/></svg>`},
+
+{n:'República Checa',a:['chequia','checa','republica checa','czechia','czech republic'],cont:'Europa',cap:'Praga',pob:'≈ 10,9 millones',len:'Checo',
+ band:'El blanco y el rojo proceden del escudo de Bohemia; el triángulo azul se añadió por Moravia. Es la antigua bandera de Checoslovaquia.',
+ dato:'La palabra «robot» nació aquí: la popularizó el escritor Karel Čapek en su obra de teatro R.U.R. (1920). Es también el país que más cerveza consume por habitante.',
+ per:['Václav Havel','Dramaturgo perseguido por el régimen comunista, lideró la Revolución de Terciopelo (1989) y llegó a presidente de su país.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D7141A"/><polygon points="0,0 15,10 0,20" fill="#11457E"/></svg>`},
+
+{n:'Macedonia del Norte',a:['macedonia','north macedonia'],cont:'Europa',cap:'Skopie',pob:'≈ 1,8 millones',len:'Macedonio y albanés',
+ band:'Un sol dorado de ocho rayos sobre fondo rojo: «el nuevo sol de la libertad», cantado en su himno.',
+ dato:'Cambió oficialmente de nombre en 2019 tras un acuerdo con su vecino del sur que puso fin a casi 30 años de disputa. El lago Ohrid es uno de los más antiguos de Europa.',
+ per:['Madre Teresa de Calcuta','Nació en Skopie en 1910 con el nombre de Anjezë Gonxhe Bojaxhiu. Recibió el Nobel de la Paz en 1979 por su labor con los más pobres en la India.'],
+ svg:`<svg viewBox="0 0 28 14"><rect width="28" height="14" fill="#D20000"/><g fill="#FFE600"><polygon points="14,7 12.6,0 15.4,0"/><polygon points="14,7 12.6,14 15.4,14"/><polygon points="14,7 0,5.6 0,8.4"/><polygon points="14,7 28,5.6 28,8.4"/><polygon points="14,7 3,0 0,0 0,2"/><polygon points="14,7 25,0 28,0 28,2"/><polygon points="14,7 3,14 0,14 0,12"/><polygon points="14,7 25,14 28,14 28,12"/></g><circle cx="14" cy="7" r="3.1" fill="#D20000"/><circle cx="14" cy="7" r="2.6" fill="#FFE600"/></svg>`},
+
+{n:'Turquía',a:['turkiye','turkey'],cont:'Europa y Asia',cap:'Ankara',pob:'≈ 85 millones',len:'Turco',
+ band:'La media luna y la estrella blancas sobre rojo. Según la leyenda, reproducen el reflejo de la luna y una estrella en un charco de sangre tras una batalla.',
+ dato:'Su ciudad más poblada, Estambul, está partida entre Europa y Asia por el estrecho del Bósforo; sin embargo, no es la capital.',
+ per:['Mustafa Kemal Atatürk','Fundó la república en 1923 y en 1928 sustituyó el alfabeto árabe por el latino para escribir su lengua.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#E30A17"/><circle cx="10.5" cy="10" r="5" fill="#fff"/><circle cx="11.75" cy="10" r="4" fill="#E30A17"/><polygon points="${star(16.3,10,2.5,null,5,180)}" fill="#fff"/></svg>`},
+
+{n:'Corea del Sur',a:['corea','republica de corea','south korea','korea'],cont:'Asia',cap:'Seúl',pob:'≈ 51 millones',len:'Coreano',
+ band:'El círculo central representa el equilibrio entre el yin y el yang; los cuatro trigramas simbolizan el cielo, la tierra, el agua y el fuego.',
+ dato:'Es una potencia tecnológica y cultural: su música pop, sus series y su cine se siguen en todo el mundo.',
+ per:['Rey Sejong el Grande','En 1443 impulsó la creación del hangul, un alfabeto diseñado para que todo el pueblo, y no solo la élite, pudiera leer y escribir.'],
+ svg:`<svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#fff"/><g transform="rotate(33.69 18 12)"><path d="M12,12 A6,6 0 0 1 24,12 Z" fill="#CD2E3A"/><path d="M12,12 A6,6 0 0 0 24,12 Z" fill="#0047A0"/><circle cx="15" cy="12" r="3" fill="#CD2E3A"/><circle cx="21" cy="12" r="3" fill="#0047A0"/></g>${trigram(-56.31,[1,1,1])}${trigram(56.31,[0,1,0])}${trigram(123.69,[0,0,0])}${trigram(-123.69,[1,0,1])}</svg>`},
+
+{n:'India',a:['la india'],cont:'Asia',cap:'Nueva Delhi',pob:'≈ 1.430 millones',len:'Hindi e inglés, más 22 lenguas reconocidas en la Constitución',
+ band:'Azafrán (valor), blanco (paz) y verde (fe y fertilidad). En el centro, la rueda de Ashoka, con 24 radios.',
+ dato:'Desde 2023 es el país más poblado del mundo. De aquí proceden el ajedrez y el sistema de numeración que acabó llegando a Europa a través de los árabes.',
+ per:['Mahatma Gandhi','Dirigió la independencia frente al Imperio británico (1947) mediante la resistencia no violenta.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FF9933"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><g stroke="#000080" fill="none"><circle cx="15" cy="10" r="2.9" stroke-width="0.35"/><g stroke-width="0.15">${indiaWheel()}</g></g><circle cx="15" cy="10" r="0.5" fill="#000080"/></svg>`},
+
+{n:'Sudáfrica',a:['sudafrica','republica de sudafrica','south africa'],cont:'África',cap:'Tres: Pretoria (Gobierno), Ciudad del Cabo (Parlamento) y Bloemfontein (justicia)',pob:'≈ 62 millones',len:'12 oficiales, entre ellas zulú, xhosa, afrikáans, inglés y lengua de signos',
+ band:'Adoptada en 1994. La forma de Y simboliza la unión de los distintos pueblos que avanzan juntos por un mismo camino.',
+ dato:'Entre 1948 y 1994 impuso el apartheid, un sistema legal de segregación racial. Es el único país con tres capitales.',
+ per:['Nelson Mandela','Pasó 27 años en prisión por luchar contra el apartheid. En 1994 fue elegido presidente y recibió el Nobel de la Paz en 1993.'],
+ svg:`<svg viewBox="0 0 900 600"><rect width="900" height="600" fill="#001489"/><rect width="900" height="300" fill="#E03C31"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#fff" stroke-width="200"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#007749" stroke-width="120"/><polygon points="0,72 342,300 0,528" fill="#FFB81C"/><polygon points="0,132 252,300 0,468" fill="#000"/></svg>`},
+
+{n:'Jamaica',a:[],cont:'América (Caribe)',cap:'Kingston',pob:'≈ 2,8 millones',len:'Inglés; en la calle, patois jamaicano',
+ band:'Es la única bandera nacional sin rojo, blanco ni azul. Negro (fortaleza), oro (sol y riqueza) y verde (tierra y esperanza).',
+ dato:'Es la cuna del reggae y la tierra de Usain Bolt, plusmarquista mundial de los 100 y 200 metros.',
+ per:['Bob Marley','Músico que llevó el reggae a todo el mundo con canciones como «One Love» o «Redemption Song».'],
+ svg:`<svg viewBox="0 0 12 6"><rect width="12" height="6" fill="#009B3A"/><polygon points="0,0 6,3 0,6" fill="#000"/><polygon points="12,0 6,3 12,6" fill="#000"/><path d="M0,0 L12,6 M0,6 L12,0" stroke="#FED100" stroke-width="0.8"/></svg>`},
+
+{n:'Uruguay',a:[],cont:'América del Sur',cap:'Montevideo',pob:'≈ 3,4 millones',len:'Español',
+ band:'Las nueve franjas representan los departamentos originales del país; el Sol de Mayo es símbolo de la independencia.',
+ dato:'Organizó y ganó el primer Mundial de fútbol de la historia, en 1930.',
+ per:['José Gervasio Artigas','Héroe de la independencia y considerado el padre de la nación. Aquí también nació el escritor Mario Benedetti.'],
+ svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#fff"/><g fill="#0038A8"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#fff"/><polygon points="${star(5,5,4.2,2.6,16)}" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/><circle cx="5" cy="5" r="1.9" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/></svg>`},
+
+{n:'Chile',a:[],cont:'América del Sur',cap:'Santiago',pob:'≈ 19,5 millones',len:'Español',
+ band:'Conocida como «la estrella solitaria». El azul es el cielo; el blanco, la nieve de los Andes; el rojo, la sangre de la independencia.',
+ dato:'Mide unos 4.300 km de norte a sur y apenas 180 km de ancho medio. En el norte está el desierto de Atacama, el desierto no polar más árido del mundo.',
+ per:['Gabriela Mistral','Poeta y maestra; en 1945 se convirtió en la primera persona de América Latina en ganar el Nobel de Literatura.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D52B1E"/><rect width="10" height="10" fill="#0039A6"/><polygon points="${star(5,5,2.6)}" fill="#fff"/></svg>`},
+
+{n:'Nueva Zelanda',a:['new zealand','aotearoa'],cont:'Oceanía',cap:'Wellington',pob:'≈ 5,2 millones',len:'Inglés, maorí y lengua de signos neozelandesa',
+ band:'La bandera del Reino Unido recuerda su pasado colonial; las cuatro estrellas rojas forman la Cruz del Sur. En 2016 se votó en referéndum si cambiarla y ganó mantenerla.',
+ dato:'En 1893 fue el primer país del mundo en reconocer el voto de las mujeres en elecciones nacionales.',
+ per:['Kate Sheppard','Encabezó la campaña sufragista que logró el voto femenino en 1893. Su rostro aparece en los billetes de 10 dólares del país.'],
+ svg:`<svg viewBox="0 0 60 30"><defs><clipPath id="nzA"><rect width="60" height="30"/></clipPath><clipPath id="nzB"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath></defs><rect width="60" height="30" fill="#00247D"/><g transform="scale(0.5)" clip-path="url(#nzA)"><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#nzB)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g><polygon points="${star(45,6.5,2.1)}" fill="#fff"/><polygon points="${star(45,6.5,1.55)}" fill="#CC142B"/><polygon points="${star(40.5,13.5,1.9)}" fill="#fff"/><polygon points="${star(40.5,13.5,1.4)}" fill="#CC142B"/><polygon points="${star(50.5,12,1.9)}" fill="#fff"/><polygon points="${star(50.5,12,1.4)}" fill="#CC142B"/><polygon points="${star(45,24,2.4)}" fill="#fff"/><polygon points="${star(45,24,1.85)}" fill="#CC142B"/></svg>`},
+
+{n:'Países Bajos',a:['holanda','paises bajos','netherlands','nederland'],cont:'Europa',cap:'Ámsterdam (el Gobierno está en La Haya)',pob:'≈ 18 millones',len:'Neerlandés',
+ band:'Es una de las tricolores más antiguas del mundo. La franja superior fue naranja, por Guillermo de Orange; con el tiempo se cambió a rojo, pero el naranja sigue siendo su color nacional.',
+ dato:'Alrededor de una cuarta parte del territorio está por debajo del nivel del mar, protegida por diques y pólderes. Hay más bicicletas que habitantes.',
+ per:['Ana Frank','Niña judía que escribió su famoso diario mientras vivía escondida de los nazis en un anexo secreto (1942-1944).'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#AE1C28"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#21468B"/></svg>`},
+
+{n:'Italia',a:['italy'],cont:'Europa',cap:'Roma',pob:'≈ 59 millones',len:'Italiano',
+ band:'«Il Tricolore» se inspiró en la bandera francesa que llevaron las tropas de Napoleón. Según la tradición, el verde es la esperanza; el blanco, la fe; el rojo, la caridad.',
+ dato:'Es uno de los países con más lugares Patrimonio de la Humanidad. Dentro de su capital existe otro Estado independiente, el más pequeño del mundo.',
+ per:['Dante Alighieri','Autor de la «Divina Comedia» (s. XIV). Al escribirla en lengua vulgar y no en latín, se convirtió en el padre de la lengua de su país.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>`},
+
+{n:'Alemania',a:['germany','deutschland'],cont:'Europa',cap:'Berlín',pob:'≈ 84 millones',len:'Alemán',
+ band:'Los colores proceden de los uniformes de los voluntarios que lucharon contra Napoleón y se convirtieron en símbolo de unidad y democracia en la revolución de 1848.',
+ dato:'Entre 1949 y 1990 estuvo dividida en dos países. El muro que partía su capital cayó el 9 de noviembre de 1989.',
+ per:['Johannes Gutenberg','Hacia 1450 desarrolló la imprenta de tipos móviles, que permitió difundir libros de forma masiva. Su obra más famosa es una Biblia.'],
+ svg:`<svg viewBox="0 0 50 30"><rect width="50" height="10" fill="#000"/><rect y="10" width="50" height="10" fill="#DD0000"/><rect y="20" width="50" height="10" fill="#FFCE00"/></svg>`},
+
+{n:'Francia',a:['france'],cont:'Europa',cap:'París',pob:'≈ 68 millones',len:'Francés',
+ band:'Nació con la Revolución de 1789: el azul y el rojo son los colores de París, y el blanco, el de la monarquía.',
+ dato:'Es el país más visitado del mundo. Su fiesta nacional, el 14 de julio, recuerda la toma de la Bastilla.',
+ per:['Victor Hugo','Escritor romántico, autor de «Los miserables» y «Nuestra Señora de París». Pasó casi 20 años en el exilio por oponerse a Napoleón III.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>`},
+
+{n:'Portugal',a:[],cont:'Europa',cap:'Lisboa',pob:'≈ 10,4 millones',len:'Portugués',
+ band:'La esfera armilar recuerda la época de los descubrimientos marítimos; el escudo, con cinco pequeños escudos azules (las «quinas»), representa la historia del reino. Se adoptó en 1911, al proclamarse la república.',
+ dato:'Su lengua la hablan más de 250 millones de personas en el mundo, la mayoría en una antigua colonia de América del Sur.',
+ per:['Fernando Pessoa','Poeta que escribió con varios «heterónimos»: autores inventados, con biografía y estilo propios, como Alberto Caeiro o Ricardo Reis.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="12" height="20" fill="#006600"/><rect x="12" width="18" height="20" fill="#FF0000"/><g fill="none" stroke="#FFE000"><circle cx="12" cy="10" r="4.2" stroke-width="0.7"/><ellipse cx="12" cy="10" rx="4.2" ry="1.4" stroke-width="0.45"/><ellipse cx="12" cy="10" rx="1.4" ry="4.2" stroke-width="0.45"/></g><path d="M10,7.2 h4 v3.4 a2,2 0 0 1 -4,0 z" fill="#fff" stroke="#FF0000" stroke-width="0.7"/><g fill="#003399"><rect x="11.65" y="7.9" width="0.7" height="0.7"/><rect x="11.65" y="9" width="0.7" height="0.7"/><rect x="11.65" y="10.1" width="0.7" height="0.7"/><rect x="10.7" y="9" width="0.7" height="0.7"/><rect x="12.6" y="9" width="0.7" height="0.7"/></g></svg>`},
+
+{n:'Irlanda',a:['ireland','eire'],cont:'Europa',cap:'Dublín',pob:'≈ 5,3 millones',len:'Irlandés (gaélico) e inglés',
+ band:'El verde representa la tradición gaélica y católica; el naranja, a los protestantes; el blanco, la paz entre ambas comunidades.',
+ dato:'Su fiesta más famosa, el 17 de marzo, se celebra en medio mundo con ropa verde y tréboles. La isla está dividida: el norte pertenece al Reino Unido.',
+ per:['James Joyce','Autor de «Ulises» (1922), novela que transcurre en un solo día y revolucionó la literatura con la técnica del monólogo interior.'],
+ svg:`<svg viewBox="0 0 60 30"><rect width="20" height="30" fill="#169B62"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#FF883E"/></svg>`},
+
+{n:'Bélgica',a:['belgica','belgium'],cont:'Europa',cap:'Bruselas',pob:'≈ 11,8 millones',len:'Neerlandés, francés y alemán',
+ band:'Sus colores proceden del escudo del antiguo ducado de Brabante: un león dorado con garras rojas sobre fondo negro.',
+ dato:'Su capital es la sede principal de la Unión Europea y de la OTAN. Es famosa por su chocolate, sus gofres y sus cómics.',
+ per:['Hergé','Seudónimo de Georges Remi, creador de las aventuras de Tintín (1929), uno de los cómics más leídos del mundo.'],
+ svg:`<svg viewBox="0 0 15 13"><rect width="5" height="13" fill="#000"/><rect x="5" width="5" height="13" fill="#FDDA24"/><rect x="10" width="5" height="13" fill="#EF3340"/></svg>`},
+
+{n:'Suecia',a:['sweden','sverige'],cont:'Europa',cap:'Estocolmo',pob:'≈ 10,5 millones',len:'Sueco',
+ band:'Cruz nórdica amarilla sobre azul, colores tomados de su escudo de las tres coronas doradas.',
+ dato:'Cada 10 de diciembre, en su capital, se entregan los Premios Nobel (todos salvo el de la Paz).',
+ per:['Astrid Lindgren','Escritora de literatura infantil, creadora de Pippi Calzaslargas (1945). Sus libros se han traducido a más de cien lenguas.'],
+ svg:`<svg viewBox="0 0 16 10"><rect width="16" height="10" fill="#006AA7"/><rect x="5" width="2" height="10" fill="#FECC00"/><rect y="4" width="16" height="2" fill="#FECC00"/></svg>`},
+
+{n:'Noruega',a:['norway','norge'],cont:'Europa',cap:'Oslo',pob:'≈ 5,5 millones',len:'Noruego (también sami)',
+ band:'Cruz nórdica en rojo, blanco y azul, los colores asociados a la libertad por las banderas de Francia, Estados Unidos y el Reino Unido.',
+ dato:'Es tierra de fiordos y del sol de medianoche. En su capital se entrega cada año el Nobel de la Paz.',
+ per:['Roald Amundsen','Explorador que dirigió la primera expedición en llegar al Polo Sur, en diciembre de 1911.'],
+ svg:`<svg viewBox="0 0 22 16"><rect width="22" height="16" fill="#BA0C2F"/><rect x="6" width="4" height="16" fill="#fff"/><rect y="6" width="22" height="4" fill="#fff"/><rect x="7" width="2" height="16" fill="#00205B"/><rect y="7" width="22" height="2" fill="#00205B"/></svg>`},
+
+{n:'Suiza',a:['switzerland','schweiz','suisse'],cont:'Europa',cap:'Berna',pob:'≈ 8,9 millones',len:'Alemán, francés, italiano y romanche',
+ band:'Es una de las dos únicas banderas nacionales cuadradas (la otra es la del Vaticano). El emblema de la Cruz Roja es su bandera con los colores invertidos.',
+ dato:'Es famosa por su neutralidad y porque sus ciudadanos votan en referéndum varias veces al año. Los Alpes cubren gran parte de su territorio.',
+ per:['Henri Dunant','Fundador de la Cruz Roja (1863) y primer Premio Nobel de la Paz, en 1901.'],
+ svg:`<svg viewBox="0 0 32 32"><rect width="32" height="32" fill="#DA291C"/><rect x="13" y="6" width="6" height="20" fill="#fff"/><rect x="6" y="13" width="20" height="6" fill="#fff"/></svg>`},
+
+{n:'Reino Unido',a:['gran bretana','inglaterra','united kingdom','uk','great britain'],cont:'Europa',cap:'Londres',pob:'≈ 68 millones',len:'Inglés (también galés y gaélico escocés)',
+ band:'La «Union Jack» superpone las cruces de San Jorge (Inglaterra), San Andrés (Escocia) y San Patricio (Irlanda). Gales no aparece en ella.',
+ dato:'Está formado por cuatro naciones. En 2020 salió de la Unión Europea tras el referéndum del «Brexit».',
+ per:['William Shakespeare','Dramaturgo y poeta, autor de «Hamlet», «Romeo y Julieta» y «Macbeth». Murió en 1616, el mismo año que Cervantes.'],
+ svg:`<svg viewBox="0 0 60 30">${uj('uk',1)}</svg>`},
+
+{n:'Venezuela',a:[],cont:'América del Sur',cap:'Caracas',pob:'≈ 28 millones',len:'Español',
+ band:'Diseñada a partir de la de Francisco de Miranda. Las ocho estrellas representan las siete provincias que firmaron la independencia más la de Guayana, añadida en 2006.',
+ dato:'Allí está el Salto Ángel, la cascada más alta del mundo (979 m), y posee las mayores reservas de petróleo conocidas del planeta.',
+ per:['Simón Bolívar','«El Libertador»: dirigió la independencia de buena parte de América del Sur. Un país, Bolivia, lleva su nombre.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FFCC00"/><rect y="6.67" width="30" height="6.67" fill="#00247D"/><rect y="13.33" width="30" height="6.67" fill="#CF142B"/><g fill="#fff">${[0,1,2,3,4,5,6,7].map(k=>{const a=(160-k*20)*Math.PI/180;return `<polygon points="${star(15+5.5*Math.cos(a),14-5.5*Math.sin(a),0.65)}"/>`;}).join('')}</g></svg>`},
+
+{n:'Colombia',a:[],cont:'América del Sur',cap:'Bogotá',pob:'≈ 52 millones',len:'Español (y más de 60 lenguas indígenas)',
+ band:'También deriva de la bandera de Miranda. El amarillo ocupa la mitad superior; el azul y el rojo, un cuarto cada uno.',
+ dato:'Es el segundo país con más biodiversidad del mundo y el único de América del Sur con costas en el Pacífico y en el Caribe.',
+ per:['Gabriel García Márquez','Autor de «Cien años de soledad» (1967), obra cumbre del realismo mágico. Premio Nobel de Literatura en 1982.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg>`},
+
+{n:'Ecuador',a:[],cont:'América del Sur',cap:'Quito',pob:'≈ 18 millones',len:'Español (el kichwa y el shuar son lenguas oficiales de relación intercultural)',
+ band:'Casi idéntica a la colombiana, pero con escudo: un cóndor sobre un paisaje con el volcán Chimborazo.',
+ dato:'Las islas Galápagos, que inspiraron a Darwin su teoría de la evolución, forman parte de este país. La cima del Chimborazo es el punto más alejado del centro de la Tierra.',
+ per:['Manuela Sáenz','Heroína de la independencia y compañera de Simón Bolívar, al que salvó de un atentado; él la llamó «la Libertadora del Libertador».'],
+ svg:`<svg viewBox="0 0 36 24"><rect width="36" height="12" fill="#FFDD00"/><rect y="12" width="36" height="6" fill="#034EA2"/><rect y="18" width="36" height="6" fill="#ED1C24"/><ellipse cx="18" cy="11.8" rx="2.4" ry="2.9" fill="#7FB2E5" stroke="#C8A200" stroke-width="0.4"/><polygon points="16,13.4 17.4,11 18.2,11.9 19,11.2 20,13.4" fill="#4E8A3A"/><path d="M13.6,8.6 Q18,5.4 22.4,8.6 L20.3,9.1 Q18,7.9 15.7,9.1 Z" fill="#333"/><circle cx="18" cy="8.2" r="0.6" fill="#333"/><g><rect x="13.6" y="10" width="0.5" height="4" fill="#FFDD00"/><rect x="14.1" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="14.6" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="20.9" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="21.4" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="21.9" y="10" width="0.5" height="4" fill="#FFDD00"/></g></svg>`},
+
+{n:'Perú',a:['peru'],cont:'América del Sur',cap:'Lima',pob:'≈ 34 millones',len:'Español, quechua y aimara',
+ band:'Según la leyenda, el general San Martín se inspiró en unas parihuanas (flamencos) de alas rojas y pecho blanco. La versión oficial del Estado lleva además un escudo.',
+ dato:'Aquí se encuentra Machu Picchu, la ciudadela inca, y comparte con Bolivia el lago Titicaca, el lago navegable más alto del mundo.',
+ per:['Mario Vargas Llosa','Novelista, autor de «La ciudad y los perros» y «Conversación en La Catedral». Premio Nobel de Literatura en 2010.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#D91023"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#D91023"/></svg>`},
+
+{n:'Brasil',a:['brazil'],cont:'América del Sur',cap:'Brasilia',pob:'≈ 210 millones',len:'Portugués',
+ band:'El círculo azul reproduce el cielo de Río de Janeiro la noche en que se proclamó la república (1889); cada estrella representa un estado. Lleva el lema «Ordem e Progresso».',
+ dato:'Es el país más grande de América del Sur y alberga alrededor del 60 % de la selva amazónica. Ha ganado cinco Mundiales de fútbol, más que nadie.',
+ per:['Pelé','Considerado uno de los mejores futbolistas de la historia; es el único jugador que ha ganado tres Mundiales (1958, 1962 y 1970).'],
+ svg:`<svg viewBox="0 0 20 14"><defs><clipPath id="brC"><circle cx="10" cy="7" r="3.5"/></clipPath></defs><rect width="20" height="14" fill="#009C3B"/><polygon points="1.7,7 10,1.7 18.3,7 10,12.3" fill="#FFDF00"/><circle cx="10" cy="7" r="3.5" fill="#002776"/><path d="M6,6.4 Q10.2,5 14,7.6" stroke="#fff" stroke-width="0.55" fill="none" clip-path="url(#brC)"/><g fill="#fff"><circle cx="9" cy="8.6" r="0.16"/><circle cx="10.4" cy="9.2" r="0.16"/><circle cx="11.6" cy="8.4" r="0.16"/><circle cx="8.2" cy="9.4" r="0.13"/><circle cx="10" cy="10.2" r="0.16"/><circle cx="12.2" cy="9.6" r="0.13"/><circle cx="10.9" cy="6.1" r="0.13"/></g></svg>`},
+
+{n:'Argentina',a:[],cont:'América del Sur',cap:'Buenos Aires',pob:'≈ 46 millones',len:'Español',
+ band:'La creó Manuel Belgrano en 1812. El Sol de Mayo recuerda la Revolución de Mayo de 1810, que abrió el camino a la independencia.',
+ dato:'Allí está el Aconcagua (6.961 m), la montaña más alta de América. Es la patria del tango y ha ganado tres Mundiales (1978, 1986 y 2022).',
+ per:['Jorge Luis Borges','Escritor de relatos como «El Aleph» o «Ficciones», llenos de laberintos, espejos y bibliotecas infinitas.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#74ACDF"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><polygon points="${star(15,10,2.7,1.8,16)}" fill="#F6B40E" stroke="#85340A" stroke-width="0.08"/><circle cx="15" cy="10" r="1.4" fill="#F6B40E" stroke="#85340A" stroke-width="0.1"/></svg>`},
+
+{n:'Cuba',a:[],cont:'América (Caribe)',cap:'La Habana',pob:'≈ 11 millones',len:'Español',
+ band:'Las tres franjas azules representan los tres departamentos en que se dividía la isla; el triángulo rojo, la sangre derramada; la estrella solitaria, la independencia.',
+ dato:'Fue, junto con Puerto Rico, una de las últimas colonias españolas en América, hasta 1898. Es la isla más grande del Caribe.',
+ per:['José Martí','Poeta y héroe de la independencia. Versos de sus «Versos sencillos» forman la letra de la canción «Guantanamera».'],
+ svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#fff"/><g fill="#002A8F"><rect width="60" height="6"/><rect y="12" width="60" height="6"/><rect y="24" width="60" height="6"/></g><polygon points="0,0 26,15 0,30" fill="#CF142B"/><polygon points="${star(8.7,15,3.6)}" fill="#fff"/></svg>`},
+
+{n:'México',a:['mexico'],cont:'América del Norte',cap:'Ciudad de México',pob:'≈ 130 millones',len:'Español y 68 lenguas indígenas, como el náhuatl o el maya',
+ band:'El escudo recrea la leyenda de la fundación de Tenochtitlan: los mexicas debían asentarse donde vieran un águila sobre un nopal devorando una serpiente.',
+ dato:'Es el país con más hispanohablantes del mundo. Palabras como «chocolate», «tomate» o «aguacate» llegaron al español desde el náhuatl.',
+ per:['Sor Juana Inés de la Cruz','Monja y escritora del Barroco (s. XVII), llamada «la décima musa». Defendió el derecho de las mujeres al conocimiento.'],
+ svg:`<svg viewBox="0 0 35 20"><rect width="11.67" height="20" fill="#006847"/><rect x="11.67" width="11.67" height="20" fill="#fff"/><rect x="23.33" width="11.67" height="20" fill="#CE1126"/><path d="M14.3,10.6 A3.3,3.3 0 0 0 20.7,10.6" stroke="#2E7D32" stroke-width="0.6" fill="none"/><rect x="17" y="10.8" width="1" height="1.5" fill="#3A7D2C"/><path d="M17,8 L14.8,6.3 L15.3,9.4 L16.8,10 Z" fill="#5C3A1C"/><ellipse cx="17.8" cy="8.9" rx="1.3" ry="1.9" fill="#7A4B24"/><circle cx="18.6" cy="6.9" r="0.6" fill="#7A4B24"/><path d="M18.3,9 q1.2,-0.6 1.8,0.4" stroke="#3A7D2C" stroke-width="0.35" fill="none"/></svg>`},
+
+{n:'Estados Unidos',a:['eeuu','ee uu','usa','estados unidos de america','united states'],cont:'América del Norte',cap:'Washington D. C.',pob:'≈ 335 millones',len:'Inglés; más de 40 millones de personas hablan español en casa',
+ band:'Las 50 estrellas representan los estados; las 13 franjas, las trece colonias que se independizaron de Gran Bretaña en 1776.',
+ dato:'Es uno de los países con más hispanohablantes del mundo. Su ciudad más poblada, Nueva York, no es la capital.',
+ per:['Martin Luther King','Líder del movimiento por los derechos civiles de la población afroamericana. Su discurso «I have a dream» (1963) es uno de los más famosos de la historia.'],
+ svg:`<svg viewBox="0 0 190 100"><rect width="190" height="100" fill="#fff"/><g fill="#B22234">${[0,2,4,6,8,10,12].map(i=>`<rect y="${(i*7.692).toFixed(2)}" width="190" height="7.69"/>`).join('')}</g><rect width="76" height="53.85" fill="#3C3B6E"/><g fill="#fff">${usStars()}</g></svg>`},
+
+{n:'Japón',a:['japon','japan','nippon'],cont:'Asia',cap:'Tokio',pob:'≈ 124 millones',len:'Japonés',
+ band:'El «Hinomaru» («círculo del sol») representa el sol naciente: el nombre del país en su lengua significa «origen del sol».',
+ dato:'Está formado por unas 14.000 islas y tiene una de las esperanzas de vida más altas del mundo. Su escritura combina tres sistemas distintos.',
+ per:['Murasaki Shikibu','Dama de la corte que escribió a comienzos del siglo XI «La historia de Genji», considerada una de las primeras novelas de la historia.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#fff"/><circle cx="15" cy="10" r="6" fill="#BC002D"/></svg>`},
+
+{n:'China',a:[],cont:'Asia',cap:'Pekín',pob:'≈ 1.410 millones',len:'Chino mandarín',
+ band:'La estrella grande representa al Partido Comunista; las cuatro pequeñas, las clases sociales del pueblo unidas en torno a él.',
+ dato:'Su escritura no usa alfabeto: se basa en miles de caracteres. Allí se inventaron el papel, la brújula, la pólvora y la imprenta primitiva.',
+ per:['Confucio','Filósofo del siglo VI-V a. C. cuyas enseñanzas sobre el respeto, la familia y el buen gobierno marcaron la cultura de Asia oriental.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#EE1C25"/><g fill="#FFFF00"><polygon points="${star(5,5,3)}"/>${[[10,2],[12,4],[12,7],[10,9]].map(([x,y])=>`<polygon points="${star(x,y,1,null,5,Math.atan2(5-y,5-x)*180/Math.PI)}"/>`).join('')}</g></svg>`},
+
+{n:'Marruecos',a:['morocco','maroc'],cont:'África',cap:'Rabat',pob:'≈ 37 millones',len:'Árabe y amazigh (bereber)',
+ band:'La estrella verde de cinco puntas entrelazadas es el «sello de Salomón», símbolo de protección; el rojo es el color de la dinastía reinante.',
+ dato:'Solo 14 km de mar lo separan de España, en el estrecho de Gibraltar. Su ciudad más poblada, Casablanca, no es la capital.',
+ per:['Ibn Battuta','Viajero nacido en Tánger en el siglo XIV; recorrió unos 120.000 km por África, Asia y Europa y dejó escrito el relato de sus viajes.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#C1272D"/><polygon points="${[0,2,4,1,3].map(k=>{const a=(-90+72*k)*Math.PI/180;return (15+5*Math.cos(a)).toFixed(2)+','+(10.4+5*Math.sin(a)).toFixed(2);}).join(' ')}" fill="none" stroke="#006233" stroke-width="0.7"/></svg>`},
+
+{n:'Egipto',a:['egypt'],cont:'África',cap:'El Cairo',pob:'≈ 110 millones',len:'Árabe',
+ band:'En el centro, el águila de Saladino. El rojo recuerda la lucha contra la opresión; el blanco, la revolución de 1952; el negro, el fin de los tiempos oscuros.',
+ dato:'La Gran Pirámide de Guiza es la única de las siete maravillas del mundo antiguo que sigue en pie. Casi toda su población vive junto al Nilo.',
+ per:['Cleopatra VII','Última reina de la dinastía ptolemaica (s. I a. C.), aliada de Julio César y de Marco Antonio. Hablaba varias lenguas.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#CE1126"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#000"/><polygon points="15,7.6 16.2,8.3 18.3,8 17.5,11 16,11.6 16,12.6 14,12.6 14,11.6 12.5,11 11.7,8 13.8,8.3" fill="#C09300"/><circle cx="15" cy="7.7" r="0.6" fill="#C09300"/></svg>`},
+
+{n:'Australia',a:[],cont:'Oceanía',cap:'Canberra',pob:'≈ 27 millones',len:'Inglés',
+ band:'La bandera británica recuerda su origen colonial; la gran estrella de siete puntas representa la federación de estados y territorios; las demás forman la Cruz del Sur.',
+ dato:'Frente a su costa está la Gran Barrera de Coral, el mayor arrecife del mundo. Su ciudad más conocida, Sídney, no es la capital.',
+ per:['Cathy Freeman','Atleta aborigen que encendió el pebetero y ganó el oro en los 400 metros en los Juegos Olímpicos de Sídney 2000.'],
+ svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#00008B"/>${uj('au',0.5)}<g fill="#fff"><polygon points="${star(15,22.5,4.5,2,7)}"/><polygon points="${star(45,25.5,1.9,0.85,7)}"/><polygon points="${star(37.5,13.5,1.9,0.85,7)}"/><polygon points="${star(45,4.8,1.9,0.85,7)}"/><polygon points="${star(52,11.3,1.9,0.85,7)}"/><polygon points="${star(48.2,15.6,1.1)}"/></g></svg>`}
+];
+
+/* ---------- estado ---------- */
+const COLORS=['#2C5A78','#B23A2E','#B8860B','#2F7048'];
+const COLS='ABCDEF';
+const MODE_NAMES={flag:'Bandera oculta',clues:'Pistas',alt:'Alternar'};
+const MODE_HELP={
+  flag:'Se destapan casillas de la bandera. Cuantas menos hagan falta, más puntos (máximo 10). Los equipos pueden pedir casillas concretas: «¡la C3!».',
+  clues:'La bandera sigue tapada y se leen pistas: un dato curioso, un personaje, el continente y la capital, y por último la lengua. La primera pista vale 8 puntos.',
+  alt:'Una ronda de bandera oculta y otra de pistas, sucesivamente.'
+};
+const CLUE_PTS=[8,6,4,2];
+
+const $=s=>document.querySelector(s);
+let cfg={teams:2,names:['Equipo 1','Equipo 2','Equipo 3','Equipo 4'],mode:'flag',rounds:20};
+let teams=[],deck=[],idx=0,cur=null,roundMode='flag',revealed=new Set(),penalty=0,hintStep=0,clueStep=0,solved=false,awaiting=false,history=[];
+
+const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,' ').replace(/\s+/g,' ').trim();
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- configuración ---------- */
+function renderSetup(){
+  $('#teamCount').innerHTML=[1,2,3,4].map(n=>`<button data-v="${n}" aria-pressed="${n===cfg.teams}">${n===1?'1 jugador':n+' equipos'}</button>`).join('');
+  $('#teamNames').innerHTML=Array.from({length:cfg.teams},(_,i)=>`<input style="--tc:${COLORS[i]}" data-i="${i}" value="${esc(cfg.names[i])}" aria-label="Nombre del equipo ${i+1}" maxlength="20">`).join('');
+  document.querySelectorAll('#modeSel button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===cfg.mode));
+  document.querySelectorAll('#roundSel button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===cfg.rounds));
+  $('#modeHelp').textContent=MODE_HELP[cfg.mode];
+}
+$('#teamCount').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfg.teams=+b.dataset.v;renderSetup();});
+$('#teamNames').addEventListener('input',e=>{const i=+e.target.dataset.i;cfg.names[i]=e.target.value;});
+$('#modeSel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfg.mode=b.dataset.v;renderSetup();});
+$('#roundSel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;cfg.rounds=+b.dataset.v;renderSetup();});
+$('#startBtn').addEventListener('click',start);
+$('#againBtn').addEventListener('click',()=>{$('#end').hidden=true;$('#setup').hidden=false;renderSetup();});
+
+/* ---------- partida ---------- */
+function start(){
+  teams=Array.from({length:cfg.teams},(_,i)=>({name:(cfg.names[i]||'').trim()||('Equipo '+(i+1)),score:0}));
+  deck=shuffle(C).slice(0,cfg.rounds);idx=0;history=[];
+  $('#setup').hidden=true;$('#end').hidden=true;$('#game').hidden=false;
+  newRound();
+}
+function newRound(){
+  cur=deck[idx];
+  roundMode=cfg.mode==='alt'?(idx%2?'clues':'flag'):cfg.mode;
+  revealed=new Set();penalty=0;hintStep=0;clueStep=roundMode==='clues'?1:0;solved=false;awaiting=false;
+  $('#flag').innerHTML=cur.svg;
+  const t=$('#tiles');t.innerHTML='';
+  for(let r=0;r<4;r++)for(let c=0;c<6;c++){
+    const i=r*6+c,b=document.createElement('button');
+    b.className='tile';b.textContent=COLS[c]+(r+1);
+    b.setAttribute('aria-label','Destapar casilla '+COLS[c]+(r+1));
+    b.addEventListener('click',()=>reveal(i));
+    t.appendChild(b);
+  }
+  $('#hints').innerHTML='';$('#guessIn').value='';setMsg('');
+  $('#solution').hidden=true;$('#solution').innerHTML='';
+  $('#roundInfo').textContent=`Bandera ${idx+1} de ${deck.length}`;
+  $('#modeInfo').textContent=MODE_NAMES[roundMode];
+  if(roundMode==='flag') randomReveal();
+  update();
+}
+function value(){
+  if(roundMode==='flag') return Math.max(1,11-revealed.size-penalty);
+  return clueStep<=4?CLUE_PTS[clueStep-1]:1;
+}
+function reveal(i){
+  if(solved||revealed.has(i))return;
+  if(roundMode==='clues'&&clueStep<5){setMsg('En este modo primero se leen las cuatro pistas.','no');return;}
+  revealed.add(i);
+  const tile=$('#tiles').children[i];tile.classList.add('open');tile.tabIndex=-1;
+  update();
+}
+function randomReveal(){
+  const closed=[...Array(24).keys()].filter(i=>!revealed.has(i));
+  if(!closed.length)return;
+  reveal(closed[Math.floor(Math.random()*closed.length)]);
+}
+function nextClue(){
+  if(solved)return;
+  if(clueStep<4){clueStep++;update();}
+  else{clueStep=5;randomReveal();}
+}
+function clueTexts(c){
+  return [
+    c.dato,
+    `Personaje: ${c.per[0]}. ${c.per[1]}`,
+    `Continente: ${c.cont}. Capital: ${c.cap}.`,
+    `Lengua: ${c.len}.`
+  ];
+}
+function hint(){
+  if(solved||hintStep>1)return;
+  const line=hintStep===0?`Continente: ${cur.cont}`:`Capital: ${cur.cap}`;
+  $('#hints').insertAdjacentHTML('beforeend',`<div>${esc(line)}</div>`);
+  hintStep++;penalty+=2;update();
+}
+function update(){
+  const v=value();
+  $('#valNum').textContent=solved?'—':v;
+  $('#valLbl').textContent=solved?'ronda terminada':(v===1?'punto en juego':'puntos en juego');
+  const isFlag=roundMode==='flag';
+  $('#revealBtn').hidden=!isFlag;$('#hintBtn').hidden=!isFlag;$('#clueBtn').hidden=isFlag;
+  $('#revealBtn').disabled=solved||revealed.size>=24;
+  $('#hintBtn').disabled=solved||hintStep>1;
+  $('#hintBtn').textContent=hintStep===0?'Pista: continente (−2)':'Pista: capital (−2)';
+  $('#clueBtn').disabled=solved||revealed.size>=24;
+  $('#clueBtn').textContent=clueStep<4?'Siguiente pista':'Destapar casilla al azar';
+  $('#stage').classList.toggle('locked',solved||(!isFlag&&clueStep<5));
+  const shown=isFlag?[]:clueTexts(cur).slice(0,Math.min(clueStep,4));
+  $('#clues').innerHTML=shown.map(t=>`<li>${esc(t)}</li>`).join('');
+  $('#solveBtn').hidden=solved;$('#checkBtn').disabled=solved;$('#guessIn').disabled=solved;
+  renderTeams();
+}
+function renderTeams(){
+  const el=$('#teams');
+  el.classList.toggle('awaiting',awaiting&&!solved);
+  el.innerHTML=teams.map((t,i)=>`<div class="team" style="--tc:${COLORS[i]}"><span class="tname">${esc(t.name)}</span><span class="tscore">${t.score}</span><button data-t="${i}" ${solved?'disabled':''}>Acierto +${value()}</button></div>`).join('');
+}
+$('#teams').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(b)award(+b.dataset.t);});
+
+function setMsg(t,kind){const m=$('#msg');m.textContent=t;m.className='msg'+(kind?' '+kind:'');}
+function check(){
+  if(solved)return;
+  const raw=$('#guessIn').value,v=norm(raw);if(!v)return;
+  const ok=v===norm(cur.n)||cur.a.some(a=>norm(a)===v);
+  if(ok){
+    if(teams.length===1){award(0);}
+    else{awaiting=true;setMsg('¡Correcto! Pulsa «Acierto» en el equipo que lo ha dicho.','ok');renderTeams();}
+  }else{
+    setMsg(`«${raw.trim()}» no es la respuesta. Seguid buscando.`,'no');
+    const inp=$('#guessIn');inp.classList.remove('shake');void inp.offsetWidth;inp.classList.add('shake');inp.select();
+  }
+}
+function award(t){
+  if(solved)return;
+  const pts=value();teams[t].score+=pts;solve(t,pts);
+}
+function solve(t,pts){
+  solved=true;awaiting=false;
+  [...$('#tiles').children].forEach(b=>b.classList.add('open'));
+  history.push({c:cur,team:t,pts:pts||0});
+  setMsg('');
+  const last=idx>=deck.length-1;
+  const kicker=t!=null?`${esc(teams[t].name)} suma ${pts} ${pts===1?'punto':'puntos'}`:'Sin puntos en esta ronda';
+  const s=$('#solution');
+  s.innerHTML=`
+    <p class="kicker">${kicker}</p>
+    <h2 class="country">${esc(cur.n)}</h2>
+    <dl class="facts">
+      <div><dt>Capital</dt><dd>${esc(cur.cap)}</dd></div>
+      <div><dt>Continente</dt><dd>${esc(cur.cont)}</dd></div>
+      <div><dt>Población aproximada</dt><dd>${esc(cur.pob)}</dd></div>
+      <div><dt>Lenguas</dt><dd>${esc(cur.len)}</dd></div>
+    </dl>
+    <div class="prose">
+      <div data-s="0" title="Ver en grande"><h3>La bandera</h3><p>${esc(cur.band)}</p></div>
+      <div data-s="1" title="Ver en grande"><h3>Dato curioso</h3><p>${esc(cur.dato)}</p></div>
+      <div data-s="2" title="Ver en grande"><h3>Personaje: ${esc(cur.per[0])}</h3><p>${esc(cur.per[1])}</p></div>
+    </div>
+    <div class="btns">
+      <button id="slidesBtn" class="secondary">Ver en diapositivas</button>
+      <button id="nextBtn" class="primary">${last?'Ver la clasificación':'Siguiente bandera'}</button>
+    </div>`;
+  s.hidden=false;
+  $('#nextBtn').addEventListener('click',next);
+  $('#slidesBtn').addEventListener('click',()=>openSlides(0));
+  s.querySelectorAll('.prose>div').forEach(d=>d.addEventListener('click',()=>openSlides(+d.dataset.s)));
+  update();
+  s.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+}
+function next(){
+  if(idx>=deck.length-1){finish();return;}
+  idx++;newRound();
+  $('#game').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});
+}
+function finish(){
+  $('#game').hidden=true;$('#end').hidden=false;
+  const ranked=teams.map((t,i)=>({...t,i})).sort((a,b)=>b.score-a.score);
+  $('#ranking').innerHTML=ranked.map(t=>`<li style="--tc:${COLORS[t.i]}"><span>${esc(t.name)}</span><span>${t.score} ${t.score===1?'punto':'puntos'}</span></li>`).join('');
+  $('#recap').innerHTML=history.map(h=>`<figure><div class="mini">${uniq(h.c.svg)}</div><figcaption>${esc(h.c.n)}<small>${h.team!=null?esc(teams[h.team].name)+' (+'+h.pts+')':'Sin acierto'}</small></figcaption></figure>`).join('');
+  window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
+}
+
+$('#revealBtn').addEventListener('click',randomReveal);
+$('#clueBtn').addEventListener('click',nextClue);
+$('#hintBtn').addEventListener('click',hint);
+$('#checkBtn').addEventListener('click',check);
+$('#guessIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();}});
+$('#solveBtn').addEventListener('click',()=>{if(!solved)solve(null,0);});
+$('#quitBtn').addEventListener('click',finish);
+document.addEventListener('keydown',e=>{
+  if(!$('#slides').hidden)return;
+  if($('#game').hidden||e.target.tagName==='INPUT')return;
+  if(e.key===' '&&!solved&&!e.target.closest('button')){e.preventDefault();roundMode==='flag'?randomReveal():nextClue();}
+  else if((e.key==='n'||e.key==='N')&&solved){next();}
+});
+
+/* ---------- diapositivas ---------- */
+const WIKI={'Madre Teresa de Calcuta':'Teresa de Calcuta','Rey Sejong el Grande':'Sejong el Grande','Sor Juana Inés de la Cruz':'Juana Inés de la Cruz','Cleopatra VII':'Cleopatra','Martin Luther King':'Martin Luther King Jr.'};
+const photoCache={};
+async function getPhoto(name){
+  if(name in photoCache)return photoCache[name];
+  const title=WIKI[name]||name;
+  for(const lang of ['es','en']){
+    try{
+      const r=await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g,'_'))}`);
+      if(!r.ok)continue;
+      const d=await r.json();
+      const src=(d.originalimage&&d.originalimage.source)||(d.thumbnail&&d.thumbnail.source);
+      if(src){photoCache[name]=src;return src;}
+    }catch(e){}
+  }
+  photoCache[name]=null;return null;
+}
+let slideIdx=0,slideReturn=null;
+const SLIDE_N=3;
+function initials(n){return n.split(' ').filter(w=>/^[A-ZÁÉÍÓÚ]/.test(w)).slice(0,2).map(w=>w[0]).join('');}
+function renderSlide(){
+  const c=cur,el=$('#slide');
+  el.className='slide';
+  if(slideIdx===0){
+    el.innerHTML=`<p class="skicker">La bandera</p><h2>${esc(c.n)}</h2><div class="bigflag">${uniq(c.svg)}</div><p>${esc(c.band)}</p>`;
+  }else if(slideIdx===1){
+    el.innerHTML=`<p class="skicker">Dato curioso</p><div class="icon" aria-hidden="true">💡</div><h2>${esc(c.n)}</h2><p>${esc(c.dato)}</p>`;
+  }else{
+    el.classList.add('person');
+    const name=c.per[0];
+    el.innerHTML=`<div><div class="portrait" id="portrait"><span class="ini">${esc(initials(name))}</span></div><p class="credit" id="credit"></p></div>
+      <div class="ptext"><p class="skicker">Personaje · ${esc(c.n)}</p><h2>${esc(name)}</h2><p>${esc(c.per[1])}</p></div>`;
+    getPhoto(name).then(src=>{
+      if(!src||slideIdx!==2||cur!==c)return;
+      const img=new Image();img.alt=name;
+      img.onload=()=>{const p=$('#portrait');if(p){p.innerHTML='';p.appendChild(img);$('#credit').textContent='Imagen: Wikipedia';}};
+      img.src=src;
+    });
+  }
+  $('#slidesInfo').textContent=`${slideIdx+1} / ${SLIDE_N}`;
+  $('#slidePrev').disabled=slideIdx===0;$('#slideNext').disabled=slideIdx===SLIDE_N-1;
+  $('#dots').innerHTML=Array.from({length:SLIDE_N},(_,i)=>`<button data-i="${i}" aria-label="Diapositiva ${i+1}" aria-current="${i===slideIdx}"></button>`).join('');
+}
+function openSlides(i){
+  slideReturn=document.activeElement;slideIdx=i;$('#slides').hidden=false;
+  document.body.style.overflow='hidden';renderSlide();$('#slidesClose').focus();
+}
+function closeSlides(){
+  $('#slides').hidden=true;document.body.style.overflow='';
+  if(slideReturn&&slideReturn.focus)slideReturn.focus();
+}
+function goSlide(d){const n=slideIdx+d;if(n<0||n>=SLIDE_N)return;slideIdx=n;renderSlide();}
+$('#slidePrev').addEventListener('click',()=>goSlide(-1));
+$('#slideNext').addEventListener('click',()=>goSlide(1));
+$('#slidesClose').addEventListener('click',closeSlides);
+$('#dots').addEventListener('click',e=>{const b=e.target.closest('button');if(b){slideIdx=+b.dataset.i;renderSlide();}});
+document.addEventListener('keydown',e=>{
+  if($('#slides').hidden)return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();goSlide(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goSlide(-1);}
+  else if(e.key==='Escape'){closeSlides();}
+});
+let tx=null;
+$('#slides').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+$('#slides').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)goSlide(dx<0?1:-1);tx=null;});
+
+document.getElementById('allBtn').textContent='Todas ('+C.length+')';
+renderSetup();
+</script>
+</body>
+</html>
