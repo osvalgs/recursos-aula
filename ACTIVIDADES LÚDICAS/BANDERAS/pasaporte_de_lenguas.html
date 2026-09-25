@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pasaporte de lenguas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --wine:#5E1A2B; --wine2:#7A2638; --paper:#E4EBE2; --page:#F4F7F2; --line:#C9D4C6;
+  --ink:#1F3A6B; --red:#B3262E; --green:#2F6B45; --gold:#C9A24A; --text:#1E2631; --muted:#5A6573;
+  --slab:"Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
+  --sans:"Atkinson Hyperlegible", "Segoe UI", Verdana, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:var(--sans); font-size:20px; color:var(--text); line-height:1.45;
+  background-color:var(--paper);
+  background-image:
+    repeating-radial-gradient(circle at 20% 30%, transparent 0 14px, rgba(31,58,107,.035) 14px 15px),
+    repeating-radial-gradient(circle at 85% 80%, transparent 0 18px, rgba(94,26,43,.03) 18px 19px);
+  display:flex; flex-direction:column; min-height:100vh;
+}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Barra superior */
+.bar{background:var(--wine);color:#F6EBDD;display:flex;align-items:center;gap:1rem;padding:.55rem 1.2rem;border-bottom:4px solid var(--gold)}
+.brand{font-family:var(--slab);font-weight:700;font-size:1.25rem;letter-spacing:.02em;display:flex;align-items:center;gap:.5rem}
+.brand svg{width:28px;height:28px}
+#info{flex:1;font-size:.95rem;opacity:.9}
+.timer{font-family:var(--slab);font-weight:700;font-size:1.5rem;background:#F6EBDD;color:var(--wine);border-radius:8px;padding:.05rem .7rem;min-width:3.2em;text-align:center}
+.timer.low{background:var(--red);color:#fff}
+
+main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:1.4rem 1.2rem}
+
+/* Página de visado */
+.visa{background:var(--page);border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.8rem;position:relative;
+  outline:6px double var(--line);outline-offset:-14px}
+h1,h2,h3{font-family:var(--slab);color:var(--wine);margin:0 0 .5rem;line-height:1.15}
+h1{font-size:clamp(2.2rem,5vw,3.6rem)}
+h2{font-size:clamp(1.6rem,3.4vw,2.4rem)}
+h3{font-size:1.2rem}
+p{margin:.3rem 0 .8rem;max-width:70ch}
+.muted{color:var(--muted)}
+
+.btn{background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:8px;padding:.55rem 1.1rem;font-weight:700}
+.btn:hover{background:#2A4C88}
+.btn.alt{background:transparent;color:var(--ink)}
+.btn.alt:hover{background:rgba(31,58,107,.08)}
+.btn.wine{background:var(--wine);border-color:var(--wine)}
+.btn.green{background:var(--green);border-color:var(--green)}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center}
+.actions{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-top:1.3rem}
+
+/* Configuración */
+.setup{display:grid;grid-template-columns:1.1fr 1fr;gap:1.4rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-weight:700;margin-bottom:.3rem}
+.pick{display:flex;gap:.4rem}
+.pick button{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--ink);background:transparent;color:var(--ink);font-weight:700}
+.pick button.on{background:var(--ink);color:#fff}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+input[type=text],input[type=number]{font:inherit;padding:.4rem .6rem;border:2px solid var(--line);border-radius:8px;background:#fff;width:100%}
+.rounds-cfg{display:grid;grid-template-columns:1fr 5rem;gap:.4rem .8rem;align-items:center;font-size:.95rem}
+.hero-flags{display:flex;gap:.5rem;margin:.8rem 0 1rem;flex-wrap:wrap}
+.hero-flags .flag{width:64px}
+ol.rules{padding-left:1.3rem;margin:.3rem 0}
+ol.rules li{margin-bottom:.35rem}
+
+/* Banderas */
+.flag{display:block;border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.18);background:#fff;line-height:0}
+.flag svg{width:100%;height:auto;display:block}
+.bigflag{width:min(420px,70vw);margin:0 auto}
+
+/* Pregunta */
+.q-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.turn{font-weight:700;color:var(--ink)}
+.prompt{font-size:1.25rem;text-align:center;margin:1rem auto;max-width:40ch}
+.phrase{background:#fff;border-left:6px solid var(--ink);border-radius:8px;padding:.9rem 1.2rem;margin:1rem auto;max-width:760px}
+.phrase .orig{font-family:var(--slab);font-size:clamp(1.7rem,3.6vw,2.6rem);color:var(--ink);margin:0;line-height:1.2}
+.phrase .pron{font-style:italic;color:var(--muted);margin:.2rem 0 0}
+.phrase .tr{margin:.5rem 0 0;font-size:1.05rem}
+.big-phrase{text-align:center;border-left:none;border-top:6px solid var(--ink)}
+.reveal{display:grid;grid-template-columns:minmax(200px,340px) 1fr;gap:1.4rem;align-items:start;margin-top:1rem}
+.info h3{margin-top:.6rem}
+.cur{background:#FBF4E4;border:1px dashed var(--gold);border-radius:8px;padding:.7rem 1rem;margin-top:.8rem}
+.cur b{color:var(--wine)}
+
+.stamp{display:inline-block;color:var(--red);border:4px solid currentColor;border-radius:10px;padding:.2rem .9rem;
+  font-family:var(--slab);font-weight:700;font-size:clamp(1.2rem,2.6vw,1.8rem);transform:rotate(-5deg);background:rgba(255,255,255,.55);
+  animation:stamp .35s cubic-bezier(.2,1.6,.4,1)}
+.stamp.green{color:var(--green)}
+.stamp.ink{color:var(--ink)}
+@keyframes stamp{from{transform:scale(2.2) rotate(-14deg);opacity:0}to{transform:scale(1) rotate(-5deg);opacity:1}}
+
+.hints{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;margin:.6rem 0}
+.hint{background:#FBF4E4;border-radius:8px;padding:.4rem .8rem;border:1px solid var(--gold)}
+.value{font-family:var(--slab);font-weight:700;color:var(--wine);font-size:1.2rem;text-align:center}
+
+.opts{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1rem 0;align-items:start}
+.value,p[style*="text-align:center"]{margin-left:auto;margin-right:auto}
+.opt{border:3px solid transparent;border-radius:10px;padding:.5rem;background:transparent;position:relative;text-align:center}
+.opt:hover:not(:disabled){border-color:var(--line);background:#fff}
+.opt:disabled{cursor:default;color:var(--text)}
+.tf button:disabled{cursor:default;opacity:1}
+.opt .lab{display:block;margin-top:.45rem;font-size:.95rem;line-height:1.3}
+.opt .lab b{font-family:var(--slab);font-size:1.05rem;color:var(--wine)}
+.opt.ok{border-color:var(--green);background:#EAF3EC}
+.opt.bad{border-color:var(--red);background:#F8E9E9}
+.opt .let{display:block;font-family:var(--slab);font-weight:700;font-size:1.6rem;color:var(--ink);line-height:1;margin-bottom:.4rem}
+.opt .mark{position:absolute;top:-.8rem;right:-.4rem;font-size:1rem}
+.opt.dim{opacity:.55}
+
+.tf{display:flex;gap:1rem;justify-content:center;margin:1.2rem 0}
+.tf button{font-size:1.3rem;padding:.9rem 1.6rem;border-radius:10px;border:3px solid var(--ink);background:#fff;color:var(--ink);font-weight:700;min-width:12rem}
+.tf button.ok{border-color:var(--green);background:#EAF3EC;color:var(--green)}
+.tf button.bad{border-color:var(--red);background:#F8E9E9;color:var(--red)}
+.statement{font-family:var(--slab);font-size:clamp(1.5rem,3.2vw,2.2rem);text-align:center;color:var(--ink);max-width:32ch;margin:1rem auto;line-height:1.25}
+
+.bets{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0}
+.betcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.8rem}
+.betcard b{font-family:var(--slab);color:var(--wine)}
+
+/* Marcador */
+#score{background:var(--wine);padding:.6rem 1rem;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap;border-top:4px solid var(--gold)}
+#score:empty{display:none}
+.team{background:#F6EBDD;border-radius:10px;padding:.35rem .5rem .35rem .8rem;display:flex;align-items:center;gap:.5rem;border:3px solid transparent;min-width:170px}
+.team.now{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,74,.35)}
+.team .nm{flex:1;font-weight:700;font-size:.95rem;line-height:1.1}
+.team .pts{font-family:var(--slab);font-weight:700;font-size:1.7rem;color:var(--wine);min-width:1.6em;text-align:center}
+.team .pm{display:flex;flex-direction:column;gap:2px}
+.team .pm button{border:none;background:var(--wine);color:#fff;border-radius:5px;width:1.8rem;height:1.35rem;font-size:.9rem;line-height:1;padding:0}
+.passturn{background:transparent;border:2px solid #F6EBDD;color:#F6EBDD;border-radius:8px;padding:.3rem .8rem;font-size:.9rem;align-self:center}
+
+.team .nm small{display:block;margin-top:3px}
+.wild{border:1.5px solid var(--ink);background:#fff;color:var(--ink);border-radius:6px;font-size:.75rem;font-weight:700;padding:1px 6px}
+.wild:disabled{opacity:.4;cursor:default}
+.wildmsg{background:#FBF4E4;border:1px solid var(--gold);border-radius:8px;padding:.5rem 1rem;text-align:center;margin-bottom:.8rem;font-weight:700;color:var(--wine)}
+
+/* Ficha de apoyo */
+.fam{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.8rem;margin-top:.8rem}
+.famb{background:#fff;border:1px solid var(--line);border-left:5px solid var(--ink);border-radius:8px;padding:.6rem .9rem;font-size:.92rem}
+.famb h3{font-size:1.05rem;margin:0 0 .3rem}
+.famb ul{margin:0;padding-left:1.1rem}
+.famb li{margin-bottom:.2rem}
+.scripts{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.95rem}
+.scripts td,.scripts th{border:1px solid var(--line);padding:.35rem .6rem;text-align:left;vertical-align:top}
+.scripts th{background:#EEF2EC;font-family:var(--slab);color:var(--wine)}
+.scripts .smp{font-size:1.3rem}
+
+.qs{padding-left:1.4rem;margin:.6rem 0}
+.qs li{margin-bottom:.9rem;max-width:none}
+.qs .ans{display:block;margin-top:.25rem;color:var(--green);font-weight:700}
+.qs .lines{display:block;border-bottom:1px solid var(--line);height:1.6rem}
+.qs .lines+.lines{margin-top:.3rem}
+.sheethead{display:flex;gap:2rem;margin:.6rem 0 1rem;font-weight:700}
+.sheethead span{flex:1;border-bottom:1px solid var(--muted);padding-bottom:.2rem}
+/* Podio */
+.podium{display:flex;flex-direction:column;gap:.6rem;max-width:620px;margin:1rem auto}
+.pl{display:flex;align-items:center;gap:1rem;background:#fff;border-radius:10px;padding:.6rem 1rem;border:1px solid var(--line)}
+.pl .pos{font-family:var(--slab);font-weight:700;font-size:1.6rem;color:var(--gold);width:2rem}
+.pl .n{flex:1;font-weight:700}
+.pl .s{font-family:var(--slab);font-weight:700;font-size:1.5rem;color:var(--wine)}
+.pl.first{border:3px solid var(--gold)}
+
+/* Repaso */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-top:1rem}
+.card{background:var(--page);border:1px solid var(--line);border-radius:12px;padding:1rem;font-size:.92rem}
+.card .flag{width:120px;margin-bottom:.6rem}
+.card h3{margin:0 0 .2rem}
+.card .phrase{margin:.6rem 0;padding:.5rem .8rem}
+.card .phrase .orig{font-size:1.25rem}
+.card .cur{margin-top:.5rem;padding:.5rem .7rem}
+
+@media (max-width:820px){
+  .setup,.reveal{grid-template-columns:1fr}
+  .opts{grid-template-columns:repeat(2,1fr)}
+  body{font-size:18px}
+}
+@media print{
+  .bar,#score,.noprint{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;font-size:10.5pt}
+  main{max-width:none;padding:0}
+  .visa{outline:none;border:none;padding:0;background:#fff}
+  .cards{grid-template-columns:repeat(3,1fr);gap:8px}
+  .card{break-inside:avoid;font-size:8.5pt;padding:8px}
+  .qs li{break-inside:avoid;margin-bottom:10px;font-size:10.5pt}
+  .qs .lines{height:20px}
+  .card .phrase{margin:4px 0;padding:3px 6px;border-left-width:4px}
+  .card .phrase .orig{font-size:10pt}
+  .card .phrase .tr,.card .phrase .pron{font-size:8.5pt;margin-top:1px}
+  .card h3{font-size:11pt}
+  .card .flag{width:64px;margin-bottom:4px}
+  .fam{grid-template-columns:repeat(2,1fr);gap:6px}
+  .famb{break-inside:avoid;font-size:9pt;padding:5px 8px}
+  .scripts{font-size:9pt;break-inside:avoid}
+  h1{font-size:20pt} h2{font-size:15pt}
+  h3{break-after:avoid}
+  .fam+h3{margin-top:6px!important}
+  .famb li{margin-bottom:0}
+  .card .cur{padding:4px 6px}
+}
+@media (prefers-reduced-motion:reduce){.stamp{animation:none}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="3" width="22" height="26" rx="3" fill="#F6EBDD"/><circle cx="16" cy="14" r="6" fill="none" stroke="#5E1A2B" stroke-width="1.8"/><path d="M10 14h12M16 8c-2.5 3-2.5 9 0 12M16 8c2.5 3 2.5 9 0 12" fill="none" stroke="#5E1A2B" stroke-width="1.4"/><rect x="10" y="23" width="12" height="2" fill="#C9A24A"/></svg>
+    Pasaporte de lenguas
+  </div>
+  <div id="info"></div>
+  <div id="timer" class="timer" hidden>30</div>
+</header>
+<main id="stage"></main>
+<footer id="score"></footer>
+
+<script>
+/* ======================= BANDERAS (SVG) ======================= */
+let uid = 0;
+const hs = c => { const h = 200 / c.length; return c.map((x, i) => `<rect x="0" y="${i*h}" width="300" height="${h+0.6}" fill="${x}"/>`).join(''); };
+const vs = c => { const w = 300 / c.length; return c.map((x, i) => `<rect x="${i*w}" y="0" width="${w+0.6}" height="200" fill="${x}"/>`).join(''); };
+function star(cx, cy, r, fill, rot = -90) {
+  let p = [];
+  for (let i = 0; i < 10; i++) {
+    const rr = i % 2 ? r * 0.382 : r, a = (rot + i * 36) * Math.PI / 180;
+    p.push((cx + rr * Math.cos(a)).toFixed(1) + ',' + (cy + rr * Math.sin(a)).toFixed(1));
+  }
+  return `<polygon points="${p.join(' ')}" fill="${fill}"/>`;
+}
+function pentagram(cx, cy, r, stroke) {
+  const pts = [0, 2, 4, 1, 3].map(i => { const a = (-90 + i * 72) * Math.PI / 180; return (cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1); });
+  return `<polygon points="${pts.join(' ')}" fill="none" stroke="${stroke}" stroke-width="7" stroke-linejoin="miter"/>`;
+}
+function tri(cx, cy, a, p) {
+  let g = `<g transform="translate(${cx} ${cy}) rotate(${a})">`;
+  p.forEach((b, i) => { const y = -18 + i * 14;
+    g += b ? `<rect x="-25" y="${y}" width="50" height="8"/>` : `<rect x="-25" y="${y}" width="22" height="8"/><rect x="3" y="${y}" width="22" height="8"/>`; });
+  return g + '</g>';
+}
+const VB = { suiza: '0 0 200 200', reinounido: '0 0 60 30' };
+const FL = {
+  francia: () => vs(['#0055A4', '#fff', '#EF4135']),
+  italia: () => vs(['#009246', '#fff', '#CE2B37']),
+  belgica: () => vs(['#000', '#FDDA24', '#EF3340']),
+  irlanda: () => vs(['#169B62', '#fff', '#FF883E']),
+  peru: () => vs(['#D91023', '#fff', '#D91023']),
+  alemania: () => hs(['#000', '#DD0000', '#FFCE00']),
+  rusia: () => hs(['#fff', '#0039A6', '#D52B1E']),
+  paisesbajos: () => hs(['#AE1C28', '#fff', '#21468B']),
+  bolivia: () => hs(['#D52B1E', '#F9E300', '#007934']),
+  espana: () => `<rect width="300" height="200" fill="#AA151B"/><rect y="50" width="300" height="100" fill="#F1BF00"/>`,
+  japon: () => `<rect width="300" height="200" fill="#fff"/><circle cx="150" cy="100" r="60" fill="#BC002D"/>`,
+  suiza: () => `<rect width="200" height="200" fill="#DA291C"/><rect x="82" y="40" width="36" height="120" fill="#fff"/><rect x="40" y="82" width="120" height="36" fill="#fff"/>`,
+  islandia: () => `<rect width="300" height="200" fill="#02529C"/><rect x="80" width="50" height="200" fill="#fff"/><rect y="75" width="300" height="50" fill="#fff"/><rect x="93" width="24" height="200" fill="#DC1E35"/><rect y="88" width="300" height="24" fill="#DC1E35"/>`,
+  finlandia: () => `<rect width="300" height="200" fill="#fff"/><rect x="82" width="50" height="200" fill="#002F6C"/><rect y="75" width="300" height="50" fill="#002F6C"/>`,
+  grecia: () => { let s = ''; const h = 200 / 9; for (let i = 0; i < 9; i++) s += `<rect y="${i*h}" width="300" height="${h+0.6}" fill="${i % 2 ? '#fff' : '#0D5EAF'}"/>`;
+    return s + `<rect width="111" height="111" fill="#0D5EAF"/><rect x="44.4" width="22.2" height="111" fill="#fff"/><rect y="44.4" width="111" height="22.2" fill="#fff"/>`; },
+  malta: () => `<rect width="150" height="200" fill="#fff"/><rect x="150" width="150" height="200" fill="#CF142B"/><rect x="24" y="36" width="36" height="12" fill="#A7A7A7" stroke="#CF142B" stroke-width="1"/><rect x="36" y="24" width="12" height="36" fill="#A7A7A7" stroke="#CF142B" stroke-width="1"/>`,
+  portugal: () => `<rect width="120" height="200" fill="#046A38"/><rect x="120" width="180" height="200" fill="#DA291C"/><circle cx="120" cy="100" r="36" fill="none" stroke="#FFE900" stroke-width="9"/><rect x="106" y="82" width="28" height="36" rx="4" fill="#fff" stroke="#DA291C" stroke-width="5"/>`,
+  brasil: () => `<rect width="300" height="200" fill="#009C3B"/><polygon points="150,22 278,100 150,178 22,100" fill="#FFDF00"/><circle cx="150" cy="100" r="44" fill="#002776"/><path d="M108,92 Q150,80 192,110" stroke="#fff" stroke-width="7" fill="none"/>`,
+  mexico: () => vs(['#006847', '#fff', '#CE1126']) + `<circle cx="150" cy="100" r="30" fill="none" stroke="#006847" stroke-width="4"/><ellipse cx="150" cy="97" rx="15" ry="20" fill="#8C5A2B"/>`,
+  argentina: () => hs(['#74ACDF', '#fff', '#74ACDF']) + `<circle cx="150" cy="100" r="24" fill="none" stroke="#F6B40E" stroke-width="8" stroke-dasharray="4 3"/><circle cx="150" cy="100" r="15" fill="#F6B40E"/>`,
+  chile: () => `<rect width="300" height="100" fill="#fff"/><rect y="100" width="300" height="100" fill="#D52B1E"/><rect width="100" height="100" fill="#0039A6"/>` + star(50, 50, 24, '#fff'),
+  paraguay: () => hs(['#D52B1E', '#fff', '#0038A8']) + `<circle cx="150" cy="100" r="26" fill="#fff" stroke="#0038A8" stroke-width="3"/><circle cx="150" cy="100" r="18" fill="none" stroke="#2E8B57" stroke-width="2.5"/>` + star(150, 100, 10, '#F6C700'),
+  guinea: () => hs(['#3E9A00', '#fff', '#E32118']) + `<polygon points="0,0 70,100 0,200" fill="#0073CE"/><rect x="140" y="82" width="20" height="26" rx="3" fill="#9AA3A0" stroke="#555" stroke-width="1.5"/>`,
+  filipinas: () => `<rect width="300" height="100" fill="#0038A8"/><rect y="100" width="300" height="100" fill="#CE1126"/><polygon points="0,0 173,100 0,200" fill="#fff"/><circle cx="55" cy="100" r="22" fill="none" stroke="#FCD116" stroke-width="7" stroke-dasharray="3 4"/><circle cx="55" cy="100" r="13" fill="#FCD116"/>` + star(18, 28, 9, '#FCD116') + star(18, 172, 9, '#FCD116') + star(140, 100, 9, '#FCD116'),
+  india: () => { let s = hs(['#FF9933', '#fff', '#138808']) + `<circle cx="150" cy="100" r="27" fill="none" stroke="#000080" stroke-width="4"/>`;
+    for (let i = 0; i < 24; i++) { const a = i * 15 * Math.PI / 180; s += `<line x1="150" y1="100" x2="${(150 + 27 * Math.cos(a)).toFixed(1)}" y2="${(100 + 27 * Math.sin(a)).toFixed(1)}" stroke="#000080" stroke-width="1.5"/>`; }
+    return s; },
+  china: () => `<rect width="300" height="200" fill="#EE1C25"/>` + star(50, 50, 30, '#FFFF00') + star(100, 20, 10, '#FFFF00', -60) + star(120, 40, 10, '#FFFF00', -80) + star(120, 70, 10, '#FFFF00', -100) + star(100, 90, 10, '#FFFF00', -120),
+  corea: () => `<rect width="300" height="200" fill="#fff"/><g transform="rotate(33.69 150 100)"><circle cx="150" cy="100" r="50" fill="#0047A0"/><path d="M100,100 a50,50 0 0 1 100,0 a25,25 0 0 1 -50,0 a25,25 0 0 0 -50,0z" fill="#CD2E3A"/></g><g fill="#000">` +
+    tri(58, 42, -56.3, [1, 1, 1]) + tri(242, 42, 56.3, [0, 1, 0]) + tri(58, 158, 56.3, [1, 0, 1]) + tri(242, 158, -56.3, [0, 0, 0]) + '</g>',
+  marruecos: () => `<rect width="300" height="200" fill="#C1272D"/>` + pentagram(150, 104, 42, '#006233'),
+  tanzania: () => `<polygon points="0,0 300,0 0,200" fill="#1EB53A"/><polygon points="300,0 300,200 0,200" fill="#00A3DD"/><line x1="-20" y1="213" x2="320" y2="-13" stroke="#FCD116" stroke-width="62"/><line x1="-20" y1="213" x2="320" y2="-13" stroke="#000" stroke-width="42"/>`,
+  sudafrica: () => `<rect width="300" height="100" fill="#E03C31"/><rect y="100" width="300" height="100" fill="#001489"/><path d="M0,0 L125,100 L0,200 M125,100 L300,100" stroke="#fff" stroke-width="66" fill="none"/><path d="M0,0 L125,100 L0,200 M125,100 L300,100" stroke="#007749" stroke-width="40" fill="none"/><polygon points="0,32 86,100 0,168" fill="#FFB81C"/><polygon points="0,52 62,100 0,148" fill="#000"/>`,
+  reinounido: () => { const id = 'uk' + (++uid);
+    return `<clipPath id="${id}"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><rect width="60" height="30" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#${id})" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>`; },
+  canada: () => `<rect width="300" height="200" fill="#fff"/><rect width="75" height="200" fill="#D80621"/><rect x="225" width="75" height="200" fill="#D80621"/><polygon fill="#D80621" points="150,38 161,62 173,56 166,92 186,72 191,84 211,80 203,104 213,110 178,136 182,148 154,144 154,170 146,170 146,144 118,148 122,136 87,110 97,104 89,80 109,84 114,72 134,92 127,56 139,62"/>`,
+  andorra: () => `<rect width="94" height="200" fill="#10069F"/><rect x="94" width="112" height="200" fill="#FEDD00"/><rect x="206" width="94" height="200" fill="#D50032"/><rect x="136" y="78" width="28" height="42" rx="5" fill="#C7B37F" stroke="#8A6D2F" stroke-width="2"/>`
+};
+function flag(id) { return `<svg viewBox="${VB[id] || '0 0 300 200'}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bandera">${FL[id]()}</svg>`; }
+
+/* ======================= DATOS ======================= */
+// det: true = la frase no está en español y sirve para la ronda del detective
+const C = {
+  francia:{n:"Francia",cont:"Europa",leng:"Francés",fr:"J'aime lire des livres.",tr:"Me gusta leer libros.",esc:"Alfabeto latino con letras como ç, è o â",fam:"Románica (indoeuropea): hermana del castellano",cur:"La Academia Francesa (1635) sirvió de modelo a la Real Academia Española, fundada en 1713.",det:true},
+  italia:{n:"Italia",cont:"Europa",leng:"Italiano",fr:"Mi piace molto leggere.",tr:"Me gusta mucho leer.",esc:"Alfabeto latino",fam:"Románica (indoeuropea): hermana del castellano",cur:"El italiano moderno se basa en el toscano que usó Dante en la «Divina comedia» (siglo XIV).",det:true},
+  portugal:{n:"Portugal",cont:"Europa",leng:"Portugués",fr:"Eu gosto muito de ler.",tr:"Me gusta mucho leer.",esc:"Alfabeto latino con letras como ã o õ",fam:"Románica (indoeuropea): hermana del gallego y del castellano",cur:"«Saudade», palabra portuguesa y gallega, es famosa por lo difícil que es traducirla: la nostalgia de algo querido que está lejos. Camões escribió la epopeya nacional, «Os Lusíadas» (1572).",det:true},
+  brasil:{n:"Brasil",cont:"América",leng:"Portugués",fr:"Obrigado pela ajuda!",tr:"¡Gracias por la ayuda!",esc:"Alfabeto latino con letras como ã o ç",fam:"Románica (indoeuropea)",cur:"Brasil tiene más hablantes de portugués (más de 200 millones) que todos los demás países lusófonos juntos. Su gran clásico es Machado de Assis.",det:true},
+  espana:{n:"España",cont:"Europa",leng:"Castellano; cooficiales: gallego, catalán/valenciano, euskera y aranés",fr:"Egun on, zer moduz?",tr:"Buenos días, ¿qué tal? (en euskera)",esc:"Alfabeto latino, con muchas k, tx y tz",fam:"Lengua aislada: no tiene parientes conocidos",cur:"El euskera es la única lengua no indoeuropea de Europa occidental y su origen sigue siendo un misterio. En Galicia, el 17 de mayo es el Día das Letras Galegas: el primero (1963) homenajeó los «Cantares gallegos» de Rosalía de Castro.",det:true},
+  mexico:{n:"México",cont:"América",leng:"Español (y 68 lenguas indígenas nacionales, como el náhuatl o el maya)",fr:"Nimitztlazohtla.",tr:"Te quiero. (en náhuatl)",esc:"Alfabeto latino, con muchas tl y tz",fam:"Yuto-nahua (lengua indígena americana)",cur:"Del náhuatl vienen «chocolate», «tomate», «aguacate» y «chicle». México es el país con más hispanohablantes del mundo.",det:true},
+  argentina:{n:"Argentina",cont:"América",leng:"Español",fr:"Vos sabés que te quiero, che.",tr:"Tú sabes que te quiero, oye.",esc:"Alfabeto latino",fam:"Románica (indoeuropea)",cur:"Usa el voseo: «vos tenés» en lugar de «tú tienes». Jorge Luis Borges, uno de los grandes escritores en español, era argentino.",det:false},
+  chile:{n:"Chile",cont:"América",leng:"Español",fr:"¿Cachái lo que te digo?",tr:"¿Entiendes lo que te digo?",esc:"Alfabeto latino",fam:"Románica (indoeuropea)",cur:"Chile tiene dos Premios Nobel de Literatura: Gabriela Mistral (1945), la primera persona latinoamericana en ganarlo, y Pablo Neruda (1971).",det:false},
+  paraguay:{n:"Paraguay",cont:"América",leng:"Español y guaraní",fr:"Mba'éichapa?",tr:"¿Qué tal?",esc:"Alfabeto latino con apóstrofos y letras como ỹ",fam:"Tupí-guaraní (lengua indígena americana)",cur:"Es uno de los pocos países donde la mayoría de la población habla una lengua indígena. Del tupí-guaraní vienen «jaguar» y «tucán».",det:true},
+  peru:{n:"Perú",cont:"América",leng:"Español, quechua y aimara (entre otras)",fr:"Allillanchu?",tr:"¿Estás bien? / ¿Qué tal?",esc:"Alfabeto latino con muchas ll, q y k",fam:"Quechua (lengua indígena americana)",cur:"El quechua era la lengua del Imperio inca. De él vienen «cóndor», «llama», «puma» y «cancha».",det:true},
+  bolivia:{n:"Bolivia",cont:"América",leng:"Español y 36 lenguas indígenas (37 oficiales)",fr:"Kamisaki?",tr:"¿Cómo estás? (en aimara)",esc:"Alfabeto latino",fam:"Aimara (lengua indígena americana)",cur:"Su Constitución de 2009 reconoce 37 lenguas oficiales: es uno de los países con más lenguas oficiales del mundo.",det:true},
+  guinea:{n:"Guinea Ecuatorial",cont:"África",leng:"Español, francés y portugués",fr:"Buenos días, ¿cómo estás?",tr:"Buenos días, ¿cómo estás?",esc:"Alfabeto latino",fam:"Románica (indoeuropea)",cur:"Es el único país de África donde el español es lengua oficial. Fue colonia española hasta 1968.",det:false},
+  filipinas:{n:"Filipinas",cont:"Asia",leng:"Filipino (basado en el tagalo) e inglés",fr:"Maraming salamat po.",tr:"Muchas gracias (con respeto).",esc:"Alfabeto latino",fam:"Austronesia",cur:"El filipino tiene cientos de palabras del español, como «mesa» o «silya» (silla). José Rizal escribió su novela «Noli me tángere» (1887) en castellano.",det:true},
+  belgica:{n:"Bélgica",cont:"Europa",leng:"Neerlandés, francés y alemán",fr:"Goedemorgen, hoe gaat het?",tr:"Buenos días, ¿cómo va? (en neerlandés)",esc:"Alfabeto latino, con muchas oe y ij",fam:"Germánica (indoeuropea)",cur:"Tintín nació en Bélgica: Hergé escribía sus aventuras en francés. El norte (Flandes) habla neerlandés y el sur (Valonia), francés.",det:true},
+  paisesbajos:{n:"Países Bajos",cont:"Europa",leng:"Neerlandés (y frisón en Frisia)",fr:"Ik hou van boeken.",tr:"Me encantan los libros.",esc:"Alfabeto latino, con muchas oe y ij",fam:"Germánica (indoeuropea)",cur:"Ana Frank escribió su famoso diario en neerlandés mientras se escondía en Ámsterdam.",det:true},
+  alemania:{n:"Alemania",cont:"Europa",leng:"Alemán",fr:"Ich lese sehr gern.",tr:"Me gusta mucho leer.",esc:"Alfabeto latino con letras como ä, ö, ü o ß",fam:"Germánica (indoeuropea)",cur:"En alemán todos los sustantivos van con mayúscula y se forman palabras larguísimas, como «Donaudampfschifffahrt» (navegación en barco de vapor por el Danubio).",det:true},
+  suiza:{n:"Suiza",cont:"Europa",leng:"Alemán, francés, italiano y romanche",fr:"Allegra!",tr:"¡Hola! (en romanche)",esc:"Alfabeto latino",fam:"Románica (indoeuropea): prima del castellano",cur:"El romanche es una lengua románica, como el castellano, que hablan solo unas decenas de miles de personas en los Alpes.",det:true},
+  irlanda:{n:"Irlanda",cont:"Europa",leng:"Irlandés (gaélico) e inglés",fr:"Dia duit!",tr:"¡Hola! (literalmente, «Dios contigo»)",esc:"Alfabeto latino",fam:"Céltica (indoeuropea)",cur:"El irlandés Samuel Beckett escribió «Esperando a Godot» primero en francés, no en inglés.",det:true},
+  reinounido:{n:"Reino Unido",cont:"Europa",leng:"Inglés (y galés y gaélico escocés en sus regiones)",fr:"I love reading books.",tr:"Me encanta leer libros.",esc:"Alfabeto latino",fam:"Germánica (indoeuropea)",cur:"Shakespeare es el primero en usar por escrito cientos de palabras inglesas que hoy son comunes.",det:true},
+  malta:{n:"Malta",cont:"Europa",leng:"Maltés e inglés",fr:"Merħba!",tr:"¡Bienvenido!",esc:"Alfabeto latino con letras como ħ o ż",fam:"Semítica: pariente del árabe",cur:"El maltés es la única lengua semítica oficial de la Unión Europea, y se escribe con alfabeto latino.",det:true},
+  islandia:{n:"Islandia",cont:"Europa",leng:"Islandés",fr:"Takk fyrir.",tr:"Gracias.",esc:"Alfabeto latino con letras antiguas como þ y ð",fam:"Germánica (indoeuropea)",cur:"En vez de tomar préstamos, inventan palabras: «ordenador» es «tölva», de «tala» (número) y «völva» (profetisa). Pueden leer sus sagas medievales casi sin dificultad.",det:true},
+  finlandia:{n:"Finlandia",cont:"Europa",leng:"Finés y sueco",fr:"Hyvää huomenta!",tr:"¡Buenos días! (en finés)",esc:"Alfabeto latino, con muchas vocales dobles y ä, ö",fam:"Urálica (no indoeuropea), como el húngaro y el estonio",cur:"El finés tiene unos 15 casos gramaticales. Su epopeya nacional es el «Kalevala».",det:true},
+  grecia:{n:"Grecia",cont:"Europa",leng:"Griego",fr:"Καλημέρα!",pr:"Kaliméra",tr:"¡Buenos días!",esc:"Alfabeto griego",fam:"Helénica (indoeuropea)",cur:"Del griego vienen miles de palabras españolas: «democracia», «teatro», «biblioteca»… y hasta «alfabeto», que une sus dos primeras letras: alfa y beta.",det:true},
+  rusia:{n:"Rusia",cont:"Europa / Asia",leng:"Ruso",fr:"Я люблю читать.",pr:"Ya liubliú chitat'",tr:"Me encanta leer.",esc:"Alfabeto cirílico",fam:"Eslava (indoeuropea)",cur:"El alfabeto cirílico debe su nombre a san Cirilo, un monje del siglo IX. En ruso escribió Tolstói «Guerra y paz».",det:true},
+  marruecos:{n:"Marruecos",cont:"África",leng:"Árabe y amazige (bereber)",fr:"السلام عليكم",pr:"As-salamu alaykum",tr:"La paz sea con vosotros (saludo).",esc:"Alfabeto árabe: se escribe de derecha a izquierda",fam:"Semítica",cur:"El español tiene unos 4.000 arabismos: «almohada», «azúcar», «aceite», «ojalá»…",det:true},
+  tanzania:{n:"Tanzania",cont:"África",leng:"Suajili e inglés",fr:"Hakuna matata!",tr:"¡No hay problema!",esc:"Alfabeto latino",fam:"Bantú (Níger-Congo)",cur:"«Safari» significa «viaje» en suajili, y «simba», «león». «El rey león» hizo famoso «hakuna matata» en todo el mundo.",det:true},
+  sudafrica:{n:"Sudáfrica",cont:"África",leng:"12 lenguas oficiales: zulú, xhosa, afrikáans, inglés, lengua de signos…",fr:"Sawubona!",tr:"¡Hola! (en zulú; literalmente, «te veo»)",esc:"Alfabeto latino",fam:"Bantú (Níger-Congo)",cur:"El xhosa, la lengua materna de Nelson Mandela, usa chasquidos como sonidos. En 2023 la lengua de signos se convirtió en la 12.ª lengua oficial.",det:true},
+  india:{n:"India",cont:"Asia",leng:"Hindi e inglés (y 22 lenguas reconocidas)",fr:"नमस्ते",pr:"Namaste",tr:"Hola (saludo respetuoso).",esc:"Escritura devanagari",fam:"Indoaria (indoeuropea): ¡pariente lejana del castellano!",cur:"Rabindranath Tagore ganó el Nobel de Literatura en 1913 escribiendo en bengalí: fue el primer Nobel de Literatura no europeo.",det:true},
+  china:{n:"China",cont:"Asia",leng:"Chino mandarín",fr:"我喜欢看书。",pr:"Wǒ xǐhuan kàn shū",tr:"Me gusta leer libros.",esc:"Caracteres (cada uno representa una palabra o idea)",fam:"Sinotibetana",cur:"Es la lengua con más hablantes nativos del mundo. Es tonal: «ma» puede significar «madre» o «caballo» según el tono.",det:true},
+  japon:{n:"Japón",cont:"Asia",leng:"Japonés",fr:"私は本が好きです。",pr:"Watashi wa hon ga suki desu",tr:"Me gustan los libros.",esc:"Tres sistemas: kanji, hiragana y katakana",fam:"Japónica",cur:"«La historia de Genji», escrita por una mujer, Murasaki Shikibu, en el siglo XI, se considera una de las primeras novelas de la historia.",det:true},
+  corea:{n:"Corea del Sur",cont:"Asia",leng:"Coreano",fr:"안녕하세요",pr:"Annyeonghaseyo",tr:"Hola.",esc:"Hangul: letras agrupadas en bloques",fam:"Coreánica",cur:"El alfabeto hangul lo creó a propósito el rey Sejong en 1443 para que todo el pueblo pudiera aprender a leer.",det:true},
+  canada:{n:"Canadá",cont:"América",leng:"Inglés y francés",fr:"Je me souviens.",tr:"Me acuerdo. (lema de Quebec)",esc:"Alfabeto latino",fam:"Románica (indoeuropea)",cur:"Quebec es la región francófona de Canadá; su lema, «Je me souviens», aparece en las matrículas de los coches.",det:false},
+  andorra:{n:"Andorra",cont:"Europa",leng:"Catalán",fr:"Bon dia! Com estàs?",tr:"¡Buenos días! ¿Cómo estás?",esc:"Alfabeto latino con letras como ç o l·l",fam:"Románica (indoeuropea)",cur:"Andorra es el único país del mundo donde el catalán es la única lengua oficial.",det:true}
+};
+
+const LF={francia:"Francés",italia:"Italiano",portugal:"Portugués",brasil:"Portugués",espana:"Euskera",mexico:"Náhuatl",argentina:"Español",chile:"Español",paraguay:"Guaraní",peru:"Quechua",bolivia:"Aimara",guinea:"Español",filipinas:"Filipino (tagalo)",belgica:"Neerlandés",paisesbajos:"Neerlandés",alemania:"Alemán",suiza:"Romanche",irlanda:"Irlandés",reinounido:"Inglés",malta:"Maltés",islandia:"Islandés",finlandia:"Finés",grecia:"Griego",rusia:"Ruso",marruecos:"Árabe",tanzania:"Suajili",sudafrica:"Zulú",india:"Hindi",china:"Chino mandarín",japon:"Japonés",corea:"Coreano",canada:"Francés",andorra:"Catalán"};
+const INTR = [
+  {f:["argentina","guinea","chile","brasil"],odd:"brasil",why:"Argentina, Guinea Ecuatorial y Chile tienen el español como lengua oficial. En Brasil se habla portugués."},
+  {f:["francia","belgica","canada","espana"],odd:"espana",why:"El francés es lengua oficial en Francia, Bélgica y Canadá. En España, no."},
+  {f:["alemania","suiza","belgica","paisesbajos"],odd:"paisesbajos",why:"El alemán es oficial en Alemania, Suiza y Bélgica (en una pequeña zona del este). En los Países Bajos se habla neerlandés… que también es oficial en Bélgica."},
+  {f:["peru","bolivia","paraguay","argentina"],odd:"argentina",why:"Perú (quechua, aimara), Bolivia (36 lenguas indígenas) y Paraguay (guaraní) tienen lenguas indígenas oficiales en todo el país. Argentina, solo el español."},
+  {f:["reinounido","irlanda","malta","francia"],odd:"francia",why:"El inglés es lengua oficial en Reino Unido, Irlanda y Malta. En Francia, no."},
+  {f:["marruecos","rusia","grecia","malta"],odd:"malta",why:"El árabe, el ruso y el griego no usan el alfabeto latino. El maltés, aunque es pariente del árabe, sí lo usa."},
+  {f:["francia","rusia","india","china"],odd:"china",why:"El francés, el ruso y el hindi son lenguas indoeuropeas, primas lejanas del castellano. El chino es sinotibetano."},
+  {f:["chile","guinea","mexico","filipinas"],odd:"filipinas",why:"El español es oficial en Chile, Guinea Ecuatorial y México. En Filipinas lo fue hasta 1987, pero hoy ya no."},
+  {f:["suiza","belgica","canada","japon"],odd:"japon",why:"Suiza, Bélgica y Canadá tienen varias lenguas oficiales. En Japón se habla japonés."}
+];
+
+const BULOS = [
+  {s:"El español es la lengua con más hablantes nativos del mundo.",v:false,e:"Es la segunda. La primera es el chino mandarín."},
+  {s:"El alfabeto coreano lo inventó a propósito un rey en el siglo XV.",v:true,e:"El rey Sejong creó el hangul en 1443 para que todo el pueblo pudiera leer."},
+  {s:"En el mundo se hablan más de 7.000 lenguas.",v:true,e:"Hay algo más de 7.000 lenguas vivas, y muchas están en peligro de desaparecer."},
+  {s:"El euskera es una lengua indoeuropea, como el castellano.",v:false,e:"El euskera es una lengua aislada: no se le conoce ningún pariente."},
+  {s:"La palabra «robot» viene del checo.",v:true,e:"Apareció en la obra de teatro «R.U.R.» (1920), del escritor checo Karel Čapek. Viene de «robota», «trabajo forzado»."},
+  {s:"El gallego y el portugués tienen un origen común.",v:true,e:"Ambos vienen del galaicoportugués medieval, la lengua de las cantigas."},
+  {s:"El ruso se escribe con el alfabeto griego.",v:false,e:"Se escribe con el alfabeto cirílico, que se inspiró en parte en el griego."},
+  {s:"En Papúa Nueva Guinea se hablan más de 800 lenguas.",v:true,e:"Es el país con más lenguas del mundo: unas 840."},
+  {s:"La lengua de signos es igual en todos los países.",v:false,e:"Cada país tiene la suya. En España hay dos: la española y la catalana."},
+  {s:"Shakespeare y Cervantes murieron el mismo día.",v:false,e:"Las dos fechas se escriben «23 de abril de 1616», pero Inglaterra usaba otro calendario: Shakespeare murió unos diez días después. Y Cervantes murió el 22; el 23 lo enterraron."},
+  {s:"El esperanto es una lengua inventada por una persona.",v:true,e:"Lo creó L. L. Zamenhof en 1887 para que gente de distintos países se entendiera."},
+  {s:"El chino se escribe con un alfabeto de 27 letras.",v:false,e:"Usa miles de caracteres; para leer un periódico hacen falta unos 3.000."},
+  {s:"Ninguna persona que escribe en español ha ganado el Nobel de Literatura.",v:false,e:"Lo han ganado, entre otros, Gabriela Mistral, Pablo Neruda, Gabriel García Márquez y Mario Vargas Llosa."},
+  {s:"Las palabras «álgebra» y «ojalá» vienen del árabe.",v:true,e:"Son dos de los unos 4.000 arabismos del español. «Ojalá» significaba «si Dios quiere»."}
+];
+
+const FINALES = [
+  {q:"¿Cuál es la única lengua oficial de Andorra?",a:"El catalán."},
+  {q:"Nombrad las cuatro lenguas nacionales de Suiza.",a:"Alemán, francés, italiano y romanche."},
+  {q:"¿Qué país africano tiene el español como lengua oficial?",a:"Guinea Ecuatorial."},
+  {q:"¿En qué lengua escribió José Rizal «Noli me tángere»?",a:"En español."},
+  {q:"¿Qué lengua indígena habla la mayoría de la población de Paraguay?",a:"El guaraní."},
+  {q:"¿Qué rey creó el alfabeto coreano y en qué siglo?",a:"El rey Sejong, en el siglo XV (1443)."},
+  {q:"¿Cuál es la única lengua semítica oficial de la Unión Europea?",a:"El maltés."},
+  {q:"¿De qué lengua vienen «chocolate» y «tomate»?",a:"Del náhuatl."}
+];
+
+const ROUNDS = [
+  {k:"flag",t:"¿Qué se habla aquí?",n:8,r:"Aparece una bandera. El equipo en turno dice el país y la lengua o lenguas oficiales. Vale 1 punto por el país y 1 por cada lengua acertada. Si falla, rebota al equipo siguiente."},
+  {k:"det",t:"Detective de oraciones",n:6,r:"Aparece una frase en otra lengua. El equipo dice qué lengua es y elige su bandera entre cuatro. Vale 3 puntos; cada pista que se pida resta 1."},
+  {k:"intr",t:"La bandera intrusa",n:5,r:"Tres banderas tienen algo en común en sus lenguas; una no. El equipo señala la intrusa y explica por qué. Vale 2 puntos."},
+  {k:"bulo",t:"¿Curiosidad o bulo?",n:6,r:"¿Es verdad o es un bulo? Vale 1 punto acertar y 1 más si el equipo lo justifica bien."},
+  {k:"final",t:"Apuesta final",n:1,r:"Cada equipo apuesta parte de sus puntos. Todos responden por escrito a la misma pregunta: si aciertan, suman lo apostado; si fallan, lo pierden."}
+];
+
+/* ======================= ESTADO ======================= */
+const S = {nTeams:4, wild:1, names:[], teams:[], turn:0, round:0, qi:0, plan:[]};
+const $ = s => document.querySelector(s);
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+
+/* ======================= SONIDO Y CRONÓMETRO ======================= */
+let ac = null;
+function beep(f, d) {
+  try { ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = f; o.type = "triangle";
+    g.gain.setValueAtTime(.25, ac.currentTime); g.gain.exponentialRampToValueAtTime(.001, ac.currentTime + d);
+    o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d);
+  } catch (e) {}
+}
+const T = {left:0, iv:null};
+function startTimer(s = 30) {
+  stopTimer(); T.left = s; showTimer();
+  T.iv = setInterval(() => { T.left--; showTimer();
+    if (T.left > 0 && T.left <= 3) beep(880, .12);
+    if (T.left <= 0) { stopTimer(false); beep(196, .7); } }, 1000);
+}
+function stopTimer(hide = true) { clearInterval(T.iv); T.iv = null; if (hide) $("#timer").hidden = true; }
+function showTimer() { const t = $("#timer"); t.hidden = false; t.textContent = Math.max(0, T.left); t.classList.toggle("low", T.left <= 5); }
+
+/* ======================= MARCADOR ======================= */
+function renderScore() {
+  const el = $("#score");
+  if (!S.teams.length) { el.innerHTML = ""; return; }
+  const q = cur(), showTurn = q && q.t !== "final";
+  const wildOn = q && ["flag", "det", "intr"].includes(q.t) && S.wild > 0;
+  el.innerHTML = S.teams.map((t, i) => `<div class="team ${showTurn && i === S.turn ? "now" : ""}">
+      <span class="nm">${esc(t.name)}${wildOn ? `<small><button class="wild" onclick="useWild(${i})" ${t.c ? "" : "disabled"} title="Consultar las fichas 30 segundos">Consulta: ${t.c}</button></small>` : ""}</span><span class="pts">${t.score}</span>
+      <span class="pm"><button onclick="addPts(${i},1)" aria-label="Sumar un punto a ${esc(t.name)}">+</button><button onclick="addPts(${i},-1)" aria-label="Restar un punto a ${esc(t.name)}">−</button></span></div>`).join("")
+    + (showTurn ? `<button class="passturn" onclick="passTurn()">Rebote: siguiente equipo</button>` : "");
+}
+function useWild(i) {
+  const t = S.teams[i]; if (!t.c) return; t.c--;
+  startTimer(30); renderScore();
+  const m = document.getElementById("wildmsg"); if (m) m.remove();
+  const v = document.querySelector(".visa");
+  if (v) v.insertAdjacentHTML("afterbegin", `<div class="wildmsg" id="wildmsg">${esc(t.name)} consulta sus fichas: 30 segundos</div>`);
+}
+function addPts(i, n) { S.teams[i].score += n; renderScore(); }
+function passTurn() { S.turn = (S.turn + 1) % S.teams.length; renderScore(); render(); }
+function award(n) { const q = cur(); if (q.awarded) return; S.teams[S.turn].score += n; q.awarded = true; render(); }
+
+/* ======================= CONFIGURACIÓN ======================= */
+function setupScreen() {
+  S.teams = []; stopTimer(); $("#info").textContent = "";
+  const sample = ["paraguay", "malta", "corea", "suiza", "sudafrica", "islandia", "filipinas", "peru"];
+  const names = [];
+  for (let i = 0; i < S.nTeams; i++) names.push(S.names[i] || `Equipo ${i + 1}`);
+  $("#stage").innerHTML = `
+  <section class="visa">
+    <h1>Pasaporte de lenguas</h1>
+    <p class="muted">Un concurso por equipos para viajar por el mundo a través de sus banderas, sus lenguas y sus curiosidades.</p>
+    <div class="hero-flags">${sample.map(id => `<div class="flag">${flag(id)}</div>`).join("")}</div>
+    <div class="setup">
+      <div>
+        <div class="field"><label>Número de equipos</label>
+          <div class="pick">${[2,3,4,5,6].map(n => `<button class="${n === S.nTeams ? "on" : ""}" onclick="setTeams(${n})" aria-label="${n} equipos">${n}</button>`).join("")}</div></div>
+        <div class="field"><label>Nombres de los equipos</label>
+          <div class="names">${names.map((n, i) => `<input type="text" id="tn${i}" value="${esc(n)}" aria-label="Nombre del equipo ${i + 1}">`).join("")}</div></div>
+        <div class="field"><label>Preguntas por ronda</label>
+          <div class="rounds-cfg">${ROUNDS.slice(0, 4).map((r, i) => `<span>${i + 1}. ${r.t}</span><input type="number" id="rn${i}" min="0" max="${[34, 29, 9, 14][i]}" value="${r.n}">`).join("")}
+          <span>5. ${ROUNDS[4].t}</span><select id="rn4" style="font:inherit;padding:.35rem;border:2px solid var(--line);border-radius:8px"><option value="1">Sí</option><option value="0">No</option></select></div>
+          <p class="muted" style="font-size:.85rem;margin-top:.4rem">Pon 0 para saltarte una ronda. Las preguntas se sortean cada partida.</p></div>
+        <div class="field"><label for="wild">Consultas de fichas por equipo y ronda</label>
+          <select id="wild" style="font:inherit;padding:.35rem;border:2px solid var(--line);border-radius:8px">${[0,1,2].map(n => `<option value="${n}" ${n === S.wild ? "selected" : ""}>${n}</option>`).join("")}</select>
+          <p class="muted" style="font-size:.85rem;margin-top:.4rem">Válidas en las rondas 1, 2 y 3. El equipo mira sus fichas impresas durante 30 segundos.</p></div>
+      </div>
+      <div>
+        <h3>Cómo se juega</h3>
+        <ol class="rules">${ROUNDS.map(r => `<li><b>${r.t}.</b> ${r.r}</li>`).join("")}</ol>
+        <p style="font-size:.95rem"><b>Comodín de consulta.</b> En las rondas 1, 2 y 3, cada equipo puede consultar sus fichas impresas durante 30 segundos. Se activa con el botón «Consulta» de su casilla en el marcador.</p>
+        <p class="muted" style="font-size:.9rem">El marcador de abajo permite sumar o restar puntos en cualquier momento. El equipo con el borde dorado tiene el turno.</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn wine" onclick="startGame()">Empezar el concurso</button>
+      <button class="btn alt" onclick="review()">Fichas de repaso</button>
+      <button class="btn alt" onclick="apoyo()">Ficha de apoyo</button>
+      <button class="btn alt" onclick="busqueda(false)">Preguntas de búsqueda</button>
+    </div>
+  </section>`;
+  renderScore();
+}
+function saveNames() { for (let i = 0; i < S.nTeams; i++) { const el = $("#tn" + i); if (el) S.names[i] = el.value.trim() || `Equipo ${i + 1}`; } }
+function saveWild() { const w = $("#wild"); if (w) S.wild = parseInt(w.value) || 0; }
+function setTeams(n) { saveNames(); saveWild(); S.nTeams = n; setupScreen(); }
+
+function startGame(keepTeams) {
+  if (!keepTeams) {
+    saveNames(); saveWild();
+    ROUNDS.forEach((r, i) => { const el = $("#rn" + i); if (el) r.n = Math.max(0, parseInt(el.value) || 0); });
+    S.teams = Array.from({length: S.nTeams}, (_, i) => ({name: S.names[i] || `Equipo ${i + 1}`, score: 0}));
+  } else S.teams.forEach(t => t.score = 0);
+  const ids = Object.keys(C), detIds = ids.filter(id => C[id].det);
+  S.plan = ROUNDS.map(r => {
+    if (r.k === "flag") return shuffle(ids).slice(0, r.n).map(id => ({t:"flag", id}));
+    if (r.k === "det") return shuffle(detIds).slice(0, r.n).map(id => {
+      const same = shuffle(ids.filter(x => x !== id && C[x].cont === C[id].cont && C[x].leng !== C[id].leng));
+      const rest = shuffle(ids.filter(x => x !== id && !same.includes(x)));
+      return {t:"det", id, opts: shuffle([id, ...same.concat(rest).slice(0, 3)]), hints:0, pick:null};
+    });
+    if (r.k === "intr") return shuffle(INTR).slice(0, r.n).map(s => ({t:"intr", s, f: shuffle(s.f), pick:null}));
+    if (r.k === "bulo") return shuffle(BULOS).slice(0, r.n).map(b => ({t:"bulo", b, pick:null}));
+    return r.n ? [{t:"final", item: shuffle(FINALES)[0], phase:"bet", bets:[], done:[]}] : [];
+  });
+  S.round = -1; S.turn = 0; nextRound();
+}
+function nextRound() {
+  S.round++;
+  while (S.round < ROUNDS.length && !S.plan[S.round].length) S.round++;
+  if (S.round >= ROUNDS.length) return endScreen();
+  S.qi = -1; S.teams.forEach(t => t.c = S.wild); roundIntro();
+}
+function cur() { return S.qi >= 0 && S.plan[S.round] ? S.plan[S.round][S.qi] : null; }
+
+function roundIntro() {
+  stopTimer();
+  const r = ROUNDS[S.round];
+  $("#info").textContent = `Ronda ${S.round + 1} de ${ROUNDS.length}`;
+  $("#stage").innerHTML = `<section class="visa" style="text-align:center;padding:3rem 2rem">
+    <span class="stamp ink">Ronda ${S.round + 1}</span>
+    <h1 style="margin-top:1.2rem">${r.t}</h1>
+    <p style="margin:1rem auto;font-size:1.2rem">${r.r}</p>
+    <div class="actions"><button class="btn wine" onclick="nextQ()">Empezar la ronda</button></div></section>`;
+  renderScore();
+}
+function nextQ() {
+  stopTimer();
+  if (S.qi >= 0 && cur().t !== "final") S.turn = (S.turn + 1) % S.teams.length;
+  S.qi++;
+  if (S.qi >= S.plan[S.round].length) return nextRound();
+  render();
+}
+
+/* ======================= PREGUNTAS ======================= */
+function head(extra = "") {
+  const r = ROUNDS[S.round], total = S.plan[S.round].length;
+  $("#info").textContent = `Ronda ${S.round + 1}: ${r.t}`;
+  const q = cur();
+  return `<div class="q-head"><h2>${total > 1 ? `Pregunta ${S.qi + 1} de ${total}` : r.t}</h2>
+    ${q.t !== "final" ? `<span class="turn">Turno: ${esc(S.teams[S.turn].name)}</span>` : ""}${extra}</div>`;
+}
+function phrase(c, big) { return `<div class="phrase ${big ? "big-phrase" : ""}"><p class="orig">${c.fr}</p>${c.pr ? `<p class="pron">${c.pr}</p>` : ""}${big ? "" : `<p class="tr">${c.tr}</p>`}</div>`; }
+function info(id) { const c = C[id];
+  return `<div class="info"><span class="stamp">${c.n}</span>
+    <h3>Lenguas oficiales</h3><p>${c.leng}</p>
+    ${phrase(c)}
+    <div class="cur"><b>Curiosidad.</b> ${c.cur}</div></div>`; }
+function footer(q, pts) {
+  const t = S.teams[S.turn].name;
+  let b = "";
+  if (!q.revealed) b += `<button class="btn alt" onclick="startTimer(30)">Cronómetro 30 s</button><button class="btn" onclick="reveal()">Mostrar respuesta</button>`;
+  else {
+    if (pts) b += `<button class="btn green" onclick="award(${pts})" ${q.awarded ? "disabled" : ""}>${q.awarded ? "Puntos sumados" : `Sumar ${pts} a ${esc(t)}`}</button>`;
+    b += `<button class="btn wine" onclick="nextQ()">Siguiente</button>`;
+  }
+  return `<div class="actions">${b}</div>`;
+}
+function reveal() { const q = cur(); q.revealed = true; stopTimer(); render(); }
+
+function render() {
+  const q = cur(); if (!q) return;
+  let h = "";
+  if (q.t === "flag") {
+    h = head() + (!q.revealed
+      ? `<div class="flag bigflag">${flag(q.id)}</div><p class="prompt">¿Qué país es y qué lengua o lenguas oficiales tiene?</p>`
+      : `<div class="reveal"><div class="flag">${flag(q.id)}</div>${info(q.id)}</div>
+         <p class="muted" style="text-align:center;margin-top:1rem">1 punto por el país y 1 por cada lengua acertada: súmalos en el marcador.</p>`)
+      + footer(q, 0);
+  }
+  if (q.t === "det") {
+    const c = C[q.id], val = Math.max(1, 3 - q.hints);
+    const hints = [];
+    if (q.hints >= 1) hints.push(`<span class="hint"><b>Escritura:</b> ${c.esc}</span>`);
+    if (q.hints >= 2) hints.push(`<span class="hint"><b>Familia:</b> ${c.fam}</span>`);
+    h = head() + phrase(c, true)
+      + `<p class="prompt" style="margin:.4rem auto">¿Qué lengua es? ¿De qué país es la bandera?</p>`
+      + (hints.length ? `<div class="hints">${hints.join("")}</div>` : "")
+      + (!q.revealed ? `<p class="value">Vale ${val} ${val === 1 ? "punto" : "puntos"}</p>
+          <div class="hints">${q.hints < 2 ? `<button class="btn alt" onclick="hint()">Pedir pista (−1)</button>` : ""}</div>` : "")
+      + `<div class="opts">${q.opts.map((id, k) => {
+          let cls = "", mark = "";
+          if (q.revealed) { if (id === q.id) { cls = "ok"; mark = `<span class="mark stamp green">Correcta</span>`; }
+            else if (id === q.pick) { cls = "bad"; mark = `<span class="mark stamp">Fallo</span>`; } else cls = "dim"; }
+          return `<button class="opt ${cls}" onclick="pickDet('${id}')" ${q.revealed ? "disabled" : ""} aria-label="Opción ${"ABCD"[k]}">${mark}<span class="let">${"ABCD"[k]}</span><span class="flag">${flag(id)}</span>${q.revealed ? `<span class="lab"><b>${C[id].n}</b></span>` : ""}</button>`; }).join("")}</div>`
+      + (q.revealed ? `<p style="text-align:center"><b>Lengua:</b> ${LF[q.id]}. <b>País:</b> ${c.n}. <b>Traducción:</b> ${c.tr}</p><div class="cur" style="max-width:760px;margin:0 auto"><b>Curiosidad.</b> ${c.cur}</div>` : `<p class="muted" style="text-align:center">El equipo dice la letra; pulsa su bandera.</p>`)
+      + footer(q, q.revealed && q.pick === q.id ? val : 0);
+  }
+  if (q.t === "intr") {
+    h = head() + `<p class="prompt">Tres de estas banderas tienen algo en común en sus lenguas. ¿Cuál es la intrusa y por qué?</p>`
+      + `<div class="opts">${q.f.map((id, k) => {
+          let cls = "", mark = "";
+          if (q.revealed) { if (id === q.s.odd) { cls = "ok"; mark = `<span class="mark stamp green">Intrusa</span>`; }
+            else if (id === q.pick) { cls = "bad"; mark = `<span class="mark stamp">Fallo</span>`; } }
+          return `<button class="opt ${cls}" onclick="pickIntr('${id}')" ${q.revealed ? "disabled" : ""} aria-label="Opción ${"ABCD"[k]}">${mark}<span class="let">${"ABCD"[k]}</span><span class="flag">${flag(id)}</span>${q.revealed ? `<span class="lab"><b>${C[id].n}</b><br>${C[id].leng}</span>` : ""}</button>`; }).join("")}</div>`
+      + (q.revealed ? `<div class="cur" style="max-width:760px;margin:0 auto"><b>Por qué.</b> ${q.s.why}</div>` : `<p class="muted" style="text-align:center">El equipo dice la letra; pulsa su bandera.</p>`)
+      + footer(q, q.revealed && q.pick === q.s.odd ? 2 : 0);
+  }
+  if (q.t === "bulo") {
+    const tf = (v, lab) => { let cls = ""; if (q.revealed) { if (v === q.b.v) cls = "ok"; else if (q.pick === v) cls = "bad"; }
+      return `<button class="${cls}" onclick="pickBulo(${v})" ${q.revealed ? "disabled" : ""}>${lab}</button>`; };
+    h = head() + `<p class="statement">${q.b.s}</p><div class="tf">${tf(true, "Curiosidad real")}${tf(false, "Bulo")}</div>`
+      + (q.revealed ? `<p style="text-align:center"><span class="stamp ${q.b.v ? "green" : ""}">${q.b.v ? "Es verdad" : "Es un bulo"}</span></p><div class="cur" style="max-width:760px;margin:1rem auto 0">${q.b.e}</div>
+          <p class="muted" style="text-align:center">+1 extra en el marcador si el equipo lo justificó bien.</p>` : "")
+      + footer(q, q.revealed && q.pick === q.b.v ? 1 : 0);
+  }
+  if (q.t === "final") {
+    if (q.phase === "bet") {
+      h = head() + `<p class="prompt">Cada equipo decide en secreto cuántos puntos apuesta (como máximo, los que tiene).</p>
+        <div class="bets">${S.teams.map((t, i) => `<div class="betcard"><b>${esc(t.name)}</b> <span class="muted">(${t.score} pts)</span>
+          <input type="number" id="bet${i}" min="0" max="${Math.max(0, t.score)}" value="0" aria-label="Apuesta de ${esc(t.name)}" style="margin-top:.4rem"></div>`).join("")}</div>
+        <div class="actions"><button class="btn wine" onclick="lockBets()">Cerrar apuestas y ver la pregunta</button></div>`;
+    } else {
+      h = head() + `<p class="statement">${q.item.q}</p>`
+        + (!q.revealed ? `<p class="muted" style="text-align:center">Cada equipo escribe su respuesta en un papel.</p>
+            <div class="actions"><button class="btn alt" onclick="startTimer(45)">Cronómetro 45 s</button><button class="btn alt" onclick="otherFinal()">Cambiar pregunta</button><button class="btn" onclick="reveal()">Mostrar respuesta</button></div>`
+          : `<p style="text-align:center"><span class="stamp green">${q.item.a}</span></p>
+            <div class="bets">${S.teams.map((t, i) => `<div class="betcard"><b>${esc(t.name)}</b> <span class="muted">apuesta ${q.bets[i]}</span>
+              <div class="row" style="margin-top:.5rem">${q.done[i] ? `<span>${q.done[i] > 0 ? "Suma" : "Pierde"} ${q.bets[i]}</span>`
+                : `<button class="btn green" onclick="settle(${i},1)">Acierta</button><button class="btn alt" onclick="settle(${i},-1)">Falla</button>`}</div></div>`).join("")}</div>
+            <div class="actions"><button class="btn wine" onclick="nextQ()">Ver la clasificación</button></div>`);
+    }
+  }
+  $("#stage").innerHTML = `<section class="visa">${h}</section>`;
+  renderScore();
+}
+function hint() { const q = cur(); if (q.hints < 2) q.hints++; render(); }
+function pickDet(id) { const q = cur(); q.pick = id; q.revealed = true; stopTimer(); render(); }
+function pickIntr(id) { const q = cur(); q.pick = id; q.revealed = true; stopTimer(); render(); }
+function pickBulo(v) { const q = cur(); q.pick = v; q.revealed = true; stopTimer(); render(); }
+function lockBets() { const q = cur(); q.bets = S.teams.map((t, i) => Math.min(Math.max(0, t.score), Math.max(0, parseInt($("#bet" + i).value) || 0))); q.phase = "q"; render(); }
+function otherFinal() { const q = cur(); const o = FINALES.filter(f => f !== q.item); q.item = shuffle(o)[0]; render(); }
+function settle(i, s) { const q = cur(); q.done[i] = s; S.teams[i].score += s * q.bets[i]; render(); }
+
+/* ======================= FINAL Y REPASO ======================= */
+function endScreen() {
+  stopTimer(); S.qi = -1;
+  $("#info").textContent = "Clasificación final";
+  const rank = S.teams.map(t => ({...t})).sort((a, b) => b.score - a.score);
+  let pos = 0, prev = null;
+  $("#stage").innerHTML = `<section class="visa" style="text-align:center">
+    <span class="stamp green">Viaje completado</span>
+    <h1 style="margin-top:1rem">Clasificación</h1>
+    <div class="podium">${rank.map((t, i) => { if (t.score !== prev) pos = i + 1; prev = t.score;
+      return `<div class="pl ${pos === 1 ? "first" : ""}"><span class="pos">${pos}.º</span><span class="n">${esc(t.name)}</span><span class="s">${t.score}</span></div>`; }).join("")}</div>
+    <div class="actions"><button class="btn wine" onclick="startGame(true)">Jugar otra vez con los mismos equipos</button><button class="btn alt" onclick="setupScreen()">Volver al inicio</button><button class="btn alt" onclick="review(true)">Ver las fichas de repaso</button></div>
+  </section>`;
+  const el = $("#score"); el.innerHTML = "";
+}
+function review(fromEnd) {
+  stopTimer(); if (!fromEnd) { saveNames(); saveWild(); }
+  $("#info").textContent = "Fichas de repaso";
+  const ids = Object.keys(C).sort((a, b) => C[a].n.localeCompare(C[b].n, "es"));
+  $("#stage").innerHTML = `<section class="visa">
+    <div class="row" style="justify-content:space-between"><h2>Pasaporte de lenguas: fichas de repaso</h2><div class="row noprint"><button class="btn" onclick="window.print()">Imprimir fichas</button><button class="btn alt" onclick="${fromEnd ? "endScreenBack()" : "setupScreen()"}">Volver</button></div></div>
+    <p class="muted">${ids.length} países con sus lenguas, una frase y una curiosidad.</p>
+    <div class="cards">${ids.map(id => { const c = C[id];
+      return `<article class="card"><div class="flag">${flag(id)}</div><h3>${c.n}</h3><div><b>Lenguas:</b> ${c.leng}</div>${phrase(c)}<div><b>Familia:</b> ${c.fam}</div><div class="cur"><b>Curiosidad.</b> ${c.cur}</div></article>`; }).join("")}</div>
+  </section>`;
+  $("#score").innerHTML = "";
+}
+function endScreenBack() { endScreen(); }
+
+const FAM = [
+  {t:"Románicas (indoeuropeas)", c:"#1F3A6B", l:[
+    ["Castellano","ñ, tildes, signos de apertura ¿ ¡"],["Gallego","parecido al portugués, pero sin ã ni õ"],["Portugués","ã, õ, ç; muchas palabras en -ção"],
+    ["Catalán","l·l, ç, à, è; muchas palabras acaban en consonante"],["Francés","ç, è, ê, â; apóstrofos como j' o l'"],
+    ["Italiano","consonantes dobles (tt, ll); casi todo acaba en vocal"],["Romanche","se habla en los Alpes; mezcla rasgos del italiano y del francés"]]},
+  {t:"Germánicas (indoeuropeas)", c:"#2F6B45", l:[
+    ["Inglés","muchas th, w, -ing"],["Alemán","ä, ö, ü, ß; sustantivos con mayúscula; palabras muy largas"],
+    ["Neerlandés","ij, oe, aa, ee dobles"],["Islandés","letras antiguas þ y ð"]]},
+  {t:"Otras indoeuropeas", c:"#5E1A2B", l:[
+    ["Irlandés (céltica)","grupos como bh, dh, mh"],["Ruso (eslava)","alfabeto cirílico"],
+    ["Griego (helénica)","alfabeto griego"],["Hindi (indoaria)","escritura devanagari"]]},
+  {t:"Lenguas no indoeuropeas de Europa", c:"#8A6D2F", l:[
+    ["Euskera (aislada)","k, tx, tz; sin parientes conocidos"],["Finés (urálica)","vocales dobles, ä, ö; palabras largas"],
+    ["Maltés (semítica)","alfabeto latino con ħ, ż, għ"]]},
+  {t:"Lenguas de África", c:"#B3262E", l:[
+    ["Árabe (semítica)","se escribe de derecha a izquierda, letras unidas"],["Amazige o bereber","lengua del norte de África"],
+    ["Suajili (bantú)","palabras que acaban en vocal; muchas empiezan por m- o k-"],["Zulú y xhosa (bantúes)","algunos sonidos son chasquidos"]]},
+  {t:"Lenguas de Asia", c:"#1F3A6B", l:[
+    ["Chino mandarín (sinotibetana)","caracteres; lengua tonal"],["Japonés","caracteres chinos mezclados con signos más sencillos"],
+    ["Coreano","hangul: letras agrupadas en bloques, con muchos círculos"],["Filipino o tagalo (austronesia)","alfabeto latino; muchas palabras del español"]]},
+  {t:"Lenguas indígenas de América", c:"#2F6B45", l:[
+    ["Náhuatl","muchas tl y tz"],["Quechua","muchas q, k y ll"],["Aimara","vecina del quechua en los Andes"],
+    ["Guaraní","apóstrofos y letras como ỹ o ñ"]]}
+];
+const SCRIPTS = [
+  ["Latino","A B C Ñ Ç","Castellano, inglés, maltés, suajili, guaraní…"],
+  ["Cirílico","Д Ж Л Я Ш","Ruso"],
+  ["Griego","Δ Λ Σ Ω Φ","Griego"],
+  ["Árabe","ع ش ب م ل","Árabe (de derecha a izquierda)"],
+  ["Devanagari","क ख ग म र","Hindi (una línea horizontal une las letras por arriba)"],
+  ["Caracteres chinos","中 文 山 人","Chino (y parte del japonés)"],
+  ["Hiragana y katakana","あ の カ ス","Japonés"],
+  ["Hangul","한 글 가 나","Coreano"]
+];
+const PREG = [
+  ["¿Qué país tiene más lenguas oficiales? ¿Cuántas son?","Bolivia, con 37 lenguas oficiales."],
+  ["¿Cuál es el único país de África donde el español es lengua oficial?","Guinea Ecuatorial."],
+  ["¿En qué país es el catalán la única lengua oficial?","Andorra."],
+  ["Escribe cuatro países que tengan más de una lengua oficial.","Por ejemplo: Suiza, Bélgica, Canadá, Paraguay, Perú, Bolivia, Irlanda, Malta, Finlandia, Filipinas, Sudáfrica, India, Marruecos, Tanzania o España."],
+  ["Nombra dos lenguas que se hablen en Europa y no sean indoeuropeas.","Euskera, finés o maltés."],
+  ["¿Qué lengua de las fichas se escribe de derecha a izquierda?","El árabe (Marruecos)."],
+  ["¿Qué lengua usa el alfabeto cirílico? ¿De dónde viene el nombre de ese alfabeto?","El ruso. Viene de san Cirilo, un monje del siglo IX."],
+  ["¿Qué rey inventó un alfabeto? ¿Para qué lo hizo?","El rey Sejong (Corea), en 1443, para que todo el pueblo pudiera aprender a leer."],
+  ["Busca tres palabras del español que vengan de otras lenguas. Di de cuál viene cada una.","Por ejemplo: chocolate, tomate, aguacate, chicle (náhuatl); jaguar, tucán (tupí-guaraní); cóndor, llama, puma, cancha (quechua); almohada, azúcar, aceite, ojalá (árabe); democracia, teatro, biblioteca (griego)."],
+  ["Escribe «gracias» en tres lenguas distintas.","Por ejemplo: obrigado (portugués), maraming salamat (filipino), takk fyrir (islandés)."],
+  ["¿Qué lengua de Asia es pariente lejana del castellano?","El hindi (familia indoaria, indoeuropea)."],
+  ["¿En qué lengua escribió José Rizal su novela «Noli me tángere»? ¿De qué país era?","En castellano. Era de Filipinas."],
+  ["¿Qué dos escritores chilenos ganaron el Premio Nobel de Literatura?","Gabriela Mistral (1945) y Pablo Neruda (1971)."],
+  ["Reto: ¿qué significan «safari» y «simba» en suajili?","«Safari» significa viaje y «simba», león."]
+];
+function busqueda(sol) {
+  stopTimer(); saveNames(); saveWild();
+  $("#info").textContent = sol ? "Preguntas de búsqueda: soluciones" : "Preguntas de búsqueda";
+  $("#stage").innerHTML = `<section class="visa">
+    <div class="row" style="justify-content:space-between"><h2>Pasaporte de lenguas: preguntas de búsqueda${sol ? " (soluciones)" : ""}</h2>
+      <div class="row noprint"><button class="btn" onclick="window.print()">Imprimir</button><button class="btn alt" onclick="busqueda(${!sol})">${sol ? "Ver sin soluciones" : "Ver soluciones"}</button><button class="btn alt" onclick="setupScreen()">Volver</button></div></div>
+    ${sol ? "" : `<div class="sheethead"><span>Grupo:</span><span>Nombres:</span></div>`}
+    <p>Buscad las respuestas en las fichas de repaso. ¡Os servirán para el concurso!</p>
+    <ol class="qs">${PREG.map(q => `<li>${q[0]}${sol ? `<span class="ans">${q[1]}</span>` : `<span class="lines"></span><span class="lines"></span>`}</li>`).join("")}</ol>
+  </section>`;
+  $("#score").innerHTML = "";
+}
+function apoyo() {
+  stopTimer(); saveNames(); saveWild();
+  $("#info").textContent = "Ficha de apoyo";
+  $("#stage").innerHTML = `<section class="visa">
+    <div class="row" style="justify-content:space-between"><h2>Pasaporte de lenguas: ficha de apoyo</h2><div class="row noprint"><button class="btn" onclick="window.print()">Imprimir ficha</button><button class="btn alt" onclick="setupScreen()">Volver</button></div></div>
+    <p>Estas son las lenguas que pueden aparecer en el concurso, agrupadas por familias, con pistas para reconocerlas. ¡Ojo! Aquí no aparecen los países: eso tenéis que saberlo vosotros.</p>
+    <div class="fam">${FAM.map(f => `<div class="famb" style="border-left-color:${f.c}"><h3 style="color:${f.c}">${f.t}</h3><ul>${f.l.map(x => `<li><b>${x[0]}:</b> ${x[1]}</li>`).join("")}</ul></div>`).join("")}</div>
+    <h3 style="margin-top:1.2rem">Sistemas de escritura</h3>
+    <table class="scripts"><tr><th>Escritura</th><th>Ejemplo de letras</th><th>Lenguas del concurso</th></tr>
+      ${SCRIPTS.map(x => `<tr><td><b>${x[0]}</b></td><td class="smp">${x[1]}</td><td>${x[2]}</td></tr>`).join("")}</table>
+  </section>`;
+  $("#score").innerHTML = "";
+}
+
+setupScreen();
+</script>
+</body>
+</html>
