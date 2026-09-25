@@ -53,7 +53,7 @@ const PALABRAS = [
   { semana: 1, palabra: "[v]islum[b]rar", pista: "v inicial; tras m, siempre b",
     significado: "Ver algo de forma confusa o a lo lejos, o intuirlo por indicios.",
     sinonimos: ["entrever", "atisbar"], icono: "prismaticos" },
-  { semana: 1, palabra: "espar[c]ir", pista: "verbos en -cir: con c",
+  { semana: 1, palabra: "e[s]par[c]ir", pista: "s, no x; verbos en -cir: con c",
     significado: "Extender o separar lo que estaba junto o amontonado.",
     sinonimos: ["dispersar", "difundir"], icono: "semillas" },
 
@@ -343,38 +343,48 @@ function showAll(){
 
 /* ---------- juego: ¿qué palabra es? ---------- */
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+let mazo = [], vistas = 0, fin = false;
+function nuevoMazo(){ mazo = shuffle([...lista]); vistas = 0; fin = false; }
 function newQuiz(){
-  const target = lista[Math.floor(Math.random()*lista.length)];
-  const others = shuffle(PALABRAS.map((p,i)=>({...p,id:i})).filter(p=>p.id!==target.id)).slice(0,2);
-  quiz = { target, opts: shuffle([target,...others]), done:false };
+  if(!mazo.length){ fin = true; return; }
+  quiz = { target: mazo.shift(), done:false };
+  vistas++;
 }
 function renderQuiz(){
-  if(!quiz || !lista.some(p=>p.id===quiz.target.id)) newQuiz();
+  if(!quiz || !lista.some(p=>p.id===quiz.target.id)){ nuevoMazo(); newQuiz(); }
+  const total = lista.length;
+  if(fin){
+    $('#stage').innerHTML = `<section class="slide quiz">
+      <h2 class="pauta" style="font-size:clamp(1.6rem,3vw,2.6rem);font-weight:800;align-self:flex-start">¡Fin del repaso!</h2>
+      <p class="q">Ya habéis descubierto las ${total} palabras.</p>
+      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+        <button class="big" id="restart" style="margin:0">Empezar de nuevo</button>
+      </div>
+    </section>`;
+    $('#restart').onclick = () => { nuevoMazo(); newQuiz(); renderQuiz(); };
+    return;
+  }
   const q = quiz;
+  const ultima = !mazo.length;
   $('#stage').innerHTML = `<section class="slide quiz">
     <h2 class="pauta" style="font-size:clamp(1.6rem,3vw,2.6rem);font-weight:800;align-self:flex-start">¿Qué palabra es?</h2>
     <p class="q">${esc(q.target.significado)}</p>
-    <div class="opts">${q.opts.map(o=>`<button class="opt" data-id="${o.id}">${esc(plain(o.palabra))}</button>`).join('')}</div>
+    <div class="opts"><button class="opt" id="reveal">Descubrir la palabra</button></div>
     <p class="fb" id="fb"></p>
     <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
-      <button class="big" id="again" style="margin:0">Otra definición</button>
-      <span class="score">Aciertos: ${score.ok} de ${score.total}</span>
+      <button class="big" id="again" style="margin:0">${ultima ? 'Finalizar' : 'Otra definición'}</button>
+      <span class="score">Palabra ${vistas} de ${total}</span>
     </div>
   </section>`;
-  document.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+  $('#reveal').onclick = () => {
     if(q.done) return;
-    q.done = true; score.total++;
-    const ok = +b.dataset.id === q.target.id;
-    if(ok) score.ok++;
-    document.querySelectorAll('.opt').forEach(x => { if(+x.dataset.id===q.target.id) x.classList.add('ok'); });
-    if(!ok) b.classList.add('ko');
+    q.done = true;
+    $('#reveal').parentElement.remove();
     const fb = $('#fb');
-    fb.className = 'fb ' + (ok?'ok':'ko');
-    fb.innerHTML = `<span class="fb-lead">${ok ? '¡Correcto!' : 'La respuesta era:'}</span>
-      <span class="sol pauta">${markup(q.target.palabra)}</span>
+    fb.className = 'fb ok';
+    fb.innerHTML = `<span class="sol pauta">${markup(q.target.palabra)}</span>
       <span class="fb-syn">Sinónimos: <ul class="chips">${q.target.sinonimos.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></span>`;
-    document.querySelector('.score').textContent = `Aciertos: ${score.ok} de ${score.total}`;
-  });
+  };
   $('#again').onclick = () => { newQuiz(); renderQuiz(); };
 }
 
