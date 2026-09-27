@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Atlas oculto: juego de banderas</title>
+<title>Atlas oculto (sin formulario): juego de banderas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
@@ -180,14 +180,21 @@ body:has(#setup:not([hidden])) .top{flex-direction:column;align-items:center;tex
 
 @media (max-width:520px){.guess .row{flex-wrap:wrap}.guess input{flex:1 1 100%}.guess .row button{flex:1}.guess .row .kbToggle{flex:none}}
 
+
 /* Equipo ganador */
 .winner{display:grid;gap:18px}
 .wform{display:grid;gap:14px;max-width:560px;background:var(--card);border:2px solid var(--ink);border-radius:6px;padding:18px}
 .wform label{display:grid;gap:6px;font-weight:700}
-.wform input,.wform textarea{font:inherit;font-weight:500;padding:10px 12px;border:2px solid var(--ink-2);border-radius:4px;background:var(--paper);color:var(--ink);width:100%;resize:vertical}
-.wnote{margin:0;color:var(--ink-2);font-size:.95rem}
+.wform input,.wform textarea{font:inherit;font-weight:500;padding:10px 12px;border:2px solid var(--ink-2);border-radius:4px;background:var(--paper);color:var(--ink);width:100%;min-width:0;resize:vertical}
 .wbtns{display:flex;flex-wrap:wrap;gap:10px}
-body:has(#end:not([hidden])) footer{display:none}
+.hist{max-width:560px}
+.hist h3{margin:0 0 10px;font-size:1.3rem}
+.hist ol{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.hist li{background:var(--card);border:2px solid var(--ink);border-radius:4px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.hist .hi{flex:1;min-width:0}
+.hist .ht{font-weight:800;font-size:1.1rem}
+.hist .hm{color:var(--ink-2);font-size:.95rem}
+.hist .del{background:none;border:0;color:var(--red);font-weight:700;padding:2px 4px;cursor:pointer}
 #diploma{display:none}
 @media print{
   @page{size:A4 landscape;margin:12mm}
@@ -203,6 +210,7 @@ body:has(#end:not([hidden])) footer{display:none}
 #diploma .dm{font-family:'Newsreader',Georgia,serif;font-size:16pt;margin:0;max-width:230mm}
 #diploma .dp{font-size:14pt;font-weight:700;color:#2F7048;margin:0}
 #diploma .df{font-size:12pt;color:#4A5866;margin:6mm 0 0}
+body:has(#end:not([hidden])) footer{display:none}
 
 /* Teclado en pantalla (opcional) */
 .kbToggle{white-space:nowrap}
@@ -327,9 +335,18 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <label>Nombre del equipo<input id="wTeam" autocomplete="off"></label>
         <label>Integrantes<textarea id="wMembers" rows="4" placeholder="Un nombre por línea"></textarea></label>
         <label>Grupo<input id="wGroup" autocomplete="off" placeholder="Ej.: 3.º B"></label>
-        <p class="wnote">Los puntos, la fecha y la clasificación se envían también, directamente a tu formulario.</p>
-        <div class="wbtns"><button id="wSend" class="primary" type="button">Enviar resultados</button><button id="wPrint" class="secondary" type="button">Imprimir diploma o guardarlo en PDF</button></div>
+        <label>Fecha<input id="wDate" type="date"></label>
+        <div class="wbtns">
+          <button id="wSave" class="primary" type="button">Guardar en el historial</button>
+          <button id="wPrint" class="secondary" type="button">Imprimir diploma o guardarlo en PDF</button>
+          <button id="wXlsx" class="secondary" type="button">Descargar esta partida (Excel)</button>
+          <button id="wHist" class="secondary" type="button">Descargar historial (Excel)</button>
+        </div>
         <p class="msg" id="wMsg" role="status"></p>
+      </div>
+      <div class="hist" id="histWrap" hidden>
+        <h3>Historial de ganadores</h3>
+        <ol id="histList"></ol>
       </div>
     </section>
     <h2>Banderas de la partida</h2>
@@ -793,7 +810,9 @@ function finish(){
   const top=ranked[0].score,winners=ranked.filter(t=>t.score===top);
   lastWin={score:top,ranked};
   $('#wTeam').value=winners.map(t=>t.name).join(' y ');
-  $('#wMembers').value='';$('#wGroup').value='';$('#wMsg').textContent='';$('#wMsg').className='msg';$('#wSend').disabled=false;$('#wSend').textContent='Enviar resultados';
+  $('#wMembers').value='';$('#wMsg').textContent='';$('#wMsg').className='msg';
+  const td=new Date();$('#wDate').value=`${td.getFullYear()}-${String(td.getMonth()+1).padStart(2,'0')}-${String(td.getDate()).padStart(2,'0')}`;
+  renderHist();
   window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
 }
 
@@ -877,37 +896,113 @@ let tx=null;
 $('#slides').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
 $('#slides').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)goSlide(dx<0?1:-1);tx=null;});
 
-/* ---------- equipo ganador: envío al formulario de Google ---------- */
-const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfy3EnllkwywISGxt-hqL5tFcTyQ5adyZA8oaKA_9hMTgL0Ww/viewform';
-const FORM_FIELDS={team:'entry.876372629',members:'entry.1390636133',group:'entry.772469891',score:'entry.1287363973',date:'entry.230285897',ranking:'entry.1490453748'};
+/* ---------- equipo ganador: descarga en Excel ---------- */
 let lastWin={score:0,ranked:[]};
 function wMsg(t,c){$('#wMsg').textContent=t;$('#wMsg').className='msg '+(c||'');}
-$('#wSend').addEventListener('click',()=>{
-  const team=$('#wTeam').value.trim();
-  if(!team){wMsg('Escribe el nombre del equipo.','no');$('#wTeam').focus();return;}
-  const members=$('#wMembers').value.split('\n').map(x=>x.trim()).filter(Boolean).join('\n');
-  const d=new Date(),date=`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
-  const ranking=lastWin.ranked.map((t,i)=>`${i+1}. ${t.name}: ${t.score} ${t.score===1?'punto':'puntos'}`).join('\n');
-  const q=new URLSearchParams({usp:'pp_url'});
-  q.set(FORM_FIELDS.team,team);q.set(FORM_FIELDS.members,members);q.set(FORM_FIELDS.group,$('#wGroup').value.trim());
-  q.set(FORM_FIELDS.score,String(lastWin.score));q.set(FORM_FIELDS.date,date);q.set(FORM_FIELDS.ranking,ranking);
-  q.delete('usp');
-  const btn=$('#wSend');btn.disabled=true;wMsg('Enviando…');
-  fetch(FORM_URL.replace(/viewform$/,'formResponse'),{method:'POST',mode:'no-cors',body:q})
-    .then(()=>{wMsg('Resultados enviados. Ya están en tu formulario.','ok');btn.textContent='Enviado ✓';})
-    .catch(()=>{wMsg('No se han podido enviar. Comprueba la conexión a internet y vuelve a intentarlo.','no');btn.disabled=false;});
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC[(c^b[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zip(files){
+  const enc=new TextEncoder(),parts=[],central=[];let off=0;
+  const u16=v=>[v&255,(v>>8)&255],u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255];
+  for(const [name,text] of files){
+    const nb=enc.encode(name),db=enc.encode(text),crc=crc32(db);
+    const head=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0)]);
+    parts.push(head,nb,db);
+    central.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nb);
+    off+=head.length+nb.length+db.length;
+  }
+  const csize=central.reduce((a,b)=>a+b.length,0);
+  const end=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(csize),...u32(off),...u16(0)]);
+  return new Blob([...parts,...central,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+const xe=v=>String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function colL(i){return String.fromCharCode(65+i);}
+function buildXlsx(rows,widths){
+  // rows: array of arrays of {v, s} ; s: 0 normal, 1 negrita, 2 título, 3 cabecera
+  const sheetRows=rows.map((r,ri)=>`<row r="${ri+1}">`+r.map((c,ci)=>{
+    if(c==null||c.v===''||c.v==null)return '';
+    const ref=colL(ci)+(ri+1),st=c.s?` s="${c.s}"`:'';
+    return typeof c.v==='number'?`<c r="${ref}"${st}><v>${c.v}</v></c>`:`<c r="${ref}"${st} t="inlineStr"><is><t xml:space="preserve">${xe(c.v)}</t></is></c>`;
+  }).join('')+'</row>').join('');
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>${(widths||[20,34,30,12]).map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${sheetRows}</sheetData></worksheet>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="16"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD3DCD6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+  return zip([
+    ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Resultados" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml',styles],
+    ['xl/worksheets/sheet1.xml',sheet]
+  ]);
+}
+function slug(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
+function isoToEs(v){if(!v)return '';const [y,m,d]=v.split('-');return `${+d}/${+m}/${y}`;}
+function winInfo(){
+  return {team:$('#wTeam').value.trim(),group:$('#wGroup').value.trim(),date:$('#wDate').value,
+    members:$('#wMembers').value.split(/[,\n]/).map(x=>x.trim()).filter(Boolean),score:lastWin.score,
+    ranking:lastWin.ranked.map((t,i)=>`${i+1}. ${t.name}: ${t.score}`).join(' | '),flags:history.length};
+}
+function needTeam(){if($('#wTeam').value.trim())return true;wMsg('Escribe el nombre del equipo.','no');$('#wTeam').focus();return false;}
+function downloadBlob(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);}
+function stamp(v){const d=v?new Date(v+'T12:00'):new Date();return `${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}_${String(d.getDate()).padStart(2,'0')}`;}
+/* historial */
+const HKEY='atlas-oculto-historial';
+function loadHist(){try{return JSON.parse(localStorage.getItem(HKEY))||[];}catch(e){return [];}}
+function saveHist(l){try{localStorage.setItem(HKEY,JSON.stringify(l));return true;}catch(e){return false;}}
+function renderHist(){
+  const l=loadHist();$('#histWrap').hidden=!l.length;
+  $('#histList').innerHTML=l.map((h,i)=>`<li><div class="hi"><div class="ht">${esc(h.team)} · ${h.score} ${h.score===1?'punto':'puntos'}</div>
+    <div class="hm">${esc([isoToEs(h.date),h.group].filter(Boolean).join(' · '))}${h.members.length?' — '+esc(h.members.join(', ')):''}</div></div>
+    <button class="del" data-i="${i}" type="button" aria-label="Borrar del historial">Borrar</button></li>`).join('');
+}
+$('#wSave').addEventListener('click',()=>{
+  if(!needTeam())return;
+  const l=loadHist();l.unshift(winInfo());
+  if(saveHist(l)){renderHist();wMsg('Guardado en el historial de este navegador.','ok');}
+  else wMsg('Este navegador no permite guardar. Usa «Descargar esta partida (Excel)».','no');
 });
-
+$('#histList').addEventListener('click',e=>{
+  const b=e.target.closest('.del');if(!b)return;
+  if(!confirm('¿Borrar este registro del historial?'))return;
+  const l=loadHist();l.splice(+b.dataset.i,1);saveHist(l);renderHist();
+});
+$('#wHist').addEventListener('click',()=>{
+  const l=loadHist();
+  if(!l.length){wMsg('El historial está vacío. Pulsa antes «Guardar en el historial».','no');return;}
+  const V=(v,s)=>({v,s}),R=[[V('Atlas oculto · Historial de ganadores',2)],[]];
+  R.push([V('Fecha',3),V('Grupo',3),V('Equipo ganador',3),V('Puntos',3),V('Integrantes',3),V('Banderas',3),V('Clasificación',3)]);
+  l.slice().reverse().forEach(h=>R.push([V(isoToEs(h.date)),V(h.group),V(h.team),V(h.score),V(h.members.join(', ')),V(h.flags||''),V(h.ranking||'')]));
+  downloadBlob(buildXlsx(R,[12,12,26,9,40,10,50]),`historial_atlas_oculto_${stamp()}.xlsx`);
+  wMsg('Historial descargado.','ok');
+});
+/* esta partida */
+$('#wXlsx').addEventListener('click',()=>{
+  if(!needTeam())return;
+  const w=winInfo(),V=(v,s)=>({v,s}),R=[];
+  R.push([V('Atlas oculto · Resultados',2)]);R.push([]);
+  R.push([V('Fecha',1),V(isoToEs(w.date))]);
+  R.push([V('Grupo',1),V(w.group)]);
+  R.push([V('Equipo ganador',1),V(w.team)]);
+  R.push([V('Puntos',1),V(w.score)]);
+  if(w.members.length)w.members.forEach((m,i)=>R.push([i?null:V('Integrantes',1),V(m)]));
+  else R.push([V('Integrantes',1)]);
+  R.push([]);R.push([V('Clasificación',1)]);
+  R.push([V('Posición',3),V('Equipo',3),V('Puntos',3)]);
+  lastWin.ranked.forEach((t,i)=>R.push([V(i+1),V(t.name),V(t.score)]));
+  R.push([]);R.push([V('Banderas de la partida',1)]);
+  R.push([V('N.º',3),V('País',3),V('Acertó',3),V('Puntos',3)]);
+  history.forEach((h,i)=>R.push([V(i+1),V(h.c.n),V(h.team!=null?teams[h.team].name:'Sin acierto'),V(h.team!=null?h.pts:0)]));
+  downloadBlob(buildXlsx(R),['resultados_atlas_oculto',slug(w.group),stamp(w.date)].filter(Boolean).join('_')+'.xlsx');
+  wMsg('Partida descargada en Excel.','ok');
+});
 /* diploma */
 $('#wPrint').addEventListener('click',()=>{
-  const team=$('#wTeam').value.trim();
-  if(!team){wMsg('Escribe el nombre del equipo.','no');$('#wTeam').focus();return;}
-  const members=$('#wMembers').value.split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
-  const group=$('#wGroup').value.trim(),d=new Date(),date=`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`,sc=lastWin.score;
+  if(!needTeam())return;
+  const w=winInfo();
   $('#diploma').innerHTML=`<p class="dk">Atlas oculto · Juego de banderas</p><p class="dt">Diploma</p><p class="dl">Se concede al equipo</p>
-    <p class="dn">${esc(team)}</p>${members.length?`<p class="dm">${esc(members.join(', '))}</p>`:''}
-    <p class="dl">por ganar la partida de Atlas oculto</p><p class="dp">${sc} ${sc===1?'punto':'puntos'}</p>
-    <p class="df">${esc([group,date].filter(Boolean).join(' · '))}</p>`;
+    <p class="dn">${esc(w.team)}</p>${w.members.length?`<p class="dm">${esc(w.members.join(', '))}</p>`:''}
+    <p class="dl">por ganar la partida de Atlas oculto</p><p class="dp">${w.score} ${w.score===1?'punto':'puntos'}</p>
+    <p class="df">${esc([w.group,isoToEs(w.date)].filter(Boolean).join(' · '))}</p>`;
   document.body.classList.add('print-diploma');
   const done=()=>{document.body.classList.remove('print-diploma');window.removeEventListener('afterprint',done);};
   window.addEventListener('afterprint',done);
