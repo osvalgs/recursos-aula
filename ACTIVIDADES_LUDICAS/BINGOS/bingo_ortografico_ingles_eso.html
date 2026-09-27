@@ -190,6 +190,9 @@
   .btn.ghost{ background:transparent; border-color:#d8cfb8; color:var(--muted); }
   .btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
   .btn.suggest{ background:var(--chalkboard); color:var(--chalk); border-color:var(--chalkboard); width:100%; margin-bottom:14px; }
+  .btn.primary{ background:#2f7a4f; color:#fff; border-color:#2f7a4f; }
+  .msg{ font-size:14px; margin:8px 0 0; min-height:1.4em; }
+  .sent-tag{ color:#2f7a4f; font-size:12px; font-weight:600; }
 
   .actions-row{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
 
@@ -493,7 +496,7 @@
     <h2 class="winners-print-title">Ganadores — Bingo Ortográfico</h2>
     <div class="setup-intro">
       <h2>Tabla de ganadores del trimestre</h2>
-      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). La tabla se mantiene mientras no cierres esta pestaña; usa «Exportar datos» al terminar la clase y «Cargar datos» la próxima vez para seguir sumando en la misma tabla.</p>
+      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). Con «Enviar resultados» se manda directamente a tu formulario de Google. La tabla de abajo es tu copia local en este navegador; usa «Exportar ganadores (Excel)» o «Guardar tabla en PDF» si quieres una copia aparte.</p>
     </div>
 
     <div class="panel winners-form">
@@ -505,14 +508,18 @@
         <label for="winnerNames">Ganador/a (o varios, separados por coma)</label>
         <input type="text" id="winnerNames" placeholder="Nombre y apellido">
       </div>
-      <button class="btn" id="addWinnerBtn">Añadir</button>
+      <div class="field">
+        <label for="winnerGroup">Grupo</label>
+        <input type="text" id="winnerGroup" placeholder="Ej.: 1º ESO A">
+      </div>
+      <button class="btn" id="addWinnerBtn">Añadir a la tabla</button>
+      <button class="btn primary" id="sendWinnerBtn">Enviar resultados</button>
     </div>
+    <p class="msg" id="sendWinnerMsg" role="status"></p>
 
     <div class="actions-row winners-actions">
-      <button class="btn secondary" id="exportWinnersBtn">Exportar datos (.json)</button>
-      <button class="btn secondary" id="importWinnersBtn">Cargar datos (.json)</button>
-      <input type="file" id="importWinnersFile" accept="application/json" style="display:none;">
-      <button class="btn ghost" id="printWinnersBtn">Guardar tabla en PDF</button>
+      <button class="btn secondary" id="exportWinnersBtn">Exportar ganadores (Excel)</button>
+      <button class="btn secondary" id="printWinnersBtn">Guardar tabla en PDF</button>
     </div>
 
     <div class="winners-table-wrap" id="winnersTableWrap"></div>
@@ -1266,9 +1273,16 @@
   let winners = [];
   let winnerIdSeq = 1;
 
+  // Formulario de Google para el Bingo ortográfico inglés ESO
+  const WINNER_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSdyvhTBbJAB0hOSDINtIW80X_ZqompLVdB_phD-iFE8qH7VvA/viewform';
+  const WINNER_FIELDS = { ganador: 'entry.876372629', fecha: 'entry.1390636133', grupo: 'entry.772469891' };
+
   const winnerDate = document.getElementById('winnerDate');
   const winnerNames = document.getElementById('winnerNames');
+  const winnerGroup = document.getElementById('winnerGroup');
   const winnersTableWrap = document.getElementById('winnersTableWrap');
+  const sendWinnerBtn = document.getElementById('sendWinnerBtn');
+  const sendWinnerMsg = document.getElementById('sendWinnerMsg');
 
   function todayISO(){
     const d = new Date();
@@ -1287,11 +1301,11 @@
       return;
     }
     const rows = winners.map(w=>
-      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
+      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+(w.sent ? ' <span class="sent-tag" title="Ya enviado al formulario">✓ enviado</span>' : '')+'</td><td>'+(w.group||'')+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
     ).join('');
     winnersTableWrap.innerHTML = `
       <table class="winners-table">
-        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th></th></tr></thead>
+        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th>Grupo</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
     winnersTableWrap.querySelectorAll('.row-del').forEach(btn=>{
@@ -1306,42 +1320,59 @@
   document.getElementById('addWinnerBtn').addEventListener('click', ()=>{
     const names = winnerNames.value.trim();
     if(!names) return;
-    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names });
+    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names, group: winnerGroup.value.trim(), sent: false });
     winnerNames.value = '';
     renderWinners();
   });
 
+  // Envía los resultados directamente al formulario de Google, sin abrirlo
+  async function sendWinnerResults(){
+    const pending = winnerNames.value.trim();
+    const unsent = winners.filter(w=>!w.sent);
+    const allNames = unsent.map(w=>w.names).concat(pending ? [pending] : []);
+    const names = allNames.join(', ');
+    const say = (text, bad)=>{ sendWinnerMsg.style.color = bad ? '#a3352a' : ''; sendWinnerMsg.innerHTML = text; };
+    if(!names){ say('No hay ganadores nuevos por enviar. Escribe un nombre o añade alguno a la tabla.', true); return; }
+    const params = new URLSearchParams();
+    params.set(WINNER_FIELDS.ganador, names);
+    params.set(WINNER_FIELDS.fecha, formatDate(winnerDate.value || todayISO()));
+    params.set(WINNER_FIELDS.grupo, winnerGroup.value.trim());
+    const manualLink = WINNER_FORM + '?usp=pp_url&' + params.toString();
+    const fail = ()=>{
+      say('No se han podido enviar los resultados. Comprueba la conexión y vuelve a intentarlo, o <a href="'+manualLink+'" target="_blank" rel="noopener">abre el formulario</a> para enviarlos a mano.', true);
+      sendWinnerBtn.disabled = false;
+      sendWinnerBtn.textContent = 'Enviar resultados';
+    };
+    if(!navigator.onLine){ fail(); return; }
+    sendWinnerBtn.disabled = true;
+    sendWinnerBtn.textContent = 'Enviando…';
+    try{
+      await fetch(WINNER_FORM.replace(/viewform$/, 'formResponse'), { method:'POST', mode:'no-cors', body: params });
+      sendWinnerBtn.textContent = 'Resultados enviados ✓';
+      say('Resultados enviados al formulario.');
+      unsent.forEach(w=> w.sent = true);
+      renderWinners();
+      winnerNames.value = '';
+      winnerGroup.value = '';
+      setTimeout(()=>{ sendWinnerBtn.disabled = false; sendWinnerBtn.textContent = 'Enviar resultados'; }, 2500);
+    }catch(err){
+      fail();
+    }
+  }
+  sendWinnerBtn.addEventListener('click', sendWinnerResults);
+
   document.getElementById('exportWinnersBtn').addEventListener('click', ()=>{
-    const data = JSON.stringify({ winners }, null, 2);
-    const blob = new Blob([data], { type:'application/json' });
+    const escapeCsv = (val)=> '"'+String(val).replace(/"/g,'""')+'"';
+    const rows = [['Fecha','Ganador/a','Grupo']];
+    winners.forEach(w=> rows.push([formatDate(w.date), w.names || '', w.group || '']));
+    const csv = rows.map(r=> r.map(escapeCsv).join(';')).join('\r\n');
+    const blob = new Blob(['\uFEFF'+csv], { type:'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'bingo-ortografico-ganadores.json';
+    a.download = 'bingo_ortografico_ingles_eso_ganadores.csv';
     a.click();
     URL.revokeObjectURL(url);
-  });
-
-  const importWinnersFile = document.getElementById('importWinnersFile');
-  document.getElementById('importWinnersBtn').addEventListener('click', ()=> importWinnersFile.click());
-  importWinnersFile.addEventListener('change', (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev)=>{
-      try{
-        const data = JSON.parse(ev.target.result);
-        const loaded = Array.isArray(data.winners) ? data.winners : [];
-        loaded.forEach(w=>{
-          winners.push({ id: winnerIdSeq++, date: w.date || '', names: w.names || '' });
-        });
-        renderWinners();
-      }catch(err){
-        alert('No se ha podido leer ese archivo. Comprueba que sea un .json exportado desde esta misma herramienta.');
-      }
-    };
-    reader.readAsText(file);
-    importWinnersFile.value = '';
   });
 
   document.getElementById('printWinnersBtn').addEventListener('click', ()=> window.print());
