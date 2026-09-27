@@ -310,12 +310,9 @@
     background:none; border:none; color:var(--coral); cursor:pointer; font-size:13px; font-weight:600;
   }
   .winners-empty{ color:var(--muted); font-size:14px; margin-top:16px; }
-  #sendWinnerMsg{ max-width:820px; margin:6px auto 0; text-align:center; font-size:13.5px; min-height:1.2em; }
-  #sendWinnerMsg a{ color:inherit; text-decoration:underline; }
-  .sent-tag{ color:#2f7a4f; font-size:12px; font-weight:600; }
 
   @media print{
-    .topbar, .setup-intro, .private-banner, .panel, .actions-row, .status-msg, .winners-form, .winners-actions, .row-del, #sendWinnerMsg{ display:none !important; }
+    .topbar, .setup-intro, .private-banner, .panel, .actions-row, .status-msg, .winners-form, .winners-actions, .row-del{ display:none !important; }
     body{ background:#fff; }
     #cardsPreview{ margin:0; }
 
@@ -494,7 +491,7 @@
     <h2 class="winners-print-title">Ganadores — Bingo Ortográfico</h2>
     <div class="setup-intro">
       <h2>Tabla de ganadores del trimestre</h2>
-      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). Con «Enviar resultados» se manda directamente a tu formulario de Google (compartido entre todos los bingos de mecánica FPB). La tabla de abajo es tu copia local en este navegador; usa «Descargar tabla (Excel)» o «Guardar tabla en PDF» si quieres una copia aparte.</p>
+      <p>Añade aquí a quien cante un bingo válido (con las 6 palabras bien escritas). La tabla se guarda automáticamente en este navegador, así que sigue disponible aunque cierres la pestaña. Usa «Descargar tabla (Excel)» de vez en cuando como copia de seguridad.</p>
     </div>
 
     <div class="panel winners-form">
@@ -506,14 +503,8 @@
         <label for="winnerNames">Ganador/a (o varios, separados por coma)</label>
         <input type="text" id="winnerNames" placeholder="Nombre y apellido">
       </div>
-      <div class="field">
-        <label for="winnerGroup">Grupo</label>
-        <input type="text" id="winnerGroup" placeholder="Ej.: 1.º FPB A">
-      </div>
-      <button class="btn" id="addWinnerBtn">Añadir a la tabla</button>
-      <button class="btn primary" id="sendWinnerBtn">Enviar resultados</button>
+      <button class="btn" id="addWinnerBtn">Añadir</button>
     </div>
-    <p class="msg" id="sendWinnerMsg" role="status"></p>
 
     <div class="actions-row winners-actions">
       <button class="btn secondary" id="exportWinnersBtn">Descargar tabla (Excel)</button>
@@ -523,12 +514,6 @@
     <div class="winners-table-wrap" id="winnersTableWrap"></div>
   </div>
 </div>
-
-<script>
-  // Formulario de Google compartido por todos los bingos de mecánica FPB (versión en español)
-  const WINNER_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSej2cA8t64nMl4mecHOYYjPj6ygHmayM6gsv5bJduMsoHlcvA/viewform';
-  const WINNER_FIELDS = { ganador: 'entry.876372629', fecha: 'entry.1390636133', grupo: 'entry.772469891' };
-</script>
 
 <script>
   // ---------------- word bank by orthographic difficulty ----------------
@@ -1208,10 +1193,7 @@
 
   const winnerDate = document.getElementById('winnerDate');
   const winnerNames = document.getElementById('winnerNames');
-  const winnerGroup = document.getElementById('winnerGroup');
   const winnersTableWrap = document.getElementById('winnersTableWrap');
-  const sendWinnerBtn = document.getElementById('sendWinnerBtn');
-  const sendWinnerMsg = document.getElementById('sendWinnerMsg');
 
   function todayISO(){
     const d = new Date();
@@ -1245,11 +1227,11 @@
       return;
     }
     const rows = winners.map(w=>
-      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+(w.sent ? ' <span class="sent-tag" title="Ya enviado al formulario">✓ enviado</span>' : '')+'</td><td>'+(w.group||'')+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
+      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
     ).join('');
     winnersTableWrap.innerHTML = `
       <table class="winners-table">
-        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th>Grupo</th><th></th></tr></thead>
+        <thead><tr><th>Fecha</th><th>Ganador/a(s)</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
     winnersTableWrap.querySelectorAll('.row-del').forEach(btn=>{
@@ -1265,48 +1247,11 @@
   document.getElementById('addWinnerBtn').addEventListener('click', ()=>{
     const names = winnerNames.value.trim();
     if(!names) return;
-    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names, group: winnerGroup.value.trim(), sent: false });
+    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names });
     winnerNames.value = '';
     saveWinnersToStorage();
     renderWinners();
   });
-
-  // Envía los resultados directamente al formulario de Google, sin abrirlo
-  async function sendWinnerResults(){
-    const pending = winnerNames.value.trim();
-    const unsent = winners.filter(w=>!w.sent);
-    const allNames = unsent.map(w=>w.names).concat(pending ? [pending] : []);
-    const names = allNames.join(', ');
-    const say = (text, bad)=>{ sendWinnerMsg.style.color = bad ? '#a3352a' : ''; sendWinnerMsg.innerHTML = text; };
-    if(!names){ say('No hay ganadores nuevos por enviar. Escribe un nombre o añade alguno a la tabla.', true); return; }
-    const params = new URLSearchParams();
-    params.set(WINNER_FIELDS.ganador, names);
-    params.set(WINNER_FIELDS.fecha, formatDate(winnerDate.value || todayISO()));
-    params.set(WINNER_FIELDS.grupo, winnerGroup.value.trim());
-    const manualLink = WINNER_FORM + '?usp=pp_url&' + params.toString();
-    const fail = ()=>{
-      say('No se han podido enviar los resultados. Comprueba la conexión y vuelve a intentarlo, o <a href="'+manualLink+'" target="_blank" rel="noopener">abre el formulario</a> para enviarlos a mano.', true);
-      sendWinnerBtn.disabled = false;
-      sendWinnerBtn.textContent = 'Enviar resultados';
-    };
-    if(!navigator.onLine){ fail(); return; }
-    sendWinnerBtn.disabled = true;
-    sendWinnerBtn.textContent = 'Enviando…';
-    try{
-      await fetch(WINNER_FORM.replace(/viewform$/, 'formResponse'), { method:'POST', mode:'no-cors', body: params });
-      sendWinnerBtn.textContent = 'Resultados enviados ✓';
-      say('Resultados enviados al formulario.');
-      unsent.forEach(w=> w.sent = true);
-      saveWinnersToStorage();
-      renderWinners();
-      winnerNames.value = '';
-      winnerGroup.value = '';
-      setTimeout(()=>{ sendWinnerBtn.disabled = false; sendWinnerBtn.textContent = 'Enviar resultados'; }, 2500);
-    }catch(err){
-      fail();
-    }
-  }
-  sendWinnerBtn.addEventListener('click', sendWinnerResults);
 
   // Descarga la tabla como .csv, que se abre directamente en Excel
   function csvEscape(text){
@@ -1314,8 +1259,8 @@
     return /[",\n;]/.test(t) ? '"' + t.replace(/"/g,'""') + '"' : t;
   }
   document.getElementById('exportWinnersBtn').addEventListener('click', ()=>{
-    const header = ['Fecha','Ganador/a(s)','Grupo'];
-    const rows = winners.map(w=>[formatDate(w.date), w.names, w.group||'']);
+    const header = ['Fecha','Ganador/a(s)'];
+    const rows = winners.map(w=>[formatDate(w.date), w.names]);
     const csv = '\uFEFF' + [header, ...rows].map(r=>r.map(csvEscape).join(';')).join('\r\n');
     const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
