@@ -235,6 +235,25 @@
   .btn-ghost{background:transparent; color:#6b6046; border-color:#b7a97f;}
   .btn-ghost:hover{background:rgba(0,0,0,.05);}
 
+  .export-actions{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:22px;
+  }
+  .export-actions button{font-size:12.5px; padding:10px 16px;}
+
+  @media print{
+    body{background:#fff !important; padding:0;}
+    .masthead .kicker, .progress, .progress-legend, .folio, footer.note{display:none !important;}
+    .app{max-width:100%;}
+    .dossier{box-shadow:none; border:none;}
+    .dossier::before{display:none;}
+    .export-actions, .actions, .send-status{display:none !important;}
+    #hidden_iframe, .term-popup, .modal-overlay{display:none !important;}
+  }
+
   /* ------------- imágenes / vídeo ------------- */
   figure{margin:18px 0; padding:0;}
   figure img{
@@ -776,6 +795,11 @@
 
       <div class="feedback-panel" id="studentFeedback"></div>
 
+      <div class="export-actions">
+        <button class="btn-ghost" id="btnGuardarPDF">🖨️ Guardar en PDF</button>
+        <button class="btn-ghost" id="btnExportarExcel">📊 Exportar a Excel</button>
+      </div>
+
       <div class="actions">
         <button class="btn-ghost" data-back>← Atrás</button>
         <button class="btn-primary" id="btnEnviar">Enviar expediente →</button>
@@ -822,7 +846,7 @@
    al final mostrará los datos en pantalla para copiarlos a mano.
    ===================================================================== */
   const CONFIG = {
-    formActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfC1yfOdTydyvZIUD13ae9mZ3enUOgbmhxxo7cluXOBBQ7PEA/formResponse",
+    formActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSextX9Ks_SVAy3NTj5ktR4VDbCADBbuQEqhDryt1ayIsVZDPA/formResponse",
     entries: {
       nombreCompleto:         "entry.1757143941", // nombre + apellidos juntos
       curso:                  "entry.317932223",
@@ -1645,9 +1669,10 @@
 
   document.getElementById('btnEnviar').addEventListener('click', sendEverything);
 
-  function sendEverything(){
-    const statusEl = document.getElementById('sendStatus');
-    const payload = {
+  /* Construye el objeto con todos los datos del expediente. Se usa tanto
+     para el envío al formulario como para la exportación a PDF/Excel. */
+  function buildPayload(){
+    return {
       nombreCompleto: `${state.nombre} ${state.apellidos}`.trim(),
       curso: state.curso,
       conocimientosPrevios: state.previos,
@@ -1665,6 +1690,11 @@
       cumpleRedaccion: (state._rubric ? `${state._rubric.cumpleRedaccion ? "Sí" : "No"} (${state._rubric.nRedaccion} palabras)` : ""),
       tiempoTotal: stopTimerAndGetElapsed()
     };
+  }
+
+  function sendEverything(){
+    const statusEl = document.getElementById('sendStatus');
+    const payload = buildPayload();
 
     if(!CONFIG.formActionUrl){
       // Aún no se ha configurado el formulario: mostramos los datos para copiar.
@@ -1706,6 +1736,54 @@
   }
 
   renderProgress();
+
+  /* =====================================================================
+     EXPORTACIÓN A PDF Y A EXCEL (página final)
+     ===================================================================== */
+  const nombreArchivoBase = ()=>{
+    const base = `${state.nombre}_${state.apellidos}`.trim() || "alumno";
+    return base
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita tildes
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "") || "alumno";
+  };
+
+  document.getElementById('btnGuardarPDF').addEventListener('click', ()=>{
+    window.print();
+  });
+
+  document.getElementById('btnExportarExcel').addEventListener('click', ()=>{
+    const payload = buildPayload();
+    const etiquetas = {
+      nombreCompleto:"Nombre y apellidos", curso:"Curso", conocimientosPrevios:"Conocimientos previos",
+      resumen:"Resumen", ortografia:"Ortografía", acentuacion:"Acentuación", sintaxis:"Sintaxis",
+      vocabulario:"Vocabulario", redaccion:"Redacción", notaTest:"Nota del test",
+      detalleTest:"Detalle del test", nivelGlobal:"Nivel global", detalleRubrica:"Detalle de la rúbrica",
+      cumpleResumen:"¿Cumple extensión resumen?", cumpleRedaccion:"¿Cumple extensión redacción?",
+      tiempoTotal:"Tiempo total"
+    };
+    function csvEscape(v){
+      const s = String(v ?? "");
+      if(/[";\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+      return s;
+    }
+    const filas = [
+      ["Campo","Valor"].map(csvEscape).join(";"),
+      ...Object.keys(payload).map(k => [etiquetas[k] || k, payload[k]].map(csvEscape).join(";"))
+    ];
+    // \uFEFF (BOM) para que Excel reconozca bien los acentos al abrir el CSV
+    const csvContent = "\uFEFF" + filas.join("\r\n");
+    const blob = new Blob([csvContent], {type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `expediente_turing_${nombreArchivoBase()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
 
   /* =====================================================================
      GLOSARIO EMERGENTE Y PALABRAS EN INGLÉS (biografía)

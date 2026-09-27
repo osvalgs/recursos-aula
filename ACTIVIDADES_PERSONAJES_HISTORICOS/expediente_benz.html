@@ -235,6 +235,21 @@
   .btn-primary:hover:not(:disabled){background:var(--brass-dark); color:var(--text-light);}
   .btn-ghost{background:transparent; color:#6b6046; border-color:#b7a97f;}
   .btn-ghost:hover{background:rgba(0,0,0,.05);}
+  .btn-export{background:transparent; color:var(--sage); border-color:var(--sage); font-weight:600;}
+  .btn-export:hover:not(:disabled){background:var(--sage); color:var(--text-light);}
+  .export-row{display:flex; gap:10px; margin-top:22px; flex-wrap:wrap;}
+  .export-row button{flex:1; min-width:150px;}
+
+  /* ------------- impresión / PDF ------------- */
+  @media print{
+    body{background:#fff !important; padding:0; color:#000;}
+    .masthead, .progress, .progress-legend, .export-row, .actions, .send-status{display:none !important;}
+    .section{display:none !important;}
+    .section.active{display:block !important;}
+    .dossier{box-shadow:none; border:none; padding:0;}
+    .dossier::before{display:none;}
+    .folio{display:none;}
+  }
 
   /* ------------- imágenes / vídeo ------------- */
   figure{margin:18px 0; padding:0;}
@@ -718,6 +733,11 @@
 
       <div class="feedback-panel" id="studentFeedback"></div>
 
+      <div class="export-row">
+        <button class="btn-export" id="btnPDF">🖨 Guardar como PDF</button>
+        <button class="btn-export" id="btnExcel">📊 Exportar a Excel</button>
+      </div>
+
       <div class="actions">
         <button class="btn-ghost" data-back>← Atrás</button>
         <button class="btn-primary" id="btnEnviar">Enviar ficha →</button>
@@ -753,7 +773,7 @@
    al final mostrará los datos en pantalla para copiarlos a mano.
    ===================================================================== */
   const CONFIG = {
-    formActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSextX9Ks_SVAy3NTj5ktR4VDbCADBbuQEqhDryt1ayIsVZDPA/formResponse",
+    formActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfC1yfOdTydyvZIUD13ae9mZ3enUOgbmhxxo7cluXOBBQ7PEA/formResponse",
     entries: {
       nombreCompleto:         "entry.1757143941", // nombre + apellidos juntos
       curso:                  "entry.317932223",
@@ -765,10 +785,10 @@
       redaccion:              "entry.1045304660",
       notaTest:               "entry.299251515",
       detalleTest:            "entry.1580565298",
-      // --- Conexiones con otras materias (añade estos 3 campos al Google Form y pega aquí sus entry.XXXXXXXXX) ---
-      historia:               "",
-      geografia:              "",
-      ingles:                 "",
+      // --- Conexiones con otras materias ---
+      historia:               "entry.208254186",
+      geografia:              "entry.72142346",
+      ingles:                 "entry.226980627",
       // --- Rúbrica de nivel (solo para ti; el alumnado no ve estos datos) ---
       nivelGlobal:            "entry.1072371234",
       detalleRubrica:         "entry.1468374494",
@@ -1603,10 +1623,12 @@
   }
 
   document.getElementById('btnEnviar').addEventListener('click', sendEverything);
+  document.getElementById('btnPDF').addEventListener('click', exportarPDF);
+  document.getElementById('btnExcel').addEventListener('click', exportarExcel);
 
-  function sendEverything(){
-    const statusEl = document.getElementById('sendStatus');
-    const payload = {
+  /* ---- Construye el objeto de datos final (compartido por envío, PDF y Excel) ---- */
+  function buildPayload(){
+    return {
       nombreCompleto: `${state.nombre} ${state.apellidos}`.trim(),
       curso: state.curso,
       conocimientosPrevios: state.previos,
@@ -1626,6 +1648,50 @@
       cumpleRedaccion: (state._rubric ? `${state._rubric.cumpleRedaccion ? "Sí" : "No"} (${state._rubric.nRedaccion} palabras)` : ""),
       tiempoTotal: stopTimerAndGetElapsed()
     };
+  }
+
+  /* ---- Nombre de archivo seguro a partir del nombre del alumno/a ---- */
+  function nombreArchivoBase(){
+    const n = `${state.nombre}_${state.apellidos}`.trim() || "alumno";
+    return n.normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"") || "alumno";
+  }
+
+  /* ---- Guardar como PDF: abre el diálogo de impresión del navegador ---- */
+  function exportarPDF(){
+    fillSummary();
+    window.print();
+  }
+
+  /* ---- Exportar a Excel: genera un CSV (se abre directamente en Excel) ---- */
+  function exportarExcel(){
+    const payload = buildPayload();
+    const labels = {
+      nombreCompleto:"Nombre completo", curso:"Curso", conocimientosPrevios:"Conocimientos previos",
+      resumen:"Resumen", ortografia:"Ortografía", acentuacion:"Acentuación", vocabulario:"Vocabulario",
+      redaccion:"Redacción", notaTest:"Nota test", detalleTest:"Detalle test",
+      historia:"Historia", geografia:"Geografía", ingles:"Inglés",
+      nivelGlobal:"Nivel global", detalleRubrica:"Detalle rúbrica",
+      cumpleResumen:"Cumple resumen", cumpleRedaccion:"Cumple redacción", tiempoTotal:"Tiempo total"
+    };
+    const escapeCsv = v => `"${String(v==null?"":v).replace(/"/g,'""')}"`;
+    const header = Object.keys(payload).map(k => escapeCsv(labels[k] || k)).join(";");
+    const row = Object.keys(payload).map(k => escapeCsv(payload[k])).join(";");
+    const csv = "\uFEFF" + header + "\r\n" + row + "\r\n";
+    const blob = new Blob([csv], {type:"text/csv;charset=utf-8;"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resultados_${nombreArchivoBase()}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 500);
+  }
+
+  function sendEverything(){
+    const statusEl = document.getElementById('sendStatus');
+    const payload = buildPayload();
 
     if(!CONFIG.formActionUrl){
       // Aún no se ha configurado el formulario: mostramos los datos para copiar.
