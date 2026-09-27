@@ -138,6 +138,23 @@
     font-size:.98rem;
   }
 
+  .ambito-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:26px;
+  }
+  @media (max-width:760px){.ambito-grid{grid-template-columns:1fr;}}
+  .ambito-block{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:22px 24px;
+  }
+  .ambito-block.tuyo{box-shadow:0 0 0 2px var(--amber) inset;}
+  .ambito-tag{
+    display:block; font-size:.92rem; letter-spacing:.01em;
+    color:var(--pine-2); font-weight:600; margin-bottom:10px;
+    font-family:'Fraunces', serif;
+  }
+  .ambito-block h3{
+    margin:0 0 2px; font-size:1.08rem; color:var(--pine-2);
+  }
+
   /* ---------- myth slides ---------- */
   .slide.type-myth{justify-content:center; align-items:center; text-align:center;}
   .myth-icon{margin-bottom:18px;}
@@ -324,24 +341,27 @@
 
   <!-- 3. AMBITO -->
   <section class="slide type-content bg-paper2" data-slide>
-    <div class="slide-inner split reverse">
-      <div class="art">
-        <svg viewBox="0 0 280 240" role="img" aria-label="Tres materias que se unen en un mismo bloque">
-          <circle cx="100" cy="90" r="52" fill="#C88A2E" opacity="0.85"/>
-          <circle cx="180" cy="90" r="52" fill="#A6553A" opacity="0.85"/>
-          <circle cx="140" cy="150" r="52" fill="#5F7F6E" opacity="0.85"/>
-          <text x="140" y="215" text-anchor="middle" fill="#24463D" font-family="Work Sans" font-size="13" font-weight="600">Un solo ámbito</text>
-        </svg>
-      </div>
-      <div>
-        <p class="eyebrow">Vuestro ámbito</p>
-        <h2>Lingüístico y social</h2>
-        <p>Tres materias, un solo profesor que las conoce todas y puede seguir de cerca cómo va cada uno:</p>
-        <ul class="ambito-list">
-          <li>Lengua Castellana e Literatura</li>
-          <li>Lingua Galega e Literatura</li>
-          <li>Xeografía e Historia</li>
-        </ul>
+    <div class="slide-inner">
+      <p class="eyebrow">Cómo se organizan las materias</p>
+      <h2>Dos ámbitos, no asignaturas sueltas</h2>
+      <p style="max-width:60ch;">El PDC agrupa casi todas las materias en dos bloques grandes, cada uno con su propio profesor de referencia:</p>
+      <div class="ambito-grid">
+        <div class="ambito-block tuyo">
+          <span class="ambito-tag">Ámbito sociolingüístico</span>
+          <ul class="ambito-list">
+            <li>Lengua Castellana e Literatura</li>
+            <li>Lingua Galega e Literatura</li>
+            <li>Xeografía e Historia</li>
+          </ul>
+        </div>
+        <div class="ambito-block">
+          <span class="ambito-tag">Ámbito científico-tecnológico</span>
+          <ul class="ambito-list">
+            <li>Matemáticas</li>
+            <li>Física e Química</li>
+            <li>Bioloxía e Xeoloxía</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
