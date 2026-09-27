@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pasaporte lengua</title>
+<title>Pasaporte de lenguas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -937,6 +937,7 @@ function winBox(rank) {
     <div class="actions">
       <button class="btn green" id="w_send" onclick="winSend()">Enviar resultados</button>
       <button class="btn alt" onclick="winPrint()">Imprimir diploma o guardarlo en PDF</button>
+      <button class="btn alt" onclick="winXLSX()">Descargar resultados (Excel)</button>
     </div>
     <p class="ok" id="w_msg" aria-live="polite"></p>
   </div>`;
@@ -1074,6 +1075,56 @@ function apoyo() {
 
 setupScreen();
 
+
+/* ======================= EXPORTAR A EXCEL (.xlsx, sin librerías) ======================= */
+const CRC = (() => { const t = []; for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = b => { let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zip(files) { // ZIP sin compresión
+  const enc = new TextEncoder(), parts = [], cen = []; let off = 0;
+  const u16 = v => [v & 255, v >> 8 & 255], u32 = v => [v & 255, v >> 8 & 255, v >> 16 & 255, v >>> 24 & 255];
+  for (const [name, text] of files) {
+    const nb = enc.encode(name), db = enc.encode(text), c = crc32(db);
+    const head = [...u16(20), ...u16(0x0800), ...u16(0), ...u16(0), ...u16(0x21), ...u32(c), ...u32(db.length), ...u32(db.length), ...u16(nb.length), ...u16(0)];
+    parts.push(new Uint8Array([0x50, 0x4B, 3, 4, ...head]), nb, db);
+    cen.push(new Uint8Array([0x50, 0x4B, 1, 2, ...u16(20), ...head, ...u16(0), ...u16(0), ...u16(0), ...u32(0), ...u32(off)]), nb);
+    off += 30 + nb.length + db.length;
+  }
+  const cs = cen.reduce((a, x) => a + x.length, 0);
+  return new Blob([...parts, ...cen, new Uint8Array([0x50, 0x4B, 5, 6, 0, 0, 0, 0, ...u16(files.length), ...u16(files.length), ...u32(cs), ...u32(off), 0, 0])],
+    {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+function xlsx(rows, cols) { // rows: [[valor | {v, b}]]; b = negrita
+  const x = v => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const L = i => String.fromCharCode(65 + i);
+  const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>${cols.map((w, i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join("")}</cols><sheetData>${
+    rows.map((r, ri) => `<row r="${ri + 1}">${r.map((c, ci) => { if (c === "" || c == null) return ""; const o = typeof c === "object" ? c : {v: c}, ref = L(ci) + (ri + 1), st = o.b ? ' s="1"' : "";
+      return typeof o.v === "number" ? `<c r="${ref}"${st}><v>${o.v}</v></c>` : `<c r="${ref}" t="inlineStr"${st}><is><t xml:space="preserve">${x(o.v)}</t></is></c>`; }).join("")}</row>`).join("")}</sheetData></worksheet>`;
+  return zip([
+    ["[Content_Types].xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
+    ["_rels/.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+    ["xl/workbook.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Resultados" sheetId="1" r:id="rId1"/></sheets></workbook>`],
+    ["xl/_rels/workbook.xml.rels", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`],
+    ["xl/styles.xml", `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border/></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf/><xf fontId="1" applyFont="1"/></cellXfs></styleSheet>`],
+    ["xl/worksheets/sheet1.xml", sheet]
+  ]);
+}
+// Resultados de esta partida en una hoja de Excel
+function winXLSX() {
+  const d = winData(), rank = [...S.teams].sort((a, b) => b.score - a.score), B = v => ({v, b: true});
+  const rows = [
+    [B("Pasaporte de lenguas: resultados")], [],
+    [B("Fecha"), fdate(d.fecha)], [B("Grupo"), d.grupo], [B("Equipo ganador"), d.equipo],
+    [B("Integrantes"), d.integrantes.join(", ")], [B("Puntos"), d.puntos], [],
+    [B("Clasificación")], [B("Puesto"), B("Equipo"), B("Puntos")],
+    ...rank.map((t, i) => [i + 1, t.name, t.score])
+  ];
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(xlsx(rows, [18, 40, 10]));
+  a.download = `resultados_pasaporte_de_lenguas_${(d.fecha || "").split("-").reverse().join("_") || "partida"}.xlsx`;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  const m = $("#w_msg"); m.style.color = ""; m.textContent = "Excel descargado.";
+}
 /* ======================= TECLADO EN PANTALLA ======================= */
 const KB = {on:false, shift:false, key:null};
 try { const v = localStorage.getItem("pl_kb"); KB.on = v === null ? (navigator.maxTouchPoints > 0 || matchMedia("(pointer: coarse)").matches) : v === "1"; } catch (e) {}

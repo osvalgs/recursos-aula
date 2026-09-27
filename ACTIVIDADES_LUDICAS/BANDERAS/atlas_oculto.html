@@ -327,8 +327,8 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <label>Nombre del equipo<input id="wTeam" autocomplete="off"></label>
         <label>Integrantes<textarea id="wMembers" rows="4" placeholder="Un nombre por línea"></textarea></label>
         <label>Grupo<input id="wGroup" autocomplete="off" placeholder="Ej.: 3.º B"></label>
-        <p class="wnote">Los puntos, la fecha y la clasificación se envían también, directamente a tu formulario.</p>
-        <div class="wbtns"><button id="wSend" class="primary" type="button">Enviar resultados</button><button id="wPrint" class="secondary" type="button">Imprimir diploma o guardarlo en PDF</button></div>
+        <p class="wnote">Los puntos, la fecha y la clasificación se incluyen automáticamente.</p>
+        <div class="wbtns"><button id="wSend" class="primary" type="button">Enviar resultados</button><button id="wPrint" class="secondary" type="button">Imprimir diploma o guardarlo en PDF</button><button id="wXlsx" class="secondary" type="button">Descargar resultados (Excel)</button></div>
         <p class="msg" id="wMsg" role="status"></p>
       </div>
     </section>
@@ -803,7 +803,7 @@ $('#hintBtn').addEventListener('click',hint);
 $('#checkBtn').addEventListener('click',check);
 $('#guessIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();}});
 $('#solveBtn').addEventListener('click',()=>{if(!solved)solve(null,0);});
-$('#quitBtn').addEventListener('click',finish);
+$('#quitBtn').addEventListener('click',()=>{if(confirm('¿Terminar la partida ahora? Se mostrará la clasificación con los puntos que hay en este momento.'))finish();});
 document.addEventListener('keydown',e=>{
   if(!$('#slides').hidden)return;
   if($('#game').hidden||e.target.tagName==='INPUT')return;
@@ -896,6 +896,71 @@ $('#wSend').addEventListener('click',()=>{
   fetch(FORM_URL.replace(/viewform$/,'formResponse'),{method:'POST',mode:'no-cors',body:q})
     .then(()=>{wMsg('Resultados enviados. Ya están en tu formulario.','ok');btn.textContent='Enviado ✓';})
     .catch(()=>{wMsg('No se han podido enviar. Comprueba la conexión a internet y vuelve a intentarlo.','no');btn.disabled=false;});
+});
+
+/* excel */
+const CRC=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(b){let c=0xFFFFFFFF;for(let i=0;i<b.length;i++)c=CRC[(c^b[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+function zip(files){
+  const enc=new TextEncoder(),parts=[],central=[];let off=0;
+  const u16=v=>[v&255,(v>>8)&255],u32=v=>[v&255,(v>>8)&255,(v>>16)&255,(v>>>24)&255];
+  for(const [name,text] of files){
+    const nb=enc.encode(name),db=enc.encode(text),crc=crc32(db);
+    const head=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0)]);
+    parts.push(head,nb,db);
+    central.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(0),...u16(0x21),...u32(crc),...u32(db.length),...u32(db.length),...u16(nb.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),nb);
+    off+=head.length+nb.length+db.length;
+  }
+  const csize=central.reduce((a,b)=>a+b.length,0);
+  const end=new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(files.length),...u16(files.length),...u32(csize),...u32(off),...u16(0)]);
+  return new Blob([...parts,...central,end],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+}
+const xe=v=>String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function colL(i){return String.fromCharCode(65+i);}
+function buildXlsx(rows,widths){
+  // rows: array of arrays of {v, s} ; s: 0 normal, 1 negrita, 2 título, 3 cabecera
+  const sheetRows=rows.map((r,ri)=>`<row r="${ri+1}">`+r.map((c,ci)=>{
+    if(c==null||c.v===''||c.v==null)return '';
+    const ref=colL(ci)+(ri+1),st=c.s?` s="${c.s}"`:'';
+    return typeof c.v==='number'?`<c r="${ref}"${st}><v>${c.v}</v></c>`:`<c r="${ref}"${st} t="inlineStr"><is><t xml:space="preserve">${xe(c.v)}</t></is></c>`;
+  }).join('')+'</row>').join('');
+  const sheet=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>${(widths||[20,34,30,12]).map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${sheetRows}</sheetData></worksheet>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="16"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD3DCD6"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="4"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`;
+  return zip([
+    ['[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'],
+    ['_rels/.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'],
+    ['xl/workbook.xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Resultados" sheetId="1" r:id="rId1"/></sheets></workbook>'],
+    ['xl/_rels/workbook.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>'],
+    ['xl/styles.xml',styles],
+    ['xl/worksheets/sheet1.xml',sheet]
+  ]);
+}
+function slug(t){return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');}
+
+$('#wXlsx').addEventListener('click',()=>{
+  const team=$('#wTeam').value.trim();
+  if(!team){wMsg('Escribe el nombre del equipo.','no');$('#wTeam').focus();return;}
+  const members=$('#wMembers').value.split(/[,\n]/).map(x=>x.trim()).filter(Boolean);
+  const group=$('#wGroup').value.trim(),d=new Date(),date=`${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}`;
+  const V=(v,s)=>({v,s}),R=[];
+  R.push([V('Atlas oculto · Resultados',2)]);R.push([]);
+  R.push([V('Fecha',1),V(date)]);
+  R.push([V('Grupo',1),V(group)]);
+  R.push([V('Equipo ganador',1),V(team)]);
+  R.push([V('Puntos',1),V(lastWin.score)]);
+  if(members.length)members.forEach((m,i)=>R.push([i?null:V('Integrantes',1),V(m)]));
+  else R.push([V('Integrantes',1)]);
+  R.push([]);R.push([V('Clasificación',1)]);
+  R.push([V('Posición',3),V('Equipo',3),V('Puntos',3)]);
+  lastWin.ranked.forEach((t,i)=>R.push([V(i+1),V(t.name),V(t.score)]));
+  R.push([]);R.push([V('Banderas de la partida',1)]);
+  R.push([V('N.º',3),V('País',3),V('Acertó',3),V('Puntos',3)]);
+  history.forEach((h,i)=>R.push([V(i+1),V(h.c.n),V(h.team!=null?teams[h.team].name:'Sin acierto'),V(h.team!=null?h.pts:0)]));
+  const stamp=`${d.getFullYear()}_${String(d.getMonth()+1).padStart(2,'0')}_${String(d.getDate()).padStart(2,'0')}`;
+  const name=['resultados_atlas_oculto',slug(group),stamp].filter(Boolean).join('_')+'.xlsx';
+  const url=URL.createObjectURL(buildXlsx(R)),a=document.createElement('a');
+  a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);
+  wMsg('Descargado: '+name,'ok');
 });
 
 /* diploma */
