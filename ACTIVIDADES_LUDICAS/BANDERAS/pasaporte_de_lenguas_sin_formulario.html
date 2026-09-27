@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pasaporte lengua</title>
+<title>Pasaporte lengua (sin formulario)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -916,15 +916,19 @@ function endScreen() {
     <div class="diploma" id="diploma"></div>
   </section>`;
   const el = $("#score"); el.innerHTML = "";
+  histDraw();
 }
 
 /* ======================= REGISTRO DEL EQUIPO GANADOR ======================= */
+const HKEY = "pl_ganadores";
+function histGet() { try { return JSON.parse(localStorage.getItem(HKEY) || "[]"); } catch (e) { return []; } }
+function histSet(h) { try { localStorage.setItem(HKEY, JSON.stringify(h)); return true; } catch (e) { return false; } }
 function winBox(rank) {
   const top = rank.length ? rank[0].score : 0, win = rank.filter(t => t.score === top);
   const today = new Date(), iso = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   return `<div class="winbox">
     <h2>Equipo ganador</h2>
-    <p class="muted" style="text-align:center;margin:0">Escribid los nombres de los integrantes y enviad los resultados.</p>
+    <p class="muted" style="text-align:center;margin:0">Escribid los nombres de los integrantes y guardadlo en el historial.</p>
     <div class="grid">
       <div><label for="w_team">Equipo</label><input type="text" id="w_team" data-k="w_team" autocomplete="off" value="${esc(win.map(t => t.name).join(" y "))}"></div>
       <div><label for="w_group">Grupo</label><input type="text" id="w_group" data-k="w_group" autocomplete="off" placeholder="Ej.: 2.º ESO B"></div>
@@ -933,42 +937,47 @@ function winBox(rank) {
     <label for="w_names">Integrantes</label>
     <input type="text" id="w_names" data-k="w_names" autocomplete="off" placeholder="Separad los nombres con comas">
     <input type="hidden" id="w_pts" value="${top}">
-    <p class="muted" style="margin:.6rem 0 0;font-size:.9rem">Los puntos, la fecha y la clasificación se envían automáticamente.</p>
     <div class="actions">
-      <button class="btn green" id="w_send" onclick="winSend()">Enviar resultados</button>
+      <button class="btn green" onclick="winSave()">Guardar en el historial</button>
       <button class="btn alt" onclick="winPrint()">Imprimir diploma o guardarlo en PDF</button>
+      <button class="btn alt" onclick="histCSV()">Descargar historial (Excel)</button>
     </div>
     <p class="ok" id="w_msg" aria-live="polite"></p>
+    <div id="hist"></div>
   </div>`;
-}
-const FORM = "https://docs.google.com/forms/d/e/1FAIpQLSehN4yRdJ9Kfol9tmoSIBnJ1klAxTYBrzRx4Id8b8jjpf7fKg/viewform";
-const FIELDS = {equipo: "entry.876372629", integrantes: "entry.1390636133", grupo: "entry.772469891",
-  puntos: "entry.1287363973", fecha: "entry.230285897", clasificacion: "entry.1490453748"};
-// Envía los resultados directamente al formulario de Google, sin abrirlo
-async function winSend() {
-  const d = winData(), m = $("#w_msg"), btn = $("#w_send");
-  const say = (t, bad) => { m.style.color = bad ? "var(--red)" : ""; m.innerHTML = t; };
-  if (!d.equipo && !d.integrantes.length) { say("Escribid al menos el equipo o los integrantes.", true); return; }
-  const rank = [...S.teams].sort((a, b) => b.score - a.score);
-  const clas = rank.map((t, i) => `${i + 1}.º ${t.name}: ${t.score} ${t.score === 1 ? "punto" : "puntos"}`).join("\n");
-  const p = new URLSearchParams();
-  p.set(FIELDS.equipo, d.equipo); p.set(FIELDS.integrantes, d.integrantes.join(", ")); p.set(FIELDS.grupo, d.grupo);
-  p.set(FIELDS.puntos, String(d.puntos)); p.set(FIELDS.fecha, fdate(d.fecha)); p.set(FIELDS.clasificacion, clas);
-  const manual = FORM + "?usp=pp_url&" + p.toString();
-  const fail = () => { say(`No se han podido enviar los resultados. Comprobad la conexión y volved a intentarlo, o <a href="${manual}" target="_blank" rel="noopener">abrid el formulario</a> para enviarlos a mano.`, true); btn.disabled = false; btn.textContent = "Enviar resultados"; };
-  if (!navigator.onLine) { fail(); return; }
-  btn.disabled = true; btn.textContent = "Enviando…";
-  try {
-    await fetch(FORM.replace(/viewform$/, "formResponse"), {method: "POST", mode: "no-cors", body: p});
-    btn.textContent = "Resultados enviados ✓";
-    say("Resultados enviados al formulario.");
-  } catch (e) { fail(); }
 }
 function winData() {
   return {fecha: $("#w_date").value, grupo: $("#w_group").value.trim(), equipo: $("#w_team").value.trim(),
     puntos: +$("#w_pts").value, integrantes: $("#w_names").value.split(",").map(n => n.trim()).filter(Boolean)};
 }
+function winSave() {
+  const d = winData(), m = $("#w_msg");
+  if (!d.equipo && !d.integrantes.length) { m.style.color = "var(--red)"; m.textContent = "Escribid al menos el equipo o los integrantes."; return; }
+  const h = histGet(); h.push(d);
+  if (histSet(h)) { m.style.color = ""; m.textContent = "Guardado en el historial."; }
+  else { m.style.color = "var(--red)"; m.textContent = "El navegador no deja guardar aquí: descarga el historial o imprime el diploma."; }
+  histDraw();
+}
 const fdate = f => f ? f.split("-").reverse().join("/") : "";
+function histDraw() {
+  const box = $("#hist"); if (!box) return;
+  const h = histGet();
+  box.innerHTML = h.length ? `<h3 style="margin-top:1rem">Historial de ganadores</h3><div class="histwrap"><table class="hist">
+    <tr><th>Fecha</th><th>Grupo</th><th>Equipo</th><th>Puntos</th><th>Integrantes</th><th></th></tr>
+    ${h.map((r, i) => `<tr><td>${fdate(r.fecha)}</td><td>${esc(r.grupo)}</td><td>${esc(r.equipo)}</td><td>${r.puntos}</td><td>${esc(r.integrantes.join(", "))}</td>
+      <td><button onclick="histDel(${i})" aria-label="Borrar esta fila" title="Borrar">✕</button></td></tr>`).reverse().join("")}</table></div>` : "";
+}
+function histDel(i) { const h = histGet(); if (!confirm("¿Borrar esta fila del historial?")) return; h.splice(i, 1); histSet(h); histDraw(); }
+function histCSV() {
+  const h = histGet(), cur = winData();
+  const rows = h.length ? h : [cur];
+  const q = v => `"${String(v).replace(/"/g, '""')}"`;
+  const csv = "\ufeff" + ["Fecha;Grupo;Equipo;Puntos;Integrantes", ...rows.map(r => [fdate(r.fecha), r.grupo, r.equipo, r.puntos, r.integrantes.join(", ")].map(q).join(";"))].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv], {type: "text/csv;charset=utf-8"}));
+  a.download = "ganadores_pasaporte_lengua.csv"; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
 function winPrint() {
   const d = winData();
   $("#diploma").innerHTML = `<span class="stamp green">Viaje completado</span>
