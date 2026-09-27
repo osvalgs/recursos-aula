@@ -197,6 +197,15 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
 .btn-enviar:hover:not(:disabled){background:var(--wine-light);}
 .btn-enviar:disabled{opacity:0.5;cursor:default;}
 .envio-ok{background:#EAF4EE;border:1px solid #2D7A4A;border-radius:6px;padding:0.75rem 1rem;font-size:14px;color:#1A4A2E;margin-top:0.75rem;display:none;}
+.resumen-export-actions{display:flex;gap:.75rem;margin-top:.75rem;}
+.btn-export{flex:1;background:white;color:var(--wine);border:1.5px solid var(--wine);padding:12px;border-radius:8px;font-size:14px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+.btn-export:hover{background:var(--parchment);}
+@media print{
+  body *{visibility:hidden;}
+  #resumenFinal,#resumenFinal *{visibility:visible;}
+  #resumenFinal{position:absolute;top:0;left:0;width:100%;box-shadow:none;border:none;}
+  #resumenFinal .resumen-export-actions,#resumenFinal #btnEnviar,#resumenFinal #testsIncompletos{display:none!important;}
+}
 
 /* Caja transformación */
 .transf-box{background:#F0F5FF;border:1px dashed #90A8D0;border-radius:8px;padding:1.25rem;margin:0.75rem 0;font-size:14px;}
@@ -961,6 +970,10 @@ footer{background:var(--wine);color:white;text-align:center;padding:1.5rem;margi
     <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">&#128228; Enviar resultados al profesor</button>
     <div class="envio-ok" id="envioOk">&#9989; Resultados enviados correctamente. ¡Buen trabajo!</div>
     <div class="envio-ok" id="yaEnviado" style="display:none;background:#FFF8E8;border-color:#C9972A;color:#7A5200;">&#9888;&#65039; <strong>Ya has enviado tus resultados.</strong> Solo se permite un env&iacute;o por sesi&oacute;n.</div>
+    <div class="resumen-export-actions">
+      <button class="btn-export" onclick="guardarPDF()">&#128190; Guardar en PDF</button>
+      <button class="btn-export" onclick="exportarExcel()">&#128202; Exportar a Excel</button>
+    </div>
   </div>
 </section>
 
@@ -1020,6 +1033,10 @@ function mostrarResumen(){const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;const nota=(Ma
   document.getElementById('btnEnviar').disabled=!allDone;const yaEnvio=sessionStorage.getItem('sintaxis_enviado_'+ALUMNO.toLowerCase().trim());if(yaEnvio){document.getElementById('btnEnviar').style.display='none';document.getElementById('testsIncompletos').style.display='none';document.getElementById('yaEnviado').style.display='block';}document.getElementById('resumenFinal').style.display='block';if(allDone)setTimeout(()=>document.getElementById('resumenFinal').scrollIntoView({behavior:'smooth',block:'start'}),300);}
 
 function enviarResultados(){const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;const nota=(Math.round(tot/20*100)/10).toFixed(1);const nota025=(parseFloat(nota)/10*0.25).toFixed(2).replace('.',',');const iframe=document.createElement('iframe');iframe.style.display='none';iframe.name='hf';document.body.appendChild(iframe);const form=document.createElement('form');form.method='POST';form.action=FORM_ACTION;form.target='hf';[[FIELD_NOMBRE,ALUMNO],[FIELD_CURSO,CURSO],[FIELD_NOTA_10,nota],[FIELD_NOTA_025,nota025]].forEach(([k,v])=>{const inp=document.createElement('input');inp.type='hidden';inp.name=k;inp.value=v;form.appendChild(inp);});document.body.appendChild(form);form.submit();sessionStorage.setItem('sintaxis_enviado_'+ALUMNO.toLowerCase().trim(),'1');document.getElementById('btnEnviar').disabled=true;document.getElementById('btnEnviar').innerHTML='✅ Resultados enviados';document.getElementById('envioOk').style.display='block';}
+
+function guardarPDF(){window.print();}
+
+function exportarExcel(){const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;const nota=(Math.round(tot/20*100)/10).toFixed(1);const nota025=(parseFloat(nota)/10*0.25).toFixed(2).replace('.',',');const strip=s=>String(s).replace(/<[^>]*>/g,'').replace(/&iacute;/g,'í').replace(/&oacute;/g,'ó').replace(/&aacute;/g,'á').replace(/&eacute;/g,'é').replace(/&uacute;/g,'ú');const filas=[['Alumno','Curso','Test 1 (/10)','Test 2 (/10)','Total (/20)','Nota (/10)','Nota (/0,25)'],[ALUMNO,CURSO,t1,t2,tot,nota,nota025],[]];filas.push(['Preguntas falladas']);let hayFallos=false;[1,2].forEach(n=>QS[n].forEach((q,i)=>{if(ST[n].ans[i]!==undefined&&ST[n].ans[i]!==q.c){filas.push(['Test '+n,'P'+(i+1),strip(q.q)]);hayFallos=true;}}));if(!hayFallos)filas.push(['(ninguna)']);const csv='\uFEFF'+filas.map(f=>f.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='resultados_sujeto_complementos_'+(ALUMNO||'alumno').toLowerCase().trim().replace(/\s+/g,'_')+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);}
 
 function show(k){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));var sec=document.getElementById('s-'+k);if(sec)sec.classList.add('active');document.querySelectorAll('.nav-btn').forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf("'"+k+"'")>-1)b.classList.add('active');});window.scrollTo({top:0,behavior:'smooth'});}
 

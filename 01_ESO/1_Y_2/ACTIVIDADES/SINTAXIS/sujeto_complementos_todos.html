@@ -166,6 +166,12 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
 .btn-submit{background:var(--ci);color:white;border:none;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;width:100%;margin-top:.5rem;}
 .btn-submit:hover{background:#155e35;}
 .btn-submit:disabled{background:var(--muted);cursor:not-allowed;}
+.export-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:.8rem;}
+.export-buttons .btn-submit{width:auto;flex:1;min-width:180px;margin-top:0;}
+.btn-pdf{background:var(--cag);}
+.btn-pdf:hover{background:#7E1414;}
+.btn-excel{background:var(--wine);}
+.btn-excel:hover{background:var(--wine-light);}
 .submit-ok{background:#D4F0E0;color:#1A7A44;border-radius:8px;padding:1rem 1.2rem;text-align:center;font-size:15px;font-weight:600;display:none;margin-top:1rem;}
 
 /* NEXT BUTTON */
@@ -704,9 +710,16 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
   <div class="tests-incompletos" id="testsIncompletos"><span id="testsIncompletosMsg"></span></div>
   <button class="btn-submit" id="btnSubmit" onclick="submitForm()" disabled>Enviar resultados al formulario</button>
   <div class="submit-ok" id="submitOk">✔ Resultados enviados correctamente. ¡Buen trabajo!</div>
+
+  <div class="export-buttons">
+    <button class="btn-submit btn-pdf" id="btnPDF" onclick="exportPDF()" disabled>📄 Guardar en PDF</button>
+    <button class="btn-submit btn-excel" id="btnExcel" onclick="exportExcel()" disabled>📊 Exportar a Excel</button>
+  </div>
 </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 // ══ FORM CONFIG ══════════════════════════════════════════════
 const FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLSfS_6JXJGkAd15J5JfLQIzRxv7_hzmZV33WUmrKC_QFxcERMQ/formResponse';
@@ -1002,6 +1015,8 @@ function updateResults(){
     document.getElementById('gradeSubtitle').textContent=`${t1sc+t2sc} respuestas correctas de 40 · cada una vale 0,25 puntos`;
     document.getElementById('testsIncompletos').style.display='none';
     document.getElementById('btnSubmit').disabled=false;
+    document.getElementById('btnPDF').disabled=false;
+    document.getElementById('btnExcel').disabled=false;
   } else {
     function missList(n){const m=[];QS[n].forEach((_,i)=>{if(ST[n].ans[i]===undefined)m.push('P'+(i+1));});return m;}
     const m1=missList(1), m2=missList(2);
@@ -1012,7 +1027,123 @@ function updateResults(){
     document.getElementById('testsIncompletos').style.display='block';
     document.getElementById('gradeSubtitle').textContent='Completa los dos tests para ver tu nota final.';
     document.getElementById('btnSubmit').disabled=true;
+    document.getElementById('btnPDF').disabled=true;
+    document.getElementById('btnExcel').disabled=true;
   }
+}
+
+// ══ HELPERS PARA EXPORTACIÓN ═════════════════════════════════
+function buildResultsSummary(){
+  const t1sc=ST[1].sc, t2sc=ST[2].sc;
+  const total=((t1sc+t2sc)*0.25).toFixed(2);
+  const fecha=new Date().toLocaleDateString('es-ES');
+  const detalle=[];
+  [1,2].forEach(n=>{
+    QS[n].forEach((q,i)=>{
+      const oi=ST[n].ans[i];
+      const marcada=oi!==undefined?q.opts[oi]:'—';
+      const correcta=q.opts[q.ans];
+      const acierto=oi===q.ans;
+      detalle.push({
+        test:'Test '+n,
+        num:i+1,
+        pregunta:q.q,
+        marcada:marcada,
+        correcta:correcta,
+        acierto:acierto?'Sí':'No'
+      });
+    });
+  });
+  return {ALUMNO,CURSO,fecha,t1sc,t2sc,total,detalle};
+}
+
+// ══ EXPORTAR PDF ═════════════════════════════════════════════
+function exportPDF(){
+  if(document.getElementById('btnPDF').disabled) return;
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const R=buildResultsSummary();
+  const marginX=40; let y=50;
+  const pageH=doc.internal.pageSize.getHeight();
+  const pageW=doc.internal.pageSize.getWidth();
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('Sujeto y Complementos — Resultados',marginX,y); y+=26;
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text(`Alumno/a: ${R.ALUMNO}    Curso: ${R.CURSO}    Fecha: ${R.fecha}`,marginX,y); y+=22;
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text(`Nota final: ${R.total} / 10`,marginX,y); y+=18;
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text(`Test 1: ${(R.t1sc*0.25).toFixed(2)} / 5 (${R.t1sc}/20)    Test 2: ${(R.t2sc*0.25).toFixed(2)} / 5 (${R.t2sc}/20)`,marginX,y); y+=28;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(12);
+  doc.text('Detalle de respuestas',marginX,y); y+=18;
+  doc.setFontSize(9);
+
+  const colWidths=[45,42,220,90,90,40];
+  const headers=['Test','Nº','Pregunta','Marcada','Correcta','¿Ok?'];
+  const startX=marginX;
+
+  function drawRow(cells,bold){
+    let x=startX;
+    doc.setFont('helvetica',bold?'bold':'normal');
+    cells.forEach((c,i)=>{
+      const lines=doc.splitTextToSize(String(c),colWidths[i]-4);
+      doc.text(lines,x,y);
+      x+=colWidths[i];
+    });
+    const maxLines=Math.max(...cells.map((c,i)=>doc.splitTextToSize(String(c),colWidths[i]-4).length));
+    return maxLines*11;
+  }
+
+  y+=4;
+  y+=drawRow(headers,true);
+  doc.setLineWidth(0.5); doc.line(startX,y-2,pageW-marginX,y-2);
+  y+=4;
+
+  R.detalle.forEach(d=>{
+    if(y>pageH-50){ doc.addPage(); y=50; y+=drawRow(headers,true); doc.line(startX,y-2,pageW-marginX,y-2); y+=4; }
+    const rowH=drawRow([d.test,d.num,d.pregunta,d.marcada,d.correcta,d.acierto],false);
+    y+=rowH+4;
+  });
+
+  const nombreArchivo=('resultados_sujeto_complementos_'+(R.ALUMNO||'alumno')).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ñ/g,'n')
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')+'.pdf';
+  doc.save(nombreArchivo);
+}
+
+// ══ EXPORTAR EXCEL ═══════════════════════════════════════════
+function exportExcel(){
+  if(document.getElementById('btnExcel').disabled) return;
+  const R=buildResultsSummary();
+
+  const wsResumenData=[
+    ['Alumno/a',R.ALUMNO],
+    ['Curso',R.CURSO],
+    ['Fecha',R.fecha],
+    ['Test 1 (sobre 5)',(R.t1sc*0.25).toFixed(2)],
+    ['Test 1 — aciertos',R.t1sc+' / 20'],
+    ['Test 2 (sobre 5)',(R.t2sc*0.25).toFixed(2)],
+    ['Test 2 — aciertos',R.t2sc+' / 20'],
+    ['Nota final (sobre 10)',R.total]
+  ];
+  const wsResumen=XLSX.utils.aoa_to_sheet(wsResumenData);
+  wsResumen['!cols']=[{wch:22},{wch:20}];
+
+  const wsDetalleData=[['Test','Nº','Pregunta','Respuesta marcada','Respuesta correcta','¿Acierto?']]
+    .concat(R.detalle.map(d=>[d.test,d.num,d.pregunta,d.marcada,d.correcta,d.acierto]));
+  const wsDetalle=XLSX.utils.aoa_to_sheet(wsDetalleData);
+  wsDetalle['!cols']=[{wch:8},{wch:5},{wch:60},{wch:30},{wch:30},{wch:9}];
+
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,wsResumen,'Resumen');
+  XLSX.utils.book_append_sheet(wb,wsDetalle,'Detalle');
+
+  const nombreArchivo=('resultados_sujeto_complementos_'+(R.ALUMNO||'alumno')).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ñ/g,'n')
+    .replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')+'.xlsx';
+  XLSX.writeFile(wb,nombreArchivo);
 }
 
 // ══ FORM SUBMIT ══════════════════════════════════════════════
