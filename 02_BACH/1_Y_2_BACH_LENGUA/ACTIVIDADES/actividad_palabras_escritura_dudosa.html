@@ -105,6 +105,10 @@ table.teo td em{color:#888;font-style:italic;font-size:12px}
 .btn-enviar:hover{background:#145522}
 .btn-enviar:disabled{background:#999;cursor:not-allowed}
 .envio-ok{background:var(--green-l);border:1.5px solid var(--green);border-radius:8px;padding:1rem;text-align:center;color:var(--green);font-size:14px;display:none;margin-top:.75rem;font-weight:600}
+.export-row{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.75rem}
+.btn-exp{flex:1;min-width:200px;color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-pdf{background:var(--accent)}.btn-pdf:hover{background:#5a1020}
+.btn-xls{background:var(--teal)}.btn-xls:hover{background:#145555}
 .pending-msg{background:var(--paper2);border:1px dashed var(--border);border-radius:8px;padding:2rem;text-align:center;font-size:14px;color:#aaa}
 </style>
 </head>
@@ -217,11 +221,17 @@ table.teo td em{color:#888;font-style:italic;font-size:12px}
       <div class="review-wrap" id="reviewWrap"></div>
       <button class="btn-enviar" id="btnEnviar" onclick="enviar()">📤 Enviar oraciones al profesor</button>
       <div class="envio-ok" id="envioOk">✓ Oraciones enviadas correctamente al profesor.</div>
+      <div class="export-row">
+        <button class="btn-exp btn-pdf" onclick="exportarPDF()">📄 Guardar resultados en PDF</button>
+        <button class="btn-exp btn-xls" onclick="exportarExcel()">📊 Exportar a Excel</button>
+      </div>
     </div>
   </div>
 </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 /* 15 parejas únicas divididas en 3 bloques de 5 sin repetición */
 const BLOCKS=[
@@ -399,6 +409,101 @@ function enviar(){
   document.body.appendChild(f);
   document.getElementById('btnEnviar').disabled=true;document.getElementById('envioOk').style.display='block';
 }
+/* ===== EXPORTACIÓN PDF / EXCEL ===== */
+function slugArchivo(s){
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+}
+function recogerResultados(){
+  const filas=[];
+  BLOCKS.forEach(blk=>{
+    blk.pairs.forEach((p,pi)=>{
+      const pid=`b${blk.id}p${pi+1}`;
+      p.words.forEach((w,wi)=>{
+        filas.push({bloque:blk.title,pareja:p.label,palabra:w,oracion:document.getElementById(`${pid}-w${wi}`).value.trim()});
+      });
+    });
+  });
+  return filas;
+}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES');}
+
+function exportarExcel(){
+  if(typeof XLSX==='undefined'){alert('No se pudo cargar la librería de Excel. Comprueba tu conexión a internet e inténtalo de nuevo.');return;}
+  const filas=recogerResultados();
+  const aoa=[
+    ['Palabras de escritura dudosa · PAU Galicia'],
+    ['Alumno/a',G.nombre],
+    ['Curso',G.curso],
+    ['Fecha',fechaHoy()],
+    [],
+    ['Bloque','Pareja','Palabra','Oración del alumno/a']
+  ];
+  filas.forEach(f=>aoa.push([f.bloque,f.pareja,f.palabra,f.oracion||'(sin respuesta)']));
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=[{wch:11},{wch:26},{wch:18},{wch:100}];
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:3}}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Resultados');
+  XLSX.writeFile(wb,'palabras_escritura_dudosa_'+slugArchivo(G.nombre)+'.xlsx');
+}
+
+function exportarPDF(){
+  if(!window.jspdf){alert('No se pudo cargar la librería de PDF. Comprueba tu conexión a internet e inténtalo de nuevo.');return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=15,MAXW=W-2*M,BOTTOM=282;
+  let y=M;
+  function salto(h){if(y+h>BOTTOM){doc.addPage();y=M;}}
+
+  doc.setFillColor(26,26,46);doc.rect(0,0,W,30,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(16);
+  doc.text('Palabras de escritura dudosa',M,14);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text('PAU Galicia · Lengua Castellana y Literatura',M,21);
+  y=40;
+  doc.setTextColor(26,26,46);doc.setFontSize(11);
+  doc.setFont('helvetica','bold');doc.text('Alumno/a:',M,y);
+  doc.setFont('helvetica','normal');doc.text(G.nombre,M+24,y);y+=6;
+  doc.setFont('helvetica','bold');doc.text('Curso:',M,y);
+  doc.setFont('helvetica','normal');doc.text(G.curso,M+24,y);y+=6;
+  doc.setFont('helvetica','bold');doc.text('Fecha:',M,y);
+  doc.setFont('helvetica','normal');doc.text(fechaHoy(),M+24,y);y+=10;
+
+  BLOCKS.forEach(blk=>{
+    salto(14);
+    doc.setFillColor(122,28,46);doc.rect(M,y-5,MAXW,8,'F');
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(11);
+    doc.text(blk.title,M+2,y);
+    y+=8;
+    blk.pairs.forEach((p,pi)=>{
+      const pid=`b${blk.id}p${pi+1}`;
+      salto(12);
+      doc.setTextColor(122,28,46);doc.setFont('helvetica','bold');doc.setFontSize(10.5);
+      doc.text(p.label,M,y);y+=5;
+      p.words.forEach((w,wi)=>{
+        const val=document.getElementById(`${pid}-w${wi}`).value.trim()||'(sin respuesta)';
+        doc.setFont('helvetica','normal');doc.setFontSize(10);
+        const lines=doc.splitTextToSize(val,MAXW-8);
+        salto(6+lines.length*5);
+        doc.setTextColor(26,107,107);doc.setFont('helvetica','bold');
+        doc.text(w+':',M+2,y);y+=5;
+        doc.setTextColor(26,26,46);doc.setFont('helvetica','normal');
+        doc.text(lines,M+6,y);
+        y+=lines.length*5+2;
+      });
+      y+=2;
+    });
+    y+=3;
+  });
+
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){
+    doc.setPage(i);doc.setFontSize(8);doc.setTextColor(140,140,140);doc.setFont('helvetica','normal');
+    doc.text(`Página ${i} de ${n}`,W-M,292,{align:'right'});
+  }
+  doc.save('palabras_escritura_dudosa_'+slugArchivo(G.nombre)+'.pdf');
+}
+
 buildUI();
 </script>
 </body>

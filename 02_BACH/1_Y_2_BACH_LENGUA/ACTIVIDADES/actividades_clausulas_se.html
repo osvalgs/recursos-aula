@@ -181,6 +181,14 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
 .tests-inc{background:#FFF8E8;border:1.5px solid var(--amber);border-radius:8px;padding:1rem;text-align:center;color:#7A4200;font-size:14px;margin-bottom:1rem;display:none;}
 .kahoot-banner{background:linear-gradient(135deg,#46178F 0%,#7B2ECA 100%);color:white;border-radius:10px;padding:2rem;text-align:center;margin-top:2rem;}
 .kahoot-banner h3{font-family:'Playfair Display',serif;font-size:22px;margin-bottom:0.5rem;}
+.export-wrap{margin-top:1.5rem;padding-top:1.25rem;border-top:2px solid var(--parchment);}
+.export-wrap h4{font-size:13px;font-weight:600;color:var(--indigo);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;}
+.export-btns{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;}
+@media(max-width:600px){.export-btns{grid-template-columns:1fr;}}
+.btn-export{border:2px solid var(--indigo);background:white;color:var(--indigo);padding:12px;border-radius:8px;font-size:15px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.btn-export:hover{background:var(--indigo);color:white;}
+.btn-export.xls{border-color:#1D6F42;color:#1D6F42;}
+.btn-export.xls:hover{background:#1D6F42;color:white;}
 .mb-2{margin-bottom:2rem;}
 em{font-style:italic;}
 </style>
@@ -195,8 +203,7 @@ em{font-style:italic;}
     <p>Rellena los datos para empezar. Tus resultados se enviarán al profesor al finalizar.</p>
     <input class="login-input" type="text" id="loginNombre" placeholder="Nombre y apellidos completos" autocomplete="name" maxlength="80">
     <input class="login-input" type="text" id="loginCurso" placeholder="Curso" maxlength="30">
-    </select>
-    <div class="login-err" id="loginErr">Por favor, rellena todos los campos antes de continuar.</div>
+    <div class="login-error" id="loginError">Por favor, rellena todos los campos antes de continuar.</div>
     <button class="login-btn" onclick="doLogin()">Empezar →</button>
   </div>
 </div>
@@ -532,6 +539,13 @@ em{font-style:italic;}
       <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
       <div class="envio-ok" id="envioOk">✅ <strong>¡Resultados enviados!</strong> Tu profesor recibirá tu nota.</div>
       <div class="ya-enviado" id="yaEnviado">⚠️ <strong>Ya has enviado tus resultados.</strong> Solo se permite un envío por sesión.</div>
+      <div class="export-wrap">
+        <h4>Guarda tus resultados</h4>
+        <div class="export-btns">
+          <button class="btn-export" onclick="guardarPDF()">📄 Guardar en PDF</button>
+          <button class="btn-export xls" onclick="exportarExcel()">📊 Exportar a Excel</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -564,15 +578,18 @@ em{font-style:italic;}
   Bachillerato · Lengua Castellana y Literatura · Clasificación de la cláusula y Tipos de SE
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 const FORM_ACTION='https://docs.google.com/forms/d/e/1FAIpQLScyYsueAWhJ0DD2AoVGF0QtwOUY3XP3h-CrB0QYv-0x89o1kQ/formResponse';
 const FIELD_NOMBRE='entry.1791367276',FIELD_T1='entry.2126806944',FIELD_T2='entry.1230015467',FIELD_FIN='entry.1412898436',FIELD_ERR='entry.531157057';
-let ALUMNO='';
+let ALUMNO='',CURSO='';
 
 function doLogin(){
   const v=document.getElementById('loginNombre').value.trim();
-  if(v.split(/\s+/).filter(Boolean).length<2){document.getElementById('loginError').style.display='block';return;}
-  ALUMNO=v;
+  const c=document.getElementById('loginCurso').value.trim();
+  if(v.split(/\s+/).filter(Boolean).length<2||!c){document.getElementById('loginError').style.display='block';return;}
+  ALUMNO=v;CURSO=c;
   document.getElementById('loginOverlay').style.display='none';
   document.getElementById('navUser').style.display='flex';
   document.getElementById('navNombre').textContent=ALUMNO;
@@ -820,6 +837,106 @@ function enviarResultados(){
   document.getElementById('btnEnviar').disabled=true;
   document.getElementById('btnEnviar').innerHTML='✅ Resultados enviados';
   document.getElementById('envioOk').style.display='block';
+}
+
+// ── EXPORTAR RESULTADOS (PDF / EXCEL) ──
+function slug(t){return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+function datosResultados(){
+  const t1=ST[1].sc,t2=ST[2].sc,tot=t1+t2;
+  const nota=(Math.round(tot/20*100)/10).toFixed(1);
+  const filas=[];
+  [1,2].forEach(n=>QS[n].forEach((q,i)=>{
+    const r=ST[n].ans[i];
+    filas.push({test:'Test '+n,num:i+1,q:q.q,resp:r===undefined?'Sin responder':q.opts[r],corr:q.opts[q.c],ok:r===q.c,sin:r===undefined,fb:q.fb});
+  }));
+  return {t1,t2,tot,nota,filas,fecha:new Date().toLocaleString('es-ES')};
+}
+function descargar(blob,nombre){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=nombre;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+}
+function exportarExcel(){
+  const d=datosResultados();
+  const nombre='resultados_clausulas_se_'+slug(ALUMNO);
+  const estado=f=>f.sin?'Sin responder':(f.ok?'Correcta':'Incorrecta');
+  const resumen=[
+    ['Alumno/a',ALUMNO],['Curso',CURSO],['Fecha',d.fecha],[],
+    ['Test Cláusula (sobre 10)',d.t1],['Test SE (sobre 10)',d.t2],
+    ['Total (sobre 20)',d.tot],['Nota final (sobre 10)',parseFloat(d.nota)]
+  ];
+  const detalle=[['Test','Nº','Pregunta','Respuesta del alumno','Respuesta correcta','Resultado']]
+    .concat(d.filas.map(f=>[f.test,f.num,f.q,f.resp,f.corr,estado(f)]));
+  if(window.XLSX){
+    const wb=XLSX.utils.book_new();
+    const ws1=XLSX.utils.aoa_to_sheet(resumen);ws1['!cols']=[{wch:26},{wch:36}];
+    const ws2=XLSX.utils.aoa_to_sheet(detalle);ws2['!cols']=[{wch:8},{wch:5},{wch:70},{wch:34},{wch:34},{wch:14}];
+    XLSX.utils.book_append_sheet(wb,ws1,'Resumen');
+    XLSX.utils.book_append_sheet(wb,ws2,'Detalle');
+    XLSX.writeFile(wb,nombre+'.xlsx');
+  }else{
+    // Plan B sin conexión a la librería: CSV compatible con Excel
+    const csv=resumen.concat([[]],detalle).map(r=>r.map(c=>'"'+String(c===undefined?'':c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+    descargar(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),nombre+'.csv');
+  }
+}
+function guardarPDF(){
+  const d=datosResultados();
+  const nombre='resultados_clausulas_se_'+slug(ALUMNO)+'.pdf';
+  if(!(window.jspdf&&window.jspdf.jsPDF)){pdfPorImpresion(d);return;}
+  const doc=new window.jspdf.jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=15,maxW=W-2*M;let y=0;
+  const clean=t=>String(t).replace(/→/g,'->').replace(/[^\u0020-\u00FF–—‘’“”…•€]/g,'');
+  const ensure=h=>{if(y+h>282){doc.addPage();y=M;}};
+  function write(t,size,style,color,indent){
+    doc.setFont('helvetica',style||'normal');doc.setFontSize(size);doc.setTextColor.apply(doc,color||[28,34,64]);
+    doc.splitTextToSize(clean(t),maxW-(indent||0)).forEach(l=>{ensure(size*0.45);doc.text(l,M+(indent||0),y);y+=size*0.45;});
+  }
+  // Cabecera
+  doc.setFillColor(45,58,140);doc.rect(0,0,W,30,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(17);
+  doc.text('Clasificación de la cláusula y tipos de SE',M,13);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);
+  doc.text('Lengua Castellana y Literatura · Resultados de los tests',M,21);
+  y=40;
+  write('Alumno/a: '+ALUMNO,12,'bold');y+=1;
+  write('Curso: '+CURSO+'    ·    Fecha: '+d.fecha,10,'normal',[90,96,128]);y+=5;
+  // Cajas de puntuación
+  const bw=(maxW-8)/3,vals=[[d.t1+'/10','Test Cláusula'],[d.t2+'/10','Test SE'],[d.tot+'/20','Total']];
+  vals.forEach((v,i)=>{
+    const x=M+i*(bw+4);
+    doc.setFillColor(238,238,255);doc.roundedRect(x,y,bw,20,2,2,'F');
+    doc.setTextColor(45,58,140);doc.setFont('helvetica','bold');doc.setFontSize(16);doc.text(v[0],x+bw/2,y+10,{align:'center'});
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(90,96,128);doc.text(v[1],x+bw/2,y+16,{align:'center'});
+  });
+  y+=25;
+  doc.setFillColor(45,58,140);doc.roundedRect(M,y,maxW,18,2,2,'F');
+  doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);
+  doc.text('Nota final: '+d.nota+' / 10',W/2,y+12,{align:'center'});
+  y+=28;
+  write('Detalle por pregunta',13,'bold',[45,58,140]);y+=3;
+  d.filas.forEach(f=>{
+    ensure(22);
+    const col=f.sin?[146,64,14]:(f.ok?[27,94,32]:[139,26,26]);
+    write(f.test+' · Pregunta '+f.num+'  —  '+(f.sin?'SIN RESPONDER':(f.ok?'CORRECTA':'INCORRECTA')),10,'bold',col);y+=0.5;
+    write(f.q,10,'normal');
+    write('Respuesta del alumno: '+f.resp,9.5,'normal',[60,66,90],3);
+    if(!f.ok){write('Respuesta correcta: '+f.corr,9.5,'bold',[27,94,32],3);write('Explicación: '+f.fb,9,'italic',[90,96,128],3);}
+    y+=3.5;
+  });
+  const n=doc.internal.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(140,140,160);doc.text(clean(ALUMNO)+' · página '+i+' de '+n,W/2,291,{align:'center'});}
+  doc.save(nombre);
+}
+function pdfPorImpresion(d){
+  // Plan B sin conexión a la librería: ventana imprimible → "Guardar como PDF"
+  const esc=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+  const filas=d.filas.map(f=>`<div style="margin:0 0 10px;padding-bottom:8px;border-bottom:1px solid #ddd;page-break-inside:avoid"><b style="color:${f.sin?'#92400E':(f.ok?'#1B5E20':'#8B1A1A')}">${f.test} · P${f.num} — ${f.sin?'SIN RESPONDER':(f.ok?'CORRECTA':'INCORRECTA')}</b><br>${esc(f.q)}<br><small>Respuesta del alumno: ${esc(f.resp)}${f.ok?'':'<br><b>Correcta: '+esc(f.corr)+'</b><br><i>'+esc(f.fb)+'</i>'}</small></div>`).join('');
+  const w=window.open('','_blank');
+  if(!w){alert('Tu navegador ha bloqueado la ventana. Permite las ventanas emergentes e inténtalo de nuevo.');return;}
+  w.document.write(`<html><head><meta charset="UTF-8"><title>resultados_clausulas_se_${slug(ALUMNO)}</title></head><body style="font-family:Arial,sans-serif;font-size:13px;max-width:780px;margin:20px auto"><h2 style="color:#2D3A8C">Clasificación de la cláusula y tipos de SE</h2><p><b>${esc(ALUMNO)}</b> · ${esc(CURSO)} · ${d.fecha}</p><p>Test Cláusula: <b>${d.t1}/10</b> · Test SE: <b>${d.t2}/10</b> · Total: <b>${d.tot}/20</b> · Nota final: <b>${d.nota}/10</b></p><hr>${filas}</body></html>`);
+  w.document.close();w.focus();setTimeout(()=>w.print(),400);
 }
 function show(k){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));

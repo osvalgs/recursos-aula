@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Análisis de Verbos · PAU Galicia</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--ink:#1A1A2E;--paper:#FAFAF7;--paper2:#F3F2EC;--accent:#7A1C2E;--accent2:#C9973A;--teal:#1A6B6B;--teal-l:#E6F4F4;--violet:#4A2C7A;--violet-l:#F0EAF8;--green:#1A5C2A;--green-l:#E6F4E8;--border:rgba(26,26,46,.12);--sh:0 2px 20px rgba(26,26,46,.08);--shL:0 8px 40px rgba(26,26,46,.14)}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -99,6 +102,12 @@ select.vs.fail{border-color:var(--accent);background:#FEF0EF}
 .btn-enviar:disabled{background:#999;cursor:not-allowed}
 .envio-ok{background:var(--green-l);border:1.5px solid var(--green);border-radius:8px;padding:1rem;text-align:center;color:var(--green);font-size:14px;display:none;margin-top:.75rem;font-weight:600}
 .pending-msg{background:var(--paper2);border:1px dashed var(--border);border-radius:8px;padding:2rem;text-align:center;font-size:14px;color:#aaa}
+.exp-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:.75rem}
+@media(max-width:500px){.exp-row{grid-template-columns:1fr}}
+.btn-exp{border:none;padding:13px;border-radius:8px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-pdf{background:var(--accent)}.btn-pdf:hover{background:#5a1020}
+.btn-xls{background:var(--teal)}.btn-xls:hover{background:#145555}
+.exp-note{font-size:12px;color:#888;text-align:center;margin-top:.5rem}
 </style>
 </head>
 <body>
@@ -208,6 +217,11 @@ select.vs.fail{border-color:var(--accent);background:#FEF0EF}
       <div class="blk-grid" id="blkGrid"></div>
       <button class="btn-enviar" id="btnEnviar" onclick="enviar()">📤 Enviar al profesor</button>
       <div class="envio-ok" id="envioOk">✓ Nota enviada correctamente al profesor.</div>
+      <div class="exp-row">
+        <button class="btn-exp btn-pdf" onclick="exportarPDF()">📄 Guardar en PDF</button>
+        <button class="btn-exp btn-xls" onclick="exportarExcel()">📊 Exportar a Excel</button>
+      </div>
+      <div class="exp-note">Incluye tus respuestas, las correctas y las explicaciones de los fallos.</div>
     </div>
   </div>
 </div>
@@ -351,6 +365,113 @@ function enviar(){
   document.body.appendChild(f);
   document.getElementById('btnEnviar').disabled=true;document.getElementById('envioOk').style.display='block';
 }
+/* ===== EXPORTACIÓN (PDF / EXCEL) ===== */
+function slug(t){return t.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');}
+function limpiarHTML(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent;}
+function labelValor(v){const o=VALOR_OPTS.find(x=>x.v===v);return o?o.l:(v||'');}
+function recogerDatos(){
+  const filas=[];
+  BLOCKS.forEach(blk=>{
+    blk.verbs.forEach((v,vi)=>{
+      const pid=`b${blk.id}v${vi+1}`;
+      const campos=[
+        ['Tiempo',`${pid}-t`,v.tiempo,v.exp.tiempo,false],
+        ['Modo',`${pid}-m`,v.modo,v.exp.modo,false],
+        ['Aspecto',`${pid}-a`,v.aspecto,v.exp.aspecto,false],
+        ['Voz',`${pid}-vo`,v.voz,v.exp.voz,false],
+        ['Valor',`${pid}-val`,v.valor,v.exp.valor,true]
+      ];
+      campos.forEach(([campo,id,corr,exp,esValor])=>{
+        const val=document.getElementById(id).value;
+        const ok=val===corr;
+        filas.push({
+          bloque:blk.title,num:vi+1,oracion:limpiarHTML(v.sent),forma:v.forma,campo:campo,
+          alumno:val?(esValor?labelValor(val):val):'(sin responder)',
+          correcta:esValor?labelValor(corr):corr,
+          ok:ok,exp:ok?'':exp
+        });
+      });
+    });
+  });
+  return filas;
+}
+function nombreArchivo(){return 'analisis_verbos_'+slug(G.nombre)+'_'+slug(G.curso);}
+function exportarPDF(){
+  if(!window.jspdf||!window.jspdf.jsPDF){alert('No se pudo cargar la librería de PDF. Comprueba tu conexión a internet e inténtalo de nuevo.');return;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const filas=recogerDatos();
+  const total=G.scores.reduce((a,b)=>a+b,0);
+  const pct=Math.round(total/75*100);
+  const fecha=new Date().toLocaleDateString('es-ES');
+  doc.setFont('helvetica','bold');doc.setFontSize(16);doc.setTextColor(26,26,46);
+  doc.text('Análisis de formas verbales · PAU Galicia',14,16);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(90,90,90);
+  doc.text('Alumno/a: '+G.nombre+'    Curso: '+G.curso+'    Fecha: '+fecha,14,23);
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(122,28,46);
+  doc.text('Puntuación total: '+total+'/75 ('+pct+'%)',14,31);
+  doc.autoTable({
+    startY:35,
+    head:[['Bloque','Aciertos','Sobre','%']],
+    body:BLOCKS.map((b,i)=>[b.title,G.scores[i],25,Math.round(G.scores[i]/25*100)+'%']),
+    theme:'grid',styles:{fontSize:9,cellPadding:2},
+    headStyles:{fillColor:[26,26,46],textColor:255},
+    tableWidth:100
+  });
+  const body=filas.map(f=>[f.bloque.replace('Bloque ','B')+'.'+f.num,f.forma,f.campo,f.alumno,f.correcta,f.ok?'Correcto':'Incorrecto',f.exp]);
+  doc.autoTable({
+    startY:doc.lastAutoTable.finalY+8,
+    head:[['Nº','Forma verbal','Campo','Tu respuesta','Respuesta correcta','Resultado','Explicación (solo fallos)']],
+    body:body,theme:'grid',
+    styles:{fontSize:8,cellPadding:1.8,overflow:'linebreak',valign:'top'},
+    headStyles:{fillColor:[26,26,46],textColor:255},
+    columnStyles:{0:{cellWidth:12},1:{cellWidth:30},2:{cellWidth:18},3:{cellWidth:50},4:{cellWidth:50},5:{cellWidth:20},6:{cellWidth:'auto'}},
+    didParseCell:function(d){
+      if(d.section==='body'){
+        const ok=d.row.raw[5]==='Correcto';
+        d.cell.styles.fillColor=ok?[230,244,232]:[254,240,239];
+        if(d.column.index===5)d.cell.styles.textColor=ok?[26,92,42]:[122,28,46];
+      }
+    },
+    margin:{left:14,right:14}
+  });
+  const n=doc.getNumberOfPages();
+  for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(150,150,150);doc.text('Página '+i+' de '+n,283,203,{align:'right'});}
+  doc.save(nombreArchivo()+'.pdf');
+}
+function exportarExcel(){
+  if(!window.XLSX){alert('No se pudo cargar la librería de Excel. Comprueba tu conexión a internet e inténtalo de nuevo.');return;}
+  const filas=recogerDatos();
+  const total=G.scores.reduce((a,b)=>a+b,0);
+  const fecha=new Date().toLocaleDateString('es-ES');
+  const resumen=[
+    ['Análisis de formas verbales · PAU Galicia'],
+    [],
+    ['Alumno/a',G.nombre],
+    ['Curso',G.curso],
+    ['Fecha',fecha],
+    ['Puntuación total',total],
+    ['Sobre',75],
+    ['Porcentaje',Math.round(total/75*100)/100],
+    [],
+    ['Bloque','Aciertos','Sobre','Porcentaje']
+  ];
+  BLOCKS.forEach((b,i)=>resumen.push([b.title,G.scores[i],25,Math.round(G.scores[i]/25*100)/100]));
+  const ws1=XLSX.utils.aoa_to_sheet(resumen);
+  ws1['!cols']=[{wch:20},{wch:34},{wch:10},{wch:12}];
+  ws1['B8'].z='0%';
+  for(let r=11;r<=13;r++){if(ws1['D'+r])ws1['D'+r].z='0%';}
+  const det=[['Bloque','Nº','Oración','Forma verbal','Campo','Tu respuesta','Respuesta correcta','Resultado','Explicación (solo fallos)']];
+  filas.forEach(f=>det.push([f.bloque,f.num,f.oracion,f.forma,f.campo,f.alumno,f.correcta,f.ok?'Correcto':'Incorrecto',f.exp]));
+  const ws2=XLSX.utils.aoa_to_sheet(det);
+  ws2['!cols']=[{wch:10},{wch:5},{wch:60},{wch:18},{wch:10},{wch:34},{wch:34},{wch:12},{wch:60}];
+  ws2['!autofilter']={ref:'A1:I'+det.length};
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws1,'Resumen');
+  XLSX.utils.book_append_sheet(wb,ws2,'Detalle');
+  XLSX.writeFile(wb,nombreArchivo()+'.xlsx');
+}
+
 buildUI();
 </script>
 </body>
