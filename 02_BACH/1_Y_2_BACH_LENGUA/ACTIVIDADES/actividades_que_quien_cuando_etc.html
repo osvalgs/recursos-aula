@@ -92,7 +92,33 @@ main{max-width:790px;margin:0 auto;padding:2rem 1.5rem 4rem;}
   .palabra-btn{background:#e8f0fb!important;border:1px solid #b8cef0!important;color:#2563a8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
   main{padding:1rem;}
 }
+/* ── EXPORTACIÓN DE RESULTADOS ── */
+.export-box{margin-top:1.5rem;padding-top:1.3rem;border-top:1px solid rgba(250,248,244,.15);}
+.export-box label{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:rgba(250,248,244,.6);margin-bottom:.4rem;}
+.export-box input{width:100%;max-width:360px;padding:8px 10px;font-size:14px;font-family:var(--font-sans);border-radius:var(--radius);border:1px solid rgba(250,248,244,.25);background:rgba(250,248,244,.08);color:var(--cream);text-align:center;}
+.export-box input::placeholder{color:rgba(250,248,244,.4);}
+.export-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:1rem;}
+.btn-exp{padding:9px 20px;font-size:14px;font-weight:500;font-family:var(--font-sans);border-radius:var(--radius);border:1px solid var(--cream);cursor:pointer;}
+.btn-exp.pdf{background:var(--cream);color:var(--ink);}
+.btn-exp.xls{background:var(--green);color:white;border-color:var(--green);}
+.btn-exp:hover{opacity:.88;}
+#informe{display:none;font-family:var(--font-sans);color:#111;}
+#informe h1{font-family:var(--font-serif);font-size:20px;margin-bottom:.2rem;}
+#informe .inf-sub{font-size:12px;color:#555;margin-bottom:.8rem;}
+#informe .inf-datos{font-size:13px;margin-bottom:.8rem;line-height:1.6;}
+#informe h2{font-family:var(--font-serif);font-size:14px;margin:.8rem 0 .3rem;}
+#informe table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:.6rem;}
+#informe th,#informe td{border:1px solid #bbb;padding:3px 5px;text-align:left;vertical-align:top;}
+#informe th{background:#eee;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+#informe tr{break-inside:avoid;}
+#informe .ok{color:#1a6b3c;font-weight:600;}#informe .err{color:#c0392b;font-weight:600;}
+@media print{
+  body.modo-informe header,body.modo-informe .bloque-nav,body.modo-informe .stats-bar,body.modo-informe main{display:none!important;}
+  body.modo-informe #informe{display:block!important;}
+  body.modo-informe{background:white;}
+}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -133,6 +159,7 @@ main{max-width:790px;margin:0 auto;padding:2rem 1.5rem 4rem;}
 </div>
 
 <main id="main"></main>
+<div id="informe"></div>
 
 <script>
 // ── DESPLEGABLES ─────────────────────────────────────────────────────────────
@@ -547,7 +574,11 @@ function buildFinal(){
   return '<div class="puntuacion-final"><h3>Puntuación final del ejercicio</h3>'
     +'<div class="nota-grande">'+nota+'</div>'
     +'<div class="nota-sub">sobre 10 · '+totalOk+' aciertos de 60</div>'
-    +'<div class="nota-comentario">'+c+'</div></div>';
+    +'<div class="nota-comentario">'+c+'</div>'
+    +'<div class="export-box"><label for="nombre-alumno">Nombre y apellidos</label>'
+    +'<input id="nombre-alumno" type="text" placeholder="Escribe tu nombre" oninput="NOMBRE=this.value" value="'+NOMBRE.replace(/"/g,'&quot;')+'">'
+    +'<div class="export-btns"><button class="btn-exp pdf" type="button" onclick="guardarPDF()">⬇ Guardar resultados en PDF</button>'
+    +'<button class="btn-exp xls" type="button" onclick="exportarExcel()">⬇ Exportar a Excel</button></div></div></div>';
 }
 
 function verResultados(b){
@@ -589,7 +620,7 @@ function comprobar(id,b){
   const cl=sc.value,fn=sf.value;
   if(!cl||!fn){fb.style.display='block';fb.className='feedback err';fb.innerHTML='Selecciona tanto la clase de palabra como la función.';return;}
   const ok=cl===it.cl&&fn===it.fn;
-  let antMsg='';
+  let antMsg='',antEst='';
   if(it.rel){
     const selTxt=getSelTxt(id);
     const selN=norm(selTxt);const antN=norm(it.antOK);
@@ -597,10 +628,11 @@ function comprobar(id,b){
     if(!selTxt)antMsg='<br><em>⚠ No has seleccionado el antecedente. Selecciona la palabra o grupo nominal al que hace referencia el pronombre/determinante relativo.</em>';
     else if(!antOk)antMsg='<br><em>⚠ Antecedente seleccionado («'+selTxt+'») incorrecto. El antecedente es: <strong>'+it.antOK+'</strong>.</em>';
     else antMsg='<br><em>✓ Antecedente identificado correctamente: <strong>'+selTxt+'</strong>.</em>';
+    antEst=!selTxt?'No seleccionado':(!antOk?'Incorrecto («'+selTxt+'»)':'Correcto');
   }
   fb.style.display='block';fb.className='feedback '+(ok?'ok':'err');
   fb.innerHTML=(ok?'✓ Correcto. ':'✗ Incorrecto. ')+it.ex+antMsg;
-  estado[id]={cl,fn,respondido:true,correcto:ok,antMsg};
+  estado[id]={cl,fn,respondido:true,correcto:ok,antMsg,antEst};
   const orDiv=document.getElementById('or-'+id);
   if(orDiv){orDiv.classList.remove('respondida-ok','respondida-err');orDiv.classList.add(ok?'respondida-ok':'respondida-err');}
   const btn=document.getElementById('btn-'+id);
@@ -633,6 +665,80 @@ document.addEventListener('click',e=>{
   const a=document.getElementById('anchor-'+popupAbierto);
   if(a&&!a.contains(e.target))cerrar(popupAbierto);
 });
+
+// ── EXPORTACIÓN DE RESULTADOS (PDF / EXCEL) ──────────────────────────────────
+let NOMBRE='';
+const BLOQ_NOM=['Bloque 1 · sin tilde','Bloque 2 · con tilde / cuyo','Bloque 3 · sin tilde','Bloque 4 · con tilde / cuyo'];
+function etiqueta(lista,v){const o=lista.find(x=>x.v===v);return v&&o?o.l:'—';}
+function sinHTML(h){const d=document.createElement('div');d.innerHTML=h;return d.textContent;}
+function fechaHoy(){return new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});}
+function datosResultados(){
+  const filas=[];const res=[];let totOk=0;
+  [0,1,2,3].forEach(b=>{
+    const datos=ALL_DATA[b];let ok=0;
+    ORDENES[b].forEach((idx,pos)=>{
+      const it=datos[idx];const st=estado[it.id]||{};
+      if(st.correcto)ok++;
+      filas.push({
+        num:b*15+pos+1,bloque:BLOQ_NOM[b],
+        oracion:it.t.replace('<T>',it.p.toUpperCase()),palabra:it.p,
+        clAl:st.respondido&&st.cl?etiqueta(ALL_CL[b],st.cl):'Sin responder',
+        clOk:etiqueta(ALL_CL[b],it.cl),
+        fnAl:st.respondido&&st.fn?etiqueta(ALL_FN[b],st.fn):'Sin responder',
+        fnOk:etiqueta(ALL_FN[b],it.fn),
+        ant:it.rel?(st.antEst||'—'):'No procede',
+        res:st.respondido&&st.cl?(st.correcto?'Correcta':'Incorrecta'):'Sin responder'
+      });
+    });
+    totOk+=ok;res.push({bloque:BLOQ_NOM[b],ok,err:15-ok,pct:Math.round(ok/15*100)});
+  });
+  return {filas,res,totOk,nota:(totOk/60*10).toFixed(1)};
+}
+function nombreArchivo(ext){
+  const n=(NOMBRE||'alumno').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ñ/g,'n').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+  return 'resultados_clase_palabra_funcion_'+(n||'alumno')+'.'+ext;
+}
+function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function guardarPDF(){
+  if(!NOMBRE.trim()&&!confirm('No has escrito tu nombre. ¿Guardar igualmente?'))return;
+  const D=datosResultados();
+  let h='<h1>Clase de palabra y función sintáctica</h1>'
+    +'<div class="inf-sub">Lengua castellana y literatura · que/qué, quien/quién, cuando/cuándo, donde/dónde, como/cómo, cuyo, si</div>'
+    +'<div class="inf-datos"><strong>Alumno/a:</strong> '+esc(NOMBRE||'—')+'<br><strong>Fecha:</strong> '+fechaHoy()
+    +'<br><strong>Nota final:</strong> '+D.nota+' / 10 ('+D.totOk+' aciertos de 60)</div>'
+    +'<h2>Resumen por bloques</h2><table><tr><th>Bloque</th><th>Correctas</th><th>Incorrectas / sin responder</th><th>% aciertos</th></tr>'
+    +D.res.map(r=>'<tr><td>'+r.bloque+'</td><td>'+r.ok+'</td><td>'+r.err+'</td><td>'+r.pct+'%</td></tr>').join('')+'</table>'
+    +'<h2>Detalle de respuestas</h2><table><tr><th>Nº</th><th>Oración</th><th>Clase (respuesta)</th><th>Clase correcta</th><th>Función (respuesta)</th><th>Función correcta</th><th>Antecedente</th><th>Resultado</th></tr>'
+    +D.filas.map(f=>'<tr><td>'+f.num+'</td><td>'+esc(f.oracion)+'</td><td>'+esc(f.clAl)+'</td><td>'+esc(f.clOk)+'</td><td>'+esc(f.fnAl)+'</td><td>'+esc(f.fnOk)+'</td><td>'+esc(f.ant)+'</td><td class="'+(f.res==='Correcta'?'ok':'err')+'">'+f.res+'</td></tr>').join('')+'</table>';
+  document.getElementById('informe').innerHTML=h;
+  const tituloPrev=document.title;document.title=nombreArchivo('pdf').replace('.pdf','');
+  document.body.classList.add('modo-informe');
+  const fin=()=>{document.body.classList.remove('modo-informe');document.title=tituloPrev;window.removeEventListener('afterprint',fin);};
+  window.addEventListener('afterprint',fin);
+  setTimeout(()=>{window.print();setTimeout(fin,1000);},100);
+}
+function exportarExcel(){
+  if(!NOMBRE.trim()&&!confirm('No has escrito tu nombre. ¿Exportar igualmente?'))return;
+  const D=datosResultados();
+  const resumen=[['Clase de palabra y función sintáctica'],[],['Alumno/a',NOMBRE||'—'],['Fecha',fechaHoy()],['Nota final (sobre 10)',Number(D.nota)],['Aciertos',D.totOk+' de 60'],[],
+    ['Bloque','Correctas','Incorrectas / sin responder','% aciertos']].concat(D.res.map(r=>[r.bloque,r.ok,r.err,r.pct/100]));
+  const detalle=[['Nº','Bloque','Oración','Palabra','Clase (respuesta)','Clase correcta','Función (respuesta)','Función correcta','Antecedente','Resultado']]
+    .concat(D.filas.map(f=>[f.num,f.bloque,f.oracion,f.palabra,f.clAl,f.clOk,f.fnAl,f.fnOk,f.ant,f.res]));
+  if(typeof XLSX==='undefined'){
+    // Alternativa sin conexión: CSV compatible con Excel
+    const csv=[...resumen,[],...detalle].map(r=>r.map(c=>'"'+String(c??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));
+    a.download=nombreArchivo('csv');document.body.appendChild(a);a.click();a.remove();return;
+  }
+  const wb=XLSX.utils.book_new();
+  const ws1=XLSX.utils.aoa_to_sheet(resumen);ws1['!cols']=[{wch:30},{wch:14},{wch:26},{wch:12}];
+  for(let i=0;i<4;i++){const c=ws1[XLSX.utils.encode_cell({r:8+i,c:3})];if(c)c.z='0%';}
+  const ws2=XLSX.utils.aoa_to_sheet(detalle);
+  ws2['!cols']=[{wch:5},{wch:24},{wch:60},{wch:10},{wch:45},{wch:45},{wch:38},{wch:38},{wch:22},{wch:13}];
+  ws2['!autofilter']={ref:'A1:J'+detalle.length};
+  XLSX.utils.book_append_sheet(wb,ws1,'Resumen');XLSX.utils.book_append_sheet(wb,ws2,'Detalle');
+  XLSX.writeFile(wb,nombreArchivo('xlsx'));
+}
 
 renderBloque(0);
 </script>
