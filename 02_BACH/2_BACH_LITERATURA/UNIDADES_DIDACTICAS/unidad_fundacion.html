@@ -165,6 +165,15 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
 .btn-enviar:disabled{background:#888;cursor:not-allowed;}
 .envio-ok{background:#EAF4E8;border:1.5px solid #3A8C3A;border-radius:8px;padding:1rem;text-align:center;color:#1F5C1F;font-size:14px;display:none;margin-top:0.75rem;}
 .ya-enviado{background:#FFF8E8;border:1.5px solid var(--ocre);border-radius:8px;padding:1rem;text-align:center;color:#7A5200;font-size:14px;display:none;margin-top:0.75rem;}
+
+/* EXPORTAR PDF / EXCEL */
+.export-row{display:flex;gap:0.75rem;margin-top:1rem;}
+.btn-export{flex:1;background:var(--navy);color:white;border:none;padding:12px;border-radius:8px;font-size:14px;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background 0.15s;}
+.btn-export:hover{background:var(--navy-light);}
+.btn-export:disabled{background:#888;cursor:not-allowed;}
+.btn-export.excel{background:#1A7340;}
+.btn-export.excel:hover{background:#1F8C4C;}
+@media(max-width:500px){.export-row{flex-direction:column;}}
 .tests-incompletos{background:#FFF8E8;border:1.5px solid var(--ocre);border-radius:8px;padding:1rem;text-align:center;color:#7A5200;font-size:14px;margin-bottom:1rem;display:none;}
 
 /* KAHOOT */
@@ -222,6 +231,8 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
 .ej-result.ok{background:#EAF4E8;color:#1F5C1F;}
 .ej-result.parcial{background:#FFF8E8;color:#7A5200;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -827,6 +838,10 @@ body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--
           <h4>Preguntas a repasar</h4>
           <div id="resumenErrores"></div>
         </div>
+        <div class="export-row">
+          <button class="btn-export" id="btnPDF" onclick="exportarPDF()">📄 Descargar PDF</button>
+          <button class="btn-export excel" id="btnExcel" onclick="exportarExcel()">📊 Exportar Excel</button>
+        </div>
         <div class="tests-incompletos" id="testsIncompletos">⚠️ Completa primero el Test 1 para poder enviar los resultados.</div>
         <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">📤 Enviar resultados al profesor</button>
         <div class="envio-ok" id="envioOk">✅ Resultados enviados correctamente. ¡Buen trabajo!</div>
@@ -996,6 +1011,8 @@ function mostrarResumen(){
   var t1done = Object.keys(ST[1].ans).length===QS[1].length;
   document.getElementById('testsIncompletos').style.display = t1done?'none':'block';
   document.getElementById('btnEnviar').disabled = !t1done;
+  document.getElementById('btnPDF').disabled = !t1done;
+  document.getElementById('btnExcel').disabled = !t1done;
   var yaEnvio = sessionStorage.getItem('fundacion_enviado_'+ALUMNO.toLowerCase().trim());
   if(yaEnvio){document.getElementById('btnEnviar').style.display='none';document.getElementById('testsIncompletos').style.display='none';document.getElementById('yaEnviado').style.display='block';}
   document.getElementById('resumenFinal').style.display='block';
@@ -1020,6 +1037,77 @@ function enviarResultados(){
   document.getElementById('btnEnviar').disabled=true;
   document.getElementById('btnEnviar').innerHTML='✅ Resultados enviados';
   document.getElementById('envioOk').style.display='block';
+}
+
+function _resumenDatos(){
+  var t1=ST[1].sc, t2=ST[2].sc, tot=t1+t2;
+  var nota = (Math.round(tot/16*100)/10).toFixed(1);
+  var errores=[];
+  [1,2].forEach(function(n){
+    QS[n].forEach(function(q,i){
+      if(ST[n].ans[i]!==undefined && ST[n].ans[i]!==q.c) errores.push('Test '+n+' – P'+(i+1)+': '+q.q);
+    });
+  });
+  return {t1:t1,t2:t2,tot:tot,nota:nota,errores:errores};
+}
+function _nombreArchivo(ext){
+  return 'resultados_fundacion_'+(ALUMNO||'alumno').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'')+'.'+ext;
+}
+
+function exportarPDF(){
+  var d = _resumenDatos();
+  var jsPDFCtor = window.jspdf && window.jspdf.jsPDF;
+  if(!jsPDFCtor){ alert('No se pudo cargar el generador de PDF. Comprueba tu conexión a internet e inténtalo de nuevo.'); return; }
+  var doc = new jsPDFCtor();
+  doc.setFont('helvetica','bold'); doc.setFontSize(17);
+  doc.text('La Fundación · Antonio Buero Vallejo', 14, 18);
+  doc.setFontSize(12); doc.text('Resultados de la evaluación', 14, 26);
+  doc.setDrawColor(155,27,110); doc.setLineWidth(0.8); doc.line(14,30,196,30);
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  doc.text('Alumno/a: '+ALUMNO, 14, 40);
+  doc.text('Fecha: '+new Date().toLocaleDateString(), 14, 47);
+  doc.text('Test 1 (contexto y biografía): '+d.t1+' / 8', 14, 58);
+  doc.text('Test 2 (temas, personajes y técnicas): '+d.t2+' / 8', 14, 65);
+  doc.text('Puntuación total: '+d.tot+' / 16', 14, 72);
+  doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('Nota estimada: '+d.nota+' / 10', 14, 82);
+  doc.setFont('helvetica','normal'); doc.setFontSize(11);
+  var y = 95;
+  doc.setFont('helvetica','bold'); doc.text('Preguntas a repasar:', 14, y); y+=7;
+  doc.setFont('helvetica','normal');
+  if(d.errores.length){
+    d.errores.forEach(function(e){
+      var lines = doc.splitTextToSize(e, 178);
+      lines.forEach(function(l){ if(y>280){doc.addPage(); y=20;} doc.text(l,14,y); y+=6; });
+    });
+  } else {
+    doc.text('Ninguna. ¡Enhorabuena!', 14, y);
+  }
+  doc.save(_nombreArchivo('pdf'));
+}
+
+function exportarExcel(){
+  var d = _resumenDatos();
+  if(!window.XLSX){ alert('No se pudo cargar el generador de Excel. Comprueba tu conexión a internet e inténtalo de nuevo.'); return; }
+  var data = [
+    ['La Fundación · Antonio Buero Vallejo — Resultados'],
+    [],
+    ['Alumno/a', ALUMNO],
+    ['Fecha', new Date().toLocaleDateString()],
+    ['Test 1 (/8)', d.t1],
+    ['Test 2 (/8)', d.t2],
+    ['Total (/16)', d.tot],
+    ['Nota estimada (/10)', d.nota],
+    [],
+    ['Preguntas a repasar']
+  ];
+  if(d.errores.length){ d.errores.forEach(function(e){ data.push([e]); }); }
+  else { data.push(['Ninguna. ¡Enhorabuena!']); }
+  var ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:55},{wch:20}];
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Resultados');
+  XLSX.writeFile(wb, _nombreArchivo('xlsx'));
 }
 
 // ── EJERCICIOS INTERACTIVOS ──
