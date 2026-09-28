@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Literatura Barroca &middot; Unidad Did&aacute;ctica &middot; 1.&ordm; Bachillerato</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
   --verde:#1B3A2D;--verde-light:#2D6046;
@@ -1071,6 +1073,10 @@ footer{background:var(--verde);color:white;text-align:center;padding:1.5rem;marg
     <button class="btn-enviar" id="btnEnviar" onclick="enviarResultados()">&#128228; Enviar resultados al profesor</button>
     <div class="envio-ok" id="envioOk">&#9989; <strong>&iexcl;Resultados enviados!</strong> Tu profesor recibir&aacute; tu nota en breve.</div>
     <div class="envio-ok" id="yaEnviado" style="display:none;background:#FFF8E8;border-color:var(--oro);color:#7A5200;">&#9888;&#65039; Ya has enviado tus resultados. Solo se permite un env&iacute;o.</div>
+    <div class="export-wrap" style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+      <button class="btn-enviar" style="background:var(--verde-light);" onclick="exportarPDF()">&#128190; Guardar resultados en PDF</button>
+      <button class="btn-enviar" style="background:var(--oro-light);" onclick="exportarExcel()">&#128202; Exportar a Excel</button>
+    </div>
   </div>
 
   <!-- BLOQUE ENVÍO -->
@@ -1084,6 +1090,10 @@ footer{background:var(--verde);color:white;text-align:center;padding:1.5rem;marg
     <button class="btn-enviar" id="btnEnviarFinal" onclick="intentarEnviar()">&#128228; Enviar resultados al profesor</button>
     <div class="envio-ok" id="envioOkFinal" style="margin-top:0.75rem;">&#9989; <strong>&iexcl;Resultados enviados!</strong> Tu profesor recibir&aacute; tu nota en breve.</div>
     <div class="envio-ok" id="yaEnviadoFinal" style="display:none;margin-top:0.75rem;background:#FFF8E8;border-color:var(--oro);color:#7A5200;">&#9888;&#65039; Ya has enviado tus resultados. Solo se permite un env&iacute;o.</div>
+    <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+      <button class="btn-enviar" style="background:var(--verde-light);" onclick="exportarPDF()">&#128190; Guardar resultados en PDF</button>
+      <button class="btn-enviar" style="background:var(--oro-light);" onclick="exportarExcel()">&#128202; Exportar a Excel</button>
+    </div>
   </div>
 
   <div class="kahoot-banner">
@@ -1478,6 +1488,79 @@ function ejHuecosBloquear(gid, respuestas) {
     res.textContent = ok + '/' + respuestas.length + ' correctas' + (ok === respuestas.length ? ' \u00a1Perfecto! \ud83c\udf89' : '');
     res.className = 'ej-result ' + (ok === respuestas.length ? 'ok' : 'parcial');
   }
+}
+
+/* ── EXPORTAR RESULTADOS (PDF / EXCEL) ── */
+function _txt(h) { var e = document.createElement('div'); e.innerHTML = String(h); return (e.textContent || '').replace(/\s+/g,' ').trim(); }
+function _datosExport() {
+  var t1 = ST[1].sc, t2 = ST[2].sc, tot = t1 + t2;
+  var nota = (Math.round(tot / 20 * 100) / 10).toFixed(1);
+  var filas = [];
+  [1,2].forEach(function(n) {
+    QS[n].forEach(function(q, i) {
+      var r = ST[n].ans[i];
+      var enunciado = _txt(q.q);
+      filas.push({
+        test: 'Test ' + n, num: i + 1, pregunta: enunciado,
+        respuesta: r === undefined ? '(sin contestar)' : _txt(q.opts[r]),
+        correcta: _txt(q.opts[q.c]),
+        estado: r === undefined ? 'Sin contestar' : (r === q.c ? 'Correcta' : 'Incorrecta')
+      });
+    });
+  });
+  return { alumno: ALUMNO || '', curso: CURSO_ALUMNO || CURSO_FIJO || '', t1: t1, t2: t2, tot: tot, nota: nota, filas: filas };
+}
+function _nombreArchivo(ext) {
+  var n = (ALUMNO || 'alumno').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'');
+  return 'resultados_literatura_barroca_' + n + '.' + ext;
+}
+function exportarExcel() {
+  if (typeof XLSX === 'undefined') { alert('No se ha podido cargar la librer\u00eda de Excel. Comprueba tu conexi\u00f3n a internet.'); return; }
+  var d = _datosExport();
+  var resumen = [
+    ['Unidad: Literatura Barroca (1.\u00ba Bachillerato)'], [],
+    ['Alumno/a', d.alumno], ['Curso', d.curso],
+    ['Test 1 (sobre 10)', d.t1], ['Test 2 (sobre 10)', d.t2],
+    ['Total (sobre 20)', d.tot], ['Nota final (sobre 10)', parseFloat(d.nota)]
+  ];
+  var detalle = [['Test','N.\u00ba','Pregunta','Tu respuesta','Respuesta correcta','Estado']];
+  d.filas.forEach(function(f){ detalle.push([f.test, f.num, f.pregunta, f.respuesta, f.correcta, f.estado]); });
+  var wb = XLSX.utils.book_new();
+  var ws1 = XLSX.utils.aoa_to_sheet(resumen); ws1['!cols'] = [{wch:28},{wch:32}];
+  var ws2 = XLSX.utils.aoa_to_sheet(detalle); ws2['!cols'] = [{wch:8},{wch:5},{wch:70},{wch:45},{wch:45},{wch:15}];
+  XLSX.utils.book_append_sheet(wb, ws1, 'Resumen');
+  XLSX.utils.book_append_sheet(wb, ws2, 'Detalle');
+  XLSX.writeFile(wb, _nombreArchivo('xlsx'));
+}
+function exportarPDF() {
+  if (!window.jspdf) { alert('No se ha podido cargar la librer\u00eda de PDF. Comprueba tu conexi\u00f3n a internet.'); return; }
+  var d = _datosExport();
+  var doc = new window.jspdf.jsPDF({ unit: 'mm', format: 'a4' });
+  var W = 210, M = 15, y = 20, maxW = W - 2 * M;
+  function salto(h) { if (y + h > 282) { doc.addPage(); y = 20; } }
+  doc.setFont('times','bold'); doc.setFontSize(16); doc.setTextColor(27,58,45);
+  doc.text('Literatura Barroca \u00b7 Resultados', M, y); y += 8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(30,30,30);
+  doc.text('Alumno/a: ' + d.alumno + (d.curso ? '   \u00b7   Curso: ' + d.curso : ''), M, y); y += 6;
+  doc.text('Test 1: ' + d.t1 + '/10   Test 2: ' + d.t2 + '/10   Total: ' + d.tot + '/20', M, y); y += 6;
+  doc.setFont('helvetica','bold'); doc.text('Nota final: ' + d.nota + ' / 10', M, y); y += 8;
+  doc.setDrawColor(184,134,11); doc.line(M, y, W - M, y); y += 6;
+  d.filas.forEach(function(f) {
+    var txt = doc.splitTextToSize(f.test + ' P' + f.num + ': ' + f.pregunta, maxW);
+    var r1 = doc.splitTextToSize('Tu respuesta: ' + f.respuesta, maxW - 4);
+    var r2 = f.estado === 'Incorrecta' ? doc.splitTextToSize('Correcta: ' + f.correcta, maxW - 4) : [];
+    salto(txt.length * 5 + (r1.length + r2.length) * 5 + 6);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(30,30,30);
+    doc.text(txt, M, y); y += txt.length * 5;
+    doc.setFont('helvetica','normal');
+    if (f.estado === 'Correcta') doc.setTextColor(30,120,60);
+    else if (f.estado === 'Incorrecta') doc.setTextColor(180,40,40);
+    else doc.setTextColor(120,120,120);
+    doc.text(r1, M + 4, y); y += r1.length * 5;
+    if (r2.length) { doc.setTextColor(30,120,60); doc.text(r2, M + 4, y); y += r2.length * 5; }
+    y += 3;
+  });
+  doc.save(_nombreArchivo('pdf'));
 }
 </script>
 </body>
