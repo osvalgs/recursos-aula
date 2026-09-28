@@ -109,6 +109,11 @@ table.teo td em{color:#888;font-style:italic;font-size:12px}
 .btn-exp{flex:1;min-width:200px;color:#fff;border:none;padding:13px;border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-pdf{background:var(--accent)}.btn-pdf:hover{background:#5a1020}
 .btn-xls{background:var(--teal)}.btn-xls:hover{background:#145555}
+.inp-sent.good{border-color:var(--green);background:#F3FAF4}
+.block-ok.err{background:#FFF8E8;border-color:var(--accent2);color:#7A5200}
+.rv-ok{color:var(--green);font-weight:600}.rv-err{color:var(--accent);font-weight:600}.rv-vac{color:#7A5200;font-weight:600}
+.go-res{display:none;text-align:center;padding:.5rem 0 1rem}.go-res.show{display:block}
+.go-res .go-btn{background:var(--green);font-size:16px;padding:15px 32px}.go-res .go-btn:hover{background:#145522}
 .pending-msg{background:var(--paper2);border:1px dashed var(--border);border-radius:8px;padding:2rem;text-align:center;font-size:14px;color:#aaa}
 </style>
 </head>
@@ -201,9 +206,13 @@ table.teo td em{color:#888;font-style:italic;font-size:12px}
   <div class="enunciado-box">
     <h3>Enunciado</h3>
     <p>Muestre, con ejemplos que proporcionen un contexto suficiente, la diferencia de uso entre las siguientes parejas de términos.</p>
+    <p style="margin-top:.6rem;font-size:13px;opacity:.8">Cada oración debe tener más de dos palabras y sentido completo. Al comprobar cada bloque se señalarán los fallos; si los hay, podrás corregirlos o continuar y se enviarán al profesor tal cual.</p>
   </div>
 
   <div id="bloques-wrap"></div>
+  <div class="go-res" id="goRes">
+    <button class="go-btn" onclick="showTab('resultados',document.querySelectorAll('.tb')[2])">📤 Ir a resultados y enviar →</button>
+  </div>
 </div>
 
 <div class="sec" id="sec-resultados">
@@ -214,9 +223,9 @@ table.teo td em{color:#888;font-style:italic;font-size:12px}
     <div class="sp-hdr"><h3>Listo para enviar</h3><p id="scoreAlumno">—</p></div>
     <div class="sp-body">
       <div class="nota-box">
-        <div class="nota">✓</div>
-        <div class="nlbl">Ejercicio completado</div>
-        <div class="nmsg">El profesor evaluará tus oraciones y asignará la nota (0,25 pts por pareja).</div>
+        <div class="nota" id="notaNum">✓</div>
+        <div class="nlbl" id="notaLbl">Ejercicio completado</div>
+        <div class="nmsg" id="notaMsg">El profesor evaluará tus oraciones y asignará la nota (0,25 pts por pareja).</div>
       </div>
       <div class="review-wrap" id="reviewWrap"></div>
       <button class="btn-enviar" id="btnEnviar" onclick="enviar()">📤 Enviar oraciones al profesor</button>
@@ -309,98 +318,200 @@ function buildUI(){
   });
 }
 
-function normStr(s){
-  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace('/a','').trim();
+/* ===== COMPROBACIÓN DE ORACIONES ===== */
+const LET='a-záéíóúüñ';
+const SUF_AR='ar|o|as|a|amos|áis|an|é|aste|ó|asteis|aron|aba|abas|ábamos|abais|aban|ando|ado|ada|ados|adas|ará|arás|aremos|aréis|arán|aría|arías|aríamos|arían|e|es|emos|éis|en|ara|aras|áramos|arais|aran';
+const PATRONES={
+  'sobretodo':'sobretodos?',
+  'sobre todo':'sobre todo',
+  'aparte':'aparte',
+  'a parte':'a (?:una )?parte',
+  'sino':'sino',
+  'si no':'si no',
+  'bello':'bell[oa]s?',
+  'vello':'vellos?',
+  'hojear':'hoje(?:'+SUF_AR+')',
+  'ojear':'oje(?:'+SUF_AR+')',
+  'grabar':'grab(?:'+SUF_AR+')',
+  'gravar':'grav(?:'+SUF_AR+')',
+  'respeto':'respetos?',
+  'respecto':'respectos?',
+  'prejuicio':'prejuicios?',
+  'perjuicio':'perjuicios?',
+  'absolver':'absolv(?:er|erá|erán|ería|ía|ías|íamos|ían|ió|í|iste|ieron|iendo|emos|éis|ido)|absuelv(?:o|e|es|en)|absuelt[oa]s?',
+  'absorber':'absorb(?:er|erá|erán|ería|e|es|en|emos|éis|o|ía|ías|íamos|ían|ió|í|iste|ieron|iendo|ido)',
+  'acerca de':'acerca de',
+  'a cerca de':'a cerca de',
+  'bobina':'bobinas?',
+  'bovina':'bovin[oa]s?',
+  'también':'también',
+  'tan bien':'tan bien',
+  'porque':'porque',
+  'por qué':'por qué',
+  'a sí mismo/a':'a sí mism[oa]s?',
+  'asimismo':'asimismo',
+  'sabia':'sabi[oa]s?',
+  'savia':'savias?'
+};
+function strip(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function rx(pat,loose){
+  const L=loose?'a-z':LET;
+  return new RegExp('(^|[^'+L+'])('+(loose?strip(pat):pat)+')(?![' +L+ '])');
 }
-function wordInText(text,word){
-  const t=normStr(text),w=normStr(word);
-  if(w.includes(' ')) return t.includes(w)||t.includes(w.replace('mismo','misma'));
-  try{return new RegExp('\\b'+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b').test(t);}
-  catch(e){return t.includes(w);}
+function tokens(s){return s.toLowerCase().match(new RegExp('['+LET+']+','g'))||[];}
+
+/* Devuelve {estado:'vacio'|'error'|'ok', msg} */
+function evaluar(val,w){
+  val=(val||'').trim();
+  const pat=PATRONES[w]||w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const t=val.toLowerCase(), ts=strip(val);
+  const mx=rx(pat,false).exec(t);
+  const ml=mx?null:rx(pat,true).exec(ts);
+  const base=mx?t:ts;
+  const mm=mx||ml;
+  const resto=mm?base.slice(0,mm.index+mm[1].length)+' '+base.slice(mm.index+mm[0].length):base;
+  const nResto=tokens(resto).length;
+
+  // Sin escribir nada o solo la palabra pedida
+  if(!val||(mm&&nResto===0)) return {estado:'vacio',msg:'Rellena el campo: escribe una oración con «'+w+'».'};
+  // Palabra no usada o mal escrita
+  if(!mm) return {estado:'error',msg:'No has usado «'+w+'» en la oración.'};
+  if(!mx) return {estado:'error',msg:'Revisa la escritura de «'+w+'»: falta o sobra alguna tilde o letra.'};
+  // Más de dos palabras
+  const tk=tokens(val);
+  if(tk.length<3||nResto<2) return {estado:'error',msg:'La oración es demasiado corta: escribe una oración completa con más de dos palabras.'};
+  // Comprobaciones básicas de sentido
+  if(tk.some(x=>x.length>=3&&!/[aeiouáéíóúü]/.test(x))||/(.)\1{3,}/.test(t))
+    return {estado:'error',msg:'La oración no parece tener sentido: revisa las palabras que has escrito.'};
+  if(new Set(tk).size<3)
+    return {estado:'error',msg:'Repites las mismas palabras: escribe una oración con sentido.'};
+  return {estado:'ok',msg:''};
 }
 
 function checkBlock(bid){
   const blk=BLOCKS[bid-1];
   const warnEl=document.getElementById(`b${bid}-warn`);
-  let allFilled=true,hasErrors=false;
+  const okEl=document.getElementById(`b${bid}-ok`);
+  let vacios=0,fallos=0;
 
   blk.pairs.forEach((p,pi)=>{
     const pid=`b${bid}p${pi+1}`;
     p.words.forEach((w,wi)=>{
       const el=document.getElementById(`${pid}-w${wi}`);
       const errEl=document.getElementById(`${pid}-err${wi}`);
-      const val=el.value.trim();
-      el.classList.remove('warn','wrong');
-      if(errEl)errEl.textContent='';
-
-      if(val.length<5){
-        allFilled=false;
-        el.classList.add('warn');
-      }else if(!wordInText(val,w)){
-        el.classList.add('wrong');
-        hasErrors=true;
-        if(errEl)errEl.textContent=`\u2717 No parece que hayas usado \xab${w}\xbb en esta oraci\xf3n.`;
+      el.classList.remove('warn','wrong','good');
+      errEl.textContent='';errEl.style.color='';
+      const r=evaluar(el.value,w);
+      if(r.estado==='vacio'){
+        vacios++;el.classList.add('warn');
+        errEl.textContent=r.msg;errEl.style.color='#7A5200';
+      }else if(r.estado==='error'){
+        fallos++;el.classList.add('wrong');
+        errEl.textContent='\u2717 '+r.msg;
+      }else{
+        el.classList.add('good');
+        errEl.textContent='\u2713 Correcta';errEl.style.color='var(--green)';
       }
     });
   });
 
-  if(!allFilled){
-    warnEl.textContent='Rellena todas las oraciones antes de comprobar el bloque.';
-    warnEl.classList.add('show');return;
+  okEl.classList.remove('show','err');
+  if(vacios){
+    warnEl.textContent='Rellena los campos marcados en amarillo antes de comprobar el bloque.';
+    warnEl.classList.add('show');
+    G.completados[bid-1]=false;
+    actualizarResultados();
+    return;
   }
-  warnEl.classList.remove('show');
 
   blk.pairs.forEach((_,pi)=>{
     document.getElementById(`b${bid}p${pi+1}-rev`).classList.add('show');
   });
-
-  if(hasErrors){
-    warnEl.textContent='Corrige las oraciones marcadas en rojo antes de continuar.';
+  G.completados[bid-1]=true;
+  if(fallos){
+    okEl.textContent=`\u26A0 Bloque comprobado: ${fallos} ${fallos===1?'oración con fallo':'oraciones con fallos'}`;
+    okEl.classList.add('show','err');
+    warnEl.textContent='Puedes corregir las oraciones marcadas en rojo y volver a comprobar, o continuar: se enviarán al profesor con los fallos señalados.';
     warnEl.classList.add('show');
-    G.completados[bid-1]=false;
-    document.getElementById(`b${bid}-ok`).classList.remove('show');
   }else{
-    G.completados[bid-1]=true;
-    document.getElementById(`b${bid}-ok`).classList.add('show');
+    okEl.textContent='\u2713 Bloque completado · todas correctas';
+    okEl.classList.add('show');
+    warnEl.classList.remove('show');
   }
   actualizarResultados();
 }
 
-function actualizarResultados(){
-  if(!G.completados.every(c=>c)){document.getElementById('pendingMsg').style.display='block';document.getElementById('scorePanel').classList.remove('show');return;}
-  document.getElementById('pendingMsg').style.display='none';document.getElementById('scorePanel').classList.add('show');
-  document.getElementById('scoreAlumno').textContent=G.nombre+' · '+G.curso;
-  // Build review
-  const rw=document.getElementById('reviewWrap');
-  let html='';
+function recogerResultados(){
+  const filas=[];
   BLOCKS.forEach(blk=>{
-    html+=`<div class="review-blk"><div class="review-blk-t">${blk.title}</div>`;
     blk.pairs.forEach((p,pi)=>{
       const pid=`b${blk.id}p${pi+1}`;
-      html+=`<div class="review-pair"><div class="review-pair-label">${p.label}</div>`;
       p.words.forEach((w,wi)=>{
         const val=document.getElementById(`${pid}-w${wi}`).value.trim();
-        html+=`<div class="review-sent"><strong>${w}:</strong> ${val||'(sin respuesta)'}</div>`;
+        const r=evaluar(val,w);
+        filas.push({bloque:blk.title,pareja:p.label,palabra:w,oracion:val,estado:r.estado,msg:r.msg});
       });
-      html+=`</div>`;
     });
-    html+=`</div>`;
   });
-  rw.innerHTML=html;
+  return filas;
+}
+function textoEstado(f){
+  return f.estado==='ok'?'Correcta':(f.estado==='error'?'Fallo':'Sin responder');
+}
+
+function actualizarResultados(){
+  const todos=G.completados.every(c=>c);
+  document.getElementById('goRes').classList.toggle('show',todos);
+  if(!todos){document.getElementById('pendingMsg').style.display='block';document.getElementById('scorePanel').classList.remove('show');return;}
+  document.getElementById('pendingMsg').style.display='none';document.getElementById('scorePanel').classList.add('show');
+  document.getElementById('scoreAlumno').textContent=G.nombre+' · '+G.curso;
+
+  const rows=recogerResultados();
+  const ok=rows.filter(r=>r.estado==='ok').length;
+  const fallos=rows.length-ok;
+  document.getElementById('notaNum').textContent=ok+'/'+rows.length;
+  document.getElementById('notaLbl').textContent='oraciones correctas en la comprobación automática';
+  document.getElementById('notaMsg').textContent=fallos
+    ?`Hay ${fallos} ${fallos===1?'oración con fallo':'oraciones con fallos'}. Se enviarán al profesor señaladas, que asignará la nota (0,25 pts por pareja).`
+    :'El profesor revisará el sentido de tus oraciones y asignará la nota (0,25 pts por pareja).';
+
+  // Revisión detallada
+  let html='',curB='',curP='';
+  rows.forEach(f=>{
+    if(f.bloque!==curB){
+      if(curP)html+='</div>';
+      if(curB)html+='</div>';
+      curB=f.bloque;curP='';
+      html+=`<div class="review-blk"><div class="review-blk-t">${f.bloque}</div>`;
+    }
+    if(f.pareja!==curP){
+      if(curP)html+='</div>';
+      curP=f.pareja;
+      html+=`<div class="review-pair"><div class="review-pair-label">${f.pareja}</div>`;
+    }
+    const marca=f.estado==='ok'?'<span class="rv-ok">\u2713 Correcta</span>'
+      :f.estado==='error'?`<span class="rv-err">\u2717 ${esc(f.msg)}</span>`
+      :'<span class="rv-vac">Sin responder</span>';
+    html+=`<div class="review-sent"><strong>${f.palabra}:</strong> ${esc(f.oracion)||'(sin respuesta)'}<br>${marca}</div>`;
+  });
+  if(curP)html+='</div>';
+  if(curB)html+='</div>';
+  document.getElementById('reviewWrap').innerHTML=html;
 }
 
 function enviar(){
-  let texto='';
-  BLOCKS.forEach(blk=>{
-    blk.pairs.forEach((p,pi)=>{
-      const pid=`b${blk.id}p${pi+1}`;
-      texto+=`[${p.label}] `;
-      p.words.forEach((w,wi)=>{
-        const val=document.getElementById(`${pid}-w${wi}`).value.trim();
-        texto+=`${w}: "${val}" | `;
-      });
-      texto+='\n';
-    });
+  const rows=recogerResultados();
+  const ok=rows.filter(r=>r.estado==='ok').length;
+  let texto=`RESULTADO AUTOMÁTICO: ${ok}/${rows.length} oraciones correctas\n`;
+  let cur='';
+  rows.forEach(f=>{
+    if(f.pareja!==cur){
+      if(cur)texto+='\n';
+      cur=f.pareja;texto+=`[${f.pareja}] `;
+    }
+    const marca=f.estado==='ok'?'CORRECTA':(f.estado==='error'?'FALLO: '+f.msg:'SIN RESPONDER');
+    texto+=`${f.palabra}: "${f.oracion}" → ${marca} | `;
   });
   const FORM='https://docs.google.com/forms/d/e/1FAIpQLSdSOqgfmhWLd5BCH2DI7LXBIM0lczrFXlBqX_8zmb8HDw8VAQ/formResponse';
   fetch(FORM+'?'+new URLSearchParams({'entry.965384595':G.nombre,'entry.2013791434':G.curso,'entry.591257558':texto.trim()}).toString(),{method:'POST',mode:'no-cors'});
@@ -409,39 +520,30 @@ function enviar(){
   document.body.appendChild(f);
   document.getElementById('btnEnviar').disabled=true;document.getElementById('envioOk').style.display='block';
 }
+
 /* ===== EXPORTACIÓN PDF / EXCEL ===== */
 function slugArchivo(s){
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
-}
-function recogerResultados(){
-  const filas=[];
-  BLOCKS.forEach(blk=>{
-    blk.pairs.forEach((p,pi)=>{
-      const pid=`b${blk.id}p${pi+1}`;
-      p.words.forEach((w,wi)=>{
-        filas.push({bloque:blk.title,pareja:p.label,palabra:w,oracion:document.getElementById(`${pid}-w${wi}`).value.trim()});
-      });
-    });
-  });
-  return filas;
 }
 function fechaHoy(){return new Date().toLocaleDateString('es-ES');}
 
 function exportarExcel(){
   if(typeof XLSX==='undefined'){alert('No se pudo cargar la librería de Excel. Comprueba tu conexión a internet e inténtalo de nuevo.');return;}
   const filas=recogerResultados();
+  const ok=filas.filter(f=>f.estado==='ok').length;
   const aoa=[
     ['Palabras de escritura dudosa · PAU Galicia'],
     ['Alumno/a',G.nombre],
     ['Curso',G.curso],
     ['Fecha',fechaHoy()],
+    ['Oraciones correctas',ok+' de '+filas.length],
     [],
-    ['Bloque','Pareja','Palabra','Oración del alumno/a']
+    ['Bloque','Pareja','Palabra','Oración del alumno/a','Comprobación','Detalle del fallo']
   ];
-  filas.forEach(f=>aoa.push([f.bloque,f.pareja,f.palabra,f.oracion||'(sin respuesta)']));
+  filas.forEach(f=>aoa.push([f.bloque,f.pareja,f.palabra,f.oracion||'(sin respuesta)',textoEstado(f),f.msg]));
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols']=[{wch:11},{wch:26},{wch:18},{wch:100}];
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:3}}];
+  ws['!cols']=[{wch:11},{wch:26},{wch:18},{wch:80},{wch:15},{wch:70}];
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:5}}];
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,'Resultados');
   XLSX.writeFile(wb,'palabras_escritura_dudosa_'+slugArchivo(G.nombre)+'.xlsx');
@@ -452,6 +554,8 @@ function exportarPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:'mm',format:'a4'});
   const W=210,M=15,MAXW=W-2*M,BOTTOM=282;
+  const filas=recogerResultados();
+  const ok=filas.filter(f=>f.estado==='ok').length;
   let y=M;
   function salto(h){if(y+h>BOTTOM){doc.addPage();y=M;}}
 
@@ -462,38 +566,43 @@ function exportarPDF(){
   doc.text('PAU Galicia · Lengua Castellana y Literatura',M,21);
   y=40;
   doc.setTextColor(26,26,46);doc.setFontSize(11);
-  doc.setFont('helvetica','bold');doc.text('Alumno/a:',M,y);
-  doc.setFont('helvetica','normal');doc.text(G.nombre,M+24,y);y+=6;
-  doc.setFont('helvetica','bold');doc.text('Curso:',M,y);
-  doc.setFont('helvetica','normal');doc.text(G.curso,M+24,y);y+=6;
-  doc.setFont('helvetica','bold');doc.text('Fecha:',M,y);
-  doc.setFont('helvetica','normal');doc.text(fechaHoy(),M+24,y);y+=10;
+  [['Alumno/a:',G.nombre],['Curso:',G.curso],['Fecha:',fechaHoy()],['Correctas:',ok+' de '+filas.length+' oraciones']].forEach(([a,b])=>{
+    doc.setFont('helvetica','bold');doc.text(a,M,y);
+    doc.setFont('helvetica','normal');doc.text(b,M+26,y);y+=6;
+  });
+  y+=4;
 
-  BLOCKS.forEach(blk=>{
-    salto(14);
-    doc.setFillColor(122,28,46);doc.rect(M,y-5,MAXW,8,'F');
-    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(11);
-    doc.text(blk.title,M+2,y);
-    y+=8;
-    blk.pairs.forEach((p,pi)=>{
-      const pid=`b${blk.id}p${pi+1}`;
+  let curB='',curP='';
+  filas.forEach(f=>{
+    if(f.bloque!==curB){
+      curB=f.bloque;curP='';
+      if(y>M+50)y+=3;
+      salto(14);
+      doc.setFillColor(122,28,46);doc.rect(M,y-5,MAXW,8,'F');
+      doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(11);
+      doc.text(f.bloque,M+2,y);
+      y+=8;
+    }
+    if(f.pareja!==curP){
+      curP=f.pareja;
       salto(12);
       doc.setTextColor(122,28,46);doc.setFont('helvetica','bold');doc.setFontSize(10.5);
-      doc.text(p.label,M,y);y+=5;
-      p.words.forEach((w,wi)=>{
-        const val=document.getElementById(`${pid}-w${wi}`).value.trim()||'(sin respuesta)';
-        doc.setFont('helvetica','normal');doc.setFontSize(10);
-        const lines=doc.splitTextToSize(val,MAXW-8);
-        salto(6+lines.length*5);
-        doc.setTextColor(26,107,107);doc.setFont('helvetica','bold');
-        doc.text(w+':',M+2,y);y+=5;
-        doc.setTextColor(26,26,46);doc.setFont('helvetica','normal');
-        doc.text(lines,M+6,y);
-        y+=lines.length*5+2;
-      });
-      y+=2;
-    });
-    y+=3;
+      doc.text(f.pareja,M,y);y+=5;
+    }
+    doc.setFont('helvetica','normal');doc.setFontSize(10);
+    const lines=doc.splitTextToSize(f.oracion||'(sin respuesta)',MAXW-8);
+    const det=f.estado==='ok'?'[Correcta]':(f.estado==='error'?'[Fallo: '+f.msg+']':'[Sin responder]');
+    const dl=doc.splitTextToSize(det,MAXW-8);
+    salto(6+lines.length*5+dl.length*4.5+2);
+    doc.setTextColor(26,107,107);doc.setFont('helvetica','bold');
+    doc.text(f.palabra+':',M+2,y);y+=5;
+    doc.setTextColor(26,26,46);doc.setFont('helvetica','normal');
+    doc.text(lines,M+6,y);y+=lines.length*5;
+    doc.setFontSize(9);
+    if(f.estado==='ok')doc.setTextColor(26,92,42);
+    else if(f.estado==='error')doc.setTextColor(122,28,46);
+    else doc.setTextColor(122,82,0);
+    doc.text(dl,M+6,y);y+=dl.length*4.5+2;
   });
 
   const n=doc.getNumberOfPages();
@@ -505,6 +614,19 @@ function exportarPDF(){
 }
 
 buildUI();
+
+/* Al editar una oración, ese bloque vuelve a requerir comprobación */
+document.getElementById('bloques-wrap').addEventListener('input',e=>{
+  const m=/^b(\d+)p\d+-w\d+$/.exec(e.target.id||'');
+  if(!m)return;
+  const bid=+m[1];
+  e.target.classList.remove('warn','wrong','good');
+  const errEl=document.getElementById(e.target.id.replace('-w','-err'));
+  if(errEl){errEl.textContent='';errEl.style.color='';}
+  G.completados[bid-1]=false;
+  const okEl=document.getElementById(`b${bid}-ok`);okEl.classList.remove('show','err');
+  actualizarResultados();
+});
 </script>
 </body>
 </html>

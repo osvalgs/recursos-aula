@@ -204,6 +204,10 @@ select.vs.fail{border-color:var(--accent);background:#FEF0EF}
   <h2 class="sec-t">Ejercicio: análisis verbal</h2>
   <p class="sec-l">Lee cada oración, identifica la forma verbal en negrita y selecciona sus propiedades. Corrige cada bloque al terminar.</p>
   <div id="bloques-wrap"></div>
+  <div id="irResultados" style="display:none;text-align:center;padding-top:1rem">
+    <p style="font-size:14px;color:#888;margin-bottom:.25rem">Has corregido los tres bloques.</p>
+    <button class="go-btn" onclick="showTab('resultados',document.querySelectorAll('.tb')[2])">📊 Ir a resultados →</button>
+  </div>
 </div>
 
 <div class="sec" id="sec-resultados">
@@ -345,8 +349,8 @@ function checkBlock(bid){
   scoreEl.classList.add('show');actualizarResultados();
 }
 function actualizarResultados(){
-  if(!G.corregidos.every(c=>c)){document.getElementById('pendingMsg').style.display='block';document.getElementById('scorePanel').classList.remove('show');return;}
-  document.getElementById('pendingMsg').style.display='none';document.getElementById('scorePanel').classList.add('show');
+  if(!G.corregidos.every(c=>c)){document.getElementById('irResultados').style.display='none';document.getElementById('pendingMsg').style.display='block';document.getElementById('scorePanel').classList.remove('show');return;}
+  document.getElementById('irResultados').style.display='block';document.getElementById('pendingMsg').style.display='none';document.getElementById('scorePanel').classList.add('show');
   document.getElementById('scoreAlumno').textContent=G.nombre+' · '+G.curso;
   const total=G.scores.reduce((a,b)=>a+b,0);const pct=Math.round(total/75*100);
   document.getElementById('notaFinal').textContent=total+'/75';

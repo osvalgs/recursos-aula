@@ -516,6 +516,10 @@ em{font-style:italic;}
   <p class="section-lead">10 preguntas sobre modalidad oracional, relación sujeto-predicado y estructura del predicado.</p>
   <div class="score-wrap"><div><div style="font-size:13px;color:var(--muted);">Puntuación</div><div class="score-num" id="sc1">0 / 10</div></div><div class="score-bar-wrap"><div class="score-bar-fill" id="sb1" style="width:0%"></div></div></div>
   <div id="qbox1"></div>
+  <div id="goTest2" style="display:none;margin-top:2rem;text-align:center;">
+    <div style="background:#E8F5E9;border:1.5px solid #4CAF50;border-radius:8px;padding:1rem;color:#1B5E20;font-size:15px;margin-bottom:1rem;">✅ <strong>¡Has terminado el Test 1!</strong> Ya puedes pasar al siguiente.</div>
+    <button class="btn-enviar" style="margin-top:0" onclick="show('test2')">Ir al Test 2 →</button>
+  </div>
 </section>
 
 <!-- ══ TEST 2 ══ -->
@@ -793,6 +797,10 @@ function answer(n,qi,oi){
   if(ok)ST[n].sc++;
   document.getElementById('sc'+n).textContent=ST[n].sc+' / '+QS[n].length;
   document.getElementById('sb'+n).style.width=(ST[n].sc/QS[n].length*100)+'%';
+  if(n===1&&Object.keys(ST[1].ans).length===QS[1].length){
+    const g=document.getElementById('goTest2');g.style.display='block';
+    setTimeout(()=>g.scrollIntoView({behavior:'smooth',block:'center'}),300);
+  }
   if(n===2&&Object.keys(ST[2].ans).length===QS[2].length)mostrarResumen();
 }
 function mostrarResumen(){
