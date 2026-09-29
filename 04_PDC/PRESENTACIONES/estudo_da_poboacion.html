@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estudo da poboación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1B2440; --paper:#F4F8F6; --soft:#DDE7E3; --mut:#566477;
+  --t:#0E7C86; --o:#E9A23B; --c:#E0573F; --b:#2F6FDE; --g:#1F9D6B;
+  --head:'Fredoka','Trebuchet MS',sans-serif;
+  --body:'Atkinson Hyperlegible','Verdana',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:clamp(15px,1.45vw,21px);line-height:1.5}
+button{font-family:var(--head);cursor:pointer;border:none}
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--b);outline-offset:3px}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.1}
+h2{font-size:2.1em;margin-bottom:.5em}
+h3{font-size:1.2em;margin-bottom:.3em}
+
+.slide{position:absolute;inset:0;padding:5vh 9vw 11vh;display:none;flex-direction:column;justify-content:safe center;overflow-y:auto}
+.slide.on{display:flex;animation:enter .45s ease}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.nav{position:fixed;top:50%;transform:translateY(-50%);width:62px;height:62px;border-radius:50%;background:var(--t);color:#fff;font-size:30px;display:grid;place-items:center;z-index:20;box-shadow:0 5px 0 #075259;transition:transform .15s}
+.nav:hover{transform:translateY(-50%) scale(1.08)}
+.nav:disabled{opacity:.25;cursor:default}
+#prev{left:18px}#next{right:18px}
+#bar{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:20}
+#bar span{width:min(22px,3vw);height:11px;border-radius:6px;background:var(--soft);transition:background .3s}
+#bar span.done{background:var(--t)}
+#count{position:fixed;bottom:14px;right:24px;font-family:var(--head);color:var(--mut);font-size:.85em}
+
+.lead{font-size:1.25em;max-width:54ch}
+.muted{color:var(--mut)}
+.row{display:flex;gap:2.2vw;align-items:flex-start;flex-wrap:wrap}
+.col{flex:1 1 300px}
+.box{background:#fff;border-radius:14px;padding:1em 1.2em;border:2px solid var(--soft)}
+.tag{display:inline-block;font-family:var(--head);font-weight:600;font-size:.8em;padding:.1em .6em;border-radius:6px;background:var(--soft);margin-right:.3em}
+.btn{background:var(--t);color:#fff;padding:.55em 1.1em;border-radius:10px;font-size:1em;box-shadow:0 4px 0 #075259;margin:.3em .3em 0 0}
+.btn.alt{background:#fff;color:var(--ink);border:2px solid var(--ink);box-shadow:0 4px 0 var(--ink)}
+.btn:active{transform:translateY(3px)}
+.feedback{min-height:1.6em;margin-top:.6em;font-weight:700}
+.ok{color:var(--g)}.ko{color:var(--c)}
+
+/* portada */
+.cover{flex-direction:row;align-items:center;gap:4vw}
+.cover h1{font-size:4.4em;letter-spacing:-.02em}
+.cover p{font-size:1.2em;color:var(--mut);margin-top:.6em;max-width:28ch}
+.cover svg{flex:0 0 44%;max-height:70vh}
+
+/* xente (puntos) */
+.people{display:flex;flex-wrap:wrap;gap:4px;max-width:520px;margin:.6em 0}
+.people i{width:16px;height:22px;display:block;background:var(--t);border-radius:8px 8px 3px 3px;position:relative;transition:background .4s,opacity .4s,transform .4s}
+.people i::before{content:"";position:absolute;top:-9px;left:3px;width:10px;height:10px;border-radius:50%;background:inherit}
+.people i.born{background:var(--g);animation:popin .5s both}
+.people i.dead{background:var(--c);opacity:.35;animation:popin .5s both}
+.people i.mig{background:var(--o);animation:popin .5s both}
+@keyframes popin{from{transform:scale(0)}to{transform:scale(1)}}
+.stat{font-family:var(--head);font-size:1.5em}
+
+/* fórmulas */
+.formula{display:inline-flex;align-items:center;gap:.5em;background:#fff;border:2px solid var(--t);border-radius:12px;padding:.5em 1em;font-family:var(--head);font-size:1.05em;margin:.5em 0;flex-wrap:wrap}
+.frac{display:inline-flex;flex-direction:column;text-align:center}
+.frac span:first-child{border-bottom:2px solid var(--ink);padding:0 .4em}
+.frac span:last-child{padding:0 .4em}
+.per{color:var(--t)}
+
+/* indicadores */
+.inds{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.ind{background:#fff;border-radius:14px;padding:.8em 1em;border:3px solid var(--k,var(--t));cursor:pointer;text-align:left;font-family:var(--body);font-size:1em;color:var(--ink)}
+.ind b{font-family:var(--head);font-size:1.15em;color:var(--k,var(--t));display:block}
+.ind .more{display:none;margin-top:.4em}
+.ind.open .more{display:block}
+
+/* vídeo */
+.player{background:var(--ink);border-radius:18px;overflow:hidden;max-width:900px;width:100%;margin:0 auto;box-shadow:0 10px 0 #0d1328}
+.screen{position:relative;aspect-ratio:16/8;background:radial-gradient(circle at 30% 30%,#135e66,#0c2f3a);color:#fff;display:grid;place-items:center;text-align:center;padding:1.5em;overflow:hidden}
+.screen .big{font-family:var(--head);font-size:2.3em;font-weight:700;line-height:1.2}
+.screen .cap{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.45);padding:.5em 1em;font-size:.95em}
+.controls{display:flex;align-items:center;gap:12px;padding:.6em 1em;color:#fff}
+.controls button{background:#fff;color:var(--ink);border-radius:8px;padding:.3em .8em;font-size:.95em}
+.track{flex:1;height:8px;background:#3a4570;border-radius:4px;overflow:hidden}
+.track div{height:100%;width:0;background:var(--o);transition:width .25s linear}
+.pop{display:inline-block;animation:popin .6s cubic-bezier(.3,1.5,.6,1) both}
+
+/* calculadora */
+.calc label{display:flex;justify-content:space-between;align-items:center;gap:1em;margin:.3em 0}
+.calc input{font:inherit;width:9em;padding:.2em .4em;border:2px solid var(--ink);border-radius:8px;text-align:right}
+.res{display:grid;grid-template-columns:1fr auto;gap:.3em 1em;font-size:1.05em}
+.res b{font-family:var(--head);font-size:1.3em;color:var(--t);text-align:right}
+
+/* idade */
+.ages{display:flex;gap:12px;align-items:flex-end;margin-top:1em}
+.age{flex:1;border-radius:12px 12px 4px 4px;color:#fff;padding:.7em;font-family:var(--head);text-align:center}
+
+/* árbore actividade */
+.tree{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.node{border-radius:14px;padding:.8em 1em;color:#fff}
+.node ul{list-style:none;margin-top:.4em}
+.node li{background:rgba(255,255,255,.2);border-radius:8px;padding:.2em .6em;margin-top:.3em}
+.sub{background:rgba(255,255,255,.15);border-radius:10px;padding:.5em .7em;margin-top:.5em}
+
+/* actividades */
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.act{background:#fff;border-radius:12px;padding:.9em 1.1em;border:2px solid var(--soft)}
+.act .n{font-family:var(--head);font-weight:700;color:#fff;background:var(--t);border-radius:6px;padding:0 .45em;margin-right:.4em}
+details{margin-top:.5em}
+summary{cursor:pointer;font-family:var(--head);font-weight:600;color:var(--b)}
+details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-top:.4em;font-size:.95em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.card{background:#fff;border:2px solid var(--soft);border-radius:14px;padding:.7em .9em}
+.card .face{font-size:2.6em;line-height:1}
+.card select{font:inherit;font-size:.85em;width:100%;margin-top:.3em;padding:.15em .3em;border-radius:7px;border:2px solid var(--ink);background:#fff}
+.card.good{border-color:var(--g);background:#e4f5ec}
+.card.bad{border-color:var(--c);background:#fbe4df}
+@media (max-width:760px){.cover{flex-direction:column}.cover svg{max-height:34vh}.nav{width:46px;height:46px;font-size:22px}.tree{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<button class="nav" id="prev" aria-label="Diapositiva anterior">&#8249;</button>
+<button class="nav" id="next" aria-label="Diapositiva seguinte">&#8250;</button>
+<div id="bar"></div>
+<div id="count"></div>
+
+<!-- 1 PORTADA -->
+<section class="slide cover">
+  <div>
+    <h1>O estudo da poboación</h1>
+    <p>Contar persoas parece doado. Entender por que somos máis ou menos xa é outra historia.</p>
+    <p class="muted" style="font-size:.9em">Xeografía, 3º ESO PDC</p>
+  </div>
+  <svg viewBox="0 0 400 360" role="img" aria-label="Globo terráqueo rodeado de siluetas de persoas de distintas idades">
+    <circle cx="200" cy="170" r="120" fill="#9fd3f5"/>
+    <g fill="#1F9D6B">
+      <path d="M110 120c20-30 60-35 80-15 12 12-6 30 8 45 14 16-8 40-30 34-16-4-12-28-34-28-22 0-40-18-24-36z"/>
+      <path d="M220 80c24-14 58-8 76 16 10 15-6 26-24 22-20-4-16 20-36 16-18-4-28-42-16-54z"/>
+      <path d="M232 180c18-10 44 0 48 22 4 24-16 46-38 38-18-6-28-50-10-60z"/>
+    </g>
+    <circle cx="200" cy="170" r="120" fill="none" stroke="#1B2440" stroke-width="6"/>
+    <g stroke="#1B2440" stroke-width="3">
+      <g transform="translate(40,250)"><circle cx="20" cy="18" r="14" fill="#E9A23B"/><path d="M0 90c0-35 8-55 20-55s20 20 20 55z" fill="#E9A23B"/></g>
+      <g transform="translate(95,275)"><circle cx="14" cy="14" r="10" fill="#E0573F"/><path d="M0 70c0-25 6-40 14-40s14 15 14 40z" fill="#E0573F"/></g>
+      <g transform="translate(290,255)"><circle cx="20" cy="18" r="14" fill="#2F6FDE"/><path d="M0 90c0-35 8-55 20-55s20 20 20 55z" fill="#2F6FDE"/><path d="M44 50v40" stroke-width="5"/></g>
+      <g transform="translate(345,280)"><circle cx="13" cy="13" r="9" fill="#0E7C86"/><path d="M0 65c0-22 5-36 13-36s13 14 13 36z" fill="#0E7C86"/></g>
+    </g>
+  </svg>
+</section>
+
+<!-- 2 ENIGMA -->
+<section class="slide">
+  <h2>O misterio de Vila Misterio</h2>
+  <div class="row">
+    <div class="col">
+      <p class="lead">Vila Misterio tiña <b>1000 habitantes</b>. Durante un ano naceron <b>8 bebés</b> e morreron <b>15 persoas</b>. Porén, o ano seguinte o censo dicía… <b>1010 habitantes</b>. Como pode ser?</p>
+      <div id="mOpts" style="margin-top:.8em">
+        <button class="btn alt" data-a="0">O censo está mal feito</button>
+        <button class="btn alt" data-a="1">Chegou xente doutros lugares</button>
+        <button class="btn alt" data-a="2">Houbo moitos xemelgos</button>
+      </div>
+      <p class="feedback" id="mFb"></p>
+    </div>
+    <div class="col box">
+      <p class="stat">Habitantes: <b id="vilaN">1000</b></p>
+      <div id="vRows" hidden>
+        <p>Naceron (+8)</p><div class="people" id="rB"></div>
+        <p>Morreron (−15)</p><div class="people" id="rD"></div>
+        <p>Chegaron máis dos que marcharon (+17)</p><div class="people" id="rM"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 LEMBRA + SABIAS -->
+<section class="slide">
+  <h2>Antes de nada: o censo</h2>
+  <div class="row">
+    <div class="col box">
+      <h3>Lembra</h3>
+      <p>O <b>censo de poboación</b> é unha lista que se elabora e publica cada certo tempo (normalmente cada dez anos). Nela recóllense e analízanse os datos demográficos, económicos e sociais dos habitantes dun territorio.</p>
+    </div>
+    <div class="col box">
+      <h3>Sabías que…?</h3>
+      <p>Xa na Antigüidade os romanos facían censos para contar a poboación. Pero, por falta de medios, non houbo datos fiables ata comezos do século XX. E aínda hoxe, nos países con menos recursos, é difícil saber con exactitude canta xente vive neles.</p>
+    </div>
+  </div>
+  <div class="box" style="margin-top:1em">
+    <p><span class="tag">TIC</span>En España, os datos oficiais están no <b>Instituto Nacional de Estatística</b>: <a href="https://www.ine.es" target="_blank" rel="noopener">www.ine.es</a> (apartado de demografía e poboación). En Galicia tamén podes consultar o <a href="https://www.ige.gal" target="_blank" rel="noopener">IGE</a>.</p>
+  </div>
+</section>
+
+<!-- 4 VIDEO -->
+<section class="slide">
+  <h2 style="text-align:center">Vídeo: a poboación en minuto e medio</h2>
+  <div class="player">
+    <div class="screen" id="vScreen"><div class="big">Preme ▶ para comezar</div></div>
+    <div class="controls">
+      <button id="vPlay">▶ Reproducir</button>
+      <button id="vRestart">↺</button>
+      <div class="track"><div id="vTrack"></div></div>
+      <span id="vTime">0:00 / 1:30</span>
+      <button id="vVoice">Voz: si</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5 INDICADORES -->
+<section class="slide">
+  <h2>Os indicadores: as ferramentas da demografía</h2>
+  <p class="lead">A <b>demografía</b> estuda a poboación con cálculos chamados <b>indicadores</b>. Preme en cada un para ver que mide.</p>
+  <div class="inds" style="margin-top:1em">
+    <button class="ind" style="--k:var(--g)"><b>Natalidade</b>Cantos nacen.<span class="more">Número de nacementos nun ano.</span></button>
+    <button class="ind" style="--k:var(--g)"><b>Fecundidade</b>Cantos fillos por muller.<span class="more">Número medio de fillos das mulleres en idade de ter fillos (15-49 anos).</span></button>
+    <button class="ind" style="--k:var(--c)"><b>Mortalidade</b>Cantos morren.<span class="more">Número de defuncións nun ano.</span></button>
+    <button class="ind" style="--k:var(--c)"><b>Mortalidade infantil</b>Cantos bebés morren.<span class="more">Menores dun ano falecidos. Indica o grao de desenvolvemento dun país.</span></button>
+    <button class="ind" style="--k:var(--b)"><b>Crecemento</b>Se medramos ou minguamos.<span class="more">Natural (nacementos e mortes) e real (engadindo as migracións).</span></button>
+    <button class="ind" style="--k:var(--o)"><b>Esperanza de vida</b>Cantos anos viviremos.<span class="more">Anos que se espera que viva unha persoa.</span></button>
+  </div>
+</section>
+
+<!-- 6 NATALIDADE -->
+<section class="slide">
+  <h2>Natalidade e fecundidade</h2>
+  <div class="row">
+    <div class="col">
+      <p><b>Natalidade</b>: número de nacementos dunha poboación nun ano. Calcúlase coa <b>taxa de natalidade</b>:</p>
+      <div class="formula">Taxa de natalidade = <span class="frac"><span>N.º de nados vivos nun ano</span><span>Poboación total</span></span> × 1000</div>
+      <p class="muted" style="font-size:.9em">O resultado exprésase en tanto por mil (‰): nacementos por cada 1000 habitantes.</p>
+    </div>
+    <div class="col box">
+      <h3>Fecundidade</h3>
+      <p>Está moi unida á natalidade. Estuda o número medio de fillos que ten cada muller en idade de procrear, que se sitúa entre os 15 e os 49 anos.</p>
+      <p style="margin-top:.5em">As diferenzas entre países poden ser <b>enormes</b>: nos países desenvolvidos as mulleres teñen poucos fillos; noutros, moitos máis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 MORTALIDADE -->
+<section class="slide">
+  <h2>Mortalidade e mortalidade infantil</h2>
+  <div class="row">
+    <div class="col">
+      <p><b>Mortalidade</b>: número de defuncións nunha poboación nun ano. Mídese coa <b>taxa bruta de mortalidade</b>, parecida á de natalidade:</p>
+      <div class="formula">Taxa de mortalidade = <span class="frac"><span>N.º de falecidos nun ano</span><span>Poboación total</span></span> × 1000</div>
+    </div>
+    <div class="col">
+      <p><b>Mortalidade infantil</b>: estuda os bebés que morren antes de cumprir un ano. Serve para medir o <b>desenvolvemento</b> dun país: canto máis alta, menos desenvolvido.</p>
+      <div class="formula">Taxa de mortalidade infantil = <span class="frac"><span>N.º de falecidos menores dun ano</span><span>N.º de nados vivos nun ano</span></span> × 1000</div>
+      <p class="muted" style="font-size:.9em">Ollo: aquí divídese entre os nados vivos, non entre a poboación total.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 CRECEMENTO -->
+<section class="slide">
+  <h2>Medramos ou minguamos?</h2>
+  <div class="row">
+    <div class="col box">
+      <h3>Crecemento vexetativo ou natural</h3>
+      <p>É a diferenza entre nacementos e defuncións nun ano. Se nacen máis dos que morren, a poboación <b>aumenta</b>; se morren máis dos que nacen, <b>diminúe</b>.</p>
+      <div class="formula">Taxa de crec. vexetativo = <span class="per">Taxa de natalidade</span> − <span class="per">Taxa de mortalidade</span></div>
+    </div>
+    <div class="col box">
+      <h3>Crecemento real</h3>
+      <p>É o crecemento total. Súmalle ao crecemento natural o efecto das <b>migracións</b> (o saldo migratorio).</p>
+      <div class="formula">Crecemento real = crecemento natural + saldo migratorio</div>
+      <div class="formula" style="font-size:.9em">= (nados − falecidos) + (inmigrantes − emigrantes)</div>
+    </div>
+  </div>
+  <p class="muted" style="margin-top:.8em">Agora xa podes resolver o misterio de Vila Misterio: 8 − 15 = −7, pero chegaron 17 persoas máis das que marcharon: −7 + 17 = +10.</p>
+</section>
+
+<!-- 9 CALCULADORA -->
+<section class="slide">
+  <h2>Calculadora de poboacións</h2>
+  <div class="row">
+    <div class="col box calc">
+      <label>Poboación total <input type="number" id="cP" value="50000" min="1"></label>
+      <label>Nados vivos no ano <input type="number" id="cN" value="400" min="0"></label>
+      <label>Falecidos no ano <input type="number" id="cM" value="650" min="0"></label>
+      <label>Falecidos menores dun ano <input type="number" id="cI" value="1" min="0"></label>
+      <label>Inmigrantes <input type="number" id="cIn" value="500" min="0"></label>
+      <label>Emigrantes <input type="number" id="cEm" value="120" min="0"></label>
+      <p class="muted" style="font-size:.85em;margin-top:.4em">Cambia os números e mira que pasa.</p>
+    </div>
+    <div class="col box">
+      <div class="res" id="cRes"></div>
+      <p class="feedback" id="cMsg" style="font-weight:400"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 ESPERANZA DE VIDA -->
+<section class="slide">
+  <h2>Esperanza de vida</h2>
+  <div class="row" style="align-items:center">
+    <div class="col">
+      <p class="lead">Indica os anos que se espera que viva unha persoa.</p>
+      <p style="margin-top:.6em">Igual que a mortalidade infantil, móstranos o grao de desenvolvemento dun país: unha esperanza de vida maior vai unida a un maior nivel de desenvolvemento (mellor sanidade, alimentación, hixiene…).</p>
+      <p style="margin-top:.6em">Calcúlase facendo a media das idades das persoas falecidas nun ano.</p>
+    </div>
+    <div class="col">
+      <svg viewBox="0 0 320 220" role="img" aria-label="Reloxo de area que simboliza os anos de vida">
+        <rect x="90" y="10" width="140" height="16" rx="6" fill="#0E7C86"/><rect x="90" y="194" width="140" height="16" rx="6" fill="#0E7C86"/>
+        <path d="M105 26 C105 80 160 90 160 110 C160 130 105 140 105 194 L215 194 C215 140 160 130 160 110 C160 90 215 80 215 26 Z" fill="#fff" stroke="#1B2440" stroke-width="5"/>
+        <path d="M120 40 C125 75 158 88 160 100 C162 88 195 75 200 40 Z" fill="#E9A23B"/>
+        <path d="M118 190 C125 160 150 150 160 145 C170 150 195 160 202 190 Z" fill="#E9A23B"/>
+        <path d="M160 100 L160 145" stroke="#E9A23B" stroke-width="3" stroke-dasharray="4 4"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ESTRUTURA: SEXO E IDADE -->
+<section class="slide">
+  <h2>A estrutura da poboación</h2>
+  <p class="lead">A demografía tamén estuda <b>como está composta</b> a poboación. Pódese organizar segundo varios factores.</p>
+  <div class="row" style="margin-top:1em">
+    <div class="col box">
+      <h3>Sexo</h3>
+      <p>É o factor máis básico: divide a sociedade entre mulleres e homes. É moi importante para valorar o acceso aos estudos, ao traballo, etc., e polo tanto para detectar desigualdades.</p>
+    </div>
+    <div class="col box">
+      <h3>Idade</h3>
+      <p>Divide a sociedade en tres grupos. Axúdanos a saber, por exemplo, se unha poboación está moi envellecida e necesitará moitos recursos para as persoas maiores.</p>
+      <div class="ages">
+        <div class="age" style="background:var(--g);height:90px">Nova<br><small>0-14 anos</small></div>
+        <div class="age" style="background:var(--b);height:150px">Adulta<br><small>15-64 anos</small></div>
+        <div class="age" style="background:var(--o);height:110px">Anciá<br><small>65 ou máis</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 ACTIVIDADE ECONOMICA -->
+<section class="slide">
+  <h2>A poboación segundo o traballo</h2>
+  <div class="tree">
+    <div class="node" style="background:var(--t)">
+      <h3>Poboación activa</h3>
+      <p>Está en idade de traballar.</p>
+      <div class="sub"><b>Ocupada</b>: traballa.
+        <ul><li>Traballadores por conta propia</li><li>Asalariados</li></ul></div>
+      <div class="sub"><b>Parada ou desocupada</b>: quere e pode traballar, pero non atopa traballo.</div>
+    </div>
+    <div class="node" style="background:var(--mut)">
+      <h3>Poboación inactiva</h3>
+      <p>Menores e anciáns, e quen, aínda tendo idade, non recibe un salario polo seu traballo.</p>
+      <ul><li>Xubilados</li><li>Labores do fogar</li><li>Estudantes</li><li>Incapacitados</li><li>Outros</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 13 ACTIVIDADE 1 -->
+<section class="slide">
+  <h2>Actividade 1</h2>
+  <div class="act" style="max-width:780px">
+    <span class="n">1</span>Explica a diferenza entre <b>crecemento natural ou vexetativo</b> e <b>crecemento real</b>.
+    <details><summary>Ver solución</summary><div>O crecemento natural só ten en conta os nacementos e as defuncións (nados − falecidos). O crecemento real engade tamén as migracións: é o crecemento natural máis o saldo migratorio (inmigrantes − emigrantes). Por iso un lugar pode ter crecemento natural negativo e, aínda así, gañar poboación, como Vila Misterio.</div></details>
+  </div>
+</section>
+
+<!-- 14 ACTIVIDADE 2 -->
+<section class="slide">
+  <h2>Actividade 2: quen é quen?</h2>
+  <p>Clasifica cada persoa segundo a súa <b>idade</b> e a súa <b>actividade económica</b>.</p>
+  <div class="cards" id="cards" style="margin-top:.6em"></div>
+  <div><button class="btn" id="aCheck">Comprobar</button><button class="btn alt" id="aReset">Empezar de novo</button></div>
+  <p class="feedback" id="aFb"></p>
+</section>
+
+<!-- 15 BILLETE -->
+<section class="slide">
+  <h2>Billete de saída</h2>
+  <div id="exit"></div>
+  <p class="feedback" id="exitFb"></p>
+</section>
+
+<script>
+/* navegación */
+const slides=[...document.querySelectorAll('.slide')];
+const bar=document.getElementById('bar'),count=document.getElementById('count');
+slides.forEach(()=>bar.appendChild(document.createElement('span')));
+let cur=0;
+function show(i){
+  cur=Math.max(0,Math.min(slides.length-1,i));
+  slides.forEach((s,k)=>s.classList.toggle('on',k===cur));
+  [...bar.children].forEach((b,k)=>b.classList.toggle('done',k<=cur));
+  count.textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  if(!slides[cur].contains(document.getElementById('vScreen')))pauseVideo();
+}
+document.getElementById('prev').onclick=()=>show(cur-1);
+document.getElementById('next').onclick=()=>show(cur+1);
+document.addEventListener('keydown',e=>{
+  if(['INPUT','SELECT'].includes(document.activeElement.tagName))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')show(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')show(cur-1);
+});
+
+/* voz: galego se existe; se non, castelán */
+function pickVoice(){const v=speechSynthesis.getVoices();return v.find(x=>x.lang&&x.lang.toLowerCase().startsWith('gl'))||v.find(x=>x.lang&&x.lang.startsWith('es-ES'))||v.find(x=>x.lang&&x.lang.startsWith('es'))}
+function say(text,onend){
+  if(!('speechSynthesis' in window)){onend&&onend();return}
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=pickVoice();
+  if(v){u.voice=v;u.lang=v.lang}else u.lang='gl-ES';u.rate=.95;
+  if(onend){u.onend=onend;u.onerror=onend}speechSynthesis.speak(u);
+}
+if('speechSynthesis' in window)speechSynthesis.getVoices();
+
+/* Vila Misterio */
+function fill(id,n,cls,delay){const el=document.getElementById(id);el.innerHTML='';for(let i=0;i<n;i++){const x=document.createElement('i');x.className=cls;x.style.animationDelay=(delay+i*.06)+'s';el.appendChild(x)}}
+function countTo(el,from,to,ms){const t0=performance.now();(function step(t){const k=Math.min(1,(t-t0)/ms);el.textContent=Math.round(from+(to-from)*k);if(k<1)requestAnimationFrame(step)})(t0)}
+document.querySelectorAll('#mOpts button').forEach(b=>b.onclick=()=>{
+  const fb=document.getElementById('mFb');
+  if(b.dataset.a==='1'){
+    fb.className='feedback ok';fb.textContent='Exacto! Por nacementos e mortes perderon 7 persoas (8 − 15). Pero chegaron 17 persoas máis das que marcharon: −7 + 17 = +10. Iso chámase crecemento real.';
+    document.getElementById('vRows').hidden=false;
+    fill('rB',8,'born',0);fill('rD',15,'dead',0.6);fill('rM',17,'mig',1.6);
+    const n=document.getElementById('vilaN');countTo(n,1000,993,1200);setTimeout(()=>countTo(n,993,1010,1500),1700);
+  }else if(b.dataset.a==='0'){fb.className='feedback ko';fb.textContent='O censo está ben feito. Hai outra explicación: pensa en quen chega e quen marcha.'}
+  else{fb.className='feedback ko';fb.textContent='Aínda que naceran xemelgos, 8 nacementos son 8 bebés. Falta algo que non son nacementos.'}
+});
+
+/* indicadores */
+document.querySelectorAll('.ind').forEach(b=>b.onclick=()=>b.classList.toggle('open'));
+
+/* vídeo animado */
+const scenes=[
+ {d:12,v:'Na Terra vivimos máis de oito mil millóns de persoas. Pero cantas somos en cada lugar, e por que cambia ese número?',h:'<div class="big"><span class="pop">🌍</span><br>+ de 8.000 millóns</div>'},
+ {d:13,v:'Para sabelo, os países fan censos: listas oficiais cos datos dos seus habitantes, que se repiten cada certo tempo.',h:'<div class="big"><span class="pop">📋</span> Censo<br><small style="font-size:.6em">quen somos, onde vivimos, en que traballamos</small></div>'},
+ {d:13,v:'Cada ano nacen bebés e morren persoas. A diferenza entre nacementos e defuncións é o crecemento natural.',h:'<div class="big"><span class="pop">👶</span> − <span class="pop" style="animation-delay:.8s">🕯️</span> = crecemento natural</div>'},
+ {d:13,v:'Pero a xente tamén se move. Uns chegan, inmigrantes, e outros marchan, emigrantes. Sumando isto obtemos o crecemento real.',h:'<div class="big"><span class="pop">🧳➡️</span> <span class="pop" style="animation-delay:.8s">⬅️🧳</span><br>crecemento real</div>'},
+ {d:13,v:'A mortalidade infantil e a esperanza de vida dinnos se un país ten boa sanidade e está desenvolvido.',h:'<div class="big"><span class="pop">🏥</span> <span class="pop" style="animation-delay:.6s">⏳</span><br>desenvolvemento</div>'},
+ {d:13,v:'Tamén estudamos como é a poboación: cantas mulleres e homes hai, que idade teñen e se traballan ou non.',h:'<div class="big"><span class="pop">👩</span><span class="pop" style="animation-delay:.4s">👨</span> <span class="pop" style="animation-delay:.8s">🧒</span><span class="pop" style="animation-delay:1.2s">🧑</span><span class="pop" style="animation-delay:1.6s">👵</span><br>sexo, idade, traballo</div>'},
+ {d:13,v:'Todos estes datos axudan a decidir cantas escolas, hospitais ou residencias necesitamos. Iso é a demografía.',h:'<div class="big"><span class="pop">🏫</span> <span class="pop" style="animation-delay:.5s">🏥</span> <span class="pop" style="animation-delay:1s">🏡</span><br>= demografía</div>'}
+];
+const total=scenes.reduce((a,s)=>a+s.d,0);
+let vPlaying=false,vScene=0,vTick=null,vVoice=true,sceneStart=0,waitVoice=false,timerDone=false,vFinished=false;
+const vScreen=document.getElementById('vScreen'),vPlay=document.getElementById('vPlay');
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+const base=i=>scenes.slice(0,i).reduce((a,s)=>a+s.d,0);
+function startScene(i){vScene=i;sceneStart=0;timerDone=false;waitVoice=vVoice&&('speechSynthesis' in window);
+  vScreen.innerHTML=scenes[i].h+'<div class="cap">'+scenes[i].v+'</div>';
+  if(waitVoice)say(scenes[i].v,()=>{waitVoice=false;maybeNext()})}
+function maybeNext(){if(!vPlaying||!timerDone||waitVoice)return;
+  if(vScene<scenes.length-1)startScene(vScene+1);else{pauseVideo();vPlay.textContent='▶ Ver outra vez';vFinished=true}}
+function tick(){if(!vPlaying)return;
+  if(sceneStart<scenes[vScene].d)sceneStart+=.25;else if(!timerDone){timerDone=true;maybeNext()}
+  const t=Math.min(total,base(vScene)+sceneStart);
+  document.getElementById('vTrack').style.width=(t/total*100)+'%';document.getElementById('vTime').textContent=fmt(t)+' / '+fmt(total)}
+function playVideo(){if(vFinished){vFinished=false;vScene=0}vPlaying=true;vPlay.textContent='❚❚ Pausa';startScene(vScene);vTick=setInterval(tick,250)}
+function pauseVideo(){if(!vPlaying)return;vPlaying=false;clearInterval(vTick);if('speechSynthesis' in window)speechSynthesis.cancel();vPlay.textContent='▶ Reproducir'}
+vPlay.onclick=()=>vPlaying?pauseVideo():playVideo();
+document.getElementById('vRestart').onclick=()=>{pauseVideo();vScene=0;vFinished=false;playVideo()};
+document.getElementById('vVoice').onclick=e=>{vVoice=!vVoice;e.target.textContent='Voz: '+(vVoice?'si':'non');
+  if(!vVoice&&'speechSynthesis' in window){speechSynthesis.cancel();waitVoice=false;maybeNext()}};
+
+/* calculadora */
+const ids=['cP','cN','cM','cI','cIn','cEm'];
+function calc(){
+  const [P,N,M,I,In,Em]=ids.map(id=>Math.max(0,+document.getElementById(id).value||0));
+  const f=x=>isFinite(x)?x.toFixed(1).replace('.',',')+' ‰':'—';
+  const tn=N/P*1000,tm=M/P*1000,ti=N?I/N*1000:NaN,nat=N-M,sal=In-Em,real=nat+sal;
+  document.getElementById('cRes').innerHTML=
+   '<span>Taxa de natalidade</span><b>'+f(tn)+'</b>'+
+   '<span>Taxa de mortalidade</span><b>'+f(tm)+'</b>'+
+   '<span>Taxa de mortalidade infantil</span><b>'+f(ti)+'</b>'+
+   '<span>Taxa de crecemento vexetativo</span><b>'+f(tn-tm)+'</b>'+
+   '<span>Crecemento natural</span><b>'+(nat>0?'+':'')+nat+'</b>'+
+   '<span>Saldo migratorio</span><b>'+(sal>0?'+':'')+sal+'</b>'+
+   '<span>Crecemento real</span><b>'+(real>0?'+':'')+real+'</b>';
+  const m=document.getElementById('cMsg');
+  m.textContent=nat<0&&real>0?'Morren máis dos que nacen, pero a inmigración fai que a poboación aumente.':
+    real<0?'A poboación diminúe.':real>0?'A poboación aumenta.':'A poboación mantense igual.';
+}
+ids.forEach(id=>document.getElementById(id).oninput=calc);calc();
+
+/* actividade 2 */
+const P=[
+ ['👵','Carmen, 74 anos','Cobra a súa pensión desde hai anos.','anciá','inactiva'],
+ ['👷','Xoán, 40 anos','Traballa de albanel nunha empresa de construción.','adulta','asalariada'],
+ ['🧑‍🎓','Iago, 16 anos','Estuda 4º da ESO.','adulta','inactiva'],
+ ['👩‍⚕️','Marta, 33 anos','É médica nun hospital público.','adulta','asalariada'],
+ ['👨‍🔧','Antón, 51 anos','É fontaneiro e ten o seu propio taller.','adulta','propia'],
+ ['🧑‍💼','Sara, 28 anos','Deixou o seu emprego e busca traballo.','adulta','parada'],
+ ['👩','Rosa, 58 anos','Coida da casa e da familia, sen cobrar salario.','adulta','inactiva'],
+ ['🧒','Uxía, 9 anos','Vai á escola.','nova','inactiva']
+];
+const AG=[['','Idade…'],['nova','Nova (0-14)'],['adulta','Adulta (15-64)'],['anciá','Anciá (65+)']];
+const AC=[['','Actividade…'],['propia','Activa ocupada: conta propia'],['asalariada','Activa ocupada: asalariada'],['parada','Activa parada'],['inactiva','Inactiva']];
+const opt=a=>a.map(([v,t])=>'<option value="'+v+'">'+t+'</option>').join('');
+function buildCards(){const c=document.getElementById('cards');c.innerHTML='';document.getElementById('aFb').textContent='';
+  P.forEach(p=>{const d=document.createElement('div');d.className='card';
+    d.innerHTML='<div class="face">'+p[0]+'</div><b>'+p[1]+'</b><p style="font-size:.85em">'+p[2]+'</p><select class="sa">'+opt(AG)+'</select><select class="sc">'+opt(AC)+'</select>';c.appendChild(d)})}
+buildCards();
+document.getElementById('aReset').onclick=buildCards;
+document.getElementById('aCheck').onclick=()=>{let ok=0;
+  [...document.querySelectorAll('.card')].forEach((d,i)=>{const g=d.querySelector('.sa').value===P[i][3]&&d.querySelector('.sc').value===P[i][4];d.classList.toggle('good',g);d.classList.toggle('bad',!g);if(g)ok++});
+  const fb=document.getElementById('aFb');fb.className='feedback '+(ok===P.length?'ok':'ko');
+  fb.textContent=ok===P.length?'Perfecto! Fíxache en que Iago, con 16 anos, xa pertence á poboación adulta, aínda que sexa inactivo.':ok+' de '+P.length+' ben. Pista: revisa a idade exacta de cada grupo.'};
+
+/* billete */
+const EX=[
+ ['Un país ten unha taxa de natalidade do 30 ‰ e unha de mortalidade do 10 ‰. Cal é a súa taxa de crecemento vexetativo?',['40 ‰','20 ‰','3 ‰'],1],
+ ['Se nun lugar emigran máis persoas das que inmigran, o saldo migratorio é…',['positivo','negativo','cero'],1],
+ ['Unha taxa de mortalidade infantil moi alta indica…',['moito desenvolvemento','pouco desenvolvemento','moitos nacementos'],1],
+ ['Unha estudante universitaria de 20 anos pertence á poboación…',['adulta inactiva','nova inactiva','adulta ocupada'],0]
+];
+const ex=document.getElementById('exit');let exOk=0;
+EX.forEach(([q,o,a])=>{const d=document.createElement('div');d.className='box';d.style.marginBottom='10px';d.innerHTML='<p style="margin-bottom:.2em">'+q+'</p>';
+  o.forEach((t,i)=>{const b=document.createElement('button');b.className='btn alt';b.textContent=t;
+    b.onclick=()=>{if(d.dataset.done)return;if(i===a){d.dataset.done=1;b.className='btn';exOk++;
+      if(exOk===EX.length){const f=document.getElementById('exitFb');f.className='feedback ok';f.textContent='Moi ben! Xa sabes como se estuda a poboación.'}}else b.style.opacity=.35};d.appendChild(b)});
+  ex.appendChild(d)});
+
+show(0);
+</script>
+</body>
+</html>
