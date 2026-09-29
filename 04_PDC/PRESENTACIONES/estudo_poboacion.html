@@ -129,6 +129,7 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 .screen .cap{font-size:clamp(.75em,2.6vh,.95em)}
 .controls{flex-shrink:0;flex-wrap:wrap}
 .controls button{min-height:44px;min-width:44px;font-size:1.05em}
+.tb{border-collapse:collapse;font-size:.95em}.tb th{text-align:left;padding:.25em .6em .25em 0;font-family:var(--head);color:#566477}.tb td{padding:.25em .6em .25em 0}.tb tr+tr{border-top:1px solid var(--soft)}
 </style>
 </head>
 <body>
@@ -251,6 +252,30 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
       <h3>Fecundidade</h3>
       <p>Está moi unida á natalidade. Estuda o número medio de fillos que ten cada muller en idade de procrear, que se sitúa entre os 15 e os 49 anos.</p>
       <p style="margin-top:.5em">As diferenzas entre países poden ser <b>enormes</b>: nos países desenvolvidos as mulleres teñen poucos fillos; noutros, moitos máis.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6b POR QUE X 1000 -->
+<section class="slide">
+  <h2>Por que multiplicamos por 1000?</h2>
+  <div class="row">
+    <div class="col">
+      <p class="lead">Para expresar o resultado <b>por cada 1000 habitantes</b> (tanto por mil, ‰). Así entendémolo mellor e podemos comparar lugares de tamaño moi distinto.</p>
+      <div class="box" style="margin-top:.8em">
+        <p>Unha cidade de 50.000 habitantes ten 400 nacementos:</p>
+        <p style="margin-top:.3em">400 ÷ 50.000 = 0,008 <span class="muted">(difícil de entender)</span></p>
+        <p>0,008 × 1000 = <b style="color:var(--t)">8 ‰</b> <span class="muted">→ nacen 8 bebés por cada 1000 habitantes</span></p>
+      </div>
+    </div>
+    <div class="col box">
+      <h3>Quen ten máis nacementos?</h3>
+      <table class="tb" style="width:100%">
+        <tr><th></th><th>Habitantes</th><th>Nacementos</th><th>Taxa</th></tr>
+        <tr><th>Aldea</th><td>2.000</td><td>20</td><td><b>10 ‰</b></td></tr>
+        <tr><th>Cidade</th><td>1.000.000</td><td>8.000</td><td><b>8 ‰</b></td></tr>
+      </table>
+      <p style="margin-top:.6em">A cidade ten moitos máis nacementos en total, pero <b>en proporción</b> nacen máis nenos na aldea.</p>
     </div>
   </div>
 </section>
