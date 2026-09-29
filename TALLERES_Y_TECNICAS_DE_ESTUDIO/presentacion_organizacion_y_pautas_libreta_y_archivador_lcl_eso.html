@@ -12,8 +12,8 @@
   --room:#dfe5ec; --paper:#fdfcf8; --card:#ffffff; --ink:#1c2433; --ink-soft:#3a4252;
   --rule:#d6e2f0; --margin:#e6a1a9; --line:#d9d3c5; --sample:#f4f2ec;
   --blue:#1d4fa0; --red:#c62828; --green:#1f8a4c;
-  --com:#1f5fa8; --gal:#b3202a; --cas:#b94a17; --his:#2e7d3a; --geo:#0f6f73; --tec:#6d3a92; --ov:#8a6a00;
-  --com-t:#e3ecf7; --gal-t:#f7e1e2; --cas-t:#fae8dd; --his-t:#e1f0e3; --geo-t:#dcefef; --tec-t:#ece3f3; --ov-t:#f6eed2; --grey-t:#ebe8e1;
+  --len:#1f5fa8; --lit:#b3202a; --cee:#0f6f73; --tec:#6d3a92; --ov:#8a6a00;
+  --len-t:#e3ecf7; --lit-t:#f7e1e2; --cee-t:#dcefef; --tec-t:#ece3f3; --ov-t:#f6eed2; --grey-t:#ebe8e1;
   --btn:#1c2433; --btn-ink:#ffffff;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -23,7 +23,7 @@
     --room:#0e1219; --paper:#1a202b; --card:#232a37; --ink:#eef1f6; --ink-soft:#c5ccd8;
     --rule:#263041; --margin:#7a4450; --line:#394356; --sample:#2a3242;
     --blue:#8fb6ff; --red:#ff8a80; --green:#6fd39a;
-    --com-t:#1f2c40; --gal-t:#3a2124; --cas-t:#3a2a20; --his-t:#1f3324; --geo-t:#1b3334; --tec-t:#2e2338; --ov-t:#35301c; --grey-t:#2b3140;
+    --len-t:#1f2c40; --lit-t:#3a2124; --cee-t:#1b3334; --tec-t:#2e2338; --ov-t:#35301c; --grey-t:#2b3140;
     --btn:#eef1f6; --btn-ink:#1c2433;
   }
 }
@@ -31,7 +31,7 @@
   --room:#0e1219; --paper:#1a202b; --card:#232a37; --ink:#eef1f6; --ink-soft:#c5ccd8;
   --rule:#263041; --margin:#7a4450; --line:#394356; --sample:#2a3242;
   --blue:#8fb6ff; --red:#ff8a80; --green:#6fd39a;
-  --com-t:#1f2c40; --gal-t:#3a2124; --cas-t:#3a2a20; --his-t:#1f3324; --geo-t:#1b3334; --tec-t:#2e2338; --ov-t:#35301c; --grey-t:#2b3140;
+  --len-t:#1f2c40; --lit-t:#3a2124; --cee-t:#1b3334; --tec-t:#2e2338; --ov-t:#35301c; --grey-t:#2b3140;
   --btn:#eef1f6; --btn-ink:#1c2433;
 }
 *{box-sizing:border-box}
@@ -67,7 +67,7 @@ h2{font-size:66px;font-weight:800}
 .cover .sub{font-size:36px;color:var(--ink-soft)}
 .cover .sub b{color:var(--ink)}
 .cover-tabs{position:absolute;right:0;top:120px;display:flex;flex-direction:column;gap:12px}
-.cover-tabs div{width:150px;padding:14px 0 14px 22px;color:#fff;font-weight:700;font-size:22px;border-radius:12px 0 0 12px}
+.cover-tabs div{width:210px;padding:14px 0 14px 22px;color:#fff;font-weight:700;font-size:22px;border-radius:12px 0 0 12px}
 
 /* pens */
 .pens{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;flex-grow:1;align-items:center}
@@ -158,13 +158,11 @@ h2{font-size:66px;font-weight:800}
   <h1>Organización y pautas de la libreta <span style="font-size:.62em;font-weight:600;color:var(--ink-soft);white-space:nowrap">(y del archivador)</span></h1>
   <div class="sub"><b>Lengua Castellana y Literatura</b><br>ESO</div>
   <div class="cover-tabs" aria-hidden="true">
-    <div style="background:var(--com)">Comunicación</div>
-    <div style="background:var(--gal)">Galego</div>
-    <div style="background:var(--cas)">Castellano</div>
-    <div style="background:var(--his)">Historia</div>
-    <div style="background:var(--geo)">Geografía</div>
+    <div style="background:var(--len)">Lengua</div>
+    <div style="background:var(--lit)">Literatura</div>
+    <div style="background:var(--cee)">Compr. y expr.</div>
     <div style="background:var(--tec)">Técnicas</div>
-    <div style="background:var(--ov)">Ort. y Voc.</div>
+    <div style="background:var(--ov)">Voc. y Ort.</div>
   </div>
 </section>
 
@@ -174,26 +172,22 @@ h2{font-size:66px;font-weight:800}
   <div class="org">
     <div class="stack">
       <div class="seg" style="flex-grow:4" data-step="1"><div class="box" style="background:var(--grey-t)">Portada e índice <small>1</small></div><div class="tab"></div></div>
-      <div class="seg" style="flex-grow:9" data-step="2"><div class="box" style="background:var(--com-t);color:var(--com)">Comunicación <small>12 hojas</small></div><div class="tab"><span style="background:var(--com)">COM</span></div></div>
-      <div class="seg" style="flex-grow:13" data-step="3"><div class="box" style="background:var(--gal-t);color:var(--gal)">Lingua e Lit. Galegas <small>20 hojas</small></div><div class="tab"><span style="background:var(--gal)">GAL</span></div></div>
-      <div class="seg" style="flex-grow:13" data-step="4"><div class="box" style="background:var(--cas-t);color:var(--cas)">Lengua y Lit. Castellanas <small>20 hojas</small></div><div class="tab"><span style="background:var(--cas)">CAS</span></div></div>
-      <div class="seg" style="flex-grow:8" data-step="5"><div class="box" style="background:var(--his-t);color:var(--his)">Historia <small>11 hojas</small></div><div class="tab"><span style="background:var(--his)">HIS</span></div></div>
-      <div class="seg" style="flex-grow:8" data-step="6"><div class="box" style="background:var(--geo-t);color:var(--geo)">Geografía <small>11 hojas</small></div><div class="tab"><span style="background:var(--geo)">GEO</span></div></div>
-      <div class="seg" style="flex-grow:6" data-step="7"><div class="box" style="background:var(--tec-t);color:var(--tec)">Técnicas de estudio <small>7 hojas</small></div><div class="tab"><span style="background:var(--tec)">TÉC</span></div></div>
-      <div class="seg free" style="flex-grow:4" data-step="8"><div class="box">Hojas libres <small>3</small></div><div class="tab"></div></div>
-      <div class="seg" style="flex-grow:11" data-step="9"><div class="box" style="background:var(--ov-t);color:var(--ov)">Ortografía y Vocabulario <small>15 hojas</small></div><div class="tab"><span style="background:var(--ov)">ORT/VOC</span></div></div>
+      <div class="seg" style="flex-grow:15" data-step="2"><div class="box" style="background:var(--len-t);color:var(--len)">Lengua <small>22 hojas</small></div><div class="tab"><span style="background:var(--len)">LEN</span></div></div>
+      <div class="seg" style="flex-grow:15" data-step="3"><div class="box" style="background:var(--lit-t);color:var(--lit)">Literatura <small>22 hojas</small></div><div class="tab"><span style="background:var(--lit)">LIT</span></div></div>
+      <div class="seg" style="flex-grow:12" data-step="4"><div class="box" style="background:var(--cee-t);color:var(--cee)">Comprensión y expr. escrita <small>18 hojas</small></div><div class="tab"><span style="background:var(--cee)">CEE</span></div></div>
+      <div class="seg" style="flex-grow:8" data-step="5"><div class="box" style="background:var(--tec-t);color:var(--tec)">Técnicas de estudio <small>10 hojas</small></div><div class="tab"><span style="background:var(--tec)">TÉC</span></div></div>
+      <div class="seg free" style="flex-grow:6" data-step="6"><div class="box">Hojas libres <small>7</small></div><div class="tab"></div></div>
+      <div class="seg" style="flex-grow:13" data-step="7"><div class="box" style="background:var(--ov-t);color:var(--ov)">Vocabulario y Ortografía <small>20 hojas</small></div><div class="tab"><span style="background:var(--ov)">VOC/ORT</span></div></div>
     </div>
     <div class="detail">
       <div data-only="0"><p style="font-size:40px;color:var(--ink)">Estimación para una libreta de <b>100 hojas</b>.</p><p>El orden de los bloques es siempre el mismo. Si tu libreta tiene otro número de hojas, ajustamos el reparto en clase.</p></div>
       <div data-only="1"><div class="range">hoja 1</div><h3>Portada e índice</h3><span class="count" style="background:var(--ink-soft)">1 hoja</span><p>Tu nombre, el curso y el índice, que irás completando.</p></div>
-      <div data-only="2"><div class="range" style="color:var(--com)">hojas 2 a 13</div><h3 style="color:var(--com)">Comunicación</h3><span class="count" style="background:var(--com)">12 hojas</span><p>Textos y comunicación oral y escrita.</p></div>
-      <div data-only="3"><div class="range" style="color:var(--gal)">hojas 14 a 33</div><h3 style="color:var(--gal)">Lingua e Literatura Galegas</h3><span class="count" style="background:var(--gal)">20 hojas</span><p>Gramática, léxico e literatura en galego.</p></div>
-      <div data-only="4"><div class="range" style="color:var(--cas)">hojas 34 a 53</div><h3 style="color:var(--cas)">Lengua y Literatura Castellanas</h3><span class="count" style="background:var(--cas)">20 hojas</span><p>Gramática, léxico y literatura en castellano.</p></div>
-      <div data-only="5"><div class="range" style="color:var(--his)">hojas 54 a 64</div><h3 style="color:var(--his)">Historia</h3><span class="count" style="background:var(--his)">11 hojas</span><p>Teoría, esquemas y actividades de Historia.</p></div>
-      <div data-only="6"><div class="range" style="color:var(--geo)">hojas 65 a 75</div><h3 style="color:var(--geo)">Geografía</h3><span class="count" style="background:var(--geo)">11 hojas</span><p>Teoría, mapas, gráficos y actividades de Geografía.</p></div>
-      <div data-only="7"><div class="range" style="color:var(--tec)">hojas 76 a 82</div><h3 style="color:var(--tec)">Técnicas de estudio</h3><span class="count" style="background:var(--tec)">7 hojas</span><p>Esquemas, resúmenes, organigramas y otras técnicas.</p></div>
-      <div data-only="8"><div class="range">hojas 83 a 85</div><h3>Hojas libres</h3><span class="count" style="background:var(--ink-soft)">3 hojas</span><p>De reserva, por si algún bloque se queda sin espacio.</p></div>
-      <div data-only="9"><div class="range" style="color:var(--ov)">hojas 86 a 100</div><h3 style="color:var(--ov)">Ortografía y Vocabulario</h3><span class="count" style="background:var(--ov)">15 hojas</span><p>Dictados de palabras con dificultad ortográfica, con su significado y sus sinónimos.</p></div>
+      <div data-only="2"><div class="range" style="color:var(--len)">hojas 2 a 23</div><h3 style="color:var(--len)">Lengua</h3><span class="count" style="background:var(--len)">22 hojas</span><p>Gramática, morfología, sintaxis y léxico.</p></div>
+      <div data-only="3"><div class="range" style="color:var(--lit)">hojas 24 a 45</div><h3 style="color:var(--lit)">Literatura</h3><span class="count" style="background:var(--lit)">22 hojas</span><p>Géneros, autores, obras y comentario de textos literarios.</p></div>
+      <div data-only="4"><div class="range" style="color:var(--cee)">hojas 46 a 63</div><h3 style="color:var(--cee)">Comprensión y expresión escrita</h3><span class="count" style="background:var(--cee)">18 hojas</span><p>Lectura y comprensión de textos, resúmenes y redacciones.</p></div>
+      <div data-only="5"><div class="range" style="color:var(--tec)">hojas 64 a 73</div><h3 style="color:var(--tec)">Técnicas de estudio</h3><span class="count" style="background:var(--tec)">10 hojas</span><p>Esquemas, resúmenes, mapas conceptuales y otras técnicas.</p></div>
+      <div data-only="6"><div class="range">hojas 74 a 80</div><h3>Hojas libres</h3><span class="count" style="background:var(--ink-soft)">7 hojas</span><p>De reserva, por si algún bloque se queda sin espacio.</p></div>
+      <div data-only="7"><div class="range" style="color:var(--ov)">hojas 81 a 100</div><h3 style="color:var(--ov)">Vocabulario y Ortografía</h3><span class="count" style="background:var(--ov)">20 hojas</span><p>Dictados de palabras con dificultad ortográfica, con su significado y sus sinónimos.</p></div>
     </div>
   </div>
 </section>
@@ -205,7 +199,7 @@ h2{font-size:66px;font-weight:800}
     <div class="spread">
       <div class="page l" data-step="1">
         <div class="t" style="color:var(--blue)">Teoría y esquemas</div>
-        <div class="hand" style="color:var(--cas);font-weight:700">UNIDAD 1: EL TEXTO</div>
+        <div class="hand" style="color:var(--cee);font-weight:700">UNIDAD 1: EL TEXTO</div>
         <div class="ln"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:92%"></div>
         <div class="hand scheme">TEXTO → oral · escrito</div>
         <div class="ln" style="width:70%"></div>
@@ -228,26 +222,22 @@ h2{font-size:66px;font-weight:800}
   <div class="tabsteps">
     <div class="nb" aria-hidden="true">
       <div class="cover-nb"></div>
-      <div class="mark" style="top:40px" data-step="1"></div>
-      <div class="mark" style="top:120px" data-step="1"></div>
-      <div class="mark" style="top:200px" data-step="1"></div>
+      <div class="mark" style="top:60px" data-step="1"></div>
+      <div class="mark" style="top:170px" data-step="1"></div>
       <div class="mark" style="top:280px" data-step="1"></div>
-      <div class="mark" style="top:360px" data-step="1"></div>
-      <div class="mark" style="top:440px" data-step="1"></div>
-      <div class="mark" style="top:520px" data-step="1"></div>
-      <div class="pt" style="top:20px;background:var(--com)" data-step="2"><span data-step="3">COM</span></div>
-      <div class="pt" style="top:100px;background:var(--gal)" data-step="2"><span data-step="3">GAL</span></div>
-      <div class="pt" style="top:180px;background:var(--cas)" data-step="2"><span data-step="3">CAS</span></div>
-      <div class="pt" style="top:260px;background:var(--his)" data-step="2"><span data-step="3">HIS</span></div>
-      <div class="pt" style="top:340px;background:var(--geo)" data-step="2"><span data-step="3">GEO</span></div>
-      <div class="pt" style="top:420px;background:var(--tec)" data-step="2"><span data-step="3">TÉC</span></div>
-      <div class="pt" style="top:500px;background:var(--ov)" data-step="2"><span data-step="3">ORT/VOC</span></div>
+      <div class="mark" style="top:390px" data-step="1"></div>
+      <div class="mark" style="top:500px" data-step="1"></div>
+      <div class="pt" style="top:40px;background:var(--len)" data-step="2"><span data-step="3">LEN</span></div>
+      <div class="pt" style="top:150px;background:var(--lit)" data-step="2"><span data-step="3">LIT</span></div>
+      <div class="pt" style="top:260px;background:var(--cee)" data-step="2"><span data-step="3">CEE</span></div>
+      <div class="pt" style="top:370px;background:var(--tec)" data-step="2"><span data-step="3">TÉC</span></div>
+      <div class="pt" style="top:480px;background:var(--ov)" data-step="2"><span data-step="3">VOC/ORT</span></div>
     </div>
     <div class="steps">
       <div class="st" data-step="1"><div class="num">1</div><div>Cuenta las hojas y marca a lápiz dónde empieza cada bloque.</div></div>
       <div class="st" data-step="2"><div class="num">2</div><div>Pega una pestaña en el borde de esa hoja, escalonadas de arriba abajo para que se vean todas.</div></div>
       <div class="st" data-step="3"><div class="num">3</div><div>Escribe en pequeño el nombre del bloque.</div></div>
-      <div class="binder" data-step="4"><b>¿Usas archivador?</b>Un separador con portada para cada bloque, en el mismo orden. Dentro, dos partes: teoría y ejercicios. Ortografía y Vocabulario, al final.</div>
+      <div class="binder" data-step="4"><b>¿Usas archivador?</b>Un separador con portada para cada bloque, en el mismo orden. Dentro, dos partes: teoría y ejercicios. Vocabulario y Ortografía, al final.</div>
     </div>
   </div>
 </section>
@@ -264,7 +254,7 @@ h2{font-size:66px;font-weight:800}
     <div class="card" data-step="2">
       <div class="head"><div class="num">2</div><h3>Título de la unidad</h3></div>
       <p>En MAYÚSCULAS y con el color del bloque. Subráyalo o enmárcalo.</p>
-      <div class="ex" style="display:flex;justify-content:center"><span style="color:var(--cas);border:3px solid var(--cas);border-radius:8px;padding:0 14px;font-weight:700">UNIDAD 1: EL TEXTO</span></div>
+      <div class="ex" style="display:flex;justify-content:center"><span style="color:var(--cee);border:3px solid var(--cee);border-radius:8px;padding:0 14px;font-weight:700">UNIDAD 1: EL TEXTO</span></div>
     </div>
     <div class="card" data-step="3">
       <div class="head"><div class="num">3</div><h3>Teoría y esquemas</h3></div>
@@ -285,7 +275,7 @@ h2{font-size:66px;font-weight:800}
       <div class="head"><div class="num">6</div><h3>Pestañas adhesivas</h3></div>
       <p>Una en la primera hoja de cada bloque, con su nombre en pequeño. Escalonadas.</p>
       <div class="ex tabs-row">
-        <span style="background:var(--com)">COM</span><span style="background:var(--gal)">GAL</span><span style="background:var(--cas)">CAS</span><span style="background:var(--his)">HIS</span><span style="background:var(--geo)">GEO</span><span style="background:var(--tec)">TÉC</span><span style="background:var(--ov)">ORT/VOC</span>
+        <span style="background:var(--len)">LEN</span><span style="background:var(--lit)">LIT</span><span style="background:var(--cee)">CEE</span><span style="background:var(--tec)">TÉC</span><span style="background:var(--ov)">VOC/ORT</span>
       </div>
     </div>
   </div>
