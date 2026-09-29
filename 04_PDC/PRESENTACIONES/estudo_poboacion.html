@@ -118,6 +118,17 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 .card.bad{border-color:var(--c);background:#fbe4df}
 @media (max-width:760px){.cover{flex-direction:column}.cover svg{max-height:34vh}.nav{width:46px;height:46px;font-size:22px}.tree{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.yt{display:flex;align-items:center;justify-content:center;gap:1em;flex-wrap:wrap;margin-top:1.2em;text-align:center}
+.ytbtn{display:inline-flex;align-items:center;gap:.5em;background:#FF0000;color:#fff;font-family:var(--head);font-size:1.1em;padding:.6em 1.3em;border-radius:12px;box-shadow:0 4px 0 #a30000;text-decoration:none}
+.ytbtn:hover{filter:brightness(1.08)}
+
+/* ajuste pizarra digital: el reproductor nunca se recorta */
+.player{display:flex;flex-direction:column;flex-shrink:0}
+.screen{aspect-ratio:auto;height:clamp(160px,min(46vh,45vw),440px);flex-shrink:0;padding:1em}
+.screen .big{font-size:clamp(1.2em,5.5vh,2.3em)}
+.screen .cap{font-size:clamp(.75em,2.6vh,.95em)}
+.controls{flex-shrink:0;flex-wrap:wrap}
+.controls button{min-height:44px;min-width:44px;font-size:1.05em}
 </style>
 </head>
 <body>
@@ -205,6 +216,11 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
       <span id="vTime">0:00 / 1:30</span>
       <button id="vVoice">Voz: si</button>
     </div>
+  </div>
+
+  <div class="yt">
+    <span class="muted">Se a animación non funciona no encerado dixital, abre o vídeo en YouTube.</span>
+    <a class="ytbtn" id="ytBtn" href="#" target="_blank" rel="noopener"><svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><rect width="28" height="20" rx="5" fill="#fff"/><path d="M11 5l8 5-8 5z" fill="#FF0000"/></svg>Ver en YouTube</a>
   </div>
 </section>
 
@@ -381,6 +397,12 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 </section>
 
 <script>
+/* ===== VÍDEO DE YOUTUBE =====
+   Pega entre las comillas el enlace del vídeo que quieras usar (p. ej. https://www.youtube.com/watch?v=XXXX).
+   Si lo dejas vacío, el botón abre una búsqueda en YouTube sobre el tema. */
+const YOUTUBE_URL = "";
+document.getElementById('ytBtn').href = YOUTUBE_URL || "https://www.youtube.com/results?search_query=" + encodeURIComponent("natalidad mortalidad crecimiento natural real demografía");
+
 /* navegación */
 const slides=[...document.querySelectorAll('.slide')];
 const bar=document.getElementById('bar'),count=document.getElementById('count');
