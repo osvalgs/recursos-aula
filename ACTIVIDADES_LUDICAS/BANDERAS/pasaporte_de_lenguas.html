@@ -16,7 +16,7 @@
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{
-  font-family:var(--sans); font-size:20px; color:var(--text); line-height:1.45;
+  font-family:var(--sans); font-size:20px; color:var(--text); line-height:1.45; text-align:justify;
   background-color:var(--paper);
   background-image:
     repeating-radial-gradient(circle at 20% 30%, transparent 0 14px, rgba(31,58,107,.035) 14px 15px),
@@ -31,10 +31,32 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 .brand{font-family:var(--slab);font-weight:700;font-size:1.25rem;letter-spacing:.02em;display:flex;align-items:center;gap:.5rem}
 .brand svg{width:28px;height:28px}
 #info{flex:1;font-size:.95rem;opacity:.9}
-.timer{font-family:var(--slab);font-weight:700;font-size:1.5rem;background:#F6EBDD;color:var(--wine);border-radius:8px;padding:.05rem .7rem;min-width:3.2em;text-align:center}
-.timer.low{background:var(--red);color:#fff}
+/* Cronómetro grande en el lateral derecho */
+.timer{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:30;width:10rem;height:10rem;border-radius:50%;
+  background:#fff;box-shadow:0 6px 24px rgba(40,20,30,.25);display:grid;place-items:center}
+.timer[hidden]{display:none}
+.timer svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+.timer .tr{fill:none;stroke:#F0E4D4;stroke-width:9}
+.timer .tp{fill:none;stroke:var(--wine);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s}
+.timer .tn{position:relative;font-family:var(--slab);font-weight:700;font-size:4.2rem;line-height:1;color:var(--wine)}
+.timer .tx{position:absolute;top:.35rem;right:.35rem;width:1.8rem;height:1.8rem;border-radius:50%;border:none;background:#F0E4D4;color:var(--wine);font-size:1rem;line-height:1}
+.timer.low .tp{stroke:var(--red)} .timer.low .tn{color:var(--red)}
+.timer.out{animation:tblink .6s step-end infinite}
+@keyframes tblink{50%{background:#F8E9E9}}
+body.timing main{max-width:min(1180px,calc(100vw - 25rem))}
+@media (max-width:900px){.timer{top:auto;bottom:6rem;width:6.5rem;height:6.5rem;transform:none}.timer .tn{font-size:2.6rem}body.timing main{max-width:1180px}}
 
 main{flex:1;width:100%;max-width:1180px;margin:0 auto;padding:1.4rem 1.2rem}
+
+/* Cortinilla antes de cada pregunta */
+.veil{position:absolute;inset:0;z-index:20;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;
+  background:rgba(244,240,232,.93);backdrop-filter:blur(30px) saturate(.3);-webkit-backdrop-filter:blur(30px) saturate(.3);cursor:pointer;text-align:center;padding:2rem}
+.veil .vq{font-family:var(--slab);font-size:clamp(2rem,4.5vw,3.2rem);font-weight:700;color:var(--wine);margin:0}
+.veil .vt{font-size:1.5rem;color:var(--ink);margin:0 0 1rem}
+.veil .btn{font-size:1.35rem;padding:.9rem 2rem}
+.veil .vh{font-size:.9rem;color:#5A6573;margin-top:.6rem}
+.visa.veiled{min-height:60vh}
+.visa.veiled > :not(.veil){pointer-events:none;user-select:none}
 
 /* Página de visado */
 .visa{background:var(--page);border:1px solid var(--line);border-radius:14px;padding:1.6rem 1.8rem;position:relative;
@@ -43,7 +65,7 @@ h1,h2,h3{font-family:var(--slab);color:var(--wine);margin:0 0 .5rem;line-height:
 h1{font-size:clamp(2.2rem,5vw,3.6rem)}
 h2{font-size:clamp(1.6rem,3.4vw,2.4rem)}
 h3{font-size:1.2rem}
-p{margin:.3rem 0 .8rem;max-width:70ch}
+p{margin:.3rem 0 .8rem}
 .muted{color:var(--muted)}
 
 .btn{background:var(--ink);color:#fff;border:2px solid var(--ink);border-radius:8px;padding:.55rem 1.1rem;font-weight:700}
@@ -63,7 +85,9 @@ p{margin:.3rem 0 .8rem;max-width:70ch}
 .pick{display:flex;gap:.4rem}
 .pick button{width:2.6rem;height:2.6rem;border-radius:50%;border:2px solid var(--ink);background:transparent;color:var(--ink);font-weight:700}
 .pick button.on{background:var(--ink);color:#fff}
-.names{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.names .tm{display:flex;flex-direction:column;gap:.25rem}
+.names .mem{font-size:.8rem;padding:.35rem .5rem}
 input[type=text],input[type=number]{font:inherit;padding:.4rem .6rem;border:2px solid var(--line);border-radius:8px;background:#fff;width:100%}
 .rounds-cfg{display:grid;grid-template-columns:1fr 5rem;gap:.4rem .8rem;align-items:center;font-size:.95rem}
 .hero-flags{display:flex;gap:.5rem;margin:.8rem 0 1rem;flex-wrap:wrap}
@@ -249,10 +273,16 @@ ol.rules li{margin-bottom:.35rem}
 body.kbopen{height:auto;padding-bottom:var(--kbh,0px)}
 body.kbmode .answer input[type=text],body.kbmode .answer textarea,body.kbmode .betcard textarea{font-size:1.35rem;padding:.55rem .7rem}
 
-/* ---- Registro del equipo ganador ---- */
+/* ---- Resultados y notas ---- */
 .winbox{max-width:860px;margin:1.6rem auto 0;text-align:left;background:#fff;border:2px dashed var(--gold);border-radius:12px;padding:1rem 1.2rem}
 .winbox h2{text-align:center;margin-bottom:.2rem}
-.winbox .grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:.2rem 1rem}
+.winbox .grid{display:grid;grid-template-columns:2fr 1fr;gap:.2rem 1rem}
+.notas{width:100%;border-collapse:collapse;margin-top:.8rem;font-size:.95rem}
+.notas th{font-family:var(--slab);color:var(--wine);text-align:left;border-bottom:2px solid var(--line);padding:.35rem .4rem}
+.notas td{border-bottom:1px solid var(--line);padding:.35rem .4rem;vertical-align:middle}
+.notas .c{text-align:center}
+.notas td.nota{font-family:var(--slab);font-weight:700;color:var(--green);font-size:1.15rem}
+.notas input{min-width:16rem}
 .winbox label{display:block;font-family:var(--slab);font-weight:700;color:var(--ink);margin:.5rem 0 .25rem}
 .winbox input[type=date]{font:inherit;padding:.4rem .6rem;border:2px solid var(--line);border-radius:8px;background:#fff;width:100%}
 .winbox .ok{color:var(--green);font-weight:700;text-align:center;min-height:1.4em;margin:.3rem 0 0}
@@ -283,11 +313,15 @@ body.kbmode .answer input[type=text],body.kbmode .answer textarea,body.kbmode .b
     Pasaporte de lenguas
   </div>
   <div id="info"></div>
-  <div id="timer" class="timer" hidden>30</div>
   <button id="endb" class="kbtoggle" onclick="endGame()" hidden title="Terminar la partida y ver la clasificación">⏹ Terminar partida</button>
   <button id="kbt" class="kbtoggle" onclick="kbToggle()" title="Teclado en pantalla para la pizarra digital">⌨ Teclado</button>
 </header>
 <main id="stage"></main>
+<div id="timer" class="timer" hidden role="timer" aria-live="off">
+  <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="tr" cx="50" cy="50" r="44"/><circle class="tp" cx="50" cy="50" r="44" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0"/></svg>
+  <span class="tn">30</span>
+  <button class="tx" onclick="stopTimer()" title="Cerrar el cronómetro" aria-label="Cerrar el cronómetro">×</button>
+</div>
 <div id="kb" hidden aria-label="Teclado en pantalla"></div>
 
 <footer id="score"></footer>
@@ -486,7 +520,7 @@ const CN = {reinounido:["Gran Bretaña","UK"], paisesbajos:["Holanda"], corea:["
 
 
 const ROUNDS = [
-  {k:"flag",t:"¿Qué se habla aquí?",n:8,r:"Aparece una bandera. El representante del equipo en turno escribe el país y la lengua o lenguas oficiales y pulsa «Comprobar». Vale 1 punto por el país y 1 por cada lengua acertada. El país debe ir con mayúscula inicial. Si falla, rebota al equipo siguiente."},
+  {k:"flag",t:"¿Qué se habla aquí?",n:8,r:"Aparece una bandera. El representante del equipo en turno escribe el país y la lengua o lenguas oficiales y pulsa «Comprobar». Vale 1 punto por el país y 1 por cada lengua acertada (máximo 2). El país debe ir con mayúscula inicial. Si falla, rebota al equipo siguiente."},
   {k:"det",t:"Detective de oraciones",n:6,r:"Aparece una frase en otra lengua. El equipo escribe qué lengua es, elige su bandera entre cuatro y pulsa «Comprobar». Vale 3 puntos; cada pista que se pida resta 1."},
   {k:"intr",t:"La bandera intrusa",n:5,r:"Tres banderas tienen algo en común en sus lenguas; una no. El equipo señala la intrusa, escribe por qué y pulsa «Comprobar». Vale 2 puntos."},
   {k:"bulo",t:"¿Curiosidad o bulo?",n:6,r:"¿Es verdad o es un bulo? El equipo elige, escribe su justificación y pulsa «Comprobar». Vale 1 punto acertar y 1 más si la justificación es buena."},
@@ -494,7 +528,7 @@ const ROUNDS = [
 ];
 
 /* ======================= ESTADO ======================= */
-const S = {nTeams:4, wild:1, names:[], teams:[], turn:0, round:0, qi:0, plan:[]};
+const S = {nTeams:4, wild:1, names:[], members:[], teams:[], turn:0, round:0, qi:0, plan:[]};
 const $ = s => document.querySelector(s);
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
@@ -508,15 +542,21 @@ function beep(f, d) {
     o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d);
   } catch (e) {}
 }
-const T = {left:0, iv:null};
+const T = {left:0, total:30, iv:null};
 function startTimer(s = 30) {
-  stopTimer(); T.left = s; showTimer();
+  stopTimer(); T.left = T.total = s; showTimer();
   T.iv = setInterval(() => { T.left--; showTimer();
     if (T.left > 0 && T.left <= 3) beep(880, .12);
     if (T.left <= 0) { stopTimer(false); beep(196, .7); } }, 1000);
 }
-function stopTimer(hide = true) { clearInterval(T.iv); T.iv = null; if (hide) $("#timer").hidden = true; }
-function showTimer() { const t = $("#timer"); t.hidden = false; t.textContent = Math.max(0, T.left); t.classList.toggle("low", T.left <= 5); }
+function stopTimer(hide = true) { clearInterval(T.iv); T.iv = null; if (hide) { $("#timer").hidden = true; document.body.classList.remove("timing"); } }
+function showTimer() {
+  const t = $("#timer"), left = Math.max(0, T.left);
+  t.hidden = false; document.body.classList.add("timing");
+  t.querySelector(".tn").textContent = left;
+  t.querySelector(".tp").style.strokeDashoffset = 100 - left / T.total * 100;
+  t.classList.toggle("low", left <= 5); t.classList.toggle("out", left === 0);
+}
 
 /* ======================= MARCADOR ======================= */
 function renderScore() {
@@ -560,8 +600,9 @@ function setupScreen() {
       <div>
         <div class="field"><label>Número de equipos</label>
           <div class="pick">${[2,3,4,5,6].map(n => `<button class="${n === S.nTeams ? "on" : ""}" onclick="setTeams(${n})" aria-label="${n} equipos">${n}</button>`).join("")}</div></div>
-        <div class="field"><label>Nombres de los equipos</label>
-          <div class="names">${names.map((n, i) => `<input type="text" id="tn${i}" value="${esc(n)}" aria-label="Nombre del equipo ${i + 1}">`).join("")}</div></div>
+        <div class="field"><label>Equipos e integrantes</label>
+          <div class="names">${names.map((n, i) => `<div class="tm"><input type="text" id="tn${i}" value="${esc(n)}" aria-label="Nombre del equipo ${i + 1}">
+            <input type="text" class="mem" id="tm${i}" value="${esc(S.members[i] || "")}" placeholder="Integrantes, separados por comas" aria-label="Integrantes del equipo ${i + 1}" autocomplete="off"></div>`).join("")}</div></div>
         <div class="field"><label>Preguntas por ronda</label>
           <div class="rounds-cfg">${ROUNDS.slice(0, 4).map((r, i) => `<span>${i + 1}. ${r.t}</span><input type="number" id="rn${i}" min="0" max="${[34, 29, 9, 14][i]}" value="${r.n}">`).join("")}
           <span>5. ${ROUNDS[4].t}</span><select id="rn4" style="font:inherit;padding:.35rem;border:2px solid var(--line);border-radius:8px"><option value="1">Sí</option><option value="0">No</option></select></div>
@@ -587,7 +628,7 @@ function setupScreen() {
   </section>`;
   renderScore();
 }
-function saveNames() { for (let i = 0; i < S.nTeams; i++) { const el = $("#tn" + i); if (el) S.names[i] = el.value.trim() || `Equipo ${i + 1}`; } }
+function saveNames() { for (let i = 0; i < S.nTeams; i++) { const el = $("#tn" + i), m = $("#tm" + i); if (el) S.names[i] = el.value.trim() || `Equipo ${i + 1}`; if (m) S.members[i] = m.value.trim(); } }
 function saveWild() { const w = $("#wild"); if (w) S.wild = parseInt(w.value) || 0; }
 function setTeams(n) { saveNames(); saveWild(); S.nTeams = n; setupScreen(); }
 
@@ -598,9 +639,11 @@ function startGame(keepTeams) {
     S.teams = Array.from({length: S.nTeams}, (_, i) => ({name: S.names[i] || `Equipo ${i + 1}`, score: 0}));
   } else S.teams.forEach(t => t.score = 0);
   const ids = Object.keys(C), detIds = ids.filter(id => C[id].det);
+  // Primero las banderas no fáciles; las fáciles solo si no hubiera suficientes
+  const pool = (list, n) => { const a = shuffle(list.filter(id => !FACILES.includes(id))), b = shuffle(list.filter(id => FACILES.includes(id))); return a.concat(b).slice(0, n); };
   S.plan = ROUNDS.map(r => {
-    if (r.k === "flag") return shuffle(ids).slice(0, r.n).map(id => ({t:"flag", id}));
-    if (r.k === "det") return shuffle(detIds).slice(0, r.n).map(id => {
+    if (r.k === "flag") return pool(ids, r.n).map(id => ({t:"flag", id}));
+    if (r.k === "det") return pool(detIds, r.n).map(id => {
       const same = shuffle(ids.filter(x => x !== id && C[x].cont === C[id].cont && C[x].leng !== C[id].leng));
       const rest = shuffle(ids.filter(x => x !== id && !same.includes(x)));
       return {t:"det", id, opts: shuffle([id, ...same.concat(rest).slice(0, 3)]), hints:0, pick:null};
@@ -635,8 +678,25 @@ function nextQ() {
   if (S.qi >= 0 && cur().t !== "final") S.turn = (S.turn + 1) % S.teams.length;
   S.qi++;
   if (S.qi >= S.plan[S.round].length) return nextRound();
+  if (cur().t !== "final") cur().veiled = true;   // la pregunta empieza tapada
   render();
 }
+// Cortinilla: al destaparla, la pregunta aparece y arranca el cronómetro
+const VEIL_S = 30;
+function unveil() { const q = cur(); if (!q || !q.veiled) return; q.veiled = false; render(); startTimer(VEIL_S); }
+function veilHTML() {
+  const total = S.plan[S.round].length;
+  return `<div class="veil" onclick="unveil()">
+    <p class="vq">Pregunta ${S.qi + 1} de ${total}</p>
+    <p class="vt">Turno: <b>${esc(S.teams[S.turn].name)}</b></p>
+    <button class="btn" onclick="event.stopPropagation();unveil()">Destapar la pregunta</button>
+    <p class="vh">El cronómetro de ${VEIL_S} s empieza al destaparla · también con la barra espaciadora</p>
+  </div>`;
+}
+document.addEventListener("keydown", e => {
+  const q = S.teams.length && S.round >= 0 ? cur() : null;
+  if (q && q.veiled && (e.key === " " || e.key === "Enter") && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) { e.preventDefault(); unveil(); }
+});
 
 /* ======================= PREGUNTAS ======================= */
 function head(extra = "") {
@@ -659,7 +719,7 @@ function footer(q, pts, chk) {
     if (!q.checked) b += `<button class="btn alt" onclick="startTimer(30)">Cronómetro 30 s</button>`;
     if (chk && !q.checked) b += `<button class="btn green" onclick="check()" ${chk === "off" ? "disabled" : ""}>Comprobar</button>`;
     if (q.checked && pts) b += `<button class="btn green" onclick="award(${pts})" ${q.awarded ? "disabled" : ""}>${q.awarded ? "Puntos sumados" : `Sumar ${pts} a ${esc(t)}`}</button>`;
-    b += `<button class="btn ${q.checked ? "" : "alt"}" onclick="reveal()">Mostrar respuesta</button>`;
+    b += `<button class="btn ${q.checked ? "" : "alt"}" onclick="reveal()">${q.checked && q.t === "flag" && q.res && q.res.country && q.res.pts === 1 + Math.min(LANG_MAX, LANGS[q.id].length) ? "Ver curiosidad" : "Mostrar respuesta"}</button>`;
   } else {
     if (pts) b += `<button class="btn green" onclick="award(${pts})" ${q.awarded ? "disabled" : ""}>${q.awarded ? "Puntos sumados" : `Sumar ${pts} a ${esc(t)}`}</button>`;
     b += `<button class="btn wine" onclick="nextQ()">Siguiente</button>`;
@@ -704,6 +764,11 @@ function langCheck(key, txt) {
   low(txt).split(/\s+(?:y|e|o)\s+/).forEach(p => { const h = hit(p, LG[key].slice(1)); if (h && (!r || h.ok)) r = h; });
   return r ? {ok: r.ok, fix: r.ok ? "" : r.fix} : {ok: false, fix: ""};
 }
+// Las lenguas suman como máximo LANG_MAX puntos por pregunta, para que los países con muchas
+// lenguas oficiales (Sudáfrica, India, México...) no desequilibren el marcador.
+const LANG_MAX = 2;
+// Banderas muy reconocibles en España: no salen en las rondas 1 y 2 (sí como opciones incorrectas).
+const FACILES = ["espana", "francia", "italia", "portugal", "brasil", "reinounido", "alemania", "argentina", "china", "japon", "marruecos"];
 function checkFlag(id, pais, lengs) {
   const P = [C[id].n, ...(CN[id] || [])], ch = hit(pais, P.map(low), true);
   let cOk = !!(ch && ch.ok), caps = true, proper = ch ? P[P.map(low).indexOf(ch.fix)] : C[id].n;
@@ -723,7 +788,7 @@ function checkFlag(id, pais, lengs) {
     else if (got.has(key)) rows.push({raw, ok: false, dup: true});
     else { got.add(key); rows.push({raw, ok: true}); }
   });
-  return {country: cOk, cfix: ch && !cOk ? proper : "", caps, acc: !!(ch && ch.ok), rows, pts: (cOk ? 1 : 0) + got.size};
+  return {country: cOk, cfix: ch && !cOk ? proper : "", caps, acc: !!(ch && ch.ok), rows, pts: (cOk ? 1 : 0) + Math.min(LANG_MAX, got.size), langs: got.size};
 }
 // Apuesta final: "ok", "tilde" (la palabra está, pero mal acentuada) o "no"
 function finCheck(item, txt) {
@@ -774,7 +839,7 @@ function flagResult(q) {
   return `<div class="answer result"><h3>Corrección</h3><ul class="check">
     <li>${r.country ? Y(`País: <b>${esc(q.pais)}</b>`) : N(`País: <b>${esc(q.pais || "(en blanco)")}</b>${r.cfix ? ` · Ortografía: ${!r.caps && r.acc ? "va con mayúscula inicial" : !r.caps ? "va con mayúscula inicial y tilde" : "revisad la tilde"}, <b>${r.cfix}</b>` : ""}`)}</li>
     ${r.rows.length ? r.rows.map(x => `<li>${x.ok ? Y(`<b>${esc(x.raw)}</b>`) : x.dup ? `<span class="d">=</span> <b>${esc(x.raw)}</b>: repetida, no suma` : x.fix ? N(`<b>${esc(x.raw)}</b> · Ortografía: se escribe <b>${x.fix}</b>`) : N(`<b>${esc(x.raw)}</b>: no es lengua oficial de este país`)}</li>`).join("") : `<li>${N("Lenguas: (en blanco)")}</li>`}
-  </ul><p class="ptsline">${r.pts} ${r.pts === 1 ? "punto" : "puntos"}</p></div>`;
+  </ul><p class="ptsline">${r.pts} ${r.pts === 1 ? "punto" : "puntos"}${r.langs > LANG_MAX ? ` <span class="muted" style="font-size:.85rem">(las lenguas suman como máximo ${LANG_MAX})</span>` : ""}</p></div>`;
 }
 
 function render() {
@@ -789,7 +854,7 @@ function render() {
           <p class="orto">✎ Ortografía: el país, con mayúscula inicial. Las tildes cuentan: una palabra sin su tilde no puntúa.</p>`)
         + (q.checked ? flagResult(q) + `<p class="muted" style="text-align:center">Si hay fallos, podéis usar el rebote antes de mostrar la respuesta.</p>` : "")
       : `<div class="reveal"><div class="flag">${flag(q.id)}</div>${info(q.id)}</div>`
-        + (q.checked ? flagResult(q) : `<p class="muted" style="text-align:center;margin-top:1rem">1 punto por el país y 1 por cada lengua acertada: súmalos en el marcador.</p>`))
+        + (q.checked ? flagResult(q) : `<p class="muted" style="text-align:center;margin-top:1rem">1 punto por el país y 1 por cada lengua acertada (máximo 2): súmalos en el marcador.</p>`))
       + footer(q, q.checked ? q.res.pts : 0, true);
   }
   if (q.t === "det") {
@@ -799,7 +864,7 @@ function render() {
     if (q.hints >= 2) hints.push(`<span class="hint"><b>Familia:</b> ${c.fam}</span>`);
     const okPick = q.checked && q.res.flag;
     h = head() + phrase(c, true)
-      + `<p class="prompt" style="margin:.4rem auto">¿Qué lengua es? ¿De qué país es la bandera?</p>`
+      + `<p class="prompt" style="margin:.4rem auto">¿Qué lengua es y en qué país se habla? Elegid su bandera.</p>`
       + (hints.length ? `<div class="hints">${hints.join("")}</div>` : "")
       + (!q.revealed ? `<p class="value">Vale ${val} ${val === 1 ? "punto" : "puntos"}</p>
           <div class="hints">${q.hints < 2 ? `<button class="btn alt" onclick="hint()">Pedir pista (−1)</button>` : ""}</div>` : "")
@@ -875,9 +940,9 @@ function render() {
             <div class="actions">${q.done.filter(Boolean).length < S.teams.length ? `<button class="btn green" onclick="settleAuto()">Aplicar la corrección automática</button>` : ""}<button class="btn wine" onclick="nextQ()">Ver la clasificación</button></div>`);
     }
   }
-  $("#stage").innerHTML = `<section class="visa">${h}</section>`;
+  $("#stage").innerHTML = `<section class="visa${q.veiled ? " veiled" : ""}">${h}${q.veiled ? veilHTML() : ""}</section>`;
   renderScore();
-  if (!q.revealed && !q.checked) { const f = [...document.querySelectorAll("#stage [data-k]")].find(el => !el.value); if (f && q.t !== "final") f.focus({preventScroll: true}); }
+  if (!q.veiled && !q.revealed && !q.checked) { const f = [...document.querySelectorAll("#stage [data-k]")].find(el => !el.value); if (f && q.t !== "final") f.focus({preventScroll: true}); }
 }
 function hint() { const q = cur(); if (q.hints < 2) q.hints++; render(); }
 function pickDet(id) { const q = cur(); if (q.revealed) return; q.pick = id; render(); }
@@ -912,28 +977,40 @@ function endScreen() {
     <div class="podium">${rank.map((t, i) => { if (t.score !== prev) pos = i + 1; prev = t.score;
       return `<div class="pl ${pos === 1 ? "first" : ""}"><span class="pos">${pos}.º</span><span class="n">${esc(t.name)}</span><span class="s">${t.score}</span></div>`; }).join("")}</div>
     <div class="actions"><button class="btn wine" onclick="startGame(true)">Jugar otra vez con los mismos equipos</button><button class="btn alt" onclick="setupScreen()">Volver al inicio</button><button class="btn alt" onclick="review(true)">Ver las fichas de repaso</button></div>
-    ${winBox(rank)}
+    ${winBox()}
     <div class="diploma" id="diploma"></div>
   </section>`;
   const el = $("#score"); el.innerHTML = "";
 }
 
-/* ======================= REGISTRO DEL EQUIPO GANADOR ======================= */
-function winBox(rank) {
-  const top = rank.length ? rank[0].score : 0, win = rank.filter(t => t.score === top);
+/* ======================= RESULTADOS Y NOTAS DE TODOS LOS EQUIPOS ======================= */
+// Nota por alumno según el puesto: 1.º 0,40 · 2.º 0,30 · 3.º 0,20 · 4.º y siguientes 0,10.
+// Empates: los equipos empatados comparten el puesto más alto y el siguiente salta puestos (1, 1, 3...).
+const NOTA_MAX = 0.40, NOTA_PASO = 0.10, NOTA_MIN = 0.10;
+const notaDe = pos => Math.max(NOTA_MIN, Math.round((NOTA_MAX - (pos - 1) * NOTA_PASO) * 100) / 100);
+const fnota = n => n.toFixed(2).replace(".", ",");
+function ranking() {
+  const r = S.teams.map((t, i) => ({name: t.name, score: t.score, idx: i})).sort((a, b) => b.score - a.score);
+  let prev = null, pos = 0;
+  r.forEach((t, i) => { if (t.score !== prev) pos = i + 1; prev = t.score; t.pos = pos; t.nota = notaDe(pos); });
+  return r;
+}
+function winBox() {
+  const rank = ranking();
   const today = new Date(), iso = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
   return `<div class="winbox">
-    <h2>Equipo ganador</h2>
-    <p class="muted" style="text-align:center;margin:0">Escribid los nombres de los integrantes y enviad los resultados.</p>
+    <h2>Resultados y notas</h2>
+    <p class="muted" style="text-align:center;margin:0">Revisad los integrantes de cada equipo y enviad los resultados: se guarda una respuesta por equipo.</p>
     <div class="grid">
-      <div><label for="w_team">Equipo</label><input type="text" id="w_team" data-k="w_team" autocomplete="off" value="${esc(win.map(t => t.name).join(" y "))}"></div>
       <div><label for="w_group">Grupo</label><input type="text" id="w_group" data-k="w_group" autocomplete="off" placeholder="Ej.: 2.º ESO B"></div>
       <div><label for="w_date">Fecha</label><input type="date" id="w_date" value="${iso}"></div>
     </div>
-    <label for="w_names">Integrantes</label>
-    <input type="text" id="w_names" data-k="w_names" autocomplete="off" placeholder="Separad los nombres con comas">
-    <input type="hidden" id="w_pts" value="${top}">
-    <p class="muted" style="margin:.6rem 0 0;font-size:.9rem">Los puntos, la fecha y la clasificación se envían automáticamente.</p>
+    <div class="histwrap"><table class="notas">
+      <thead><tr><th>Puesto</th><th>Equipo</th><th>Puntos</th><th>Nota por alumno</th><th>Integrantes</th></tr></thead>
+      <tbody>${rank.map(t => `<tr><td class="c">${t.pos}.º</td><td><b>${esc(t.name)}</b></td><td class="c">${t.score}</td><td class="c nota">${fnota(t.nota)}</td>
+        <td><input type="text" id="w_n${t.idx}" data-k="w_n${t.idx}" autocomplete="off" placeholder="Nombres separados por comas" value="${esc(S.members[t.idx] || "")}"></td></tr>`).join("")}</tbody>
+    </table></div>
+    <p class="muted" style="margin:.6rem 0 0;font-size:.9rem">Nota según el puesto: 1.º, 0,40; 2.º, 0,30; 3.º, 0,20; 4.º y siguientes, 0,10. Si hay empate, los equipos empatados comparten la nota más alta.</p>
     <div class="actions">
       <button class="btn green" id="w_send" onclick="winSend()">Enviar resultados</button>
       <button class="btn alt" onclick="winPrint()">Imprimir diploma o guardarlo en PDF</button>
@@ -944,39 +1021,50 @@ function winBox(rank) {
 }
 const FORM = "https://docs.google.com/forms/d/e/1FAIpQLSehN4yRdJ9Kfol9tmoSIBnJ1klAxTYBrzRx4Id8b8jjpf7fKg/viewform";
 const FIELDS = {equipo: "entry.876372629", integrantes: "entry.1390636133", grupo: "entry.772469891",
-  puntos: "entry.1287363973", fecha: "entry.230285897", clasificacion: "entry.1490453748"};
-// Envía los resultados directamente al formulario de Google, sin abrirlo
+  puntos: "entry.1287363973", fecha: "entry.230285897", clasificacion: "entry.1490453748", nota: "entry.404217302"};
+function winData() {
+  const rank = ranking().map(t => ({...t, integrantes: ($("#w_n" + t.idx)?.value || "").split(",").map(n => n.trim()).filter(Boolean)}));
+  return {fecha: $("#w_date").value, grupo: $("#w_group").value.trim(), rank, n: rank.length};
+}
+// Envía una respuesta por equipo directamente al formulario de Google, sin abrirlo
 async function winSend() {
   const d = winData(), m = $("#w_msg"), btn = $("#w_send");
   const say = (t, bad) => { m.style.color = bad ? "var(--red)" : ""; m.innerHTML = t; };
-  if (!d.equipo && !d.integrantes.length) { say("Escribid al menos el equipo o los integrantes.", true); return; }
-  const rank = [...S.teams].sort((a, b) => b.score - a.score);
-  const clas = rank.map((t, i) => `${i + 1}.º ${t.name}: ${t.score} ${t.score === 1 ? "punto" : "puntos"}`).join("\n");
-  const p = new URLSearchParams();
-  p.set(FIELDS.equipo, d.equipo); p.set(FIELDS.integrantes, d.integrantes.join(", ")); p.set(FIELDS.grupo, d.grupo);
-  p.set(FIELDS.puntos, String(d.puntos)); p.set(FIELDS.fecha, fdate(d.fecha)); p.set(FIELDS.clasificacion, clas);
-  const manual = FORM + "?usp=pp_url&" + p.toString();
-  const fail = () => { say(`No se han podido enviar los resultados. Comprobad la conexión y volved a intentarlo, o <a href="${manual}" target="_blank" rel="noopener">abrid el formulario</a> para enviarlos a mano.`, true); btn.disabled = false; btn.textContent = "Enviar resultados"; };
-  if (!navigator.onLine) { fail(); return; }
-  btn.disabled = true; btn.textContent = "Enviando…";
+  const empty = d.rank.filter(t => !t.integrantes.length);
+  if (empty.length) { say(`Faltan los integrantes de: ${empty.map(t => esc(t.name)).join(", ")}.`, true); return; }
+  const clas = d.rank.map(t => `${t.pos}.º ${t.name}: ${t.score} ${t.score === 1 ? "punto" : "puntos"}`).join("\n");
+  const params = d.rank.map(t => {
+    const p = new URLSearchParams();
+    p.set(FIELDS.equipo, t.name); p.set(FIELDS.integrantes, t.integrantes.join(", ")); p.set(FIELDS.grupo, d.grupo);
+    p.set(FIELDS.puntos, String(t.score)); p.set(FIELDS.fecha, fdate(d.fecha));
+    p.set(FIELDS.clasificacion, `Puesto: ${t.pos}.º de ${d.n}\n\nClasificación:\n${clas}`);
+    p.set(FIELDS.nota, fnota(t.nota));
+    return p;
+  });
+  const links = d.rank.map((t, i) => `<a href="${FORM}?usp=pp_url&${params[i].toString()}" target="_blank" rel="noopener">${esc(t.name)}</a>`).join(" · ");
+  const fail = done => { say(`No se han podido enviar ${done ? "todos " : ""}los resultados. Comprobad la conexión y volved a intentarlo, o enviadlos a mano equipo por equipo: ${links}`, true); btn.disabled = false; btn.textContent = "Enviar resultados"; };
+  if (!navigator.onLine) { fail(0); return; }
+  btn.disabled = true;
+  let done = 0;
   try {
-    await fetch(FORM.replace(/viewform$/, "formResponse"), {method: "POST", mode: "no-cors", body: p});
+    for (const p of params) {
+      btn.textContent = `Enviando ${done + 1} de ${params.length}…`;
+      await fetch(FORM.replace(/viewform$/, "formResponse"), {method: "POST", mode: "no-cors", body: p});
+      done++;
+    }
     btn.textContent = "Resultados enviados ✓";
-    say("Resultados enviados al formulario.");
-  } catch (e) { fail(); }
-}
-function winData() {
-  return {fecha: $("#w_date").value, grupo: $("#w_group").value.trim(), equipo: $("#w_team").value.trim(),
-    puntos: +$("#w_pts").value, integrantes: $("#w_names").value.split(",").map(n => n.trim()).filter(Boolean)};
+    say(`Resultados de los ${done} equipos enviados al formulario.`);
+  } catch (e) { fail(done); }
 }
 const fdate = f => f ? f.split("-").reverse().join("/") : "";
 function winPrint() {
-  const d = winData();
+  const d = winData(), w = d.rank.filter(t => t.pos === 1);
+  const who = w.flatMap(t => t.integrantes);
   $("#diploma").innerHTML = `<span class="stamp green">Viaje completado</span>
     <h1>Pasaporte de lenguas</h1><p>Diploma de campeones del concurso</p>
-    <p class="dteam">${esc(d.equipo || "Equipo ganador")}</p>
-    ${d.integrantes.length ? `<p class="who">${esc(d.integrantes.join(" · "))}</p>` : ""}
-    <p>${d.puntos} puntos${d.grupo ? ` · ${esc(d.grupo)}` : ""}${d.fecha ? ` · ${fdate(d.fecha)}` : ""}</p>`;
+    <p class="dteam">${esc(w.map(t => t.name).join(" y ") || "Equipo ganador")}</p>
+    ${who.length ? `<p class="who">${esc(who.join(" · "))}</p>` : ""}
+    <p>${w.length ? w[0].score : 0} puntos${d.grupo ? ` · ${esc(d.grupo)}` : ""}${d.fecha ? ` · ${fdate(d.fecha)}` : ""}</p>`;
   document.body.classList.add("printwin");
   const off = () => { document.body.classList.remove("printwin"); window.removeEventListener("afterprint", off); };
   window.addEventListener("afterprint", off);
@@ -1108,18 +1196,21 @@ function xlsx(rows, cols) { // rows: [[valor | {v, b}]]; b = negrita
     ["xl/worksheets/sheet1.xml", sheet]
   ]);
 }
-// Resultados de esta partida en una hoja de Excel
+// Resultados de esta partida en una hoja de Excel, con la nota de cada alumno
 function winXLSX() {
-  const d = winData(), rank = [...S.teams].sort((a, b) => b.score - a.score), B = v => ({v, b: true});
+  const d = winData(), B = v => ({v, b: true});
+  const alumnos = d.rank.flatMap(t => t.integrantes.map(a => [a, t.name, t.pos + ".º", t.nota]))
+    .sort((x, y) => x[0].localeCompare(y[0], "es"));
   const rows = [
     [B("Pasaporte de lenguas: resultados")], [],
-    [B("Fecha"), fdate(d.fecha)], [B("Grupo"), d.grupo], [B("Equipo ganador"), d.equipo],
-    [B("Integrantes"), d.integrantes.join(", ")], [B("Puntos"), d.puntos], [],
-    [B("Clasificación")], [B("Puesto"), B("Equipo"), B("Puntos")],
-    ...rank.map((t, i) => [i + 1, t.name, t.score])
+    [B("Fecha"), fdate(d.fecha)], [B("Grupo"), d.grupo], [],
+    [B("Clasificación")], [B("Puesto"), B("Equipo"), B("Puntos"), B("Nota por alumno"), B("Integrantes")],
+    ...d.rank.map(t => [t.pos + ".º", t.name, t.score, t.nota, t.integrantes.join(", ")]), [],
+    [B("Notas por alumno")], [B("Alumno"), B("Equipo"), B("Puesto"), B("Nota")],
+    ...(alumnos.length ? alumnos : [["(sin integrantes escritos)"]])
   ];
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(xlsx(rows, [18, 40, 10]));
+  a.href = URL.createObjectURL(xlsx(rows, [30, 24, 10, 16, 60]));
   a.download = `resultados_pasaporte_de_lenguas_${(d.fecha || "").split("-").reverse().join("_") || "partida"}.xlsx`;
   document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
