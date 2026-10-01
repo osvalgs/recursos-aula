@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rock & Road · Dream Cars</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Barlow:wght@400;600;800&family=Barlow+Condensed:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --petrol:#0E3B5C; --petrol-2:#0A2C45; --orange:#F26B1D; --cream:#F2E8D5;
+  --chrome:#B9C0C7; --red:#C8102E; --ok:#2E9E5B;
+  --display:"Bungee","Impact","Arial Black",sans-serif;
+  --body:"Barlow","Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--petrol);color:var(--cream);font-family:var(--body);font-size:clamp(16px,1.6vw,24px);overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+a{color:inherit}
+
+/* slides */
+.deck{position:relative;height:100%;width:100%}
+.slide{position:absolute;inset:0;padding:max(80px,11vh) 9vw 14vh;display:none;flex-direction:column;overflow-y:auto}
+.slide.active{display:flex}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;line-height:1}
+h2{font-size:clamp(28px,4vw,62px);color:var(--orange);margin-bottom:.4em}
+.lead{font-size:1.15em;max-width:60ch;margin:.2em 0 1em}
+.stop{font-family:var(--cond);font-weight:800;color:var(--chrome);font-size:1em;letter-spacing:.02em;margin-bottom:.3em}
+
+/* side arrows */
+.arrow{position:fixed;top:50%;transform:translateY(-50%);z-index:20;width:62px;height:62px;border-radius:50%;
+  border:3px solid var(--cream);background:rgba(10,44,69,.8);color:var(--cream);font-size:28px;display:grid;place-items:center}
+.arrow:hover{background:var(--orange);border-color:var(--orange)}
+.arrow.prev{left:14px}.arrow.next{right:14px}
+.arrow[disabled]{opacity:.25;cursor:default}
+
+/* road progress */
+.road{position:fixed;left:0;right:0;bottom:0;height:9vh;min-height:56px;background:#2A2F33;z-index:10;
+  border-top:4px solid var(--cream)}
+.road::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;margin-top:-2px;
+  background:repeating-linear-gradient(90deg,var(--cream) 0 40px,transparent 40px 80px)}
+.car{position:absolute;top:50%;font-size:clamp(30px,4vh,46px);transform:translate(-50%,-55%) scaleX(-1);transition:left .6s cubic-bezier(.5,0,.3,1)}
+.flag{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:clamp(26px,3.5vh,40px)}
+@media (prefers-reduced-motion:reduce){.car{transition:none}}
+
+/* tools */
+.tools{position:fixed;top:14px;right:14px;z-index:30;display:flex;gap:10px}
+.tool-btn{background:var(--cream);color:var(--petrol);border:0;border-radius:8px;padding:.45em .8em;font-weight:800;font-size:.8em}
+.tool-btn:hover{background:var(--orange);color:#fff}
+.timer{position:fixed;top:14px;left:14px;z-index:30;display:flex;align-items:center;gap:8px;background:var(--petrol-2);
+  border:3px solid var(--cream);border-radius:12px;padding:6px 10px}
+.timer .t{font-family:var(--display);font-size:1.4em;min-width:3.3ch;text-align:center}
+.timer.low .t{color:var(--orange)}
+.timer.done{border-color:var(--red);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{background:var(--red)}}
+.timer button{background:none;border:2px solid var(--chrome);color:var(--cream);border-radius:6px;font-size:.75em;padding:3px 8px}
+
+/* score panel */
+.panel{position:fixed;top:0;right:0;height:100%;width:min(380px,90vw);background:var(--cream);color:var(--petrol);z-index:40;
+  transform:translateX(105%);transition:transform .3s;padding:24px;overflow-y:auto;box-shadow:-8px 0 0 var(--orange)}
+.panel.open{transform:none}
+.panel h3{font-family:var(--display);font-weight:400;margin:0 0 16px;font-size:1.5em}
+.team{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.team input{flex:1;min-width:0;font:inherit;font-weight:800;border:2px solid var(--petrol);border-radius:6px;padding:4px 8px;background:#fff}
+.team .pts{font-family:var(--display);font-size:1.6em;min-width:2ch;text-align:center}
+.team button,.panel .small{background:var(--petrol);color:var(--cream);border:0;border-radius:6px;width:38px;height:38px;font-size:1.1em;font-weight:800}
+.panel .small{width:auto;padding:0 12px;font-size:.8em;margin-right:6px}
+
+/* cover */
+.cover{justify-content:center;align-items:flex-start}
+.cover h1{font-size:clamp(60px,12vw,190px);color:var(--cream);text-shadow:6px 6px 0 var(--orange)}
+.cover .amp{color:var(--orange);text-shadow:6px 6px 0 var(--cream)}
+.cover p{font-family:var(--cond);font-weight:800;font-size:clamp(22px,2.6vw,40px);margin:.4em 0 1.2em}
+.plate{display:inline-block;background:#fff;color:#111;border:4px solid #111;border-radius:10px;padding:.15em .6em .15em 0;font-family:var(--cond);
+  font-weight:800;font-size:clamp(18px,1.8vw,28px);letter-spacing:.08em;overflow:hidden}
+.plate span{background:#1d3fa6;color:#FFD100;padding:.15em .4em;margin-right:.5em}
+
+/* big button */
+.go{background:var(--orange);color:#fff;border:0;border-radius:10px;padding:.55em 1.1em;font-weight:800;font-size:1em}
+.go:hover{background:var(--cream);color:var(--petrol)}
+.go.alt{background:transparent;border:3px solid var(--cream);color:var(--cream)}
+.go.alt:hover{background:var(--cream);color:var(--petrol)}
+
+/* route */
+.route{list-style:none;padding:0;margin:0;display:grid;gap:12px;max-width:900px}
+.route li{display:grid;grid-template-columns:3.2em 1fr auto;align-items:center;gap:16px;background:var(--petrol-2);border-left:8px solid var(--orange);padding:12px 18px;border-radius:0 10px 10px 0}
+.route .n{font-family:var(--display);font-size:1.8em;color:var(--orange)}
+.route .min{font-family:var(--cond);font-weight:800;color:var(--chrome)}
+
+/* intros */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:4vw;align-items:start}
+@media (max-width:800px){.split{grid-template-columns:1fr}}
+.intros{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
+.intro{background:var(--cream);color:var(--petrol);border-radius:12px;padding:14px 6px;text-align:center;text-decoration:none;font-weight:800;border:0}
+.intro b{display:block;font-family:var(--display);font-weight:400;font-size:2em}
+.intro:hover{background:var(--orange);color:#fff}
+.intro .ans{display:block;font-size:.8em;min-height:1.3em;color:var(--red)}
+.intro:hover .ans{color:#fff}
+.songs{list-style:none;padding:0;margin:0}
+.songs li{padding:8px 0;border-bottom:2px dashed rgba(242,232,213,.3);display:flex;gap:14px;align-items:baseline}
+.songs .L{font-family:var(--display);color:var(--orange);font-size:1.3em;width:1.4em}
+.songs small{color:var(--chrome);font-family:var(--cond);font-weight:600}
+
+/* flashcards */
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:800px){.cards{grid-template-columns:repeat(3,1fr)}}
+.fc{perspective:800px;height:clamp(90px,15vh,150px);border:0;background:none;padding:0}
+.fc .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.fc .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px}
+.fc .front{background:var(--cream);color:var(--petrol)}
+.fc .back{background:var(--orange);color:#fff;transform:rotateY(180deg)}
+.fc .ico{font-size:1.9em;line-height:1}
+.fc .w{font-family:var(--cond);font-weight:800;font-size:1.15em}
+.relay{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.callout{font-family:var(--display);font-size:clamp(34px,5vw,80px);color:var(--cream);min-width:5ch}
+
+/* quiz */
+.q{margin-bottom:14px}
+.q p{margin:0 0 6px;font-weight:800}
+.opts{display:flex;gap:10px;flex-wrap:wrap}
+.opt{background:var(--petrol-2);color:var(--cream);border:3px solid var(--chrome);border-radius:10px;padding:.35em .9em;font-size:.95em;font-weight:600}
+.opt:hover{border-color:var(--orange)}
+.opt.right{background:var(--ok);border-color:var(--ok)}
+.opt.wrong{background:var(--red);border-color:var(--red)}
+.links{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 20px}
+.links a{text-decoration:none}
+
+/* role play */
+.ticket{background:var(--cream);color:var(--petrol);border-radius:14px;padding:16px 22px;display:flex;gap:28px;flex-wrap:wrap;align-items:center;margin-bottom:18px;
+  border:4px dashed var(--orange)}
+.ticket div small{display:block;font-family:var(--cond);font-weight:800;color:#5a6c7a}
+.ticket div strong{font-family:var(--display);font-weight:400;font-size:1.3em}
+.dialog{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px}
+.dialog .who{font-family:var(--display);font-size:1.1em}
+.line{display:flex;align-items:center;gap:10px;background:var(--petrol-2);border-radius:10px;padding:8px 12px}
+.say{background:none;border:2px solid var(--chrome);color:var(--cream);border-radius:50%;width:34px;height:34px;flex:none;font-size:.8em}
+.say:hover{background:var(--orange);border-color:var(--orange)}
+.c .who{color:#ff8a8a}.m .who{color:var(--orange)}
+
+/* podium */
+.podium{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.podium div{background:var(--cream);color:var(--petrol);border-radius:12px;padding:12px 20px;font-weight:800;min-width:150px}
+.podium div.win{background:var(--orange);color:#fff;transform:scale(1.08)}
+.podium b{display:block;font-family:var(--display);font-size:1.8em;font-weight:400}
+
+/* materials */
+.mat{display:grid;grid-template-columns:1fr 1fr;gap:6px 30px}
+.mat li{margin-bottom:6px}
+.steps{margin:0 0 1em;padding-left:1.2em}
+.steps li{margin-bottom:.4em}
+
+.items{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1000px}
+.item{background:var(--cream);color:var(--petrol);border:4px solid var(--cream);border-radius:14px;padding:14px 6px;font-weight:800;font-size:1em}
+.item .ico{display:block;font-size:2.4em;line-height:1.1}
+.item.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.item.wrong{background:var(--red);border-color:var(--red);color:#fff;opacity:.75}
+.verse{background:var(--petrol-2);border-left:8px solid var(--orange);border-radius:0 12px 12px 0;padding:14px 22px;font-size:1.15em;line-height:1.9;max-width:900px}
+.verse .gap{display:inline-block;min-width:6ch;border-bottom:3px solid var(--orange);color:var(--orange);font-weight:800;text-align:center}
+.bank{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;max-width:900px}
+.bank div{background:var(--cream);color:var(--petrol);border-radius:10px;padding:8px 12px;font-size:.9em}
+.bank b{display:block;font-family:var(--cond);font-weight:800;color:var(--orange)}
+.who-ask{font-family:var(--display);font-size:clamp(30px,4vw,64px);color:var(--cream);min-height:1.2em}
+.votes{display:grid;gap:10px;max-width:800px}
+.vrow{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;background:var(--petrol-2);padding:8px 14px;border-radius:10px}
+.vbtn{background:var(--cream);color:var(--petrol);border:0;border-radius:8px;padding:.35em .7em;font-weight:800}
+.vbtn b{font-family:var(--display);font-weight:400;margin-left:6px}
+.phr{display:grid;grid-template-columns:auto 1fr 1fr;gap:8px 16px;align-items:center;max-width:1000px}
+.phr .k{font-family:var(--cond);font-weight:800;color:var(--chrome)}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;gap:3vw;align-items:center}
+.vs{font-family:var(--display);font-size:3em;color:var(--orange)}
+.tc{background:var(--cream);color:var(--petrol);border-radius:16px;overflow:hidden;min-height:clamp(250px,42vh,380px);border:5px solid var(--cream);transition:transform .2s}
+.tc.win{border-color:var(--orange);transform:scale(1.04)}
+.tc.lose{opacity:.55}
+.tc .hd{background:var(--petrol-2);color:var(--cream);font-family:var(--display);font-size:1.1em;padding:12px;text-align:center}
+.tc.back{display:grid;place-items:center;background:repeating-linear-gradient(45deg,var(--orange) 0 20px,#d85a12 20px 40px);font-family:var(--display);font-size:2.4em;color:#fff}
+.tc table{width:100%;border-collapse:collapse}
+.tc td{padding:6px 14px;border-bottom:1px solid #d9cdb6;font-weight:600}
+.tc td:last-child{text-align:right;font-weight:800}
+.tc tr.hl td{background:#ffe1cc}
+.tc .song{padding:8px 14px;font-size:.85em}
+.stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0}
+.verdict{text-align:center;font-family:var(--cond);font-weight:800;font-size:1.5em;min-height:1.5em}
+@media (max-width:800px){.items,.bank{grid-template-columns:repeat(2,1fr)}.duel{grid-template-columns:1fr}.vs{text-align:center}}
+</style></head><body>
+<div class="timer" id="timer" aria-live="polite"><span aria-hidden="true">⏱️</span><span class="t" id="tDisp">0:00</span><button id="tStart">Start</button><button id="tReset">Reset</button></div>
+<div class="tools"><button class="tool-btn" id="scoreBtn">🏁 Score</button></div>
+<aside class="panel" id="panel" aria-label="Scoreboard"><h3>Scoreboard</h3><div id="teams"></div>
+<p><button class="small" id="addTeam">+ Team</button><button class="small" id="rmTeam">− Team</button><button class="small" id="resetScore">Reset</button></p>
+<p><button class="go" id="closePanel">Close</button></p></aside>
+<button class="arrow prev" id="prev" aria-label="Previous slide">◀</button>
+<button class="arrow next" id="next" aria-label="Next slide">▶</button>
+<main class="deck">
+
+<section class="slide cover" data-time="0">
+  <div class="plate"><span>E</span>FPB · MANT. VEHÍCULOS</div>
+  <h1 style="margin-top:.2em">Dream <span class="amp">Cars</span></h1>
+  <p>Rock &amp; Road · English with classic car songs</p>
+  <button class="go" onclick="go(1)">Start the engine 🔑</button>
+</section>
+
+<section class="slide" data-time="0">
+  <h2>Today's route</h2>
+  <ol class="route">
+    <li><span class="n">1</span><span>Buy me a… · listen, write and perform</span><span class="min">20 min</span></li>
+    <li><span class="n">2</span><span>Classic Car Trumps · the card game</span><span class="min">19 min</span></li>
+  </ol>
+  <p class="lead" style="margin-top:1em">Make teams of 3 or 4. Open 🏁 Score and write your team names.</p>
+</section>
+
+<section class="slide" data-time="180">
+  <div class="stop">Warm-up · 3 minutes</div>
+  <h2>What's your dream car?</h2>
+  <p class="lead">Answer like this:</p>
+  <div class="verse" style="font-size:1.6em">My dream car is a <span class="gap">Ferrari</span>.<br>It's <span class="gap">red</span> and <span class="gap">fast</span>.</div>
+</section>
+
+<section class="slide" data-time="300">
+  <div class="stop">Stop 1 · listening</div>
+  <h2>The shopping list</h2>
+  <p class="lead">Janis Joplin asks for 3 things. Which ones? Click to check.</p>
+  <div class="links">
+    <a class="go" href="https://www.youtube.com/results?search_query=Janis+Joplin+Mercedes+Benz+lyrics" target="_blank" rel="noopener">▶ Mercedes Benz · Janis Joplin</a>
+    <button class="go alt" id="extraBtn">Extra question</button>
+  </div>
+  <div class="items" id="items"></div>
+  <p class="verdict" id="extra" style="text-align:left;margin-top:14px"></p>
+</section>
+
+<section class="slide" data-time="480">
+  <div class="stop">Stop 1 · writing · teams</div>
+  <h2>Our verse</h2>
+  <div class="relay"><button class="go" id="whoBtn">Who do we ask? 🎲</button><span class="who-ask" id="who"></span></div>
+  <div class="verse">
+    Please, please, <span class="gap" id="whoGap">______</span>, buy me a <span class="gap">______</span>!<br>
+    All my friends have a <span class="gap">______</span> and it's really <span class="gap">______</span>.<br>
+    I work every day in the <span class="gap">______</span>, I'm tired and <span class="gap">______</span>,<br>
+    so please, please, buy me a <span class="gap">______</span>!
+  </div>
+  <div class="bank">
+    <div><b>Cars</b>Ferrari · Porsche · Mustang · Cadillac · Mercedes</div>
+    <div><b>Things</b>new toolbox · car lift · motorbike · big TV · new tyres</div>
+    <div><b>Adjectives</b>fast · red · loud · expensive · cool · dirty</div>
+    <div><b>Places</b>garage · workshop · school · factory · street</div>
+  </div>
+</section>
+
+<section class="slide" data-time="420">
+  <div class="stop">Stop 1 · perform and vote</div>
+  <h2>On stage!</h2>
+  <p class="lead">Sing, rap or clap your verse. Then the class votes. The winner of each prize gets 3 points.</p>
+  <div class="votes" id="votes"></div>
+</section>
+
+<section class="slide" data-time="240">
+  <div class="stop">Stop 2 · useful phrases</div>
+  <h2>Car talk</h2>
+  <p class="lead">Click 🔊 and repeat.</p>
+  <div class="phr" id="phr"></div>
+</section>
+
+<section class="slide" data-time="0">
+  <div class="stop">Stop 2 · how to play</div>
+  <h2>Classic Car Trumps</h2>
+  <ol class="steps" style="font-size:1.1em;max-width:62ch">
+    <li>Shuffle and share the cards. Look only at your top card.</li>
+    <li>Player 1 chooses a stat and reads it: <b>“Top speed: 195 km/h.”</b></li>
+    <li>The others read the same stat on their card.</li>
+    <li>The highest number wins. Say the phrase: <b>“My car is faster!”</b> and take the cards.</li>
+    <li>The winner chooses the next stat. The player with more cards at the end wins.</li>
+  </ol>
+  <p class="lead" style="color:var(--orange);font-weight:800">No English, no cards!</p>
+</section>
+
+<section class="slide" data-time="720">
+  <div class="stop">Stop 2 · showdown</div>
+  <h2>Showdown</h2>
+  <div class="duel"><div class="tc back" id="cA">?</div><div class="vs">VS</div><div class="tc back" id="cB">?</div></div>
+  <div class="stats" id="stats"></div>
+  <p class="verdict" id="verdict" aria-live="polite"></p>
+  <div style="text-align:center"><button class="go" id="deal">Deal new cards 🃏</button></div>
+</section>
+
+<section class="slide" data-time="180">
+  <div class="stop">Finish line</div>
+  <h2>And the winner is…</h2>
+  <p class="lead">Before you go, tell the teacher: <b>“My favourite car is… because it is faster / more powerful / older.”</b></p>
+  <button class="go" id="showWin">Show the winners 🏆</button>
+  <div class="podium" id="podium"></div>
+</section>
+
+<section class="slide" data-time="0">
+  <div class="stop">Para el profesor</div>
+  <h2>Material y enlaces</h2>
+  <div class="mat">
+    <div><p><b>Imprimibles</b></p><ul>
+      <li>Material 1: The shopping list (una por alumno)</li>
+      <li>Material 2: Our verse (una por equipo)</li>
+      <li>Material 3: baraja de 12 cartas Car Trumps (una por equipo)</li>
+      <li>Material 4: Useful phrases</li></ul>
+      <p>Soluciones en documento aparte.</p></div>
+    <div><p><b>Canciones en YouTube</b></p><ul id="matLinks"></ul></div>
+  </div>
+</section>
+</main>
+<div class="road" aria-hidden="true"><span class="car" id="car">🚗</span><span class="flag">🏁</span></div>
+<script>
+const CARS=[["Ford Mustang", 1965, 4.7, 8, 271, 195, "Mustang Sally", "Wilson Pickett"], ["Cadillac Eldorado", 1959, 6.4, 8, 345, 190, "Pink Cadillac", "Bruce Springsteen"], ["Chevrolet Corvette", 1984, 5.7, 8, 205, 225, "Little Red Corvette", "Prince"], ["Ford Thunderbird", 1963, 6.4, 8, 300, 190, "Fun, Fun, Fun", "The Beach Boys"], ["Mercedes-Benz 280 SE", 1970, 2.8, 6, 160, 190, "Mercedes Benz", "Janis Joplin"], ["Porsche 911", 1970, 2.2, 6, 180, 220, "Mercedes Benz", "Janis Joplin"], ["Ford Deuce Coupe", 1932, 3.6, 8, 65, 125, "Little Deuce Coupe", "The Beach Boys"], ["Chevrolet Impala 409", 1962, 6.7, 8, 409, 210, "409", "The Beach Boys"], ["Pontiac GTO", 1964, 6.4, 8, 325, 185, "GTO", "Ronny & the Daytonas"], ["Cadillac Coupe de Ville", 1955, 5.4, 8, 250, 175, "Maybellene", "Chuck Berry"], ["Ferrari 166 Barchetta", 1949, 2.0, 12, 140, 220, "Red Barchetta", "Rush"], ["Corvette Sting Ray", 1963, 5.4, 8, 360, 230, "Shut Down", "The Beach Boys"]];
+
+/* ---------- navigation ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function go(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  document.getElementById('prev').disabled=cur===0;
+  document.getElementById('next').disabled=cur===slides.length-1;
+  document.getElementById('car').style.left=(4+cur/(slides.length-1)*86)+'%';
+  const t=+slides[cur].dataset.time;
+  document.getElementById('timer').style.display=t?'flex':'none';
+  if(t) setTimer(t);
+}
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
+});
+
+/* ---------- timer ---------- */
+let tLeft=0,tInt=null;
+const tEl=document.getElementById('timer'),tD=document.getElementById('tDisp'),tS=document.getElementById('tStart');
+function drawT(){tD.textContent=Math.floor(tLeft/60)+':'+String(tLeft%60).padStart(2,'0');
+  tEl.classList.toggle('low',tLeft<=60&&tLeft>0);tEl.classList.toggle('done',tLeft===0&&tInt===null&&tS.dataset.ran==='1');}
+function setTimer(s){clearInterval(tInt);tInt=null;tLeft=s;tS.textContent='Start';tS.dataset.ran='0';tS.dataset.base=s;drawT();}
+tS.onclick=()=>{
+  if(tInt){clearInterval(tInt);tInt=null;tS.textContent='Start';return;}
+  if(tLeft===0)return;
+  tS.dataset.ran='1';tS.textContent='Pause';
+  tInt=setInterval(()=>{tLeft--;if(tLeft<=0){tLeft=0;clearInterval(tInt);tInt=null;tS.textContent='Start';}drawT();},1000);
+};
+document.getElementById('tReset').onclick=()=>setTimer(+tS.dataset.base||60);
+
+/* ---------- scoreboard ---------- */
+let teams=[{n:'Team 1',p:0},{n:'Team 2',p:0},{n:'Team 3',p:0},{n:'Team 4',p:0}];
+const tBox=document.getElementById('teams');
+function drawTeams(){
+  tBox.innerHTML='';
+  teams.forEach((t,i)=>{
+    const d=document.createElement('div');d.className='team';
+    d.innerHTML=`<input aria-label="Team name" value="${t.n.replace(/"/g,'&quot;')}"><button aria-label="Minus one">−</button><span class="pts">${t.p}</span><button aria-label="Plus one">+</button>`;
+    d.querySelector('input').oninput=e=>t.n=e.target.value;
+    const [m,p]=d.querySelectorAll('button');
+    m.onclick=()=>{t.p=Math.max(0,t.p-1);drawTeams();};
+    p.onclick=()=>{t.p++;drawTeams();};
+    tBox.appendChild(d);
+  });
+}
+drawTeams();
+const panel=document.getElementById('panel');
+document.getElementById('scoreBtn').onclick=()=>panel.classList.toggle('open');
+document.getElementById('closePanel').onclick=()=>panel.classList.remove('open');
+document.getElementById('addTeam').onclick=()=>{if(teams.length<6){teams.push({n:'Team '+(teams.length+1),p:0});drawTeams();}};
+document.getElementById('rmTeam').onclick=()=>{if(teams.length>2){teams.pop();drawTeams();}};
+document.getElementById('resetScore').onclick=()=>{teams.forEach(t=>t.p=0);drawTeams();};
+
+/* ---------- speech ---------- */
+function say(txt){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(txt);u.lang='en-GB';u.rate=.85;
+  const v=speechSynthesis.getVoices().find(v=>v.lang.startsWith('en-GB'))||speechSynthesis.getVoices().find(v=>v.lang.startsWith('en'));
+  if(v)u.voice=v;speechSynthesis.speak(u);
+}
+
+
+const yt=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+/* shopping list */
+const items=[['🚘','a car',1],['📺','a colour TV',1],['🌃','a night out in town',1],['🏍️','a motorbike',0],['🏠','a house',0],['🏖️','a holiday',0],['🎸','a guitar',0],['🐶','a dog',0]];
+const iBox=document.getElementById('items');
+items.forEach(([ic,t,ok])=>{const b=document.createElement('button');b.className='item';b.innerHTML=`<span class="ico">${ic}</span>${t}`;
+  b.onclick=()=>{b.classList.toggle(ok?'right':'wrong');if(ok)say(t);};iBox.appendChild(b);});
+document.getElementById('extraBtn').onclick=e=>{const x=document.getElementById('extra');
+  if(!x.textContent){x.textContent='What car do her friends drive? …';e.target.textContent='Show answer';}
+  else if(e.target.textContent==='Show answer'){x.textContent='What car do her friends drive? They drive Porsches! 🏎️';e.target.textContent='Extra question';}
+  else{x.textContent='';}};
+/* who do we ask */
+const people=['Mum','the boss','Santa Claus','the teacher','Grandma','Dad','the mechanic'];
+let wi=-1;
+document.getElementById('whoBtn').onclick=()=>{let n;do{n=Math.floor(Math.random()*people.length)}while(n===wi);wi=n;
+  document.getElementById('who').textContent=people[n];document.getElementById('whoGap').textContent=people[n];say('Please, please, '+people[n]);};
+/* votes */
+function drawVotes(){const v=document.getElementById('votes');v.innerHTML='';
+  teams.forEach(t=>{t.f=t.f||0;t.b=t.b||0;const r=document.createElement('div');r.className='vrow';
+    r.innerHTML=`<strong>${esc(t.n)}</strong><button class="vbtn">😂 Funniest<b>${t.f}</b></button><button class="vbtn">🎤 Best show<b>${t.b}</b></button>`;
+    const [f,b]=r.querySelectorAll('button');f.onclick=()=>{t.f++;drawVotes();};b.onclick=()=>{t.b++;drawVotes();};v.appendChild(r);});}
+/* phrases */
+const phr=[['Year','My car is from 1965.','My car is older.'],['Engine','It has a 4.7-litre engine.','My engine is bigger.'],['Cylinders','It has 8 cylinders.','My car has more cylinders.'],['Horsepower','It has 271 horsepower.','My car is more powerful.'],['Top speed','Its top speed is 195 kilometres per hour.','My car is faster!']];
+const pBox=document.getElementById('phr');
+phr.forEach(([k,a,b])=>{pBox.insertAdjacentHTML('beforeend',`<span class="k">${k}</span>`);
+  [a,b].forEach(t=>{const d=document.createElement('div');d.className='line';d.innerHTML=`<button class="say" aria-label="Listen">🔊</button><span>${t.replace('kilometres per hour','km/h')}</span>`;
+  d.querySelector('button').onclick=()=>say(t);pBox.appendChild(d);});});
+/* showdown */
+const STATS=[['Year',1,'',"newer"],['Engine',2,' L','bigger engine'],['Cylinders',3,'','more cylinders'],['Horsepower',4,' hp','more powerful'],['Top speed',5,' km/h','faster']];
+let A,B,done=false;
+const cardHTML=(c,hl)=>`<div class="hd">${esc(c[0])}</div><table>${STATS.map(([l,i,u])=>`<tr class="${hl===i?'hl':''}"><td>${l}</td><td>${i===2?c[i].toFixed(1):c[i]}${u}</td></tr>`).join('')}</table><div class="song">♪ <b>${esc(c[6])}</b> · ${esc(c[7])} · <a href="${yt(c[7]+' '+c[6])}" target="_blank" rel="noopener">listen</a></div>`;
+function deal(){let i=Math.floor(Math.random()*CARS.length),j;do{j=Math.floor(Math.random()*CARS.length)}while(j===i);A=CARS[i];B=CARS[j];done=false;
+  ['cA','cB'].forEach(id=>{const e=document.getElementById(id);e.className='tc back';e.textContent='?';});
+  document.getElementById('verdict').textContent='Choose a stat!';}
+const sBox=document.getElementById('stats');
+STATS.forEach(([l,i,u,cmp])=>{const b=document.createElement('button');b.className='go alt';b.textContent=l;b.onclick=()=>{
+  if(!A)deal();
+  const a=document.getElementById('cA'),bb=document.getElementById('cB');
+  a.className='tc';bb.className='tc';a.innerHTML=cardHTML(A,i);bb.innerHTML=cardHTML(B,i);
+  let txt;if(A[i]===B[i])txt="It's a draw!";else{const w=A[i]>B[i]?A:B;(w===A?a:bb).classList.add('win');(w===A?bb:a).classList.add('lose');
+    txt=i===1?`The ${w[0]} is newer.`:i===2?`The ${w[0]} has a bigger engine.`:i===3?`The ${w[0]} has more cylinders.`:`The ${w[0]} is ${cmp}${i===5?'!':'.'}`;}
+  document.getElementById('verdict').textContent=txt;say(txt);};sBox.appendChild(b);});
+document.getElementById('deal').onclick=deal;deal();
+/* teacher links */
+const ml=document.getElementById('matLinks');const seen=new Set();
+CARS.forEach(c=>{const k=c[6]+'|'+c[7];if(seen.has(k))return;seen.add(k);ml.insertAdjacentHTML('beforeend',`<li><a href="${yt(c[7]+' '+c[6])}" target="_blank" rel="noopener">${esc(c[6])} · ${esc(c[7])}</a></li>`);});
+/* refresh votes when teams change */
+const _dt=drawTeams;drawTeams=function(){_dt();drawVotes();};
+document.getElementById('scoreBtn').addEventListener('click',drawVotes);
+drawVotes();
+/* ---------- winners ---------- */
+document.getElementById('showWin').onclick=()=>{
+  const s=[...teams].sort((a,b)=>b.p-a.p),top=s[0].p;
+  document.getElementById('podium').innerHTML=s.map(t=>`<div class="${t.p===top?'win':''}">${t.p===top?'🏆 ':''}${t.n.replace(/</g,'&lt;')}<b>${t.p}</b></div>`).join('');
+};
+
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=()=>{};
+go(0);
+</script>
+</body>
+</html>
