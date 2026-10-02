@@ -130,6 +130,29 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 .controls{flex-shrink:0;flex-wrap:wrap}
 .controls button{min-height:44px;min-width:44px;font-size:1.05em}
 .tb{border-collapse:collapse;font-size:.95em}.tb th{text-align:left;padding:.25em .6em .25em 0;font-family:var(--head);color:#566477}.tb td{padding:.25em .6em .25em 0}.tb tr+tr{border-top:1px solid var(--soft)}
+
+/* esquema final */
+.map{display:flex;flex-direction:column;align-items:center;font-size:.8em;width:100%}
+.map .root{background:var(--ink);color:#fff;font-family:var(--head);font-weight:700;font-size:1.45em;padding:.35em 1.3em;border-radius:14px;text-align:center}
+.map .root small{display:block;font-family:var(--body);font-weight:400;font-size:.55em;opacity:.8}
+.arr{width:3px;height:16px;background:var(--ink);position:relative;margin:0 auto 8px;flex:none}
+.arr::after{content:"";position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--ink)}
+.branches{display:grid;grid-template-columns:1fr 1.7fr 1.35fr;gap:16px;width:100%;align-items:start}
+.br{position:relative;padding-top:30px;display:flex;flex-direction:column}
+.br::before{content:"";position:absolute;top:0;left:-8px;right:-8px;height:3px;background:var(--ink)}
+.br:first-child::before{left:50%}.br:last-child::before{right:50%}
+.br::after{content:"";position:absolute;top:0;left:50%;width:3px;height:20px;background:var(--ink);transform:translateX(-50%)}
+.br>.hd{position:relative;background:var(--k);color:#fff;font-family:var(--head);font-weight:700;font-size:1.2em;text-align:center;padding:.3em .6em;border-radius:10px}
+.br>.hd::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%);border-left:7px solid transparent;border-right:7px solid transparent;border-top:9px solid var(--ink)}
+.br .arr{margin-top:0}
+.it{background:#fff;border:2px solid var(--soft);border-left:6px solid var(--k);border-radius:10px;padding:.4em .7em;margin-bottom:8px}
+.it b{font-family:var(--head);color:var(--k)}
+.fx{display:inline-block;background:var(--paper);border-radius:6px;padding:.05em .45em;font-size:.92em;margin-top:.15em}
+.to{color:var(--mut);font-weight:700}
+.slide.on .map .br{animation:enter .5s both}
+.slide.on .map .br:nth-child(2){animation-delay:.25s}
+.slide.on .map .br:nth-child(3){animation-delay:.5s}
+@media (max-width:820px){.branches{grid-template-columns:1fr}.br::before{display:none}}
 </style>
 </head>
 <body>
@@ -315,6 +338,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   <p class="muted" style="margin-top:.8em">Agora xa podes resolver o misterio de Vila Misterio: 8 − 15 = −7, pero chegaron 17 persoas máis das que marcharon: −7 + 17 = +10.</p>
 </section>
 
+<!-- 13 ACTIVIDADE 1 -->
+<section class="slide">
+  <h2>Actividade 1</h2>
+  <div class="act" style="max-width:780px">
+    <span class="n">1</span>Explica a diferenza entre <b>crecemento natural ou vexetativo</b> e <b>crecemento real</b>.
+    <details><summary>Ver solución</summary><div>O crecemento natural só ten en conta os nacementos e as defuncións (nados − falecidos). O crecemento real engade tamén as migracións: é o crecemento natural máis o saldo migratorio (inmigrantes − emigrantes). Por iso un lugar pode ter crecemento natural negativo e, aínda así, gañar poboación, como Vila Misterio.</div></details>
+  </div>
+</section>
+
 <!-- 9 CALCULADORA -->
 <section class="slide">
   <h2>Calculadora de poboacións</h2>
@@ -396,15 +428,6 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
-<!-- 13 ACTIVIDADE 1 -->
-<section class="slide">
-  <h2>Actividade 1</h2>
-  <div class="act" style="max-width:780px">
-    <span class="n">1</span>Explica a diferenza entre <b>crecemento natural ou vexetativo</b> e <b>crecemento real</b>.
-    <details><summary>Ver solución</summary><div>O crecemento natural só ten en conta os nacementos e as defuncións (nados − falecidos). O crecemento real engade tamén as migracións: é o crecemento natural máis o saldo migratorio (inmigrantes − emigrantes). Por iso un lugar pode ter crecemento natural negativo e, aínda así, gañar poboación, como Vila Misterio.</div></details>
-  </div>
-</section>
-
 <!-- 14 ACTIVIDADE 2 -->
 <section class="slide">
   <h2>Actividade 2: quen é quen?</h2>
@@ -419,6 +442,40 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   <h2>Billete de saída</h2>
   <div id="exit"></div>
   <p class="feedback" id="exitFb"></p>
+</section>
+
+<!-- 16 ESQUEMA -->
+<section class="slide">
+  <h2 style="text-align:center;margin-bottom:.3em">En resumo</h2>
+  <div class="map">
+    <div class="root">O estudo da poboación<small>demografía</small></div>
+    <div class="arr"></div>
+    <div class="branches">
+
+      <div class="br" style="--k:var(--t)">
+        <div class="hd">Censo</div><div class="arr"></div>
+        <div class="it">Lista oficial dos habitantes dun territorio, feita <b>cada 10 anos</b> aprox.</div>
+        <div class="it"><span class="to">→</span> Datos demográficos, económicos e sociais</div>
+        <div class="it"><span class="to">→</span> Fontes: <b>INE</b> e <b>IGE</b></div>
+      </div>
+
+      <div class="br" style="--k:var(--g)">
+        <div class="hd">Indicadores</div><div class="arr"></div>
+        <div class="it"><b>Natalidade</b>: nacementos nun ano<br><span class="fx">TN = nados vivos ÷ poboación × 1000</span><br><span class="to">→</span> <b>Fecundidade</b>: fillos por muller (15-49 anos)</div>
+        <div class="it" style="--k:var(--c)"><b>Mortalidade</b>: defuncións nun ano<br><span class="fx">TM = falecidos ÷ poboación × 1000</span><br><span class="to">→</span> <b>Mortalidade infantil</b><br><span class="fx">falecidos &lt; 1 ano ÷ nados vivos × 1000</span></div>
+        <div class="it" style="--k:var(--b)"><b>Crecemento</b><br>Natural: <span class="fx">TN − TM</span><br>Real: <span class="fx">natural + saldo migratorio</span></div>
+        <div class="it" style="--k:var(--o)"><b>Esperanza de vida</b>: anos que se espera vivir<br><span class="to">→</span> Xunto coa mortalidade infantil, indica o <b style="color:var(--ink)">desenvolvemento</b></div>
+      </div>
+
+      <div class="br" style="--k:var(--b)">
+        <div class="hd">Estrutura</div><div class="arr"></div>
+        <div class="it"><b>Sexo</b> <span class="to">→</span> mulleres e homes: detectar desigualdades</div>
+        <div class="it"><b>Idade</b> <span class="to">→</span> nova (0-14) · adulta (15-64) · anciá (65+)</div>
+        <div class="it"><b>Traballo</b><br><span class="to">→</span> Activa: ocupada (conta propia / asalariada) ou parada<br><span class="to">→</span> Inactiva: estudantes, xubilados, labores do fogar…</div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 <script>
@@ -451,14 +508,34 @@ document.addEventListener('keydown',e=>{
 });
 
 /* voz: galego se existe; se non, castelán */
-function pickVoice(){const v=speechSynthesis.getVoices();return v.find(x=>x.lang&&x.lang.toLowerCase().startsWith('gl'))||v.find(x=>x.lang&&x.lang.startsWith('es-ES'))||v.find(x=>x.lang&&x.lang.startsWith('es'))}
+const VOICE_PREF=['gl','es-es','es'];
+const TTS=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+let VOICES=[];
+function loadVoices(){if(TTS){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){VOICES=[]}}}
+if(TTS){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',loadVoices)}catch(e){speechSynthesis.onvoiceschanged=loadVoices}}
+function pickVoice(){for(const p of VOICE_PREF){const v=VOICES.find(x=>x.lang&&x.lang.replace('_','-').toLowerCase().startsWith(p));if(v)return v}return null}
 function say(text,onend){
-  if(!('speechSynthesis' in window)){onend&&onend();return}
-  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const v=pickVoice();
-  if(v){u.voice=v;u.lang=v.lang}else u.lang='gl-ES';u.rate=.95;
-  if(onend){u.onend=onend;u.onerror=onend}speechSynthesis.speak(u);
+  let done=false,wd=null;
+  const fin=()=>{if(done)return;done=true;clearTimeout(wd);onend&&onend()};
+  /* vixilante: se o dispositivo non fala ou non avisa do final, o vídeo segue igualmente */
+  wd=setTimeout(fin,3000+text.length*110);
+  if(!TTS){fin();return}
+  try{
+    speechSynthesis.cancel();speechSynthesis.resume();
+    const u=new SpeechSynthesisUtterance(text);const v=pickVoice();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='es-ES';
+    u.rate=.95;u.onend=fin;u.onerror=fin;
+    window._utt=u; /* Android borra ás veces a locución antes de rematar */
+    speechSynthesis.speak(u);
+  }catch(e){fin()}
 }
-if('speechSynthesis' in window)speechSynthesis.getVoices();
+function voiceNotice(msg){
+  const pl=document.querySelector('.player');if(!pl)return;
+  let n=document.getElementById('vNotice');
+  if(!n){n=document.createElement('div');n.id='vNotice';n.style.cssText='background:#E9A23B;color:#1B2440;padding:.5em 1em;font-weight:700;font-size:.9em;text-align:center';pl.insertBefore(n,pl.querySelector('.controls'))}
+  n.textContent=msg;n.hidden=false;
+}
+
 
 /* Vila Misterio */
 function fill(id,n,cls,delay){const el=document.getElementById(id);el.innerHTML='';for(let i=0;i<n;i++){const x=document.createElement('i');x.className=cls;x.style.animationDelay=(delay+i*.06)+'s';el.appendChild(x)}}
@@ -492,7 +569,7 @@ let vPlaying=false,vScene=0,vTick=null,vVoice=true,sceneStart=0,waitVoice=false,
 const vScreen=document.getElementById('vScreen'),vPlay=document.getElementById('vPlay');
 const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 const base=i=>scenes.slice(0,i).reduce((a,s)=>a+s.d,0);
-function startScene(i){vScene=i;sceneStart=0;timerDone=false;waitVoice=vVoice&&('speechSynthesis' in window);
+function startScene(i){vScene=i;sceneStart=0;timerDone=false;waitVoice=vVoice&&TTS;
   vScreen.innerHTML=scenes[i].h+'<div class="cap">'+scenes[i].v+'</div>';
   if(waitVoice)say(scenes[i].v,()=>{waitVoice=false;maybeNext()})}
 function maybeNext(){if(!vPlaying||!timerDone||waitVoice)return;
@@ -503,7 +580,7 @@ function tick(){if(!vPlaying)return;
   document.getElementById('vTrack').style.width=(t/total*100)+'%';document.getElementById('vTime').textContent=fmt(t)+' / '+fmt(total)}
 function playVideo(){if(vFinished){vFinished=false;vScene=0}vPlaying=true;vPlay.textContent='❚❚ Pausa';startScene(vScene);vTick=setInterval(tick,250)}
 function pauseVideo(){if(!vPlaying)return;vPlaying=false;clearInterval(vTick);if('speechSynthesis' in window)speechSynthesis.cancel();vPlay.textContent='▶ Reproducir'}
-vPlay.onclick=()=>vPlaying?pauseVideo():playVideo();
+vPlay.onclick=()=>{if(!vPlaying&&vVoice){loadVoices();if(!TTS||VOICES.length===0)setTimeout(()=>{loadVoices();if(!TTS||VOICES.length===0)voiceNotice('Este dispositivo non ten voces de lectura instaladas: o vídeo verase con subtítulos. Tamén podes usar o botón de YouTube.')},1200)}vPlaying?pauseVideo():playVideo()};
 document.getElementById('vRestart').onclick=()=>{pauseVideo();vScene=0;vFinished=false;playVideo()};
 document.getElementById('vVoice').onclick=e=>{vVoice=!vVoice;e.target.textContent='Voz: '+(vVoice?'si':'non');
   if(!vVoice&&'speechSynthesis' in window){speechSynthesis.cancel();waitVoice=false;maybeNext()}};
@@ -532,11 +609,11 @@ ids.forEach(id=>document.getElementById(id).oninput=calc);calc();
 const P=[
  ['👵','Carmen, 74 anos','Cobra a súa pensión desde hai anos.','anciá','inactiva'],
  ['👷','Xoán, 40 anos','Traballa de albanel nunha empresa de construción.','adulta','asalariada'],
- ['🧑‍🎓','Iago, 16 anos','Estuda 4º da ESO.','adulta','inactiva'],
+ ['🧑‍🎓','Iago, 23 anos','Estuda na universidade.','adulta','inactiva'],
+ ['🧺','Brais, 45 anos','Pasa a ferro e coida da casa e da familia, sen cobrar salario.','adulta','inactiva'],
  ['👩‍⚕️','Marta, 33 anos','É médica nun hospital público.','adulta','asalariada'],
  ['👨‍🔧','Antón, 51 anos','É fontaneiro e ten o seu propio taller.','adulta','propia'],
  ['🧑‍💼','Sara, 28 anos','Deixou o seu emprego e busca traballo.','adulta','parada'],
- ['👩','Rosa, 58 anos','Coida da casa e da familia, sen cobrar salario.','adulta','inactiva'],
  ['🧒','Uxía, 9 anos','Vai á escola.','nova','inactiva']
 ];
 const AG=[['','Idade…'],['nova','Nova (0-14)'],['adulta','Adulta (15-64)'],['anciá','Anciá (65+)']];
@@ -550,7 +627,7 @@ document.getElementById('aReset').onclick=buildCards;
 document.getElementById('aCheck').onclick=()=>{let ok=0;
   [...document.querySelectorAll('.card')].forEach((d,i)=>{const g=d.querySelector('.sa').value===P[i][3]&&d.querySelector('.sc').value===P[i][4];d.classList.toggle('good',g);d.classList.toggle('bad',!g);if(g)ok++});
   const fb=document.getElementById('aFb');fb.className='feedback '+(ok===P.length?'ok':'ko');
-  fb.textContent=ok===P.length?'Perfecto! Fíxache en que Iago, con 16 anos, xa pertence á poboación adulta, aínda que sexa inactivo.':ok+' de '+P.length+' ben. Pista: revisa a idade exacta de cada grupo.'};
+  fb.textContent=ok===P.length?'Perfecto! Fíxache en que Iago e Brais son adultos, pero inactivos: estudar ou coidar da casa sen salario non conta como actividade económica.':ok+' de '+P.length+' ben. Pista: revisa a idade exacta de cada grupo.'};
 
 /* billete */
 const EX=[
