@@ -54,7 +54,7 @@ em{font-style:italic}
 .cover svg{flex:0 0 42%;max-height:70vh}
 
 /* ---------- general ---------- */
-.lead{font-size:1.25em;max-width:52ch}
+.lead{font-size:1.25em;max-width:none}
 .muted{color:var(--mut)}
 .row{display:flex;gap:2.2vw;align-items:flex-start;flex-wrap:wrap}
 .col{flex:1 1 300px}
@@ -183,6 +183,52 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 .screen .cap{font-size:clamp(.75em,2.6vh,.95em)}
 .controls{flex-shrink:0;flex-wrap:wrap}
 .controls button{min-height:44px;min-width:44px;font-size:1.05em}
+/* ---------- esquema final ---------- */
+.map{font-size:.8em;display:flex;flex-direction:column;align-items:center;width:100%}
+.map .root{background:var(--ink);color:#fff;border-radius:12px;padding:.45em 1.4em;text-align:center;font-family:var(--head);box-shadow:0 5px 0 #0d1328}
+.map .root b{font-size:1.45em;display:block;line-height:1.1}
+.map .root span{font-family:var(--body);font-size:.9em;opacity:.9}
+.map .down{width:3px;height:16px;background:var(--ink);position:relative}
+.map .down.tip::after{content:"";position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);border:7px solid transparent;border-top:9px solid var(--ink);border-bottom:0}
+.map .lbl{font-family:var(--head);font-weight:600;color:var(--mut);font-size:.95em;margin:.15em 0}
+.map .branch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;width:100%;position:relative;padding-top:18px}
+.map .branch::before{content:"";position:absolute;top:0;left:12.5%;right:12.5%;height:3px;background:var(--ink)}
+.map .lv{position:relative;display:flex;flex-direction:column}
+.map .lv::before{content:"";position:absolute;top:-18px;left:50%;width:3px;height:12px;background:var(--ink);transform:translateX(-50%)}
+.map .lv::after{content:"";position:absolute;top:-8px;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top:8px solid var(--ink);border-bottom:0}
+.map .lv .brick{padding:.35em .6em;text-align:center;font-size:1.05em;line-height:1.15}
+.map .lv .brick small{display:block;font-family:var(--body);font-weight:400;font-size:.78em;opacity:.95}
+.map .lv ul{list-style:none;background:#fff;border:2px solid var(--c);border-top:none;border-radius:0 0 10px 10px;padding:.45em .6em .5em;margin-top:-4px;flex:1}
+.map .lv li{padding-left:1.1em;position:relative;line-height:1.35;margin-bottom:.25em}
+.map .lv li::before{content:"➜";position:absolute;left:0;color:var(--c);font-size:.85em;top:.05em}
+.map .lv li.sub{padding-left:2.1em;font-size:.93em;color:var(--mut);margin-top:-.15em}
+.map .lv li.sub::before{left:1em;content:"↳"}
+.map .lv li.link{font-weight:700;color:var(--r)}
+.map .words{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:.1em}
+.map .wbox{background:#fff;border:2px solid var(--soft);border-radius:12px;padding:.45em .7em}
+.map .wbox h3{font-size:1em;margin-bottom:.3em}
+.map .wbox h3 span{font-family:var(--body);font-weight:400;color:var(--mut);font-size:.85em}
+.map .wl{display:flex;flex-wrap:wrap;gap:.35em .8em}
+.map .wl div{display:flex;align-items:center;gap:.35em;font-size:.95em}
+.map .wl .k{font-size:.95em;padding:0 .45em}
+.map .wl div::after{content:none}
+.map .rootw{background:#fff;border:3px solid var(--r);color:var(--ink);box-shadow:0 4px 0 var(--r);border-radius:10px;padding:.25em 1em;font-family:var(--head);font-weight:700;font-size:1.15em}
+@media (max-width:760px){.map .branch{grid-template-columns:1fr 1fr}.map .branch::before,.map .lv::before,.map .lv::after{display:none}.map .words{grid-template-columns:1fr}}
+.map .elbow{width:100%;height:16px;position:relative}
+.map .elbow::before{content:"";position:absolute;left:calc(37.5% - 1.5px);top:0;width:3px;height:16px;background:var(--r)}
+.map .elbow::after{content:"";position:absolute;left:calc(37.5% - 1.5px);right:calc(50% - 1.5px);bottom:0;height:3px;background:var(--r)}
+.map .elbow+.down{background:var(--r)}.map .elbow+.down::after{border-top-color:var(--r)}
+@media (max-width:760px){.map .elbow{display:none}}
+.news.welles{max-width:none;column-count:2;column-gap:2em;font-size:.78em;line-height:1.5;padding:1em 1.4em}
+.news.welles h3,.news.welles .sub{column-span:all}
+.news.welles p+p{text-indent:1.5em}
+@media (max-width:760px){.news.welles{column-count:1}}
+/* ---------- texto justificado ---------- */
+p,li,.act,.box,details div,.news{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+.sentence,.vbout,.builder,#ordOut,.screen,.screen *,.map .root,.cover p{text-align:left}
+.sentence{text-align:left}
+/* textos a todo el ancho */
+.lead,.news{max-width:none}
 </style>
 </head>
 <body>
@@ -323,6 +369,23 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- TEXTO PARTE 1 -->
+<section class="slide">
+  <h2>Leemos un texto</h2>
+  <div class="row" style="align-items:center">
+    <article class="news col" style="flex:2 1 420px">
+      <h3>Así se reparte la riqueza en el mundo… y se perpetúa la desigualdad</h3>
+      <p class="sub">Las 80 personas más ricas del mundo acumulan casi tanta riqueza como los 3500 millones de personas que conforman la mitad de la población en situación de pobreza.</p>
+      <p class="muted" style="font-size:.9em;margin-bottom:.5em">Por Azucena García.</p>
+      <p>Ricos más ricos, pobres más pobres. Así resume Oxfam Intermón la situación actual, en la que la desigualdad se ha acomodado en un asiento de primera fila. Cada vez los extremos ganan más terreno y dejan pocas opciones a quienes carecen de oportunidades. Si continúa esta tendencia, advierte Oxfam Intermón, en 2016 «el 1% más rico tendrá más del 50% de toda la riqueza del planeta». Esto es, un 1% tendrá más que el 99%.</p>
+      <p style="text-align:right;color:var(--r);font-size:.9em;margin-top:.6em">(Adaptado de www.consumer.es)</p>
+    </article>
+    <div class="col box">
+      <p>Vamos a usar esta noticia en las actividades de cada nivel de la lengua. Léela con atención: volveremos a ella.</p>
+    </div>
+  </div>
+</section>
+
 <!-- 8 FONICO -->
 <section class="slide" data-level="0">
   <h2>Nivel fónico: cómo suena</h2>
@@ -341,6 +404,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
       <button class="btn alt" data-say="¡Vaya mundo!" data-c="2">¡Vaya mundo! <span class="tag">exclamativa</span></button>
       <svg class="curve" viewBox="0 0 300 100" aria-hidden="true"><path id="curve" d="M10 60 L290 60" stroke="#F2B705" stroke-width="8" fill="none" stroke-linecap="round" style="transition:d .4s"/></svg>
     </div>
+  </div>
+</section>
+
+<!-- ACT 3 -->
+<section class="slide" data-level="0">
+  <h2>Actividad 3</h2>
+  <div class="acts">
+    <div class="act"><span class="n">3</span>Inventa un enunciado relacionado con el contenido del texto anterior y, haciendo uso de los signos de puntuación, entónalo de maneras diferentes.
+      <details><summary>Ver un ejemplo</summary><div>La riqueza está mal repartida. / ¿La riqueza está mal repartida? / ¡La riqueza está mal repartida!</div></details></div>
   </div>
 </section>
 
@@ -368,6 +440,17 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 4-5 -->
+<section class="slide" data-level="1">
+  <h2>Actividades 4 y 5</h2>
+  <div class="acts">
+    <div class="act"><span class="n">4</span>Amplía la familia de la palabra <em>pueblo</em>: <em>poblar, población, repoblar…</em>
+      <details><summary>Ver solución</summary><div>poblado, poblador, pueblerino, despoblar, despoblado, despoblación, repoblación, superpoblación…</div></details></div>
+    <div class="act"><span class="n">5</span>¿Cómo crees que se ha formado la palabra <em>desigualdad</em>?
+      <details><summary>Ver solución</summary><div><b>des-</b> (prefijo: lo contrario) + <b>igual</b> (lexema) + <b>-dad</b> (sufijo: forma sustantivos). Primero <em>igual</em>, luego <em>igualdad</em> y, por último, <em>desigualdad</em>.</div></details></div>
+  </div>
+</section>
+
 <!-- 10 MORFOSINTACTICO II -->
 <section class="slide" data-level="1">
   <h2>Nivel morfosintáctico (2): las palabras en equipo</h2>
@@ -386,6 +469,20 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 6-7 -->
+<section class="slide" data-level="1">
+  <h2>Actividades 6 y 7</h2>
+  <div class="acts">
+    <div class="act"><span class="n">6</span>Lee el siguiente enunciado y separa todas las palabras, después los sintagmas y, por último, las oraciones:<br><em>En 2020 los ricos serán más ricos y los pobres serán más pobres.</em>
+      <details><summary>Ver solución</summary><div><b>13 palabras.</b><br><b>Sintagmas:</b> [En 2020] SPrep, [los ricos] SN, [serán más ricos] SV, [los pobres] SN, [serán más pobres] SV.<br><b>Oraciones:</b> dos, unidas por <em>y</em>: «En 2020 los ricos serán más ricos» / «los pobres serán más pobres».</div></details></div>
+    <div class="act"><span class="n">7</span>Organiza estas palabras desordenadas para que puedan constituir una oración, teniendo en cuenta algunas reglas como la de la concordancia:
+      <div class="chips" id="ordPool"></div>
+      <p id="ordOut" style="min-height:1.5em;font-weight:700"></p>
+      <button class="btn" id="ordCheck">Comprobar</button><button class="btn alt" id="ordReset">Reiniciar</button>
+      <p class="feedback" id="ordFb"></p></div>
+  </div>
+</section>
+
 <!-- 11 LEXICO -->
 <section class="slide" data-level="2">
   <h2>Nivel léxico-semántico: qué significa</h2>
@@ -398,6 +495,17 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 8-9 -->
+<section class="slide" data-level="2">
+  <h2>Actividades 8 y 9</h2>
+  <div class="acts">
+    <div class="act"><span class="n">8</span>Localiza en el texto una palabra de significado similar a <em>mundo</em>.
+      <details><summary>Ver solución</summary><div><em>planeta</em> (sinónimo): «toda la riqueza del planeta».</div></details></div>
+    <div class="act"><span class="n">9</span>En el texto que has leído aparecen las palabras <em>pobreza</em> y <em>riqueza</em>. ¿Sabes qué nombre recibe la relación de significado entre ellas? Localiza otro caso similar en el texto.
+      <details><summary>Ver solución</summary><div>Son <b>antónimos</b> (antonimia). Otro caso: <em>ricos / pobres</em> («Ricos más ricos, pobres más pobres»).</div></details></div>
+  </div>
+</section>
+
 <!-- 12 DISCURSIVO -->
 <section class="slide" data-level="3">
   <h2>Nivel discursivo o pragmático: el texto</h2>
@@ -405,6 +513,7 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
     <div class="col">
       <p class="lead">Estudia el <b>texto</b>: la unidad completa de comunicación, con sentido y dentro de un contexto.</p>
       <p style="margin-top:.6em">Un montón de ladrillos no es una casa. Para que haya texto, tiene que cumplir tres propiedades:</p>
+      <details><summary>¿Y la noticia que hemos leído?</summary><div>Es un texto porque tiene <b>sentido</b>; es <b>coherente</b> (trata un único tema: el reparto desigual de la riqueza); está <b>cohesionado</b> (<em>así, cada vez, esto es</em>; se repite <em>Oxfam Intermón</em>) y es <b>adecuado</b> a un periódico digital.</div></details>
     </div>
     <div class="col">
       <div class="brick cg" style="padding:.7em 1em;margin-bottom:16px"><b>Coherencia</b><br><span style="font-family:var(--body);font-weight:400">Habla de un tema claro y las ideas siguen un orden.</span></div>
@@ -414,25 +523,11 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
-<!-- 13 TEXTO -->
+<!-- ACT 1 -->
 <section class="slide">
-  <h2>Leemos un texto</h2>
-  <div class="row" style="align-items:center">
-    <article class="news col" style="flex:2 1 420px">
-      <h3>Ricos cada vez más ricos, pobres cada vez más pobres</h3>
-      <p class="sub">Un pequeño grupo de personas concentra una parte enorme del dinero de todo el planeta.</p>
-      <p>Las personas más ricas del mundo acumulan cada vez más riqueza. Mientras tanto, millones de familias viven en la pobreza y apenas tienen oportunidades para estudiar, trabajar o recibir atención médica. Varias organizaciones humanitarias alertan de que la desigualdad no deja de crecer: los que tienen mucho ganan terreno y los que tienen poco se quedan atrás. Si nada cambia, advierten, la distancia entre unos y otros será cada vez mayor en todo el planeta.</p>
-    </article>
-    <div class="col box">
-      <p>Es un texto porque tiene <b>sentido</b>, es <b>coherente</b> (habla de la desigualdad), está <b>cohesionado</b> (<em>mientras tanto</em>, <em>unos y otros</em>) y es <b>adecuado</b> a un periódico.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 14 ACTIVIDAD 1 -->
-<section class="slide">
-  <h2>Actividad 1: cada pieza a su piso</h2>
-  <p>Pulsa un concepto y después el nivel al que pertenece.</p>
+  <h2>Actividad 1</h2>
+  <p><span class="act" style="display:inline;border:none;padding:0;background:none"><span class="n">1</span></span>Organiza en los niveles correspondientes los siguientes conceptos lingüísticos.</p>
+  <p class="muted" style="font-size:.9em">Pulsa un concepto y después el nivel al que pertenece.</p>
   <div class="chips" id="pool"></div>
   <div class="bins" id="bins">
     <div class="bin" data-b="0" style="--c:#c99600"><h3>Fónico</h3><div class="chips"></div></div>
@@ -442,41 +537,6 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
   <div><button class="btn" id="clCheck">Comprobar</button><button class="btn alt" id="clReset">Empezar otra vez</button></div>
   <p class="feedback" id="clFb"></p>
-</section>
-
-<!-- 15 ACTIVIDADES 2-5 -->
-<section class="slide">
-  <h2>Actividades 2 a 5</h2>
-  <div class="acts">
-    <div class="act"><span class="n">2</span>Escribe el abecedario en tu cuaderno y, con ayuda del profesor, anota el fonema de cada letra. ¿Hay siempre una letra para cada sonido? ¿Qué problema puede causar?
-      <details><summary>Ver solución</summary><div>No siempre. La <b>h</b> no suena; <b>c, k, qu</b> pueden sonar /k/; <b>g</b> y <b>j</b> pueden sonar /x/; <b>b</b> y <b>v</b> suenan igual; la <b>x</b> son dos sonidos /ks/. Por eso cometemos faltas de ortografía.</div></details></div>
-    <div class="act"><span class="n">3</span>Inventa un enunciado sobre el texto y escríbelo con distintos signos de puntuación. Léelo en voz alta con cada entonación.
-      <details><summary>Ver un ejemplo</summary><div>Los ricos son cada vez más ricos. / ¿Los ricos son cada vez más ricos? / ¡Los ricos son cada vez más ricos!</div></details></div>
-    <div class="act"><span class="n">4</span>Amplía la familia de la palabra <em>pueblo</em>: <em>poblar, población, repoblar…</em>
-      <details><summary>Ver solución</summary><div>poblado, poblador, pueblerino, despoblar, despoblado, despoblación, repoblación, superpoblación…</div></details></div>
-    <div class="act"><span class="n">5</span>¿Cómo crees que se ha formado la palabra <em>desigualdad</em>?
-      <details><summary>Ver solución</summary><div><b>des-</b> (prefijo: lo contrario) + <b>igual</b> (lexema) + <b>-dad</b> (sufijo: forma sustantivos). Primero <em>igual</em>, luego <em>igualdad</em> y, por último, <em>desigualdad</em>.</div></details></div>
-  </div>
-</section>
-
-<!-- 16 ACTIVIDADES 6-10 -->
-<section class="slide">
-  <h2>Actividades 6 a 10</h2>
-  <div class="acts">
-    <div class="act"><span class="n">6</span>Separa las palabras, después los sintagmas y, por último, las oraciones:<br><em>En 2030 los ricos serán más ricos y los pobres serán más pobres.</em>
-      <details><summary>Ver solución</summary><div><b>13 palabras.</b><br><b>Sintagmas:</b> [En 2030] SPrep, [los ricos] SN, [serán más ricos] SV, [los pobres] SN, [serán más pobres] SV.<br><b>Oraciones:</b> dos, unidas por <em>y</em>: «En 2030 los ricos serán más ricos» / «los pobres serán más pobres».</div></details></div>
-    <div class="act"><span class="n">7</span>Ordena las palabras para formar una oración. Recuerda la concordancia.
-      <div class="chips" id="ordPool"></div>
-      <p id="ordOut" style="min-height:1.5em;font-weight:700"></p>
-      <button class="btn" id="ordCheck">Comprobar</button><button class="btn alt" id="ordReset">Reiniciar</button>
-      <p class="feedback" id="ordFb"></p></div>
-    <div class="act"><span class="n">8</span>Busca en el texto una palabra con un significado parecido a <em>mundo</em>.
-      <details><summary>Ver solución</summary><div><em>planeta</em> (sinónimo).</div></details></div>
-    <div class="act"><span class="n">9</span>En el texto aparecen <em>pobreza</em> y <em>riqueza</em>. ¿Cómo se llama esa relación de significado? Busca otro caso en el texto.
-      <details><summary>Ver solución</summary><div>Son <b>antónimos</b> (antonimia). Otros casos: <em>ricos / pobres</em>, <em>mucho / poco</em>.</div></details></div>
-    <div class="act"><span class="n">10</span><b>Propuesta de expresión.</b> Inventa un enunciado que suene bien y tenga una gramática correcta, pero que no tenga sentido.
-      <details><summary>Ver un ejemplo</summary><div><em>La mesa azul estornudó un martes cuadrado.</em> Los sonidos y la concordancia están bien, pero el significado no encaja.</div></details></div>
-  </div>
 </section>
 
 <!-- 17 CIERRE -->
@@ -489,10 +549,32 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
 
 <!-- ============ PARTE 2: LAS PALABRAS ============ -->
 
+<!-- P2 TEXTO WELLES -->
+<section class="slide">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:1em">
+    <div><p class="muted" style="font-family:var(--head);font-weight:600">Parte 2: las palabras</p>
+    <h2 style="margin-bottom:.3em">Leemos: la noche de los marcianos</h2></div>
+    <svg viewBox="0 0 220 220" style="width:90px;flex:0 0 90px" role="img" aria-label="Radio antigua con un platillo volante encima">
+      <ellipse cx="120" cy="40" rx="55" ry="14" fill="#8E5BD9"/><ellipse cx="120" cy="32" rx="24" ry="16" fill="#9fd3f5" stroke="#1B2440" stroke-width="3"/>
+      <path d="M100 56 L80 110 M140 56 L160 110" stroke="#F2B705" stroke-width="4" stroke-dasharray="6 6"/>
+      <rect x="30" y="100" width="160" height="110" rx="22" fill="#E0412F" stroke="#1B2440" stroke-width="4"/>
+      <circle cx="80" cy="155" r="30" fill="#F5F7FB" stroke="#1B2440" stroke-width="4"/>
+      <rect x="125" y="130" width="45" height="22" rx="4" fill="#F2B705" stroke="#1B2440" stroke-width="3"/>
+    </svg>
+  </div>
+  <article class="news welles">
+    <h3>El día que Orson Welles sembró el pánico con <em>La guerra de los mundos</em></h3>
+    <p class="sub">Un 30 de octubre, pero de hace 75 años, el célebre personaje entraba en el Estudio Uno de la CBS para narrar en directo la adaptación de la novela de H. G. Wells y poner el planeta a merced de los alienígenas.</p>
+    <p>Alrededor de las ocho de la tarde, el Estudio Uno de la Columbia Broadcasting en Nueva York se convertía en el escenario donde Welles iba a interpretar, acompañado de la compañía teatral Mercury que él mismo dirigía, la novela del escritor británico H. G. Wells, <em>La guerra de los mundos</em> (…). En un contexto marcado por la Gran Depresión, el locutor norteamericano pensó que tal adaptación contada en forma de noticiario de última hora calaría en el seno de la audiencia. Y vaya si lo hizo (…). Así, en plena víspera de Halloween, tan solo tuvo que prender la mecha con un comienzo espeluznante: «Señoras y señores, interrumpimos nuestro programa de baile para comunicarles una noticia de último minuto procedente de la agencia Intercontinental Radio. El profesor Farrel del Observatorio de Mount Jennings de Chicago reporta que se han observado en el planeta Marte algunas explosiones que se dirigen a la Tierra con enorme rapidez… Continuaremos informando».</p>
+    <p>Tras el primer corte y para darle aún mayor veracidad a la noticia, Welles retomaba la supuesta emisión de una orquesta desde el hotel Meridian Plaza para volver a parar a medida que la ficticia invasión extraterrestre se iba desarrollando (…). «Damas y caballeros, tengo que anunciarles una grave noticia. Por increíble que parezca, tanto las observaciones científicas como la más palpable realidad nos obligan a creer que los extraños seres que han aterrizado esta noche en una zona rural de Jersey son la vanguardia de un ejército invasor procedente del planeta Marte…» (…).</p>
+    <p>Los datos de audiencia estiman que cerca de 12 millones de personas escucharon la transmisión y otras tantas cayeron presa del pánico abandonando sus casas y colapsando carreteras, estaciones o comisarías de policía. Los teléfonos de emergencia echaron humo durante varias horas recibiendo multitud de mensajes que decían haber visto a los extraterrestres. El polémico acontecimiento, que terminaba con la «muerte» del propio Orson Welles a causa de los gases que emanaban los invasores, pudo ser el fin de su fulgurante carrera, pero visto en perspectiva, aquello, en realidad, no fue más que el inicio de su leyenda.</p>
+  </article>
+</section>
+
 <!-- P2-1 PORTADA + DETECTIVE -->
 <section class="slide">
-  <h2>Parte 2: las palabras</h2>
-  <p class="lead">Detective de palabras. Esta frase tiene 13 palabras. ¿Cuántas <b>clases</b> distintas de palabras crees que esconde?</p>
+  <h2>Detective de palabras</h2>
+  <p class="lead">Esta frase tiene 13 palabras. ¿Cuántas <b>clases</b> distintas de palabras crees que esconde?</p>
   <p class="sentence" id="hookS"></p>
   <div id="hookOpts">
     <button class="btn alt" data-n="4">4 clases</button>
@@ -542,6 +624,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 11a -->
+<section class="slide">
+  <h2>Actividad 11 a)</h2>
+  <div class="acts">
+    <div class="act"><span class="n">a</span>Estos sustantivos comunes son relevantes porque a partir de ellos se podrían resumir las ideas importantes del texto: <em>adaptación, audiencia, transmisión, veracidad, pánico</em> y <em>emergencia</em>. ¿Qué tienen en común?
+      <details><summary>Ver solución</summary><div>Todos son sustantivos <b>comunes</b> y <b>abstractos</b>: nombran ideas o conceptos que no se pueden percibir con los sentidos.</div></details></div>
+  </div>
+</section>
+
 <!-- P2-5 ADJETIVO -->
 <section class="slide">
   <h2><span class="k c-adj big">Adjetivo</span></h2>
@@ -568,6 +659,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 11b -->
+<section class="slide">
+  <h2>Actividad 11 b)</h2>
+  <div class="acts">
+    <div class="act"><span class="n">b</span>¿Qué diferencias existen entre los adjetivos destacados en estos sintagmas: «<b>célebre</b> personaje» y «escritor <b>británico</b>»?
+      <details><summary>Ver solución</summary><div><em>Célebre</em> va delante y es <b>explicativo</b>: resalta una cualidad del personaje. <em>Británico</em> va detrás y es <b>especificativo</b>: distingue a ese escritor de los de otras nacionalidades.</div></details></div>
+  </div>
+</section>
+
 <!-- P2-6 DETERMINANTES Y PRONOMBRES -->
 <section class="slide">
   <h2><span class="k c-det big">Determinante</span> y <span class="k c-pro big">pronombre</span></h2>
@@ -585,6 +685,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
   <div class="box" style="margin-top:1em">
     <p><b>¡Ojo, misma palabra!</b> <em><u>Este</u> ovni brilla</em> (determinante: va con un sustantivo) / <em><u>Este</u> brilla</em> (pronombre: va solo).</p>
+  </div>
+</section>
+
+<!-- ACT 11d -->
+<section class="slide">
+  <h2>Actividad 11 d)</h2>
+  <div class="acts">
+    <div class="act"><span class="n">d</span>Al principio y al final del texto encontrarás algunos determinantes numerales que dotan de veracidad a la noticia. ¿Cuáles son?
+      <details><summary>Ver solución</summary><div>Al principio: «un <b>30</b> de octubre», «hace <b>75</b> años» (y «las <b>ocho</b> de la tarde»). Al final: «cerca de <b>12</b> millones de personas». Son numerales cardinales: precisan fechas y cantidades, y eso hace la noticia más creíble.</div></details></div>
   </div>
 </section>
 
@@ -607,6 +716,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
       <p class="vbout" id="vbOut"></p>
       <p class="muted" id="vbInfo" style="font-size:.92em"></p>
     </div>
+  </div>
+</section>
+
+<!-- ACT 11e -->
+<section class="slide">
+  <h2>Actividad 11 e)</h2>
+  <div class="acts">
+    <div class="act"><span class="n">e</span>Observa cómo se utiliza el verbo en tiempo presente en el estilo directo (entrecomillado en el texto) y en pasado en la narración de la noticia. Pon ejemplos.
+      <details><summary>Ver solución</summary><div><b>Estilo directo (presente):</b> <em>interrumpimos, reporta, se dirigen, tengo, obligan, son</em>. Parece que ocurre en ese mismo momento.<br><b>Narración (pasado):</b> <em>entraba, se convertía, pensó, hizo, tuvo, retomaba, escucharon, cayeron, echaron, pudo, fue</em>.</div></details></div>
   </div>
 </section>
 
@@ -636,6 +754,15 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
+<!-- ACT 11c -->
+<section class="slide">
+  <h2>Actividad 11 c)</h2>
+  <div class="acts">
+    <div class="act"><span class="n">c</span>Averigua qué adverbios han derivado de estos adjetivos seleccionados del texto: <em>increíble, extraña, plena, última</em> y <em>supuesta</em>.
+      <details><summary>Ver solución</summary><div>increíblemente, extrañamente, plenamente, últimamente, supuestamente.</div></details></div>
+  </div>
+</section>
+
 <!-- P2-9 PREP, CONJ, INTERJ -->
 <section class="slide">
   <h2>Las palabras que unen… y las que gritan</h2>
@@ -648,49 +775,6 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   </div>
 </section>
 
-<!-- P2-10 TEXTO WELLES -->
-<section class="slide">
-  <h2>Leemos: la noche de los marcianos</h2>
-  <div class="row" style="align-items:flex-start">
-    <article class="news col" style="flex:3 1 480px;font-size:.92em">
-      <h3>La noche en que la radio hizo creer que llegaban los marcianos</h3>
-      <p class="sub">Hace ochenta y ocho años, Orson Welles convirtió una novela de ciencia ficción en la emisión de radio más famosa de la historia.</p>
-      <p>El 30 de octubre de 1938, víspera de Halloween, Orson Welles se sentó ante el micrófono de la cadena CBS, en Nueva York. Iba a presentar la adaptación de <em>La guerra de los mundos</em>, la novela del escritor británico H. G. Wells. Sin embargo, el célebre personaje decidió contarla como si fuera un informativo real.</p>
-      <p>La emisión empezó con música de baile. De repente, un locutor la interrumpió: «Señoras y señores, interrumpimos este programa para darles una noticia de última hora: una extraña nave cae sobre una granja de Nueva Jersey». Poco después, una supuesta reportera describía la escena: «Es increíble. Algo sale de la nave. ¡Tiene tentáculos!».</p>
-      <p>Aunque la cadena avisó de que era una obra de ficción, muchos oyentes creyeron la transmisión. Según los periódicos de la época, mucha gente salió a la calle en plena noche y colapsó las líneas de emergencia. Hoy los historiadores piensan que el pánico fue menor de lo que se contó, pero aquella audiencia descubrió el poder de la radio y la importancia de la veracidad. Welles tenía entonces veintitrés años.</p>
-    </article>
-    <div class="col" style="flex:1 1 220px">
-      <svg viewBox="0 0 220 220" role="img" aria-label="Radio antigua con un platillo volante encima">
-        <ellipse cx="120" cy="40" rx="55" ry="14" fill="#8E5BD9"/><ellipse cx="120" cy="32" rx="24" ry="16" fill="#9fd3f5" stroke="#1B2440" stroke-width="3"/>
-        <circle cx="85" cy="42" r="4" fill="#F2B705"/><circle cx="120" cy="47" r="4" fill="#F2B705"/><circle cx="155" cy="42" r="4" fill="#F2B705"/>
-        <path d="M100 56 L80 110 M140 56 L160 110" stroke="#F2B705" stroke-width="4" stroke-dasharray="6 6"/>
-        <rect x="30" y="100" width="160" height="110" rx="22" fill="#E0412F" stroke="#1B2440" stroke-width="4"/>
-        <circle cx="80" cy="155" r="30" fill="#F5F7FB" stroke="#1B2440" stroke-width="4"/>
-        <path d="M60 145h40M58 155h44M60 165h40" stroke="#1B2440" stroke-width="3"/>
-        <rect x="125" y="130" width="45" height="22" rx="4" fill="#F2B705" stroke="#1B2440" stroke-width="3"/>
-        <circle cx="135" cy="180" r="9" fill="#1B2440"/><circle cx="162" cy="180" r="9" fill="#1B2440"/>
-      </svg>
-    </div>
-  </div>
-</section>
-
-<!-- P2-11 ACTIVIDAD 11 -->
-<section class="slide">
-  <h2>Actividad 11</h2>
-  <div class="acts">
-    <div class="act"><span class="n">a</span>Estos sustantivos comunes resumen las ideas del texto: <em>adaptación, audiencia, transmisión, veracidad, pánico, emergencia</em>. ¿Qué tienen en común?
-      <details><summary>Ver solución</summary><div>Todos son <b>comunes</b> y <b>abstractos</b>: nombran ideas o conceptos que no se pueden tocar ni ver.</div></details></div>
-    <div class="act"><span class="n">b</span>¿Qué adverbios salen de estos adjetivos del texto: <em>increíble, extraña, plena, última, supuesta</em>?
-      <details><summary>Ver solución</summary><div>increíblemente, extrañamente, plenamente, últimamente, supuestamente.</div></details></div>
-    <div class="act"><span class="n">c</span>¿Qué diferencia hay entre los adjetivos de <em>«<b>célebre</b> personaje»</em> y <em>«escritor <b>británico</b>»</em>?
-      <details><summary>Ver solución</summary><div><em>Célebre</em> va delante y es <b>explicativo</b>: resalta una cualidad del personaje. <em>Británico</em> va detrás y es <b>especificativo</b>: distingue a ese escritor de los de otros países.</div></details></div>
-    <div class="act"><span class="n">d</span>Al principio y al final del texto hay determinantes numerales que dan veracidad a la noticia. ¿Cuáles son?
-      <details><summary>Ver solución</summary><div>Al principio, <em><b>ochenta y ocho</b> años</em> (y la fecha, <em>30</em> de octubre de 1938). Al final, <em><b>veintitrés</b> años</em>. Son numerales cardinales.</div></details></div>
-    <div class="act"><span class="n">e</span>Observa el tiempo de los verbos en las frases entre comillas (estilo directo) y en la narración. Pon ejemplos.
-      <details><summary>Ver solución</summary><div>Entre comillas, <b>presente</b>: <em>interrumpimos, cae, es, sale, tiene</em>. Parece que ocurre en ese mismo momento. En la narración, <b>pasado</b>: <em>se sentó, decidió, empezó, interrumpió, creyeron</em>.</div></details></div>
-  </div>
-</section>
-
 <!-- P2-12 RETO FINAL -->
 <section class="slide">
   <h2>Reto final: colorea la frase</h2>
@@ -699,6 +783,76 @@ details div{background:var(--paper);border-radius:8px;padding:.6em .8em;margin-t
   <p class="sentence" id="rtS"></p>
   <button class="btn" id="rtCheck">Comprobar</button><button class="btn alt" id="rtReset">Borrar colores</button>
   <p class="feedback" id="rtFb"></p>
+</section>
+
+<!-- ESQUEMA FINAL -->
+<section class="slide">
+  <h2 style="margin-bottom:.3em">Esquema final: todo lo que hemos visto</h2>
+  <div class="map">
+    <div class="root"><b>La lengua es un sistema</b><span>un código de signos + reglas para combinarlos, organizado en niveles</span></div>
+    <div class="down"></div>
+    <div class="branch">
+      <div class="lv" style="--c:#c99600">
+        <div class="brick cy">Nivel fónico<small>cómo suena</small></div>
+        <ul>
+          <li><b>Fonemas</b> (/m/) y <b>grafías</b> (m)</li>
+          <li><b>Entonación</b></li>
+          <li class="sub">enunciativa, interrogativa, exclamativa</li>
+        </ul>
+      </div>
+      <div class="lv" style="--c:var(--r)">
+        <div class="brick cr">Nivel morfosintáctico<small>forma y combinación</small></div>
+        <ul>
+          <li><b>Palabra</b>: lexema + morfemas</li>
+          <li class="sub">flexivos (género, número) y derivativos</li>
+          <li class="link">Categoría gramatical ⤵</li>
+          <li><b>Sintagmas</b>: SN, SPrep, SV…</li>
+          <li><b>Oraciones</b>: simples y compuestas</li>
+        </ul>
+      </div>
+      <div class="lv" style="--c:var(--b)">
+        <div class="brick cb">Nivel léxico-semántico<small>qué significa</small></div>
+        <ul>
+          <li>Significado <b>denotativo</b> y <b>connotativo</b></li>
+          <li><b>Relaciones</b>: polisemia, sinonimia, antonimia</li>
+          <li><b>Origen</b>: cultismos, préstamos, neologismos, tecnicismos</li>
+        </ul>
+      </div>
+      <div class="lv" style="--c:var(--g)">
+        <div class="brick cg">Nivel discursivo<small>el texto</small></div>
+        <ul>
+          <li><b>Texto</b>: unidad completa de comunicación</li>
+          <li>Propiedades:</li>
+          <li class="sub">coherencia, cohesión y adecuación</li>
+        </ul>
+      </div>
+    </div>
+    <div class="elbow"></div>
+    <div class="down tip"></div>
+    <div class="rootw" style="margin-top:10px">Clases de palabras</div>
+    <div class="down tip"></div>
+    <div class="words" style="margin-top:10px">
+      <div class="wbox">
+        <h3>Variables <span>cambian de forma</span></h3>
+        <div class="wl">
+          <div><span class="k c-sus">sustantivo</span> nombra</div>
+          <div><span class="k c-det">determinante</span> acompaña y concreta</div>
+          <div><span class="k c-adj">adjetivo</span> expresa cualidades</div>
+          <div><span class="k c-pro">pronombre</span> sustituye</div>
+          <div><span class="k c-ver">verbo</span> acciones, procesos, estados</div>
+        </div>
+      </div>
+      <div class="wbox">
+        <h3>Invariables <span>siempre igual</span></h3>
+        <div class="wl">
+          <div><span class="k c-adv">adverbio</span> circunstancias</div>
+          <div><span class="k c-pre">preposición</span> relaciona</div>
+          <div><span class="k c-con">conjunción</span> une</div>
+          <div><span class="k c-int">interjección</span> expresa emociones</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- visor ampliado -->
@@ -743,16 +897,34 @@ document.addEventListener('keydown',e=>{
 });
 
 /* ---------- voz ---------- */
+const VOICE_PREF=['es-es','es'];
+const TTS=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+let VOICES=[];
+function loadVoices(){if(TTS){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){VOICES=[]}}}
+if(TTS){loadVoices();try{speechSynthesis.addEventListener('voiceschanged',loadVoices)}catch(e){speechSynthesis.onvoiceschanged=loadVoices}}
+function pickVoice(){for(const p of VOICE_PREF){const v=VOICES.find(x=>x.lang&&x.lang.replace('_','-').toLowerCase().startsWith(p));if(v)return v}return null}
 function say(text,onend){
-  if(!('speechSynthesis' in window)){onend&&onend();return}
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text);u.lang='es-ES';u.rate=.95;
-  const v=speechSynthesis.getVoices().find(v=>v.lang&&v.lang.startsWith('es-ES'))||speechSynthesis.getVoices().find(v=>v.lang&&v.lang.startsWith('es'));
-  if(v)u.voice=v;
-  if(onend){u.onend=onend;u.onerror=onend}
-  speechSynthesis.speak(u);
+  let done=false,wd=null;
+  const fin=()=>{if(done)return;done=true;clearTimeout(wd);onend&&onend()};
+  /* vixilante: se o dispositivo non fala ou non avisa do final, o vídeo segue igualmente */
+  wd=setTimeout(fin,3000+text.length*110);
+  if(!TTS){fin();return}
+  try{
+    speechSynthesis.cancel();speechSynthesis.resume();
+    const u=new SpeechSynthesisUtterance(text);const v=pickVoice();
+    if(v){u.voice=v;u.lang=v.lang}else u.lang='es-ES';
+    u.rate=.95;u.onend=fin;u.onerror=fin;
+    window._utt=u; /* Android borra ás veces a locución antes de rematar */
+    speechSynthesis.speak(u);
+  }catch(e){fin()}
 }
-if('speechSynthesis' in window) speechSynthesis.getVoices();
+function voiceNotice(msg){
+  const pl=document.querySelector('.player');if(!pl)return;
+  let n=document.getElementById('vNotice');
+  if(!n){n=document.createElement('div');n.id='vNotice';n.style.cssText='background:#E9A23B;color:#1B2440;padding:.5em 1em;font-weight:700;font-size:.9em;text-align:center';pl.insertBefore(n,pl.querySelector('.controls'))}
+  n.textContent=msg;n.hidden=false;
+}
+
 
 /* ---------- enigma ---------- */
 const letters=['D','O','N','U','M'],cols=['cg','ck','cb','cr','cy'];
@@ -835,7 +1007,7 @@ const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
 function sceneBase(i){return scenes.slice(0,i).reduce((a,s)=>a+s.d,0)}
 function renderScene(i){vScreen.innerHTML=scenes[i].h+'<div class="cap">'+scenes[i].v+'</div>'}
 function startScene(i){
-  vScene=i;sceneStart=0;timerDone=false;waitVoice=vVoice&&('speechSynthesis' in window);
+  vScene=i;sceneStart=0;timerDone=false;waitVoice=vVoice&&TTS;
   renderScene(i);
   if(waitVoice)say(scenes[i].v,()=>{waitVoice=false;maybeNext()});
 }
@@ -863,7 +1035,7 @@ function pauseVideo(){
   if('speechSynthesis' in window)speechSynthesis.cancel();
   vPlay.textContent='▶ Reproducir';
 }
-vPlay.onclick=()=>vPlaying?pauseVideo():playVideo();
+vPlay.onclick=()=>{if(!vPlaying&&vVoice){loadVoices();if(!TTS||VOICES.length===0)setTimeout(()=>{loadVoices();if(!TTS||VOICES.length===0)voiceNotice('Este dispositivo no tiene voces de lectura instaladas: el vídeo se verá con subtítulos. También puedes usar el botón de YouTube.')},1200)}vPlaying?pauseVideo():playVideo()};
 document.getElementById('vRestart').onclick=()=>{pauseVideo();vScene=0;vFinished=false;document.getElementById('vTrack').style.width='0';playVideo()};
 document.getElementById('vVoice').onclick=e=>{vVoice=!vVoice;e.target.textContent='Voz: '+(vVoice?'sí':'no');e.target.setAttribute('aria-pressed',vVoice);
   if(!vVoice&&'speechSynthesis' in window){speechSynthesis.cancel();waitVoice=false;maybeNext()}};
@@ -892,8 +1064,8 @@ document.getElementById('clReset').onclick=buildClassify;
 buildClassify();
 
 /* ---------- actividad 7: ordenar ---------- */
-const target='Las personas más ricas del mundo acumulan cada vez más riqueza';
-const ordWords=['del','más','riqueza','ricas','acumulan','personas','mundo','cada','Las','más','vez'];
+const target='personas más ricas del mundo acumulan el ochenta por ciento de la riqueza';
+const ordWords=['del','ochenta','más','el','mundo','ricas','de','acumulan','por','riqueza','la','ciento','personas'];
 const ordPool=document.getElementById('ordPool'),ordOut=document.getElementById('ordOut'),ordFb=document.getElementById('ordFb');let ordSeq=[];
 function buildOrd(){
   ordPool.innerHTML='';ordSeq=[];ordOut.textContent='';ordFb.textContent='';
@@ -903,8 +1075,8 @@ function buildOrd(){
 document.getElementById('ordReset').onclick=buildOrd;
 document.getElementById('ordCheck').onclick=()=>{
   const a=ordSeq.join(' ').toLowerCase();
-  if(a===target.toLowerCase()){ordFb.className='feedback ok';ordFb.textContent='¡Correcto! Artículo, sustantivo y adjetivo concuerdan: las personas ricas.'}
-  else{ordFb.className='feedback ko';ordFb.textContent=ordSeq.length<ordWords.length?'Usa todas las palabras.':'Todavía no. Empieza por «Las personas…».'}
+  if(a===target.toLowerCase()){ordFb.className='feedback ok';ordFb.textContent='¡Correcto! «Personas más ricas del mundo acumulan el ochenta por ciento de la riqueza». Concuerdan sustantivo y adjetivo (personas ricas), sujeto y verbo (personas acumulan) y determinante y sustantivo (la riqueza).'}
+  else{ordFb.className='feedback ko';ordFb.textContent=ordSeq.length<ordWords.length?'Usa todas las palabras.':'Todavía no. Pista: busca primero quién acumula la riqueza.'}
 };
 buildOrd();
 
