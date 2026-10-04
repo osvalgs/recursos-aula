@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>No aire: a radio e os textos orais · PDC 3º ESO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noche:#15213B; --noche2:#1E2F52; --noche3:#2A4170;
+  --ambar:#F5B84B; --ambar-suave:#F9D48C;
+  --texto:#ECE7DC; --texto2:#B9C0CF;
+  --rojo:#E8553A; --verde:#58C28A; --azul:#6FB3E0;
+  --disp:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --cuerpo:"Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--noche);color:var(--texto);font-family:var(--cuerpo);font-size:clamp(17px,1.55vw,24px);line-height:1.5;overflow:hidden}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--ambar);outline-offset:3px}
+
+/* ---------- escenario ---------- */
+.stage{position:relative;height:calc(100% - 92px);overflow:hidden}
+.slide{position:absolute;inset:0;padding:clamp(18px,3.2vw,52px) max(86px,5vw) 20px;overflow-y:auto;opacity:0;visibility:hidden;transition:opacity .45s ease, visibility 0s linear .45s}
+.slide.on{opacity:1;visibility:visible;transition:opacity .45s ease}
+.slide-inner{max-width:none;width:100%;margin:0;text-align:justify;hyphens:auto}
+h1,h2,h3{font-family:var(--disp);line-height:1.08;margin:0 0 .45em;letter-spacing:-.01em}
+h2{font-size:clamp(30px,3.6vw,54px);font-weight:800;color:var(--texto)}
+h3{font-size:clamp(20px,1.9vw,30px);font-weight:700;color:var(--ambar)}
+p{margin:.3em 0 .8em}
+.kicker{font-family:var(--disp);font-weight:500;color:var(--texto2);font-size:.9em;margin-bottom:.3em}
+.ex-tag{display:inline-flex;align-items:center;gap:.5em;background:var(--ambar);color:var(--noche);font-family:var(--disp);font-weight:700;padding:.2em .8em;border-radius:999px;font-size:.8em;margin-bottom:.6em}
+.teo-tag{display:inline-flex;align-items:center;gap:.5em;border:2px solid var(--azul);color:var(--azul);font-family:var(--disp);font-weight:700;padding:.15em .8em;border-radius:999px;font-size:.8em;margin-bottom:.6em}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,40px);align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:820px){.grid2,.grid3{grid-template-columns:1fr}}
+.panel{background:var(--noche2);border-radius:18px;padding:1em 1.2em}
+.nota{color:var(--texto2);font-size:.85em}
+strong{color:var(--ambar-suave)}
+
+/* ---------- portada ---------- */
+.portada{display:grid;grid-template-columns:1.1fr .9fr;gap:3vw;align-items:center;min-height:100%}
+@media (max-width:820px){.portada{grid-template-columns:1fr}}
+.titulo-portada{font-size:clamp(46px,7.2vw,118px);font-weight:800;line-height:.92;margin:0 0 .25em}
+.titulo-portada span{display:block;color:var(--ambar)}
+.onair{display:inline-flex;align-items:center;gap:.6em;border:3px solid var(--rojo);color:var(--rojo);font-family:var(--disp);font-weight:800;padding:.25em .9em;border-radius:10px;letter-spacing:.06em;margin-bottom:1em}
+.onair i{width:.8em;height:.8em;border-radius:50%;background:var(--rojo);box-shadow:0 0 14px var(--rojo);animation:latido 1.6s ease-in-out infinite}
+@keyframes latido{50%{opacity:.35;box-shadow:none}}
+.onda{fill:none;stroke:var(--ambar);stroke-width:5;stroke-linecap:round;opacity:0;animation:onda 2.4s ease-out infinite}
+.onda.b{animation-delay:.6s}.onda.c{animation-delay:1.2s}
+@keyframes onda{0%{opacity:0;transform:scale(.7)}30%{opacity:1}100%{opacity:0;transform:scale(1.25)}}
+.aguja-radio{animation:sintoniza 5s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes sintoniza{0%,100%{transform:translateX(0)}50%{transform:translateX(70px)}}
+
+/* ---------- línea de tiempo del relato ---------- */
+.relato{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:1em}
+@media (max-width:820px){.relato{grid-template-columns:1fr 1fr}}
+.escena{color:var(--texto);font-family:var(--cuerpo);background:var(--noche2);border-radius:16px;padding:1em;min-height:210px;border:2px dashed var(--noche3);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;transition:background .3s, border-color .3s}
+.escena .num{font-family:var(--disp);font-weight:800;font-size:2.4em;color:var(--noche3)}
+.escena .cont{display:none}
+.escena.visto{border:2px solid var(--ambar);justify-content:flex-start;align-items:flex-start;text-align:left}
+.escena.visto .num{display:none}
+.escena.visto .cont{display:block;animation:aparece .4s ease}
+.escena .icono{font-size:2em;line-height:1;margin-bottom:.3em}
+@keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- bio ---------- */
+.bio{display:flex;gap:1em;align-items:center;background:var(--noche2);border-radius:16px;padding:.8em 1.1em;margin-bottom:.6em}
+.bio .avatar{flex:0 0 auto;width:64px;height:64px;border-radius:50%;background:var(--noche3);display:grid;place-items:center;font-size:1.8em}
+
+/* ---------- opciones / quiz ---------- */
+.q{margin:0 0 1.1em}
+.q-enun{font-weight:700;margin-bottom:.45em}
+.ops{display:flex;flex-wrap:wrap;gap:.5em}
+.op{background:var(--noche2);color:var(--texto);border:2px solid var(--noche3);border-radius:12px;padding:.45em .9em;text-align:left;transition:background .2s,border-color .2s,transform .15s}
+.op:hover{border-color:var(--ambar)}
+.op.ok{background:var(--verde);border-color:var(--verde);color:#0f2a1c;font-weight:700}
+.op.ko{background:transparent;border-color:var(--rojo);color:var(--rojo);text-decoration:line-through}
+.op.ko{animation:tiembla .35s}
+@keyframes tiembla{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ---------- revelar ---------- */
+.btn{background:var(--ambar);color:var(--noche);border:0;border-radius:12px;padding:.45em 1em;font-family:var(--disp);font-weight:700}
+.btn.sec{background:transparent;color:var(--ambar);border:2px solid var(--ambar)}
+.btn:hover{filter:brightness(1.08)}
+.oculto{display:none}
+.respuesta{background:rgba(88,194,138,.13);border-left:5px solid var(--verde);border-radius:0 12px 12px 0;padding:.6em 1em;margin:.6em 0;animation:aparece .35s ease}
+.respuesta::before{content:"Resposta modelo";display:block;font-family:var(--disp);font-weight:700;color:var(--verde);font-size:.8em;margin-bottom:.2em}
+textarea.pizarra{width:100%;min-height:3.2em;background:#0f1930;color:var(--texto);border:2px dashed var(--noche3);border-radius:12px;padding:.55em .8em;font-family:var(--cuerpo);font-size:1em;resize:vertical}
+textarea.pizarra::placeholder{color:#6f7a93}
+
+/* ---------- comparación oral/escrito ---------- */
+.versus{display:grid;grid-template-columns:1fr auto 1fr;gap:1.2em;align-items:center}
+@media (max-width:820px){.versus{grid-template-columns:1fr}}
+.vs{font-family:var(--disp);font-weight:800;font-size:2em;color:var(--texto2)}
+.lado{background:var(--noche2);border-radius:18px;padding:1.1em;text-align:center}
+.lado svg{width:120px;height:120px}
+
+/* características */
+.carac{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:820px){.carac{grid-template-columns:1fr}}
+.carac .panel{border-top:5px solid var(--ambar)}
+.carac .big{font-size:2.2em;line-height:1}
+
+/* clasificar */
+.clas-item{display:flex;justify-content:space-between;align-items:center;gap:1em;background:var(--noche2);border-radius:12px;padding:.5em .6em .5em 1em;margin-bottom:.5em;border:2px solid transparent;transition:border-color .2s}
+.clas-item.ok{border-color:var(--verde)}
+.clas-item.ko{border-color:var(--rojo)}
+.clas-item .frase{font-style:italic}
+.clas-item .ops{flex:0 0 auto}
+.clas-item .op{padding:.3em .8em}
+
+/* tarjetas giratorias */
+.flips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:820px){.flips{grid-template-columns:1fr 1fr}}
+.flip{perspective:900px;height:150px;background:none;border:0;padding:0;color:inherit;text-align:left}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .55s;transform-style:preserve-3d}
+.flip.gira .flip-in{transform:rotateY(180deg)}
+.cara{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:.8em 1em;display:flex;flex-direction:column;justify-content:center}
+.cara.fr{background:var(--noche2);border:2px solid var(--noche3);align-items:center;text-align:center}
+.cara.fr b{font-family:var(--disp);font-size:1.25em;color:var(--texto)}
+.cara.fr span{font-size:1.8em}
+.cara.tr{background:var(--ambar);color:var(--noche);transform:rotateY(180deg);font-size:.85em;line-height:1.35}
+.cara.tr b{font-family:var(--disp)}
+
+/* objetivos radio */
+.objetivos{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:.4em 0 1em}
+@media (max-width:820px){.objetivos{grid-template-columns:1fr 1fr}}
+.obj{background:var(--noche2);border-radius:16px;padding:1em;text-align:center}
+.obj .ic{font-size:2.2em}
+.obj b{display:block;font-family:var(--disp);font-size:1.15em;color:var(--ambar)}
+.sabias{border:2px solid var(--azul);border-radius:16px;padding:.7em 1em}
+.sabias h3{color:var(--azul);font-size:1.05em;margin-bottom:.2em}
+
+/* lista con iconos */
+.lista-ic{list-style:none;padding:0;margin:0}
+.lista-ic li{display:flex;gap:.7em;align-items:flex-start;margin-bottom:.7em}
+.lista-ic li .ic{flex:0 0 auto;width:2.1em;height:2.1em;border-radius:50%;background:var(--noche3);display:grid;place-items:center;font-size:.95em}
+
+/* en el aire */
+.aire-btn{display:inline-flex;align-items:center;gap:.6em;background:transparent;border:3px solid #56627d;color:#8a95ad;font-family:var(--disp);font-weight:800;border-radius:12px;padding:.35em 1em;letter-spacing:.05em}
+.aire-btn i{width:.8em;height:.8em;border-radius:50%;background:#56627d}
+.aire-btn.vivo{border-color:var(--rojo);color:var(--rojo)}
+.aire-btn.vivo i{background:var(--rojo);box-shadow:0 0 14px var(--rojo);animation:latido 1.2s infinite}
+.crono{font-family:var(--disp);font-weight:700;font-size:1.5em;margin-left:.6em;vertical-align:middle;font-variant-numeric:tabular-nums}
+
+/* 6 preguntas */
+.w6{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:820px){.w6{grid-template-columns:1fr 1fr}}
+.w{background:var(--noche2);border:2px solid var(--noche3);border-radius:14px;padding:.8em;text-align:left;color:var(--texto);min-height:120px}
+.w b{display:block;font-family:var(--disp);font-size:1.35em;color:var(--ambar)}
+.w .sol{display:none;margin-top:.3em}
+.w.visto{border-color:var(--verde)}
+.w.visto .sol{display:block;animation:aparece .35s}
+.w .pista{color:#6f7a93;font-size:.85em}
+.w.visto .pista{display:none}
+
+/* ordenar */
+.orden{display:flex;flex-direction:column;gap:.5em;max-width:720px}
+.ord-item{display:flex;align-items:center;gap:.8em;background:var(--noche2);border:2px solid var(--noche3);border-radius:12px;padding:.5em .9em;color:var(--texto);text-align:left}
+.ord-item .n{flex:0 0 auto;width:1.9em;height:1.9em;border-radius:50%;border:2px dashed var(--texto2);display:grid;place-items:center;font-family:var(--disp);font-weight:800}
+.ord-item.sel .n{background:var(--ambar);border:0;color:var(--noche)}
+.ord-item.ok{border-color:var(--verde)}
+.ord-item.ko{border-color:var(--rojo)}
+
+/* banco de expresiones */
+.chips{display:flex;flex-wrap:wrap;gap:.45em}
+.chip{background:var(--noche3);border-radius:999px;padding:.25em .8em;font-size:.9em}
+
+/* cierre */
+.tarea{background:var(--noche2);border-radius:18px;padding:1em 1.2em;border-left:6px solid var(--ambar)}
+
+/* ---------- dial de navegación ---------- */
+.dial{position:fixed;left:0;right:0;bottom:0;height:92px;padding-bottom:env(safe-area-inset-bottom,0px);background:linear-gradient(#101a30,#0c1426);border-top:2px solid #2a3a5f;display:flex;align-items:center;gap:10px;padding-left:12px;padding-right:12px;z-index:5}
+.dial .flecha{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:var(--noche3);color:var(--texto);border:0;font-size:1.3em;display:grid;place-items:center}
+.dial .flecha:disabled{opacity:.35;cursor:default}
+.escala{position:relative;flex:1;height:64px;border-radius:10px;background:#1b1a14;box-shadow:inset 0 0 18px rgba(245,184,75,.22);overflow:hidden}
+.marcas{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:flex-end;padding:0 14px 8px}
+.marca{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;background:none;border:0;color:#b99a5c;padding:0;font-family:var(--disp);font-size:12px;font-weight:700}
+.marca::before{content:"";width:2px;height:16px;background:#8e7443;margin-bottom:4px}
+.marca.teo::before{height:24px}
+.marca.ex::before{background:var(--ambar);height:24px}
+.marca:hover{color:var(--ambar-suave)}
+.aguja{position:absolute;top:6px;bottom:6px;width:3px;background:var(--rojo);box-shadow:0 0 10px var(--rojo);border-radius:2px;transition:left .6s cubic-bezier(.6,.05,.3,1);pointer-events:none}
+.fm{position:absolute;top:6px;left:14px;font-family:var(--disp);font-weight:700;color:var(--ambar);font-size:14px;text-shadow:0 0 8px rgba(245,184,75,.6)}
+.herr{flex:0 0 auto;display:flex;gap:8px}
+.herr button{height:52px;border-radius:14px;border:0;background:var(--noche3);color:var(--texto);padding:0 14px;font-family:var(--disp);font-weight:700;font-size:15px}
+.herr .quien{background:var(--ambar);color:var(--noche)}
+@media (max-width:700px){.herr .txt{display:none}.marca{font-size:0}}
+
+/* ---------- ruleta de alumnos ---------- */
+.capa{position:fixed;inset:0;background:rgba(8,13,26,.82);display:none;place-items:center;z-index:20;padding:20px}
+.capa.on{display:grid}
+.caja{background:var(--noche2);border-radius:22px;padding:1.4em 1.6em;max-width:560px;width:100%;text-align:center;border:2px solid var(--noche3)}
+.nombre{font-family:var(--disp);font-weight:800;font-size:clamp(40px,6vw,76px);color:var(--ambar);min-height:1.3em;margin:.2em 0}
+.nombre.gira{color:var(--texto2)}
+.quedan{color:var(--texto2);font-size:.85em}
+.caja textarea{width:100%;min-height:210px;background:#0f1930;color:var(--texto);border:2px solid var(--noche3);border-radius:12px;padding:.6em;font-family:var(--cuerpo);font-size:.95em}
+.fila-btn{display:flex;gap:.6em;justify-content:center;flex-wrap:wrap;margin-top:.8em}
+
+/* ---------- esquema A4 apaisado ---------- */
+.esq-cab{display:flex;justify-content:space-between;align-items:center;gap:1em;flex-wrap:wrap}
+.esquema{container-type:inline-size;aspect-ratio:297/210;width:min(100%,calc((100vh - 240px)*1.414));margin:.4em auto 0;background:#fdfcf8;color:#1d2434;border-radius:6px;padding:3% 3.5%;display:grid;grid-template-columns:22% 1fr;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.35);font-family:var(--cuerpo)}
+.esq-tronco,.esq-ramas{font-size:2.3cqw;line-height:1.25}
+.esq-tronco{position:relative;padding-right:10%}
+.esq-titulo{font-family:var(--disp);font-weight:800;font-size:1.55em;line-height:1.1;border:3px solid #1d2434;border-radius:12px;padding:.6em .5em;text-align:center}
+.esq-tronco::after{content:"";position:absolute;right:0;top:50%;width:10%;height:3px;background:#1d2434}
+.esq-ramas{position:relative;display:flex;flex-direction:column;gap:2.2cqw;border-left:3px solid #1d2434;padding:.2em 0}
+.rama{position:relative;display:flex;align-items:center;gap:0;padding-left:3.2cqw}
+.rama::before{content:"";position:absolute;left:0;top:50%;width:2.4cqw;height:3px;background:#1d2434}
+.rama::after{content:"";position:absolute;left:2.2cqw;top:50%;transform:translateY(-50%);border-left:.9cqw solid #1d2434;border-top:.55cqw solid transparent;border-bottom:.55cqw solid transparent}
+.nodo{flex:0 0 27%;min-width:0;font-family:var(--disp);font-weight:700;border:2px solid #1d2434;background:#f6e3b8;border-radius:8px;padding:.35em .6em;position:relative;margin-right:4.4cqw}
+.nodo::after{content:"";position:absolute;right:-4cqw;top:50%;width:3cqw;height:2px;background:#1d2434}
+.nodo::before{content:"";position:absolute;right:-4.3cqw;top:50%;transform:translateY(-50%);border-left:.8cqw solid #1d2434;border-top:.45cqw solid transparent;border-bottom:.45cqw solid transparent}
+.hojas{flex:1}
+.hojas b{color:#1d2434}
+.sub-ramas{flex:1;display:flex;flex-direction:column;gap:.5em}
+.sub{display:flex;gap:.6em;align-items:baseline}
+.sub .et{flex:0 0 auto;font-weight:700;font-style:italic}
+.sub .et::after{content:" →"}
+@media (max-width:820px){.esquema{aspect-ratio:auto;width:100%;grid-template-columns:1fr;gap:1em}.esq-tronco,.esq-ramas{font-size:3.4cqw}.esq-tronco{padding-right:0}.esq-tronco::after{display:none}.nodo{flex-basis:34%}}
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:#fff;overflow:visible;height:auto}
+  .dial,.capa,.slide:not(:last-child),.esq-cab{display:none!important}
+  .stage{height:auto;overflow:visible}
+  .slide{position:static;opacity:1;visibility:visible;padding:0;overflow:visible}
+  .esquema{width:277mm;height:190mm;aspect-ratio:auto;box-shadow:none;padding:8mm 10mm;margin:0}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .onda{opacity:.7}
+}
+
+/* ---------- engadidos ---------- */
+.lateral{position:fixed;top:calc(50% - 46px);transform:translateY(-50%);z-index:6;width:58px;height:58px;border-radius:50%;background:var(--noche3);color:var(--texto);border:2px solid var(--ambar);font-size:1.4em;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.lateral:hover{background:var(--ambar);color:var(--noche)}
+.lateral:disabled{opacity:.2;cursor:default;background:var(--noche3);color:var(--texto)}
+#prev{left:14px}#next{right:14px}
+@media (max-width:700px){.slide{padding-left:58px;padding-right:58px}.lateral{width:42px;height:42px;font-size:1.05em}#prev{left:6px}#next{right:6px}}
+.act{background:var(--noche2);border-radius:18px;padding:1em 1.2em;margin-bottom:1em;border-left:6px solid var(--ambar)}
+.act-enun{font-weight:700;margin-bottom:.5em}
+.act-enun .n{display:inline-grid;place-items:center;min-width:1.8em;height:1.8em;border-radius:50%;background:var(--ambar);color:var(--noche);font-family:var(--disp);font-weight:800;margin-right:.45em}
+.act ul{margin:.2em 0 .6em 1.2em;padding:0}
+.act li{margin-bottom:.25em}
+.act h4{font-family:var(--disp);color:var(--ambar-suave);margin:.6em 0 .3em;font-size:1em}
+.lembra{border:2px solid var(--rojo);border-radius:16px;padding:.7em 1em;margin-bottom:1em}
+.lembra h3{color:var(--rojo);font-size:1.05em;margin-bottom:.2em}
+.tic{border:2px solid var(--azul);border-radius:16px;padding:.7em 1em;margin-top:.6em;word-break:break-all}
+.tic h3{color:var(--azul);font-size:1.05em;margin-bottom:.2em}
+.ficha{width:100%;border-collapse:separate;border-spacing:8px}
+.ficha td{background:#0f1930;border-radius:12px;padding:.5em .7em;vertical-align:top;width:50%}
+.ficha b{display:block;color:var(--ambar-suave);font-size:.9em;margin-bottom:.2em}
+.ficha textarea{width:100%;min-height:2.4em;background:transparent;border:0;border-bottom:2px dashed var(--noche3);color:var(--texto);font-family:var(--cuerpo);font-size:.95em;resize:vertical}
+.grupo-tit{font-family:var(--disp);font-weight:800;color:var(--azul);margin:.4em 0 .5em}
+.check label{display:flex;gap:.6em;align-items:flex-start;margin-bottom:.4em;cursor:pointer}
+.check input{width:1.2em;height:1.2em;margin-top:.2em;accent-color:var(--verde)}
+
+@media print{.lateral{display:none!important}}
+h1,h2,h3,h4{text-align:left}
+.marcas{padding:0 6px 8px}.marca{font-size:11px;white-space:nowrap;min-width:0}
+</style>
+</head>
+<body>
+
+<main class="stage" id="stage">
+
+<!-- 1 PORTADA -->
+<section class="slide" data-titulo="Portada" data-tipo="teo">
+  <div class="slide-inner portada">
+    <div>
+      <div class="onair"><i></i>NO AIRE</div>
+      <h1 class="titulo-portada">A radio<span>e o texto oral</span></h1>
+      <p style="font-size:1.15em;color:var(--texto2)">Lemos un recordo de infancia, aprendemos como se fala na radio e preparamos as nosas primeiras pezas para a aula de radio.</p>
+      <p class="nota">PDC 3º ESO · Ámbito lingüístico e social</p>
+    </div>
+    <svg viewBox="0 0 420 380" role="img" aria-label="Radio antiga emitindo ondas" style="width:100%;max-width:460px;justify-self:center">
+      <g transform="translate(210 70)">
+        <path class="onda" d="M-60,-10 A70,70 0 0 1 60,-10" style="transform-origin:0 20px"/>
+        <path class="onda b" d="M-95,-25 A110,110 0 0 1 95,-25" style="transform-origin:0 20px"/>
+        <path class="onda c" d="M-130,-40 A150,150 0 0 1 130,-40" style="transform-origin:0 20px"/>
+      </g>
+      <line x1="300" y1="130" x2="350" y2="40" stroke="#B9C0CF" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="350" cy="40" r="7" fill="#F5B84B"/>
+      <rect x="60" y="120" width="300" height="220" rx="34" fill="#8A5A34"/>
+      <rect x="72" y="132" width="276" height="196" rx="26" fill="#A56C3F"/>
+      <rect x="92" y="150" width="236" height="62" rx="12" fill="#1b1a14"/>
+      <g fill="#b99a5c">
+        <rect x="108" y="190" width="2" height="12"/><rect x="132" y="194" width="2" height="8"/><rect x="156" y="190" width="2" height="12"/><rect x="180" y="194" width="2" height="8"/><rect x="204" y="190" width="2" height="12"/><rect x="228" y="194" width="2" height="8"/><rect x="252" y="190" width="2" height="12"/><rect x="276" y="194" width="2" height="8"/><rect x="300" y="190" width="2" height="12"/>
+      </g>
+      <rect class="aguja-radio" x="140" y="156" width="4" height="50" rx="2" fill="#E8553A"/>
+      <g fill="#6d4526">
+        <rect x="92" y="228" width="150" height="8" rx="4"/><rect x="92" y="246" width="150" height="8" rx="4"/><rect x="92" y="264" width="150" height="8" rx="4"/><rect x="92" y="282" width="150" height="8" rx="4"/><rect x="92" y="300" width="150" height="8" rx="4"/>
+      </g>
+      <circle cx="290" cy="252" r="24" fill="#ECE7DC"/><circle cx="290" cy="252" r="8" fill="#8A5A34"/>
+      <circle cx="290" cy="303" r="14" fill="#ECE7DC"/>
+      <rect x="95" y="338" width="30" height="16" rx="4" fill="#6d4526"/><rect x="295" y="338" width="30" height="16" rx="4" fill="#6d4526"/>
+    </svg>
+  </div>
+</section>
+
+<!-- 2 LECTURA -->
+<section class="slide" data-titulo="Lectura" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">📖 Lectura no libro</div>
+    <h2>«Extraños en la noche»</h2>
+    <div class="bio">
+      <div class="avatar">✍️</div>
+      <div><strong>Julio Llamazares</strong> (León, 1955). Escritor dedicado ao xornalismo radiofónico e televisivo. Cultivou case todos os xéneros: novela, relatos, libros de viaxes, poesía, guións cinematográficos, ensaios e artigos xornalísticos. Obras: <em>La lluvia amarilla</em>, <em>El río del olvido</em>, <em>El cielo de Madrid</em>.</div>
+    </div>
+    <p>Despois de ler o texto en voz alta, reconstruímos a historia. <strong>Preme cada escena</strong> cando un alumno ou alumna a conte coas súas palabras.</p>
+    <div class="relato">
+      <button class="escena" type="button"><span class="num">1</span><div class="cont"><div class="icono">🕘</div><b>Cada hora, a radio.</b> Un sinal marca as horas. O pai deixa o xornal, mira o reloxo e escoita as noticias en silencio.</div></button>
+      <button class="escena" type="button"><span class="num">2</span><div class="cont"><div class="icono">🌍</div><b>Voces afastadas.</b> O neno escoita emisoras de Madrid, París, Andorra… e imaxina como son eses lugares.</div></button>
+      <button class="escena" type="button"><span class="num">3</span><div class="cont"><div class="icono">📻</div><b>A noticia.</b> Unha noite, mentres ceaban, córtase a música: asasinaron o presidente dos EE. UU., Kennedy, en Dallas.</div></button>
+      <button class="escena" type="button"><span class="num">4</span><div class="cont"><div class="icono">🤫</div><b>Silencio.</b> A familia queda calada. Soa unha balada, <em>Strangers in the night</em>, e mandan o neno á cama sen entender nada.</div></button>
+    </div>
+  </div>
+</section>
+
+<!-- 3 INTENCIONALIDADE -->
+<section class="slide" data-titulo="Intenc." data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>Para que escribe ou fala alguén?</h2>
+    <div class="lembra"><h3>🧠 Lembra</h3>A <strong>intencionalidade comunicativa</strong> é a necesidade inicial que posúe un emisor cando quere comunicarse con outros (narrar unha anécdota, explicar un concepto, convencer dunha opinión…).</div>
+    <div class="flips">
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>📚</span><b>Narrar</b></div><div class="cara tr"><b>Contar feitos ou unha anécdota.</b><br>«Aquela noite meu pai acendeu a radio…»</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>🖼️</span><b>Describir</b></div><div class="cara tr"><b>Dicir como é algo ou alguén.</b><br>«Era unha radio grande, de madeira, cun dial dourado.»</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>💬</span><b>Dialogar</b></div><div class="cara tr"><b>Intercambiar palabras entre dúas ou máis persoas.</b><br>«—Que pasa? —Cala, escoita.»</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>🔍</span><b>Explicar</b></div><div class="cara tr"><b>Facer entender un concepto.</b><br>«As ondas de radio viaxan polo aire a gran velocidade.»</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>📣</span><b>Convencer</b></div><div class="cara tr"><b>Defender unha opinión (argumentar).</b><br>«A radio é o mellor medio porque podes escoitala mentres fas outras cousas.»</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>❤️</span><b>Emocionar</b></div><div class="cara tr"><b>Transmitir sentimentos.</b><br>Moitos textos mesturan intencións: narrar un recordo e emocionar á vez.</div></div></button>
+    </div>
+    <p class="nota" style="margin-top:1em">Preme cada tarxeta para darlle a volta.</p>
+  </div>
+</section>
+
+<!-- 4 ACT 1-2 -->
+<section class="slide" data-titulo="Act.1-2" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comprensión</div>
+    <h2>«Extraños en la noche»</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">1</span>Cal é a intencionalidade comunicativa do escritor?</div>
+      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">A súa intención é <strong>narrar un recordo da súa infancia</strong> (a noite en que a radio deu a noticia do asasinato de Kennedy) e <strong>emocionar</strong> o lector. Non pretende informar sobre o magnicidio: utilízao para recrear aquela noite e o que sentiu de neno.</div>
+    </div>
+    <div class="act">
+      <div class="act-enun"><span class="n">2</span>O relato está escrito en primeira persoa. Que achega este punto de vista? Con quen se identifica o narrador?</div>
+      <p class="nota">Que achega este punto de vista?</p>
+      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">Fai o relato máis <strong>próximo e crible</strong>: vemos o que pasou a través dos ollos dun neno que non entende o que ocorre, pero intúe que é algo grave polo silencio dos seus pais.</div>
+      <p class="nota">Con quen se identifica o narrador?</p>
+      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">Identifícase <strong>co propio autor cando era neno</strong>: o Llamazares adulto lembra e conta o que viviu de pequeno, escoitando a radio xunto á súa familia.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 ACT 3-4 -->
+<section class="slide" data-titulo="Act.3-4" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comprensión</div>
+    <h2>«Extraños en la noche»</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">3</span>Resume brevemente no teu caderno a historia relatada.</div>
+      <textarea class="pizarra" placeholder="O noso resumo…" style="min-height:4.5em"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">Na casa do narrador, cada hora soaba na radio un sinal e o pai escoitaba as noticias en silencio. O neno, mentres ceaba ou desde a cama, escoitaba emisoras de lugares afastados e imaxinaba como serían. Unha noite, mentres ceaban, a música interrompeuse para anunciar que asasinaran en Dallas o presidente dos Estados Unidos, Kennedy. A familia quedou calada, o pai buscou máis noticias noutras emisoras e, despois de soar unha balada, mandaron os nenos á cama sen que o narrador entendese ben o que pasaba.</div>
+    </div>
+    <div class="act">
+      <div class="act-enun"><span class="n">4</span>A radio é o tema central do texto. Que supón para a imaxinación do narrador a existencia da radio?</div>
+      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">A radio é unha <strong>xanela ao mundo</strong>. Como só oe voces, sen imaxes, o neno imaxina como son os países e as cidades de onde chegan (París, o Vaticano, Andorra…). Algúns lugares, como Andorra, parécenlle tan irreais como un país de conto. A radio <strong>estimula a súa imaxinación</strong> e acompáñao cada noite.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ACT 5-6 -->
+<section class="slide" data-titulo="Act.5-6" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comprensión</div>
+    <h2>«Extraños en la noche»</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">5</span>Documéntate sobre o magnicidio ao que se refire a lectura e toma apuntamentos no teu caderno acerca do sucedido.</div>
+      <textarea class="pizarra" placeholder="Os nosos apuntamentos…" style="min-height:4em"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">
+        <ul style="margin:.2em 0 0 1.2em;padding:0">
+          <li><strong>Quen:</strong> John F. Kennedy, presidente dos Estados Unidos desde 1961.</li>
+          <li><strong>Cando:</strong> o 22 de novembro de 1963.</li>
+          <li><strong>Onde:</strong> en Dallas (Texas), durante unha visita á cidade.</li>
+          <li><strong>Como:</strong> desfilaba nun coche descuberto xunto á súa esposa, Jacqueline, cando recibiu varios disparos. Morreu pouco despois.</li>
+          <li><strong>Despois:</strong> detivérono a Lee Harvey Oswald como autor dos disparos, pero foi asasinado dous días máis tarde. O vicepresidente Lyndon B. Johnson asumiu a presidencia.</li>
+        </ul>
+      </div>
+      <div class="tic"><h3>💻 TIC</h3>Para documentarte sobre o magnicidio podes consultar: <a href="http://www.elmundo.es/especiales/2013/internacional/jfk/el-asesinato/2.html" target="_blank" rel="noopener" style="color:var(--azul)">http://www.elmundo.es/especiales/2013/internacional/jfk/el-asesinato/2.html</a></div>
+    </div>
+    <div class="act">
+      <div class="act-enun"><span class="n">6</span>Xustifica o título do relato.</div>
+      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">É o título da balada que soa despois da noticia (<em>Strangers in the night</em>, «estraños na noite»). Ademais, as voces da radio son <strong>descoñecidos</strong> que acompañan o neno <strong>cada noite</strong>, e aquela noite traen unha noticia estraña que el non entende.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 ACT 7 -->
+<section class="slide" data-titulo="Act. 7" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">✍️ Propostas de expresión</div>
+    <h2>Unha noticia que me impactou</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">7</span>Lembra cando escoitaches na radio ou viches na televisión algunha noticia que te impactou. Trata de relatala por escrito asociándoa aos recordos dese momento: que facías, onde estabas, con quen, como reaccionaches…</div>
+      <div class="grid2">
+        <div><p class="nota">Que noticia era? Que facías?</p><textarea class="pizarra" placeholder="…"></textarea></div>
+        <div><p class="nota">Onde estabas? Con quen?</p><textarea class="pizarra" placeholder="…"></textarea></div>
+      </div>
+      <p class="nota">Como reaccionaches?</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver exemplo</button></p>
+      <div class="respuesta oculto">«Era un domingo pola tarde e estaba no sofá coa miña avoa. De súpeto, cortaron o programa da tele para dar unha noticia de última hora: un incendio estaba queimando o monte preto da nosa aldea. Lembro que a miña avoa se levantou en silencio e foi á fiestra. Eu non dicía nada; só miraba o fume, cada vez máis negro. Aquela noite case non durmín.»</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 ACT 8 -->
+<section class="slide" data-titulo="Act. 8" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">✍️ Propostas de expresión</div>
+    <h2>Escribimos a noticia</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">8</span>Coa información obtida na actividade 5, trata de escribir unha noticia no teu caderno para lerllela aos teus compañeiros. Para iso deberás:</div>
+      <ul>
+        <li>Organizar a información respondendo ás preguntas básicas dunha noticia xornalística: que ocorreu, quen o protagonizou, como, cando, onde e por que sucedeu.</li>
+        <li>Poñer un titular que resuma o contido da túa información.</li>
+        <li>Ilustrar a noticia cunha fotografía.</li>
+      </ul>
+      <p class="nota">Preme cada tarxeta para comprobar as respostas.</p>
+      <div class="w6">
+        <button class="w" type="button"><b>Que?</b><span class="pista">Que ocorreu?</span><span class="sol">Asasinaron o presidente dos Estados Unidos.</span></button>
+        <button class="w" type="button"><b>Quen?</b><span class="pista">Quen o protagonizou?</span><span class="sol">John F. Kennedy.</span></button>
+        <button class="w" type="button"><b>Como?</b><span class="pista">Que estaba facendo?</span><span class="sol">Dispararon contra el mentres desfilaba nun coche descuberto. A súa esposa saíu ilesa.</span></button>
+        <button class="w" type="button"><b>Cando?</b><span class="pista">Mira os teus apuntamentos.</span><span class="sol">O 22 de novembro de 1963.</span></button>
+        <button class="w" type="button"><b>Onde?</b><span class="pista">En que cidade?</span><span class="sol">En Dallas (Texas).</span></button>
+        <button class="w" type="button"><b>Por que?</b><span class="pista">Sabíase naquel momento?</span><span class="sol">Naquel momento non se sabía. Unha boa noticia non inventa o que non se coñece.</span></button>
+      </div>
+      <h4>Titular</h4>
+      <textarea class="pizarra" placeholder="O noso titular…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">«Asasinado en Dallas o presidente Kennedy»</div>
+      <h4>Corpo da noticia</h4>
+      <textarea class="pizarra" placeholder="A nosa noticia…" style="min-height:4.5em"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">O presidente dos Estados Unidos, John F. Kennedy, morreu hoxe, 22 de novembro de 1963, en Dallas (Texas), despois de recibir varios disparos mentres percorría a cidade nun coche descuberto. A súa esposa, Jacqueline, que viaxaba ao seu lado, saíu ilesa. A policía detivo pouco despois un sospeitoso. Polo de agora descoñécense os motivos do ataque.</div>
+      <h4>Fotografía</h4>
+      <p>Buscade unha imaxe do momento (por exemplo, o coche presidencial en Dallas) e escribide un pé de foto breve.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 ACT 9 -->
+<section class="slide" data-titulo="Act. 9" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">✍️ Propostas de expresión</div>
+    <h2>O meu obxecto do pasado</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">9</span>Julio Llamazares asocia a radio á súa infancia. Seguro que ti tamén es capaz de relacionar algún obxecto co teu pasado. Pensa niso e relata oralmente aos teus compañeiros que obxecto era, como chegou ata ti, que experiencias tiveches con el e algúns recordos vividos con emotividade. Para iso deberás:</div>
+      <ul>
+        <li>Deixar clara a túa intencionalidade comunicativa: relatar unha historia, emocionar cun recordo…</li>
+        <li>Escribilo en primeira persoa para facelo máis próximo e crible aos lectores.</li>
+        <li>Poñerlle un título rechamante.</li>
+      </ul>
+      <div class="grid2">
+        <div><p class="nota">Que obxecto era? Como chegou ata ti?</p><textarea class="pizarra" placeholder="…"></textarea></div>
+        <div><p class="nota">Que experiencias tiveches con el?</p><textarea class="pizarra" placeholder="…"></textarea></div>
+        <div><p class="nota">Que recordos che emocionan?</p><textarea class="pizarra" placeholder="…"></textarea></div>
+        <div><p class="nota">Título rechamante</p><textarea class="pizarra" placeholder="…"></textarea></div>
+      </div>
+      <p><button class="btn sec" data-mostrar>Ver exemplos de título</button></p>
+      <div class="respuesta oculto"><div class="chips"><span class="chip">A bicicleta que voaba</span><span class="chip">O balón que nunca perdín</span><span class="chip">Unha caixa chea de veráns</span><span class="chip">O peluche que gardou os meus segredos</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 O TEXTO ORAL -->
+<section class="slide" data-titulo="T. oral" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>O texto oral</h2>
+    <div class="lembra"><h3>🧠 Lembra</h3>O <strong>texto</strong> é a unidade lingüística con sentido completo que permite a comunicación entre un emisor e un destinatario. Segundo a intención do emisor, os textos poden ser narrativos, descritivos, dialogados, expositivos ou argumentativos.</div>
+    <div class="versus">
+      <div class="lado">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="45" y="14" width="30" height="52" rx="15" fill="#F5B84B"/><path d="M33 52a27 27 0 0 0 54 0" fill="none" stroke="#ECE7DC" stroke-width="6" stroke-linecap="round"/><line x1="60" y1="80" x2="60" y2="98" stroke="#ECE7DC" stroke-width="6"/><line x1="44" y1="100" x2="76" y2="100" stroke="#ECE7DC" stroke-width="6" stroke-linecap="round"/></svg>
+        <h3>Comunicación oral</h3>
+        <p>Realízase mediante a <strong>fala</strong>.</p>
+      </div>
+      <div class="vs">ou</div>
+      <div class="lado">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><rect x="26" y="12" width="68" height="92" rx="8" fill="#ECE7DC"/><g stroke="#1E2F52" stroke-width="5" stroke-linecap="round"><line x1="38" y1="32" x2="82" y2="32"/><line x1="38" y1="48" x2="82" y2="48"/><line x1="38" y1="64" x2="74" y2="64"/><line x1="38" y1="80" x2="64" y2="80"/></g><path d="M86 70l18-18 8 8-18 18-10 2z" fill="#F5B84B"/></svg>
+        <h3>Comunicación escrita</h3>
+        <p>Créase a través da <strong>palabra impresa</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 CARACTERÍSTICAS -->
+<section class="slide" data-titulo="Trazos" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>Características dos textos orais</h2>
+    <div class="carac">
+      <div class="panel"><div class="big">⏳</div><h3>Non duran</h3><p>Non son permanentes no tempo: o que se di lévao o aire (salvo que se grave).</p></div>
+      <div class="panel"><div class="big">🙌</div><h3>Xestos e entoación</h3><p>Acompáñanse de xestos e de diferentes entoacións que axudan a comprender a mensaxe.</p></div>
+      <div class="panel"><div class="big">🎚️</div><h3>Rexistro</h3><p>Pode ser máis <strong>formal</strong> ou máis <strong>coloquial</strong> segundo o tipo de texto e os seus destinatarios.</p></div>
+    </div>
+    <div class="grid2" style="margin-top:1.2em">
+      <div class="panel" style="border-left:5px solid var(--azul)"><b>Faladoiro na radio sobre política</b><br>Rexistro coidado: «Considero que a medida é insuficiente.»</div>
+      <div class="panel" style="border-left:5px solid var(--ambar)"><b>Conversación entre amigos</b><br>Rexistro coloquial: «Iso non hai quen o crea, home.»</div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 CLASES -->
+<section class="slide" data-titulo="Clases" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>Clases de textos orais</h2>
+    <div class="grupo-tit">📝 Planificados: esixen unha preparación previa por escrito</div>
+    <div class="flips">
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>🎭</span><b>Monólogo</b></div><div class="cara tr">Reflexión en voz alta dun emisor, xeralmente con fins literarios e nun contexto teatral.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>👩‍🏫</span><b>Conferencia</b></div><div class="cara tr">Exposición oral dun emisor sobre un tema específico ante un público interesado.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>🎤</span><b>Discurso</b></div><div class="cara tr">Reflexión en voz alta dun emisor ante un público acerca dun feito concreto (unha voda, un premio, un aniversario…).</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>🗣️</span><b>Entrevista</b></div><div class="cara tr">Texto con fins informativos: unha persoa formula preguntas a outra, que responde.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>📊</span><b>Enquisa</b></div><div class="cara tr">Preguntas breves a varias persoas para obter datos. Os resultados adoitan mostrarse en gráficos.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>⚖️</span><b>Debate</b></div><div class="cara tr">Varias persoas expoñen as súas ideas sobre un tema. Unha persoa modera as quendas de palabra e expón unha conclusión final.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>☕</span><b>Faladoiro</b></div><div class="cara tr">Reunión habitual de varias persoas para conversar, informarse e entreterse sobre un tema que comparten.</div></div></button>
+    </div>
+    <div class="grupo-tit" style="margin-top:1em">💬 Non planificados: xorden de xeito espontáneo na fala</div>
+    <div class="flips">
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>👥</span><b>Conversación</b></div><div class="cara tr">Texto oral espontáneo e informal no que interveñen dúas ou máis persoas.</div></div></button>
+      <button class="flip" type="button"><div class="flip-in"><div class="cara fr"><span>💻</span><b>Videoconferencia</b></div><div class="cara tr">Conversación entre persoas que non comparten o mesmo espazo, a través dunha rede de comunicacións.</div></div></button>
+    </div>
+  </div>
+</section>
+
+<!-- 13 A RADIO -->
+<section class="slide" data-titulo="A radio" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>Para que serve a radio?</h2>
+    <div class="objetivos">
+      <div class="obj"><div class="ic">📰</div><b>Informar</b>Noticias, tempo, tráfico.</div>
+      <div class="obj"><div class="ic">🎶</div><b>Entreter</b>Música, humor, deportes.</div>
+      <div class="obj"><div class="ic">🎓</div><b>Educar</b>Divulgación, cultura, idiomas.</div>
+      <div class="obj"><div class="ic">📞</div><b>Fomentar a participación</b>Chamadas e mensaxes dos ouvintes.</div>
+    </div>
+    <div class="grid2">
+      <div class="sabias"><h3>Sabías que…?</h3>Aínda que se emiten oralmente, moitos programas <strong>prepáranse antes por escrito</strong> (o guión). Aínda así, os locutores e locutoras mostran espontaneidade e expresividade.</div>
+      <div class="sabias"><h3>Sabías que…?</h3>Un <strong>podcast</strong> é un arquivo de audio dixital para escoitar ou descargar cando queiras. Por exemplo, os programas da Radio Galega: <a href="https://www.crtvg.es/rg/podcast" target="_blank" rel="noopener" style="color:var(--azul)">www.crtvg.es/rg/podcast</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 XORNALISMO -->
+<section class="slide" data-titulo="Xornal." data-tipo="teo">
+  <div class="slide-inner">
+    <div class="teo-tag">💡 Teoría</div>
+    <h2>Os textos xornalísticos na radio</h2>
+    <div class="grid2">
+      <div>
+        <h3>En que se diferencian</h3>
+        <ul class="lista-ic">
+          <li><span class="ic">🔊</span><span>Difúndense de forma <strong>oral</strong>: non hai imaxe que axude (como na televisión).</span></li>
+          <li><span class="ic">⏳</span><span>Teñen <strong>menos permanencia no tempo</strong> ca os textos escritos da prensa.</span></li>
+          <li><span class="ic">⚡</span><span>Son moi <strong>expresivos, espontáneos e inmediatos</strong>: contan a noticia no momento.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Como é a súa linguaxe</h3>
+        <ul class="lista-ic">
+          <li><span class="ic">📚</span><span><strong>Vocabulario</strong> rico e variado, con palabras de doada comprensión.</span></li>
+          <li><span class="ic">✂️</span><span><strong>Enunciados</strong> breves e claros, sen excesos que despisten.</span></li>
+          <li><span class="ic">😄</span><span><strong>Linguaxe</strong> expresiva, natural e nada monótona.</span></li>
+          <li><span class="ic">👄</span><span><strong>Pronuncia</strong> clara, con boa vocalización e entoación.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 COM 1 -->
+<section class="slide" data-titulo="Com. 1" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comunicación · Actividade 1</div>
+    <h2>A radio e a xuventude</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">1</span>Elaborade, por grupos, unha breve enquisa para obter información sobre «A radio e a xuventude». Tras a recollida de datos, escribide unha redacción valorando os resultados e acompañádea dun gráfico.</div>
+      <div class="sabias" style="margin-bottom:.8em"><h3>➕ Axuda</h3>Para levar a cabo unha enquisa, utiliza un ton cortés e educado. Prepara preguntas pechadas, é dicir, cuxas respostas sexan NON / SI ou un dato moi concreto. É interesante elaborar despois un gráfico que reflicta os resultados.</div>
+      <textarea class="pizarra" placeholder="As nosas preguntas…" style="min-height:4.5em"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver exemplo de preguntas</button></p>
+      <div class="respuesta oculto">
+        1. Escoitas a radio habitualmente? SI / NON<br>
+        2. Cantas horas á semana a escoitas? (0 · 1-2 · 3-5 · máis de 5)<br>
+        3. Onde a escoitas máis? (casa · coche · móbil · outros)<br>
+        4. Que tipo de programas prefires? (música · deportes · noticias · humor)<br>
+        5. Escoitas podcasts? SI / NON
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 COM 2 -->
+<section class="slide" data-titulo="Com. 2" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comunicación · Actividade 2</div>
+    <h2>Un pequeno discurso</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">2</span>Imaxina que vas dar un pequeno discurso agradecendo o regalo que uns amigos che fixeron polo teu aniversario. Como o empezarías? Que expresións elixirías para agradecerlles que se acordasen de ti? Como rematarías o teu discurso?</div>
+      <div class="grid3">
+        <div class="panel"><h3>Como o empezarías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Bo, non sei nin por onde empezar…</span><span class="chip">Que sorpresa!</span><span class="chip">Antes de nada, quero dicirvos…</span></div></div></div>
+        <div class="panel"><h3>Que expresións elixirías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Moitísimas grazas por…</span><span class="chip">Agradézovolo de corazón</span><span class="chip">Fíxome moita ilusión que…</span><span class="chip">Sodes os mellores</span></div></div></div>
+        <div class="panel"><h3>Como o rematarías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Espero celebrar moitos máis convosco</span><span class="chip">E agora, á torta!</span><span class="chip">Grazas, de verdade</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 COM 3 -->
+<section class="slide" data-titulo="Com. 3" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">🎙️ Comunicación · Actividade 3</div>
+    <h2>Analizamos un programa da Radio Galega</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">3</span>Por grupos, escoitade un programa da Radio Galega e analizádeo nunha ficha que recolla estes datos. Escribide despois un informe para presentalo oralmente á clase.</div>
+      <table class="ficha">
+        <tr><td><b>Nome do programa; día e hora de emisión</b><textarea></textarea></td><td><b>Contidos / Seccións (noticias, deportes, sociedade, música…)</b><textarea></textarea></td></tr>
+        <tr><td><b>Nome da emisora / Dial / FM-AM</b><textarea></textarea></td><td><b>Público (xuvenil, adulto, interesado en…)</b><textarea></textarea></td></tr>
+        <tr><td><b>Dirección do programa / Outros colaboradores/as</b><textarea></textarea></td><td><b>Valoración persoal</b><textarea></textarea></td></tr>
+      </table>
+      <p class="nota">Podcast da Radio Galega: <a href="https://www.crtvg.es/rg/podcast" target="_blank" rel="noopener" style="color:var(--azul)">www.crtvg.es/rg/podcast</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 COM 4 a -->
+<section class="slide" data-titulo="Com.4a" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">✍️ Comunicación · Proposta de expresión</div>
+    <h2>Unha entrevista sobre a igualdade de xénero</h2>
+    <div class="act">
+      <div class="act-enun"><span class="n">4</span>Imaxina que es locutor ou locutora dun programa de radio e tes que realizar unha entrevista sobre a <em>igualdade de xénero</em>. Convén que sigas estes pasos:</div>
+      <h4>a) Reflexiona primeiro sobre:</h4>
+      <p class="nota">A quen entrevistarías?</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">A unha futbolista do equipo da nosa localidade.</div>
+      <p class="nota">Que preguntas lle farías?</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">Como empezaches a xogar? Notaches diferenzas de trato respecto dos equipos masculinos? Que lle dirías a unha nena que quere dedicarse ao deporte?</div>
+      <p class="nota">Sobre que institucións relativas ao tema te informarías?</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">Sobre a Secretaría Xeral da Igualdade da Xunta de Galicia, o departamento de igualdade do concello e a comisión de igualdade do propio centro educativo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 COM 4 b-d -->
+<section class="slide" data-titulo="Com.4b" data-tipo="ex">
+  <div class="slide-inner">
+    <div class="ex-tag">✍️ Comunicación · Proposta de expresión</div>
+    <h2>Unha entrevista sobre a igualdade de xénero</h2>
+    <div class="act">
+      <h4>b) Prepara por escrito a túa entrevista, coidando a linguaxe e seguindo esta estrutura:</h4>
+      <p class="nota"><strong>Saúdos e presentación da persoa entrevistada:</strong> comentario acerca do interese que suscita a actualidade da entrevista.</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">«Boas tardes, benvidos e benvidas a <em>Ondas do Instituto</em>. Hoxe, cando o fútbol feminino enche estadios como nunca, temos connosco a capitá do equipo local. Benvida ao programa!»</div>
+      <p class="nota"><strong>Corpo da entrevista,</strong> que forma o conxunto de preguntas e respostas, de xeito ordenado e progresivo.</p>
+      <textarea class="pizarra" placeholder="…" style="min-height:4em"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">De xeral a concreto: 1) Como empezaches a xogar? 2) Que dificultades atopaches? 3) Notaches diferenzas de trato respecto dos equipos masculinos? 4) Que cambiarías para conseguir a igualdade no deporte?</div>
+      <p class="nota"><strong>Peche ou breve conclusión;</strong> despedida e agradecementos pola súa colaboración á persoa entrevistada.</p>
+      <textarea class="pizarra" placeholder="…"></textarea>
+      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
+      <div class="respuesta oculto">«Queda claro que aínda hai camiño por percorrer, pero tamén moitas razóns para a esperanza. Moitas grazas por estar hoxe connosco. E a vós, ouvintes, grazas por escoitarnos. Ata a próxima!»</div>
+      <h4>c) Realízaa logo a un compañeiro ou compañeira de clase e grávaa.</h4>
+      <h4>d) Escoitádea e comprobade despois se se cumpriron todas as expectativas sobre os textos orais e os textos radiofónicos.</h4>
+      <div class="check">
+        <label><input type="checkbox"> Vocabulario rico e variado, con palabras de doada comprensión.</label>
+        <label><input type="checkbox"> Enunciados breves e claros.</label>
+        <label><input type="checkbox"> Linguaxe expresiva, natural e nada monótona.</label>
+        <label><input type="checkbox"> Pronuncia clara, con boa vocalización e entoación.</label>
+        <label><input type="checkbox"> Rexistro adecuado ao programa e ás persoas que escoitan.</label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 ESQUEMA -->
+<section class="slide" data-titulo="Esquema" data-tipo="teo">
+  <div class="slide-inner">
+    <div class="esq-cab">
+      <div><div class="teo-tag">📝 Copia nun folio A4 apaisado</div></div>
+      <button class="btn sec" id="btnImprimir">Imprimir esquema</button>
+    </div>
+    <div class="esquema" id="esquema">
+      <div class="esq-tronco"><div class="esq-titulo">O TEXTO ORAL<br>E A RADIO</div></div>
+      <div class="esq-ramas">
+        <div class="rama"><div class="nodo">Intención comunicativa</div><div class="hojas">narrar, describir, dialogar, explicar, convencer</div></div>
+        <div class="rama"><div class="nodo">Comunicación</div><div class="hojas"><b>oral</b> (fala) / <b>escrita</b> (palabra impresa)</div></div>
+        <div class="rama"><div class="nodo">Trazos do texto oral</div><div class="hojas">non permanente / xestos + entoación / rexistro formal ou coloquial</div></div>
+        <div class="rama doble"><div class="nodo">Clases de textos orais</div>
+          <div class="sub-ramas">
+            <div class="sub"><span class="et">Planificados</span><span class="hojas">monólogo, conferencia, discurso, entrevista, enquisa, debate, faladoiro</span></div>
+            <div class="sub"><span class="et">Non planificados</span><span class="hojas">conversación, videoconferencia</span></div>
+          </div>
+        </div>
+        <div class="rama"><div class="nodo">Obxectivos da radio</div><div class="hojas">informar, entreter, educar, fomentar a participación dos ouvintes</div></div>
+        <div class="rama doble"><div class="nodo">Xornalismo na radio</div>
+          <div class="sub-ramas">
+            <div class="sub"><span class="et">Trazos</span><span class="hojas">oral, sen imaxe / pouco permanente / expresivo, espontáneo, inmediato</span></div>
+            <div class="sub"><span class="et">Linguaxe</span><span class="hojas">vocabulario claro / enunciados breves / expresiva e natural / boa pronuncia</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<button class="lateral" id="prev" aria-label="Anterior">◀</button>
+<button class="lateral" id="next" aria-label="Seguinte">▶</button>
+
+<!-- DIAL -->
+<nav class="dial" aria-label="Navegación de diapositivas">
+  <div class="escala">
+    <div class="fm" id="fm">FM 88.0</div>
+    <div class="marcas" id="marcas"></div>
+    <div class="aguja" id="aguja"></div>
+  </div>
+  <div class="herr">
+    <button class="quien" id="btnQuien">🎙️ <span class="txt">Quen responde?</span></button>
+    <button id="btnFull" aria-label="Pantalla completa">⛶</button>
+  </div>
+</nav>
+
+<!-- RULETA -->
+<div class="capa" id="capaQuien" role="dialog" aria-modal="true" aria-label="Escoller alumno">
+  <div class="caja">
+    <div class="kicker">Tócalle responder a…</div>
+    <div class="nombre" id="nombre">?</div>
+    <div class="quedan" id="quedan"></div>
+    <div class="fila-btn">
+      <button class="btn" id="girar">Sortear</button>
+      <button class="btn sec" id="editar">Editar nomes</button>
+      <button class="btn sec" id="cerrarQuien">Pechar</button>
+    </div>
+  </div>
+</div>
+<div class="capa" id="capaNombres" role="dialog" aria-modal="true" aria-label="Editar nomes">
+  <div class="caja">
+    <h3>Nomes do grupo</h3>
+    <p class="nota">Un nome por liña.</p>
+    <textarea id="listaNombres"></textarea>
+    <div class="fila-btn">
+      <button class="btn" id="guardarNombres">Gardar</button>
+      <button class="btn sec" id="cancelarNombres">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const marcas=document.getElementById('marcas');
+  const aguja=document.getElementById('aguja');
+  const fm=document.getElementById('fm');
+  let actual=0;
+
+  slides.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='marca '+(s.dataset.tipo||'');
+    b.textContent=s.dataset.titulo||(i+1);
+    b.title=s.dataset.titulo||'';
+    b.addEventListener('click',()=>ir(i));
+    marcas.appendChild(b);
+  });
+
+  function ir(i){
+    if(i<0||i>=slides.length) return;
+    slides[actual].classList.remove('on');
+    actual=i;
+    slides[actual].classList.add('on');
+    slides[actual].scrollTop=0;
+    const m=marcas.children[i];
+    aguja.style.left=(m.offsetLeft+m.offsetWidth/2-1)+'px';
+    fm.textContent='FM '+(88+i*(20/(slides.length-1))).toFixed(1);
+    document.getElementById('prev').disabled=i===0;
+    document.getElementById('next').disabled=i===slides.length-1;
+  }
+  document.getElementById('prev').onclick=()=>ir(actual-1);
+  document.getElementById('next').onclick=()=>ir(actual+1);
+  document.addEventListener('keydown',e=>{
+    if(e.target.tagName==='TEXTAREA') return;
+    if(document.querySelector('.capa.on')){ if(e.key==='Escape') document.querySelectorAll('.capa').forEach(c=>c.classList.remove('on')); return;}
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();ir(actual+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();ir(actual-1);}
+  });
+  window.addEventListener('resize',()=>ir(actual));
+  document.getElementById('btnFull').onclick=()=>{
+    if(!document.fullscreenElement){document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();}
+    else{document.exitFullscreen&&document.exitFullscreen();}
+  };
+
+  /* escenas */
+  document.querySelectorAll('.escena').forEach(e=>e.addEventListener('click',()=>e.classList.toggle('visto')));
+  /* tarjetas */
+  document.querySelectorAll('.flip').forEach(f=>f.addEventListener('click',()=>f.classList.toggle('gira')));
+  /* 6 preguntas */
+  document.querySelectorAll('.w').forEach(w=>w.addEventListener('click',()=>w.classList.toggle('visto')));
+  /* mostrar respuesta */
+  document.querySelectorAll('[data-mostrar]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const r=b.closest('p').nextElementSibling;
+      const o=r.classList.toggle('oculto');
+      b.textContent=o?b.dataset.txt||b.textContent.replace('Ocultar','Ver'):'Ocultar';
+    });
+    b.dataset.txt=b.textContent;
+  });
+  /* quiz */
+  document.querySelectorAll('.q .op[data-ok]').forEach(op=>op.addEventListener('click',()=>{
+    op.classList.remove('ko');void op.offsetWidth;
+    op.classList.add(op.dataset.ok==='1'?'ok':'ko');
+  }));
+  /* clasificar */
+  document.querySelectorAll('.clas-item').forEach(it=>{
+    it.querySelectorAll('.op').forEach(op=>op.addEventListener('click',()=>{
+      it.querySelectorAll('.op').forEach(o=>o.classList.remove('ok','ko'));
+      const bien=op.dataset.v===it.dataset.ok;
+      void op.offsetWidth;
+      op.classList.add(bien?'ok':'ko');
+      it.classList.remove('ok','ko');it.classList.add(bien?'ok':'ko');
+    }));
+  });
+  /* ruleta */
+  const KEY='radio-pdc-nombres';
+  let nombres=[];
+  try{const g=localStorage.getItem(KEY);if(g) nombres=JSON.parse(g);}catch(e){}
+  if(!Array.isArray(nombres)||!nombres.length) nombres=Array.from({length:9},(_,i)=>'Alumno/a '+(i+1));
+  let pendientes=[...nombres];
+  const capaQ=document.getElementById('capaQuien'),capaN=document.getElementById('capaNombres');
+  const nombreEl=document.getElementById('nombre'),quedan=document.getElementById('quedan');
+  function actQuedan(){quedan.textContent=pendientes.length===nombres.length?'Aínda non respondeu ninguén':'Quedan '+pendientes.length+' por responder nesta rolda';}
+  document.getElementById('btnQuien').onclick=()=>{capaQ.classList.add('on');actQuedan();document.getElementById('girar').focus();};
+  document.getElementById('cerrarQuien').onclick=()=>capaQ.classList.remove('on');
+  document.getElementById('girar').onclick=()=>{
+    if(!pendientes.length) pendientes=[...nombres];
+    const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const elegido=pendientes.splice(Math.floor(Math.random()*pendientes.length),1)[0];
+    if(reduce){nombreEl.textContent=elegido;actQuedan();return;}
+    let n=0;nombreEl.classList.add('gira');
+    const iv=setInterval(()=>{
+      nombreEl.textContent=nombres[Math.floor(Math.random()*nombres.length)];
+      if(++n>16){clearInterval(iv);nombreEl.classList.remove('gira');nombreEl.textContent=elegido;actQuedan();}
+    },70+n*4);
+  };
+  document.getElementById('editar').onclick=()=>{document.getElementById('listaNombres').value=nombres.join('\n');capaN.classList.add('on');};
+  document.getElementById('cancelarNombres').onclick=()=>capaN.classList.remove('on');
+  document.getElementById('guardarNombres').onclick=()=>{
+    const l=document.getElementById('listaNombres').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if(l.length){nombres=l;pendientes=[...nombres];try{localStorage.setItem(KEY,JSON.stringify(nombres));}catch(e){}}
+    capaN.classList.remove('on');nombreEl.textContent='?';actQuedan();
+  };
+
+  document.getElementById('btnImprimir').onclick=()=>window.print();
+
+  ir(0);
+})();
+</script>
+</body>
+</html>
