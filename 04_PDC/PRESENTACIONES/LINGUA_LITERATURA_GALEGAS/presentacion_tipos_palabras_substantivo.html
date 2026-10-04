@@ -173,6 +173,8 @@ em{font-style:italic;color:var(--muted)}
 #schema .node.key .t{font-size:19px;fill:var(--sea)}
 #schema .node.masc rect{stroke:var(--masc)}
 #schema .node.fem rect{stroke:var(--fem)}
+#schema .node.box rect{stroke-width:2}
+#schema .node .r{font-family:var(--body);font-weight:600;font-size:14px;fill:var(--ink)}
 #schema .node,#schema .edge{transition:opacity .45s ease}
 #schema .off{opacity:0}
 @media (max-width:700px){
@@ -418,7 +420,7 @@ em{font-style:italic;color:var(--muted)}
       <button class="btn alt" id="schAll">Ver completo</button>
     </div>
     <div class="schema-wrap">
-      <svg id="schema" viewBox="0 0 900 590" role="img" aria-label="Esquema: a palabra clasifícase polo significado e pola forma; o substantivo é variable e léxico, e ten xénero e número">
+      <svg id="schema" viewBox="0 0 900 870" role="img" aria-label="Esquema: a palabra clasifícase polo significado e pola forma; o substantivo é variable e léxico, e ten xénero e número, coas regras de formación do feminino e do plural">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" class="arrhead"/>
@@ -431,18 +433,6 @@ em{font-style:italic;color:var(--muted)}
   </div>
 </section>
 
-<!-- 16 fin -->
-<section class="slide" aria-label="Fin">
-  <div class="wrap end">
-    <h2>Repasamos?</h2>
-    <div class="box def">
-      <p>A palabra pode ter significado <strong>léxico</strong> ou <strong>gramatical</strong>, e ser <strong>variable</strong> ou <strong>invariable</strong>.</p>
-      <p>O <strong>substantivo</strong> é variable e ten significado léxico: designa obxectos, persoas, animais e ideas.</p>
-      <p style="margin:0">Varía en <strong>xénero</strong> (masculino / feminino) e <strong>número</strong> (singular / plural) seguindo unhas regras.</p>
-    </div>
-    <div><button class="btn" id="restart">Volver ao comezo</button></div>
-  </div>
-</section>
 
 </main>
 
@@ -452,7 +442,7 @@ em{font-style:italic;color:var(--muted)}
 <div class="bottombar">
   <button class="themebtn" id="themeBtn" aria-label="Cambiar tema claro ou escuro">◐ Tema</button>
   <div class="progress"><span id="bar"></span></div>
-  <div class="counter" id="counter">1 / 16</div>
+  <div class="counter" id="counter">1 / 15</div>
 </div>
 
 <script>
@@ -472,7 +462,6 @@ function go(n){
   if(n===0) runMorph();
 }
 prev.onclick=()=>go(cur-1); next.onclick=()=>go(cur+1);
-document.getElementById('restart').onclick=()=>go(0);
 document.addEventListener('keydown',e=>{
   const t=e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return;
   if(e.key==='ArrowRight'||e.key==='PageDown') go(cur+1);
@@ -708,10 +697,22 @@ const nodes=[
   {id:'xv',x:145,y:500,w:190,t:'Variables',s:'oso / osa, home / muller',l:5,c:'fem'},
   {id:'xi',x:355,y:500,w:190,t:'Invariables',s:'o lapis, a ponte',l:5,c:'fem'},
   {id:'ns',x:545,y:500,w:190,t:'Singular',s:'o alumno',l:5,c:'masc'},
-  {id:'np',x:755,y:500,w:190,t:'Plural',s:'os alumnos',l:5,c:'masc'}
+  {id:'np',x:755,y:500,w:190,t:'Plural',s:'os alumnos',l:5,c:'masc'},
+  {id:'rf',x:225,y:600,w:430,t:'Formación do feminino',l:6,c:'fem box',rules:[
+    ['-o / -e átonos → -a','fillo / filla, xefe / xefa'],
+    ['-eu → -ía','xudeu / xudía, sandeu / sandía'],
+    ['Vogal tónica ou consoante (agás -n) → + -a','avó / avoa, profesor / profesora'],
+    ['-ón → -oa; -ona se é aumentativo ou despectivo','bretón / bretoa, abusón / abusona'],
+    ['-án → -á; -ana se é aumentativo ou despectivo','alemán / alemá, folgazán / folgazana']]},
+  {id:'rp',x:675,y:600,w:430,t:'Formación do plural',l:6,c:'masc box',rules:[
+    ['Vogal, ditongo ou outra consoante → + -s','cadro / cadros, tren / trens, tic / tics'],
+    ['-r, -z e agudas en -s → + -es','xogador / xogadores, raíz / raíces, compás / compases'],
+    ['-l en monosílabas e graves → + -es','ril / riles, fácil / fáciles'],
+    ['-l en polisílabas agudas → -is','canal / canais, mandil / mandís'],
+    ['Graves e esdrúxulas en -s, e todas en -x → invariables','o lapis / os lapis, o tórax / os tórax']]}
 ];
-const edges=[['pal','sig'],['pal','for'],['sig','lex'],['sig','gra'],['for','inv'],['for','var'],['lex','sub'],['var','sub'],['sub','xen'],['sub','num'],['xen','xv'],['xen','xi'],['num','ns'],['num','np']];
-const byId={};nodes.forEach(n=>{n.h=n.s?60:46;byId[n.id]=n;});
+const edges=[['pal','sig'],['pal','for'],['sig','lex'],['sig','gra'],['for','inv'],['for','var'],['lex','sub'],['var','sub'],['sub','xen'],['sub','num'],['xen','xv'],['xen','xi'],['num','ns'],['num','np'],['xv','rf'],['np','rp']];
+const byId={};nodes.forEach(n=>{n.h=n.rules?50+n.rules.length*42:(n.s?60:46);byId[n.id]=n;});
 const gN=document.getElementById('schNodes'),gE=document.getElementById('schEdges');
 edges.forEach(([a,b])=>{
   const A=byId[a],B=byId[b],x1=A.x,y1=A.y+A.h,x2=B.x,y2=B.y-3,my=(y1+y2)/2;
@@ -721,11 +722,14 @@ edges.forEach(([a,b])=>{
 nodes.forEach(n=>{
   const g=document.createElementNS(NS,'g');g.setAttribute('class','node '+(n.c||''));g.dataset.l=n.l;
   const r=document.createElementNS(NS,'rect');r.setAttribute('x',n.x-n.w/2);r.setAttribute('y',n.y);r.setAttribute('width',n.w);r.setAttribute('height',n.h);r.setAttribute('rx',12);g.appendChild(r);
-  const t=document.createElementNS(NS,'text');t.setAttribute('class','t');t.setAttribute('x',n.x);t.setAttribute('y',n.y+(n.s?25:29));t.setAttribute('text-anchor','middle');t.textContent=n.t;g.appendChild(t);
+  const t=document.createElementNS(NS,'text');t.setAttribute('class','t');t.setAttribute('x',n.x);t.setAttribute('y',n.y+(n.rules?30:(n.s?25:29)));t.setAttribute('text-anchor','middle');t.textContent=n.t;g.appendChild(t);
   if(n.s){const s=document.createElementNS(NS,'text');s.setAttribute('class','s');s.setAttribute('x',n.x);s.setAttribute('y',n.y+46);s.setAttribute('text-anchor','middle');s.textContent=n.s;g.appendChild(s);}
+  if(n.rules){const x0=n.x-n.w/2+18;n.rules.forEach(([r,e],i)=>{const y=n.y+62+i*42;
+    const a=document.createElementNS(NS,'text');a.setAttribute('class','r');a.setAttribute('x',x0);a.setAttribute('y',y);a.textContent='• '+r;g.appendChild(a);
+    const b=document.createElementNS(NS,'text');b.setAttribute('class','s');b.setAttribute('x',x0+12);b.setAttribute('y',y+18);b.textContent=e;g.appendChild(b);});}
   gN.appendChild(g);
 });
-let schLevel=5;const maxL=5,stepBtn=document.getElementById('schStep');
+let schLevel=6;const maxL=6,stepBtn=document.getElementById('schStep');
 function schShow(l){schLevel=l;document.querySelectorAll('#schema [data-l]').forEach(el=>el.classList.toggle('off',+el.dataset.l>l));
   stepBtn.textContent=l>=maxL?'Construír paso a paso':'Seguinte paso';}
 stepBtn.onclick=()=>schShow(schLevel>=maxL?0:schLevel+1);
