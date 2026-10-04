@@ -43,12 +43,12 @@ button{font:inherit;color:inherit;cursor:pointer}
 .slide{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:2.2rem 4.6rem 5rem;visibility:hidden;opacity:0;transform:translateX(30px);transition:opacity .35s ease,transform .35s ease,visibility 0s linear .35s}
 .slide.active{visibility:visible;opacity:1;transform:none;transition:opacity .35s ease,transform .35s ease}
 .slide.prev{transform:translateX(-30px)}
-.wrap{max-width:860px;margin:0 auto}
+.wrap{width:100%;margin:0}
 
 h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0 0 .6em}
 h2{font-size:clamp(1.7rem,4vw,2.5rem);font-weight:800;color:var(--sea)}
 h3{font-size:1.25rem;font-weight:700;margin-top:1.4em}
-p{margin:0 0 1em;max-width:70ch}
+p{margin:0 0 1em;text-align:justify;hyphens:auto}
 .m{background:linear-gradient(transparent 52%,var(--mark) 52%);padding:0 .08em}
 em{font-style:italic;color:var(--muted)}
 .note{font-size:.95rem;color:var(--muted)}
@@ -112,7 +112,7 @@ em{font-style:italic;color:var(--muted)}
 .game .opt:hover{background:var(--sea-soft)}
 .game .opt.right{background:var(--ok);border-color:var(--ok);color:#fff}
 .game .opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
-.game .fb{min-height:3em;margin:.8rem auto 0;max-width:60ch;font-size:.98rem}
+.game .fb{min-height:3em;margin:.8rem 0 0;font-size:.98rem}
 .game .foot{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;font-size:.9rem;color:var(--muted)}
 .game .nextq{border:none;background:var(--sea);color:var(--paper);border-radius:10px;padding:.45rem 1rem;font-weight:700}
 .game .nextq[hidden]{display:none}
@@ -411,7 +411,7 @@ em{font-style:italic;color:var(--muted)}
 
 <!-- 15 esquema -->
 <section class="slide" aria-label="Esquema final">
-  <div class="wrap" style="max-width:980px">
+  <div class="wrap">
     <h2>Esquema final</h2>
     <div class="toolbar" style="margin-top:0">
       <button class="btn" id="schStep">Construír paso a paso</button>
@@ -626,9 +626,9 @@ const acts={
     ['farmacéutico',['farmacéutica']],['cónsul',['cónsul'],'É invariable: o cónsul / a cónsul.'],['actor',['actriz']],
     ['tsar',['tsarina']],['xuíz',['xuíza']],['xogadora',['xogador']]]},
   a2:{type:'text',items:[
-    ['urbano',['urbana']],['anfitrión',['anfitrioa']],['xudeu',['xudía']],['patrón',['patroa','patrona'],'patroa (patrona: santa protectora)'],
+    ['urbano',['urbana']],['anfitrión',['anfitrioa']],['xudeu',['xudía']],['patrón',['patroa','patrona'],'patrona tamén é a santa protectora'],
     ['solteirón',['solteirona'],'-ón despectivo → -ona'],['catalán',['catalá']],['pagán',['pagá']],['anglosaxón',['anglosaxoa']],
-    ['cubano',['cubana']],['charlatán',['charlatana']],['ladrón',['ladra']]]},
+    ['cubano',['cubana']],['charlatán',['charlatana']],['ladrón',['ladroa','ladra']]]},
   a3:{type:'gender',items:[
     ['linguaxe','a','A linguaxe dos adolescentes cambia moi rápido.'],['costume','o','Teño o costume de ler antes de durmir.'],
     ['xénese','a','A xénese do proxecto foi unha conversa no recreo.'],['sangue','o','O sangue circula polas veas.'],
@@ -653,7 +653,7 @@ document.querySelectorAll('.act').forEach(el=>{
     const d=document.createElement('div');d.className='item';const id=el.dataset.act+'_'+idx;
     if(a.type==='text'){
       d.innerHTML=`<label for="${id}">${it[0]}</label><input id="${id}" autocomplete="off" autocapitalize="off" spellcheck="false">
-      <div class="msg"></div><div class="sol">${it[1][0]}${it[2]?`<span>${it[2]}</span>`:''}</div>`;
+      <div class="msg"></div><div class="sol">${it[1].join(' / ')}${it[2]?`<span>${it[2]}</span>`:''}</div>`;
       d.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'){const ins=[...el.querySelectorAll('input')];const n=ins[ins.indexOf(e.target)+1];if(n)n.focus();else check();}});
     }else{
       d.innerHTML=`<label>${it[0]}</label><div class="gsel" role="group" aria-label="Xénero de ${it[0]}">
