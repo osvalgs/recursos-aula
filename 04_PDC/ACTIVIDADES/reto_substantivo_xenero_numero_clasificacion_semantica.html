@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reto substantivo: xénero, número e clasificación semántica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF3F7; --paper:#FFFFFF; --ink:#14283D; --muted:#56687B; --line:#D3DDE6;
+  --sea:#0F6E7A; --sea-soft:#DDEFF1; --mark:#FFE066;
+  --masc:#1F5FB8; --masc-soft:#E2ECFA; --fem:#A8327A; --fem-soft:#F8E3EF;
+  --ok:#1B8047; --ok-soft:#DDF3E5; --bad:#B8362A; --bad-soft:#FBE3E0; --warn:#9A6400; --warn-soft:#FFF1D1;
+  --g1:#D2691E; --g2:#2E8B57; --g3:#7A4FC0; --gc:var(--sea);
+  --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", Verdana, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1A26; --paper:#152536; --ink:#E6EDF3; --muted:#9DB0C3; --line:#2A3E53;
+    --sea:#45B8C4; --sea-soft:#17363F; --mark:rgba(255,212,70,.42);
+    --masc:#79AEFF; --masc-soft:#1A2D4A; --fem:#FF86C8; --fem-soft:#3E1D31;
+    --ok:#5ACB88; --ok-soft:#153828; --bad:#FF8577; --bad-soft:#40201D; --warn:#F2C262; --warn-soft:#3A2E12;
+    --g1:#F0954A; --g2:#5FCB8C; --g3:#B08CF0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1A26; --paper:#152536; --ink:#E6EDF3; --muted:#9DB0C3; --line:#2A3E53;
+  --sea:#45B8C4; --sea-soft:#17363F; --mark:rgba(255,212,70,.42);
+  --masc:#79AEFF; --masc-soft:#1A2D4A; --fem:#FF86C8; --fem-soft:#3E1D31;
+  --ok:#5ACB88; --ok-soft:#153828; --bad:#FF8577; --bad-soft:#40201D; --warn:#F2C262; --warn-soft:#3A2E12;
+  --g1:#F0954A; --g2:#5FCB8C; --g3:#B08CF0;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:1.08rem;line-height:1.6;overflow:hidden}
+body[data-g="0"]{--gc:var(--g1)} body[data-g="1"]{--gc:var(--g2)} body[data-g="2"]{--gc:var(--g3)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--sea);outline-offset:2px;border-radius:6px}
+.deck{position:relative;height:100%;width:100%}
+.slide{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:2rem 4.6rem 4.6rem;visibility:hidden;opacity:0;transform:translateX(30px);transition:opacity .35s ease,transform .35s ease,visibility 0s linear .35s}
+.slide.active{visibility:visible;opacity:1;transform:none;transition:opacity .35s ease,transform .35s ease}
+.slide.prev{transform:translateX(-30px)}
+.wrap{width:100%;margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0 0 .6em}
+h2{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:800;color:var(--sea)}
+h3{font-size:1.2rem;font-weight:700;margin-top:1.1em}
+p,li{text-align:justify;hyphens:auto}
+p{margin:0 0 1em}
+em{font-style:italic;color:var(--muted)}
+.note{font-size:.95rem;color:var(--muted)}
+.kicker{font-family:var(--display);font-weight:700;color:var(--muted);font-size:1rem;margin:0 0 .3rem}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:1rem 1.2rem;margin:1rem 0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.cols>*{margin:0}
+.tag{display:inline-block;font-family:var(--display);font-weight:700;font-size:1.05rem;color:var(--sea);margin-bottom:.3rem}
+.lembra{background:var(--paper);border:2px dashed var(--fem);border-radius:14px;padding:.9rem 1.2rem;margin:1rem 0}
+.lembra h3{margin-top:0;color:var(--fem)}
+.lembra.mb{border-color:var(--masc)} .lembra.mb h3{color:var(--masc)}
+.lembra.sb{border-color:var(--sea)} .lembra.sb h3{color:var(--sea)}
+.lembra ul{margin:.3em 0;padding-left:1.2em}
+.lembra li{margin:.25em 0}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.6rem 0 0}
+.chip{border:1.5px solid var(--line);background:var(--bg);border-radius:30px;padding:.2rem .8rem;font-weight:700;font-size:.95rem}
+.rules{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper);margin:1rem 0}
+.rule{display:grid;grid-template-columns:minmax(150px,28%) 1fr;border-top:1px solid var(--line)}
+.rule:first-child{border-top:none}
+.rule .k{background:var(--sea-soft);padding:.6rem 1rem;font-weight:700}
+.rule .v{padding:.6rem 1rem}
+.rule .v p{margin:0}
+.rule .ex{color:var(--muted);font-style:italic}
+.btn{border:none;border-radius:10px;padding:.55rem 1.1rem;font-weight:700;background:var(--sea);color:var(--paper)}
+.btn.alt{background:transparent;border:2px solid var(--sea);color:var(--sea)}
+.btn.gbtn{background:var(--gc);color:#fff}
+.btn:disabled{opacity:.35;pointer-events:none}
+.btn[hidden]{display:none}
+.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:.8rem 0}
+.fb{min-height:1.7em;margin:.6rem 0;font-size:1rem;text-align:justify}
+.fb.ok b{color:var(--ok)} .fb.bad b{color:var(--bad)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* PORTADA */
+.cover{min-height:100%;display:flex;flex-direction:column;justify-content:center}
+.cover h1{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:800;margin-bottom:.2em}
+.cover .sub{font-size:1.15rem;color:var(--muted)}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.6rem 0 1rem}
+.gpick{border:3px solid var(--c);background:var(--paper);border-radius:18px;padding:1rem 1.2rem;text-align:left;display:flex;flex-direction:column;gap:.2rem}
+.gpick b{font-family:var(--display);font-size:1.6rem;color:var(--c);line-height:1.1}
+.gpick span{font-size:.95rem;color:var(--muted)}
+.gpick:hover{background:var(--c);} .gpick:hover b,.gpick:hover span{color:#fff}
+.plan{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:.8rem 1.1rem;font-size:.97rem}
+.plan table{width:100%;border-collapse:collapse}
+.plan td{padding:.2rem .4rem;border-top:1px solid var(--line)}
+.plan tr:first-child td{border-top:none}
+.plan td:last-child{text-align:right;font-family:var(--display);font-weight:700;color:var(--sea);white-space:nowrap}
+
+/* CABECEIRA DE RETO */
+.rhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.8rem;margin-bottom:.4rem}
+.act-head{display:flex;align-items:baseline;gap:.7rem}
+.act-num{font-family:var(--display);font-weight:800;font-size:2.4rem;color:var(--gc);line-height:1}
+.act-head h2{margin:0}
+.rctl{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+.gbadge{background:var(--gc);color:#fff;font-family:var(--display);font-weight:700;border-radius:30px;padding:.25rem .9rem}
+.timer{font-family:var(--display);font-weight:800;font-size:2rem;min-width:3.4em;text-align:center;border:3px solid var(--sea);border-radius:14px;padding:0 .5rem;line-height:1.35;color:var(--sea)}
+.timer.hurry{border-color:var(--bad);color:var(--bad);animation:pulse 1s infinite}
+.timer.off{border-color:var(--line);color:var(--muted)}
+.pts{font-family:var(--display);font-weight:700;font-size:1.1rem;color:var(--gc)}
+.tbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin:.2rem 0 .8rem}
+.tbar span{display:block;height:100%;width:100%;background:var(--sea);transition:width 1s linear}
+.tbar.hurry span{background:var(--bad)}
+.rbody{position:relative}
+.rbody .inner{transition:filter .3s}
+.rbody.locked .inner{filter:blur(9px);pointer-events:none;user-select:none}
+.veil{position:absolute;inset:0;display:flex;align-items:flex-start;justify-content:center;padding-top:2rem;z-index:3}
+.rbody:not(.locked) .veil{display:none}
+.veil div{background:var(--paper);border:2px solid var(--gc);border-radius:16px;padding:1.2rem 1.6rem;text-align:center;max-width:90%;box-shadow:0 8px 24px rgba(10,40,60,.18)}
+.veil div p{text-align:center;margin:.3rem 0 .8rem}
+.veil b{font-family:var(--display);font-size:1.3rem}
+.endmsg{background:var(--warn-soft);border-radius:12px;padding:.7rem 1rem;margin:.6rem 0;font-weight:700;text-align:justify}
+.endmsg[hidden]{display:none}
+.endmsg.good{background:var(--ok-soft)}
+
+/* RETO 1 */
+.sorter{display:grid;grid-template-columns:1fr minmax(200px,1.1fr) 1fr;gap:1rem;align-items:stretch}
+.bin{border:3px solid;border-radius:18px;padding:.9rem;min-height:230px;display:flex;flex-direction:column;background:var(--paper);text-align:left}
+.bin.o{border-color:var(--masc)} .bin.a{border-color:var(--fem)}
+.bin .lid{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1}
+.bin.o .lid{color:var(--masc)} .bin.a .lid{color:var(--fem)}
+.bin .lbl{font-weight:700;color:var(--muted);font-size:.92rem;margin-bottom:.5rem}
+.bin .key{font-size:.82rem;color:var(--muted);margin-top:auto;padding-top:.5rem}
+.bin .inside{display:flex;flex-wrap:wrap;gap:.3rem}
+.bin .inside span{font-size:.9rem;font-weight:700;padding:.1rem .55rem;border-radius:20px;animation:pop .3s both}
+.bin.o .inside span{background:var(--masc-soft);color:var(--masc)}
+.bin.a .inside span{background:var(--fem-soft);color:var(--fem)}
+.bin .inside span.err{outline:2px solid var(--bad)}
+.bin.flash{box-shadow:0 0 0 6px var(--ok-soft)}
+.bin:disabled{opacity:1;cursor:default}
+.feed{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1rem}
+.feed .card{font-family:var(--display);font-weight:800;font-size:clamp(2rem,5vw,2.8rem);padding:.4rem 1rem;border:2px dashed var(--line);border-radius:14px;margin:.4rem 0 .6rem;word-break:break-word}
+.feed .card.shake{animation:shake .45s}
+.feed .count{font-size:.9rem;color:var(--muted)}
+
+/* RETO 2: tres en raia */
+.ttt-wrap{display:grid;grid-template-columns:minmax(260px,420px) 1fr;gap:1.4rem;align-items:start}
+.ttt{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;background:var(--line);padding:.5rem;border-radius:18px}
+.cell{aspect-ratio:1;border:none;border-radius:12px;background:var(--paper);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;font-family:var(--display);font-weight:800;font-size:clamp(1rem,2.4vw,1.35rem);padding:.3rem;text-align:center;overflow:hidden}
+.cell:hover:not(:disabled){background:var(--sea-soft)}
+.cell.sel{box-shadow:inset 0 0 0 4px var(--gc)}
+.cell .mk{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(4rem,10vw,6.5rem);line-height:1;opacity:.22;pointer-events:none}
+.cell.me{background:color-mix(in srgb,var(--gc) 16%,var(--paper))}
+.cell.me .mk{color:var(--gc)}
+.cell.cpu{background:var(--bad-soft)} .cell.cpu .mk{color:var(--bad)}
+.cell small{font-family:var(--body);font-weight:700;font-size:.82rem;color:var(--muted);position:relative}
+.cell:disabled{cursor:default}
+.cell.win{box-shadow:inset 0 0 0 4px var(--ok)}
+.chooser{background:var(--paper);border:2px solid var(--gc);border-radius:16px;padding:1rem 1.2rem}
+.chooser .ask{font-size:1rem;color:var(--muted)}
+.chooser .big{font-family:var(--display);font-weight:800;font-size:2rem;margin:.1rem 0 .7rem}
+.opts{display:flex;flex-wrap:wrap;gap:.6rem}
+.opt{min-width:120px;padding:.6rem 1.1rem;border-radius:12px;border:2px solid var(--sea);background:transparent;font-weight:700;font-size:1.1rem}
+.opt:hover{background:var(--sea-soft)}
+.opt.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.legend{display:flex;gap:1.2rem;font-size:.92rem;color:var(--muted);margin-top:.6rem}
+.legend b{font-family:var(--display);font-size:1.2rem}
+
+/* RETO 3: detective */
+.det{display:grid;grid-template-columns:1fr 300px;gap:1.2rem;align-items:start}
+.story{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1rem 1.3rem;font-size:1.15rem;line-height:2}
+.story h3{margin:0 0 .3em;color:var(--sea)}
+.line{display:grid;grid-template-columns:2.2em 1fr;gap:.4rem;padding:.2rem 0;border-top:1px dashed var(--line)}
+.line:first-of-type{border-top:none}
+.line .ln{font-family:var(--display);font-weight:800;color:var(--gc);text-align:right;padding-right:.3rem}
+.line p{margin:0}
+.w{border-radius:4px;padding:.05em 0;cursor:pointer;transition:background .15s}
+.w:hover{background:var(--sea-soft)}
+.w.sel{background:var(--mark)}
+.w.hinted{box-shadow:0 3px 0 var(--warn)}
+.w.fixed{background:var(--ok-soft);color:var(--ok);font-weight:700;cursor:default}
+.w.given{background:var(--bad-soft);color:var(--bad);font-weight:700;cursor:default}
+.w.clean{text-decoration:line-through;text-decoration-color:var(--muted);cursor:default}
+.clues{background:var(--warn-soft);border-radius:16px;padding:1rem 1.1rem}
+.clues h3{margin:0 0 .4rem;color:var(--warn)}
+.clues ul{margin:0;padding-left:1.1em}
+.clues li{margin:.25rem 0;font-size:.98rem}
+.clues li.done{text-decoration:line-through;color:var(--muted)}
+.clues .btn{margin-top:.7rem;background:var(--warn);color:#fff;width:100%}
+.lupa{margin:1rem 0;background:var(--paper);border:2px solid var(--gc);border-radius:14px;padding:1rem 1.2rem}
+.lupa[hidden]{display:none}
+
+/* RETO 4: globos */
+.sky{background:linear-gradient(var(--sea-soft),var(--paper));border:1px solid var(--line);border-radius:18px;padding:1.2rem;text-align:center;min-height:330px}
+.sky .ask{color:var(--muted)}
+.sky .word{font-family:var(--display);font-weight:800;font-size:clamp(2.2rem,6vw,3.2rem);line-height:1.1;margin:.1rem 0 .4rem}
+.sky .count{font-size:.9rem;color:var(--muted)}
+.balloons{display:flex;justify-content:center;gap:clamp(.8rem,4vw,3rem);margin-top:1rem;flex-wrap:wrap}
+.bal{border:none;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center}
+.bal .body{width:clamp(110px,15vw,150px);aspect-ratio:4/5;border-radius:50% 50% 48% 48%/55% 55% 45% 45%;background:var(--bc);display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:800;font-size:clamp(1rem,2.2vw,1.35rem);padding:.4rem;box-shadow:inset -10px -12px 0 rgba(0,0,0,.12),inset 10px 10px 0 rgba(255,255,255,.18);transition:transform .25s}
+.bal .knot{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:12px solid var(--bc);margin-top:-2px}
+.bal .str{width:2px;height:46px;background:var(--muted)}
+.bal:hover .body{transform:translateY(-6px)}
+.bal.pop .body{animation:boom .35s forwards}
+@keyframes boom{0%{transform:scale(1)}60%{transform:scale(1.35);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+.bal.flat .body{filter:grayscale(1);transform:scale(.75) translateY(30px);opacity:.6}
+.bal.show .body{box-shadow:0 0 0 5px var(--ok)}
+.bal:disabled{cursor:default}
+
+/* RETO 5: concurso */
+.show{display:grid;grid-template-columns:1fr 190px;gap:1.2rem;align-items:start}
+.qbox{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1.2rem}
+.qbox .qn{font-size:.9rem;color:var(--muted);margin-bottom:.3rem}
+.qbox .qt{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,3vw,1.6rem);line-height:1.3;margin-bottom:1rem}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.ans{display:flex;gap:.6rem;align-items:center;text-align:left;border:2px solid var(--sea);background:transparent;border-radius:30px;padding:.6rem 1rem;font-weight:700;font-size:1.05rem}
+.ans b{font-family:var(--display);color:var(--sea)}
+.ans:hover{background:var(--sea-soft)}
+.ans.right{background:var(--ok);border-color:var(--ok);color:#fff} .ans.right b{color:#fff}
+.ans.wrong{background:var(--bad);border-color:var(--bad);color:#fff} .ans.wrong b{color:#fff}
+.ans.gone{visibility:hidden}
+.ans:disabled{cursor:default}
+.lifelines{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0 0;align-items:center}
+.ll{border:2px solid var(--warn);color:var(--warn);background:transparent;border-radius:30px;padding:.3rem .9rem;font-weight:700;font-size:.92rem}
+.ll:disabled{opacity:.3;text-decoration:line-through}
+.hint{margin-top:.8rem;background:var(--warn-soft);border-radius:10px;padding:.6rem .9rem;font-size:.97rem;text-align:justify}
+.hint[hidden]{display:none}
+.ladder{list-style:none;margin:0;display:flex;flex-direction:column-reverse;gap:.3rem;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:.7rem}
+.ladder li{display:flex;justify-content:space-between;padding:.3rem .7rem;border-radius:8px;font-family:var(--display);font-weight:700;color:var(--muted)}
+.ladder li.now{background:var(--warn-soft);color:var(--warn)}
+.ladder li.won{color:var(--ok)}
+.ladder li.lost{color:var(--bad);text-decoration:line-through}
+
+.queue{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:-.3rem 0 .7rem;font-size:.92rem}
+.qpill{border:2px solid var(--c);color:var(--c);border-radius:30px;padding:.1rem .7rem;font-weight:700;background:var(--paper)}
+.qpill b{font-family:var(--display);margin-left:.2rem}
+.qpill.now{background:var(--c);color:#fff}
+.qpill.past{opacity:.55}
+.queue .arrow{color:var(--muted)}
+.stealbar{background:color-mix(in srgb,var(--tc) 18%,var(--paper));border:3px solid var(--tc);border-radius:14px;padding:.6rem 1rem;margin:0 0 .8rem;font-size:1.05rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;animation:pop .25s both}
+.stealbar[hidden]{display:none}
+.stealbar b{color:var(--tc);font-family:var(--display)}
+.stealbar .sc{font-family:var(--display);font-weight:800;font-size:1.4rem}
+.stealbar .btn{margin-left:auto;padding:.3rem .8rem}
+.stealable{box-shadow:0 0 0 4px var(--warn-soft),0 0 0 6px var(--warn)!important}
+.st{color:var(--warn);font-weight:700}
+/* RETO INTRUSO */
+.intr{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:1.2rem;text-align:center}
+.intr .count{font-size:.9rem;color:var(--muted)}
+.intr .ask{font-size:1.25rem;margin:.2rem 0 1rem}
+.intr .ask strong{font-family:var(--display);color:var(--gc);font-size:1.5rem}
+.icards{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem}
+.icard{border:3px solid var(--line);background:var(--bg);border-radius:16px;padding:1.3rem .5rem;font-family:var(--display);font-weight:800;font-size:clamp(1.3rem,3vw,1.9rem);transition:transform .15s}
+.icard:hover:not(:disabled){transform:translateY(-4px);border-color:var(--gc)}
+.icard.right{background:var(--ok);border-color:var(--ok);color:#fff}
+.icard.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+.icard:disabled{cursor:default}
+@media (max-width:700px){.icards{grid-template-columns:1fr 1fr}}
+/* DETALLE */
+.gdet{background:var(--paper);border:1px solid var(--line);border-radius:14px;margin:.7rem 0;padding:.4rem 1rem}
+.gdet summary{cursor:pointer;font-family:var(--display);font-weight:700;padding:.4rem 0}
+.gdet h4{margin:.7rem 0 .2rem;font-family:var(--display)}
+.gdet ul{margin:.2rem 0 .5rem;padding-left:1.2em}
+.gdet li{font-size:.95rem}
+@media print{body{overflow:visible}.nav,.bottombar,#boardtools{display:none}.slide{position:static;visibility:visible;opacity:1;transform:none;padding:0;display:none;overflow:visible}.slide.active{display:block}.gdet{break-inside:avoid}details{display:block}details>*{display:block}}
+/* MARCADOR */
+.board{width:100%;border-collapse:separate;border-spacing:0;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin:1rem 0}
+.board th,.board td{padding:.7rem .8rem;text-align:center;border-top:1px solid var(--line)}
+.board thead th{border-top:none;background:var(--sea-soft);font-family:var(--display)}
+.board td:first-child,.board th:first-child{text-align:left}
+.board td.tot{font-family:var(--display);font-weight:800;font-size:1.4rem}
+.board tr.lead td.tot::after{content:" 🏆"}
+.gname{font-family:var(--display);font-weight:800;color:var(--c)}
+.tablewrap{overflow-x:auto}
+
+/* navegación */
+.nav{position:fixed;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:2px solid var(--sea);background:var(--paper);color:var(--sea);display:grid;place-items:center;z-index:20;box-shadow:0 3px 10px rgba(10,40,60,.15)}
+.nav:hover{background:var(--sea);color:var(--paper)}
+.nav:disabled{opacity:.25;pointer-events:none}
+.nav svg{width:24px;height:24px}
+#prev{left:12px} #next{right:12px}
+.bottombar{position:fixed;left:0;right:0;bottom:0;padding:0 1rem calc(.6rem + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:1rem;z-index:15;pointer-events:none}
+.progress{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.progress span{display:block;height:100%;width:0;background:var(--sea);transition:width .35s}
+.counter{font-family:var(--display);font-weight:700;font-size:.9rem;color:var(--muted);min-width:4.5em;text-align:right}
+.themebtn{pointer-events:auto;border:1px solid var(--line);background:var(--paper);border-radius:20px;padding:.2rem .7rem;font-size:.85rem}
+
+@media (max-width:900px){
+  .sorter{grid-template-columns:1fr 1fr}
+  .feed{grid-column:1/-1;order:-1}
+  .bin{min-height:150px}
+  .show,.det,.ttt-wrap{grid-template-columns:1fr}
+  .ladder{flex-direction:row-reverse;justify-content:center;flex-wrap:wrap}
+  .groups{grid-template-columns:1fr}
+}
+@media (max-width:700px){
+  .slide{padding:1.4rem 3.2rem 4.5rem}
+  .nav{width:40px;height:40px}
+  #prev{left:6px} #next{right:6px}
+  .cols{grid-template-columns:1fr}
+  .rule{grid-template-columns:1fr}
+  .answers{grid-template-columns:1fr}
+  body{font-size:1rem}
+}
+@media (prefers-reduced-motion: reduce){
+  .slide,.slide.active{transition:none;transform:none}
+  *{animation:none!important}
+}
+</style>
+</head>
+<body data-g="0">
+<main class="deck">
+
+<!-- 0 PORTADA -->
+<section class="slide active" aria-label="Portada">
+  <div class="wrap cover">
+    <p class="kicker">Lingua galega · O substantivo</p>
+    <h1>Xénero e número en xogo</h1>
+    <p class="sub">Xogamos por roldas. En cada rolda, os tres grupos saen ao encerado un despois doutro para facer o mesmo reto, cada un coas súas palabras e coa mesma dificultade. A orde cambia en cada rolda para que ningún grupo empece sempre.</p>
+    <div class="cols" style="margin:1.2rem 0">
+      <div class="box" style="margin:0"><span class="tag">Roubos</span><p style="margin:0">Agás na caixa do "o" e da "a", se o grupo que está no encerado falla, os outros grupos poden <strong>roubar</strong>: teñen 8 segundos para escoller a resposta correcta e gañar 1 punto. O roubo vai alternando entre os dous grupos que esperan. Estade atentos!</p></div>
+      <div class="box" style="margin:0"><span class="tag">Puntos</span><p style="margin:0">Cada reto ten a súa puntuación máxima (aparece no marcador). Os roubos suman á parte. Podedes usar a ficha de apoio durante todo o xogo.</p></div>
+    </div>
+    <div class="tablewrap"><table class="board" id="order"></table></div>
+    <div class="toolbar"><button class="btn" id="startBtn">Comezar o xogo</button><button class="btn alt" data-goto="1">Repasar os esquemas</button><button class="btn alt" data-goto="11">Ver o marcador</button></div>
+  </div>
+</section>
+
+<!-- ESQUEMA CLASIFICACIÓN -->
+<section class="slide" aria-label="Esquema: clasificación semántica">
+  <div class="wrap">
+    <p class="kicker">Esquema 1 de 4</p>
+    <h2>Clasificación semántica do substantivo</h2>
+    <p>Polo seu <strong>significado</strong>, os substantivos clasifícanse por parellas. Unha mesma palabra pertence sempre a varias clases: <em>rabaño</em> é común, concreto, contable e colectivo.</p>
+    <div class="rules">
+      <div class="rule"><div class="k">Común / propio</div><div class="v"><p>Os <strong>comúns</strong> nomean calquera ser dunha clase <span class="ex">(cidade, río, rapaza)</span>. Os <strong>propios</strong> identifican un ser concreto e escríbense con maiúscula <span class="ex">(Vigo, Miño, Uxía)</span>.</p></div></div>
+      <div class="rule"><div class="k">Concreto / abstracto</div><div class="v"><p>Os <strong>concretos</strong> nomean realidades que percibimos cos sentidos <span class="ex">(mesa, can, libro)</span>. Os <strong>abstractos</strong> nomean ideas, sentimentos ou calidades <span class="ex">(amizade, medo, liberdade)</span>.</p></div></div>
+      <div class="rule"><div class="k">Contable / non contable</div><div class="v"><p>Os <strong>contables</strong> pódense contar <span class="ex">(unha mazá, dúas mazás)</span>. Os <strong>non contables</strong> nomean materias que se miden ou pesan, non se contan <span class="ex">(auga, area, leite)</span>.</p></div></div>
+      <div class="rule"><div class="k">Individual / colectivo</div><div class="v"><p>Os <strong>individuais</strong> nomean un só ser en singular <span class="ex">(ovella, abella, soldado)</span>. Os <strong>colectivos</strong> nomean un conxunto de seres en singular <span class="ex">(rabaño, enxame, exército)</span>.</p></div></div>
+    </div>
+    <div class="lembra sb"><h3>Truco</h3><ul>
+      <li>Abstracto? Pregúntate se o podes tocar, ver ou ulir. Se non, é abstracto.</li>
+      <li>Non contable? Proba a poñer diante <em>dous</em> ou <em>tres</em>: <em>*tres areas</em> soa mal.</li>
+      <li>Colectivo? Está en singular pero pensas en moitos: <em>o alumnado</em> = moitos alumnos.</li>
+    </ul></div>
+  </div>
+</section>
+
+<!-- 1 ESQUEMA XÉNERO -->
+<section class="slide" aria-label="Esquema: o xénero">
+  <div class="wrap">
+    <p class="kicker">Esquema 2 de 4</p>
+    <h2>O xénero</h2>
+    <p>O xénero permite clasificar os substantivos en <strong>masculinos</strong> e <strong>femininos</strong>. Uns teñen as dúas formas e outros só unha.</p>
+    <div class="cols">
+      <div class="box"><span class="tag">Variables</span><p style="margin:0">Presentan oposición de xénero.</p>
+        <div class="chips"><span class="chip">oso / osa</span><span class="chip">galo / galiña</span><span class="chip">home / muller</span><span class="chip">o / a deportista</span></div></div>
+      <div class="box"><span class="tag">Invariables</span><p style="margin:0">Só son masculinos ou só femininos. Para sabelo, pensa que artigo levan.</p>
+        <div class="chips"><span class="chip">o lapis</span><span class="chip">a mesa</span><span class="chip">o nariz</span><span class="chip">a ponte</span></div></div>
+    </div>
+    <div class="cols" style="margin-top:1rem">
+      <div class="lembra">
+        <h3>Son femininos</h3>
+        <ul>
+          <li>Os rematados en <strong>-axe</strong>: <em>a paisaxe, a viaxe</em> (agás <em>o traxe, o paxe, o garaxe</em>).</li>
+          <li>Os rematados en <strong>-se, -te, -de</strong>: <em>a análise, a crise, a parede</em>.</li>
+          <li>Os rematados en <strong>-tude</strong> e <strong>-dade</strong>: <em>a lentitude, a liberdade</em>.</li>
+          <li>Outros: <em>a orde, a ponte, a dor, a cor, a calor, a arte, a árbore</em>.</li>
+        </ul>
+      </div>
+      <div class="lembra mb">
+        <h3>Son masculinos</h3>
+        <ul>
+          <li>Os nomes das letras: <em>o erre, o ese, o hache</em>.</li>
+          <li>Os rematados en <strong>-ume</strong>: <em>o lume, o costume, o cume</em> (agás <em>a servidume</em>).</li>
+          <li>Outros: <em>o sinal, o cárcere, o nariz, o sal, o mel, o leite, o sangue, o labor</em>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2 ESQUEMA FEMININO -->
+<section class="slide" aria-label="Esquema: formación do feminino">
+  <div class="wrap">
+    <p class="kicker">Esquema 3 de 4</p>
+    <h2>Formación do feminino</h2>
+    <div class="rules">
+      <div class="rule"><div class="k">-o ou -e átonos</div><div class="v"><p>Cambian a vogal final por <strong>-a</strong>. <span class="ex">fillo / filla, xefe / xefa</span></p></div></div>
+      <div class="rule"><div class="k">-eu</div><div class="v"><p>Fan o feminino en <strong>-ía</strong>. <span class="ex">xudeu / xudía, sandeu / sandía</span></p></div></div>
+      <div class="rule"><div class="k">Vogal tónica</div><div class="v"><p>Engaden <strong>-a</strong>. <span class="ex">avó / avoa, nu / núa</span></p></div></div>
+      <div class="rule"><div class="k">Consoante (agás -n)</div><div class="v"><p>Engaden <strong>-a</strong>. <span class="ex">autor / autora, profesor / profesora</span></p></div></div>
+      <div class="rule"><div class="k">-ón</div><div class="v"><p>En xeral, <strong>-oa</strong> <span class="ex">(ladrón / ladroa)</span>; se é aumentativo ou despectivo, <strong>-ona</strong> <span class="ex">(abusón / abusona)</span>.</p></div></div>
+      <div class="rule"><div class="k">-án</div><div class="v"><p>En xeral, <strong>-á</strong> <span class="ex">(capitán / capitá)</span>; se é aumentativo ou despectivo, <strong>-ana</strong> <span class="ex">(folgazán / folgazana)</span>.</p></div></div>
+    </div>
+    <div class="lembra sb">
+      <h3>Outras maneiras de marcar o xénero</h3>
+      <ul>
+        <li>Con <strong>palabras distintas</strong>: <em>home / muller, cabalo / egua, xenro / nora</em>.</li>
+        <li>Con <strong>terminacións especiais</strong>: <em>actor / actriz, rei / raíña, galo / galiña</em>.</li>
+        <li>Só co <strong>artigo</strong>: <em>o deportista / a deportista, o cónsul / a cónsul</em>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ESQUEMA PLURAL -->
+<section class="slide" aria-label="Esquema: formación do plural">
+  <div class="wrap">
+    <p class="kicker">Esquema 4 de 4</p>
+    <h2>Formación do plural</h2>
+    <p>O número clasifica os substantivos en <strong>singular</strong> (<em>o alumno</em>) e <strong>plural</strong> (<em>os alumnos</em>). Para formar o plural, fíxate en como remata a palabra e en onde leva o acento.</p>
+    <div class="rules">
+      <div class="rule"><div class="k">+ -s</div><div class="v"><p>Rematadas en vogal, ditongo ou consoante que non sexa -r, -z, -s ou -l. <span class="ex">cadro / cadros, xersei / xerseis, bailarín / bailaríns</span></p></div></div>
+      <div class="rule"><div class="k">+ -es</div><div class="v"><p>Agudas en <strong>-s</strong> <span class="ex">(compás / compases)</span>; rematadas en <strong>-r</strong> ou <strong>-z</strong>, co z cambiado en c <span class="ex">(xogador / xogadores, raíz / raíces)</span>; monosílabas ou graves en <strong>-l</strong> <span class="ex">(ril / riles, fácil / fáciles)</span>.</p></div></div>
+      <div class="rule"><div class="k">-l → -is</div><div class="v"><p>Polisílabas agudas en <strong>-l</strong>. <span class="ex">canal / canais, mandil / mandís</span></p></div></div>
+      <div class="rule"><div class="k">Invariables</div><div class="v"><p>Graves ou esdrúxulas en <strong>-s</strong> e todas en <strong>-x</strong>. <span class="ex">o lapis / os lapis, o xoves / os xoves, o fax / os fax</span></p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RETO INTRUSO -->
+<section class="slide reto" data-r="0" aria-label="Reto 1">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">1</span><h2>Caza o intruso</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>En cada grupo de catro substantivos, tres pertencen á clase indicada e un non. Atopade o <strong>intruso</strong>. Cada intruso cazado vale 2 puntos.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="intr">
+        <div class="count" id="r0count"></div>
+        <div class="ask">Tres son <strong id="r0cat"></strong>. Cal é o intruso?</div>
+        <div class="icards" id="r0cards"></div>
+      </div>
+      <p class="fb" id="r0fb" aria-live="polite" style="text-align:center"></p>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 4 RETO 1 -->
+<section class="slide reto" data-r="1" aria-label="Reto 2">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">2</span><h2>A caixa do "o" e da "a"</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>Metede cada un dos 8 substantivos na súa caixa: a do "o" (masculino) ou a da "a" (feminino). Tocade a caixa ou premede as teclas <strong>O</strong> e <strong>A</strong>. Cada acerto vale 1 punto.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="sorter" id="r1">
+        <button class="bin o" data-g="o"><span class="lid">"o"</span><span class="lbl">masculino</span><span class="inside"></span><span class="key">Tecla O</span></button>
+        <div class="feed"><span class="count" id="r1count"></span><div class="card" id="r1card" aria-live="polite"></div></div>
+        <button class="bin a" data-g="a"><span class="lid">"a"</span><span class="lbl">feminino</span><span class="inside"></span><span class="key">Tecla A</span></button>
+      </div>
+      <p class="fb" id="r1fb" aria-live="polite" style="text-align:center"></p>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 5 RETO 2 -->
+<section class="slide reto" data-r="2" aria-label="Reto 3">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">3</span><h2>Tres en raia do feminino</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>Escollede unha casa e elixide o feminino correcto. Se acertades, a casa é vosa (○); se fallades, é da máquina (✕). Cada acerto vale 1 punto e, se conseguides tres en raia, gañades 1 punto extra.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="ttt-wrap">
+        <div><div class="ttt" id="r2grid"></div>
+          <div class="legend"><span><b style="color:var(--gc)">○</b> vosa</span><span><b style="color:var(--bad)">✕</b> da máquina</span></div></div>
+        <div class="chooser" id="r2ch"><div class="ask">Tocade unha casa do taboleiro para comezar.</div></div>
+      </div>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 6 RETO 3 -->
+<section class="slide reto" data-r="3" aria-label="Reto 4">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">4</span><h2>Detective de erros</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>No texto hai <strong>5 erros</strong>. Usade as pistas, tocade a palabra incorrecta e escollede a forma correcta. Cada erro corrixido vale 2 puntos (1 se usades a lupa). Coidado: se tocades unha palabra que está ben, perdedes 1 punto.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="det">
+        <div><div class="story" id="r3story"></div>
+          <div class="lupa" id="r3lupa" hidden><div id="r3q" style="margin-bottom:.6rem"></div><div class="opts" id="r3opts"></div></div>
+          <p class="fb" id="r3fb" aria-live="polite"></p></div>
+        <aside class="clues"><h3>Pistas</h3><ul id="r3clues"></ul><button class="btn" id="r3lens">🔍 Usar a lupa</button><p class="note" style="margin:.5rem 0 0">A lupa marca un dos erros que faltan.</p></aside>
+      </div>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 7 RETO 4 -->
+<section class="slide reto" data-r="4" aria-label="Reto 5">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">5</span><h2>Estoupa o globo</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>Estoupade o globo que leva o <strong>plural correcto</strong>. Só tedes un intento por palabra. Cada globo ben estoupado vale 1 punto.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="sky"><div class="count" id="r4count"></div><div class="ask">Cal é o plural de…</div><div class="word" id="r4word"></div><div class="balloons" id="r4bal"></div></div>
+      <p class="fb" id="r4fb" aria-live="polite" style="text-align:center"></p>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 8 RETO 5 -->
+<section class="slide reto" data-r="5" aria-label="Reto 6">
+  <div class="wrap">
+    <div class="rhead"><div class="act-head"><span class="act-num">6</span><h2>O gran concurso</h2></div><div class="rctl"></div></div>
+    <div class="tbar"><span></span></div>
+    <p>Cinco preguntas de 2 puntos cada unha. Tedes dous comodíns dunha soa vez: o <strong>50 %</strong>, que elimina dúas respostas incorrectas, e a <strong>pista</strong>, que vos lembra a regra.</p>
+    <div class="rbody locked"><div class="veil"></div><div class="inner">
+      <div class="show">
+        <div class="qbox">
+          <div class="qn" id="r5qn"></div><div class="qt" id="r5qt"></div>
+          <div class="answers" id="r5ans"></div>
+          <div class="hint" id="r5hint" hidden></div>
+          <p class="fb" id="r5fb" aria-live="polite"></p>
+          <div class="lifelines"><button class="ll" id="r5half">50 %</button><button class="ll" id="r5clue">Pista</button><button class="btn" id="r5next" hidden>Seguinte pregunta</button></div>
+        </div>
+        <ol class="ladder" id="r5ladder"></ol>
+      </div>
+    </div></div>
+    <div class="endmsg" hidden></div>
+  </div>
+</section>
+
+<!-- 9 MARCADOR -->
+<section class="slide" aria-label="Marcador">
+  <div class="wrap">
+    <h2>Marcador</h2>
+    <p>Puntos de cada grupo en cada reto. Os números laranxas son os puntos roubados nese reto. Debaixo tes o detalle dos fallos de cada grupo e podes descargar ou imprimir os resultados.</p>
+    <div class="tablewrap"><table class="board" id="board"></table></div>
+    <div class="toolbar" id="boardtools"></div>
+    <div id="details"></div>
+  </div>
+</section>
+
+</main>
+
+<button class="nav" id="prev" aria-label="Diapositiva anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="nav" id="next" aria-label="Diapositiva seguinte"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+<div class="bottombar"><button class="themebtn" id="themeBtn">◐ Tema</button><div class="progress"><span id="bar"></span></div><span class="counter" id="counter">1 / 10</span></div>
+
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+
+/* =================== DATOS POR GRUPO =================== */
+/* Mesma estrutura e reparto de regras en cada grupo para igualar a dificultade */
+const DATA=[
+/* ---------------- GRUPO 1 ---------------- */
+{
+ r0:[{c:'colectivos',w:['familia','profesorado','xente','familiar'],a:3,h:'Familiar é individual: nomea unha soa persoa da familia. Familia, profesorado e xente nomean conxuntos.'},
+     {c:'abstractos',w:['xenerosidade','envexa','sabedoría','perfume'],a:3,h:'Perfume é concreto: percíbese co olfacto.'},
+     {c:'non contables',w:['sangue','ouro','osíxeno','moeda'],a:3,h:'Moeda é contable: unha moeda, dúas moedas. O ouro mídese ou pésase.'},
+     {c:'propios',w:['Atlántico','Rosalía','Nadal','galego'],a:3,h:'Galego, como nome de lingua, é común e escríbese con minúscula.'},
+     {c:'concretos',w:['vento','ruído','cheiro','mentira'],a:3,h:'Mentira é abstracto. O vento, o ruído e o cheiro percíbense cos sentidos.'}],
+ r1:[['aprendizaxe','a','Rematado en -axe → feminino.'],['traxe','o','Excepción de -axe: o traxe.'],['apendicite','a','Rematado en -te → feminino.'],
+     ['lentitude','a','Rematado en -tude → feminino.'],['dor','a','É feminino en galego: a dor.'],['legume','o','Rematado en -ume → masculino.'],
+     ['hache','o','As letras son masculinas: o hache.'],['sangue','o','É masculino en galego: o sangue.']],
+ r2:[['mestre','mestra',['mestresa','mestriz'],'-e átono → -a.'],['emperador','emperatriz',['emperadora','emperadoresa'],'Terminación especial: -triz.'],['francés','francesa',['francesesa','francá'],'Consoante → engade -a.'],
+     ['campión','campioa',['campiona','campiá'],'-ón → -oa.'],['peón','peoa',['peona','peá'],'-ón → -oa.'],['lambón','lambona',['lamboa','lambá'],'-ón despectivo → -ona.'],
+     ['cirurxián','cirurxiá',['cirurxiana','cirurxioa'],'-án → -á.'],['langrán','langrana',['langrá','langroa'],'-án despectivo → -ana.'],['carneiro','ovella',['carneira','carneiresa'],'Palabra distinta para cada xénero.']],
+ r3:{title:'A viaxe de fin de curso',lines:[
+   'O venres fomos de excursión a Fisterra e a titora deu {o orde|a orde|os orde;o ordo|Orde é feminino en galego: a orde.|x} de saír ás oito en punto.',
+   'No faro recibiunos unha {anfitriona|anfitrioa|anfitriá;anfitrioesa|Anfitrión non é despectivo: fai o feminino en -oa: anfitrioa.|f} moi simpática que nos explicou a paisaxe.',
+   'Despois subimos ata {a cume|o cume|as cume;a cuma|Os rematados en -ume son masculinos: o cume.|x} do monte Facho e contamos os {faroles|farois|farols;farolis|Farol é aguda en -l: cambia -l por -is: farois.|n} da costa.',
+   'Á volta merquei dous {candiles|candís|candils;candilis|Candil é aguda en -il: cambia -il por -ís: candís.|n} antigos para a miña avoa.']},
+ r4:[['xersei','xerseis',['xerseies','xerséis'],'remata en ditongo: + -s'],['dolmen','dolmens',['dólmenes','dolmes'],'remata en -n: + -s'],
+     ['nariz','narices',['narizes','narizs'],'remata en -z: + -es (z → c)'],['dólar','dólares',['dólars','dólaris'],'remata en -r: + -es'],
+     ['anís','anises',['anís','aníses'],'aguda en -s: + -es'],['réptil','réptiles',['réptís','réptils'],'grave en -l: + -es'],
+     ['fusil','fusís',['fusiles','fusils'],'aguda en -il: -l → -is'],['atlas','atlas',['atlases','atlás'],'grave en -s: invariable']],
+ r5:[{q:'Cal destes substantivos é feminino?',o:['perfume','queixume','servidume','volume'],a:2,h:'Os rematados en -ume son masculinos, agás servidume.'},
+     {q:'Cal destas oracións é correcta?',o:['Gústame a leite fría','Gústame o leite frío','Gústame os leite fríos','Gústame a leita fría'],a:1,h:'Leite é masculino en galego: o leite.'},
+     {q:'Cal é o feminino de "saxón"?',o:['saxona','saxoa','saxá','saxonesa'],a:1,h:'En xeral, os rematados en -ón fan o feminino en -oa.'},
+     {q:'Cal é o plural de "cónsul"?',o:['cónsules','cónsuis','cónsuls','cónsul'],a:0,h:'Cónsul é grave: as graves en -l engaden -es.'},
+     {q:'Cal destes substantivos NON cambia en plural?',o:['o mes','o luns','o anís','o país'],a:1,h:'As graves e esdrúxulas rematadas en -s son invariables: os luns.'}]
+},
+/* ---------------- GRUPO 2 ---------------- */
+{
+ r0:[{c:'colectivos',w:['vocabulario','mobiliario','xurado','dicionario'],a:3,h:'Dicionario é individual: é un só libro. Vocabulario, mobiliario e xurado nomean conxuntos.'},
+     {c:'abstractos',w:['paciencia','odio','infancia','suor'],a:3,h:'Suor é concreto: pódese ver e tocar.'},
+     {c:'non contables',w:['azucre','prata','fume','anel'],a:3,h:'Anel é contable: un anel, dous aneis. A prata mídese ou pésase.'},
+     {c:'propios',w:['Pacífico','Castelao','Entroido','español'],a:3,h:'Español, como nome de lingua, é común e escríbese con minúscula.'},
+     {c:'concretos',w:['trono','eco','néboa','sinceridade'],a:3,h:'Sinceridade é abstracto. O trono, o eco e a néboa percíbense cos sentidos.'}],
+ r1:[['homenaxe','a','Rematado en -axe → feminino.'],['garaxe','o','Excepción de -axe: o garaxe.'],['parálise','a','Rematado en -se → feminino.'],
+     ['inquietude','a','Rematado en -tude → feminino.'],['calor','a','É feminino en galego: a calor.'],['cardume','o','Rematado en -ume → masculino.'],
+     ['efe','o','As letras son masculinas: o efe.'],['cárcere','o','É masculino en galego: o cárcere.']],
+ r2:[['presidente','presidenta',['presidentesa','presidentriz'],'-e átono → -a.'],['duque','duquesa',['duca','duquiña'],'Terminación especial: -esa.'],['deus','deusa',['dea','deuseira'],'Consoante → engade -a.'],
+     ['patrón','patroa',['patrona','patrá'],'-ón → -oa.'],['bretón','bretoa',['bretona','bretá'],'-ón → -oa.'],['chorón','chorona',['choroa','chorá'],'-ón despectivo → -ona.'],
+     ['gardián','gardiá',['gardiana','gardioa'],'-án → -á.'],['nugallán','nugallana',['nugallá','nugalloa'],'-án despectivo → -ana.'],['touro','vaca',['toura','touresa'],'Palabra distinta para cada xénero.']],
+ r3:{title:'Unha mañá no mercado',lines:[
+   'De camiño ao mercado de Vigo collemos a estrada que pasa por debaixo {do ponte|da ponte|dos ponte;do ponto|Ponte é feminino en galego: a ponte, da ponte.|x} de Rande.',
+   'Alí coñecemos unha peixeira {catalana|catalá|cataloa;catalanesa|Os rematados en -án fan o feminino en -á: catalán / catalá.|f} moi simpática que vendía polbo.',
+   'Mamá comprou {a mel|o mel|as mel;a mela|Mel é masculino en galego: o mel.|x} da aldea e tres {pasteles|pasteis|pastels;pastelis|Pastel é aguda en -l: cambia -l por -is: pasteis.|n} de crema.',
+   'Dixemos que volveriamos todos os {mércoreses|mércores|mércorés;mércoris|Mércores é esdrúxula en -s: é invariable.|n} pola mañá.']},
+ r4:[['bambú','bambús',['bambúes','bambuses'],'remata en vogal: + -s'],['xabarín','xabaríns',['xabarines','xabarís'],'remata en -n: + -s'],
+     ['cicatriz','cicatrices',['cicatrizes','cicatrizs'],'remata en -z: + -es (z → c)'],['cráter','cráteres',['cráters','cráteris'],'remata en -r: + -es'],
+     ['revés','reveses',['revés','revéses'],'aguda en -s: + -es'],['fósil','fósiles',['fósís','fósils'],'grave en -l: + -es'],
+     ['barril','barrís',['barriles','barrils'],'aguda en -il: -l → -is'],['tórax','tórax',['tóraxes','tóraxs'],'remata en -x: invariable']],
+ r5:[{q:'Cal destes substantivos é feminino?',o:['labor','sinal','mel','arte'],a:3,h:'Arte é feminino en galego: a arte. Labor, sinal e mel son masculinos.'},
+     {q:'Cal destas oracións é correcta?',o:['Bótalle a sal á sopa','Bótalle o sal á sopa','Bótalle as sal á sopa','Bótalle a sala á sopa'],a:1,h:'Sal é masculino en galego: o sal.'},
+     {q:'Cal é o feminino de "anglosaxón"?',o:['anglosaxona','anglosaxoa','anglosaxá','anglosaxó'],a:1,h:'En xeral, os rematados en -ón fan o feminino en -oa.'},
+     {q:'Cal é o plural de "níquel"?',o:['níqueis','níquels','níqueles','níquel'],a:2,h:'Níquel é grave: as graves en -l engaden -es.'},
+     {q:'Cal destes substantivos NON cambia en plural?',o:['o compás','o venres','o deus','o gas'],a:1,h:'As graves e esdrúxulas rematadas en -s son invariables: os venres.'}]
+},
+/* ---------------- GRUPO 3 ---------------- */
+{
+ r0:[{c:'colectivos',w:['clientela','coro','vaixela','corista'],a:3,h:'Corista é individual: nomea unha soa persoa. Clientela, coro e vaixela nomean conxuntos.'},
+     {c:'abstractos',w:['tolerancia','rancor','vellez','bágoa'],a:3,h:'Bágoa é concreto: pódese ver e tocar.'},
+     {c:'non contables',w:['leña','ferro','cemento','cravo'],a:3,h:'Cravo é contable: un cravo, dous cravos. O ferro mídese ou pésase.'},
+     {c:'propios',w:['Cantábrico','Picasso','Samaín','inglés'],a:3,h:'Inglés, como nome de lingua, é común e escríbese con minúscula.'},
+     {c:'concretos',w:['orballo','lóstrego','brisa','lealdade'],a:3,h:'Lealdade é abstracto. O orballo, o lóstrego e a brisa percíbense cos sentidos.'}],
+ r1:[['reportaxe','a','Rematado en -axe → feminino.'],['paxe','o','Excepción de -axe: o paxe.'],['hipótese','a','Rematado en -se → feminino.'],
+     ['solicitude','a','Rematado en -tude → feminino.'],['cor','a','É feminino en galego: a cor.'],['queixume','o','Rematado en -ume → masculino.'],
+     ['erre','o','As letras son masculinas: o erre.'],['nariz','o','É masculino en galego: o nariz.']],
+ r2:[['parente','parenta',['parentesa','parentiña'],'-e átono → -a.'],['sacerdote','sacerdotisa',['sacerdota','sacerdotesa'],'Terminación especial: -isa.'],['xuíz','xuíza',['xuíce','xuízesa'],'Consoante → engade -a.'],
+     ['león','leoa',['leona','leá'],'-ón → -oa.'],['anfitrión','anfitrioa',['anfitriona','anfitriá'],'-ón → -oa.'],['fanfurrón','fanfurrona',['fanfurroa','fanfurrá'],'-ón despectivo → -ona.'],
+     ['ermitán','ermitá',['ermitana','ermitoa'],'-án → -á.'],['lacazán','lacazana',['lacazá','lacazoa'],'-án despectivo → -ana.'],['padriño','madriña',['padriña','padriñesa'],'Palabra distinta para cada xénero.']],
+ r3:{title:'Excursión ao monte Aloia',lines:[
+   'Onte subimos ao Aloia e no camiño vimos {o árbore|a árbore|os árbore;o árbol|Árbore é feminino en galego: a árbore.|x} de máis idade de todo o monte.',
+   'O guía era un rapaz bretón e a súa compañeira, unha moza {bretona|bretoa|bretá;bretonesa|Os rematados en -ón fan o feminino en -oa: bretón / bretoa.|f}, falaba moi ben galego.',
+   'Ao xantar, Brais tiña {un dor|unha dor|uns dor;un dore|Dor é feminino: a dor, unha dor.|x} de cabeza e eu levaba dous {móbils|móbiles|móbís;móbilis|Móbil é grave en -l: engade -es: móbiles.|n} na mochila.',
+   'Na baixada atopamos moitos {caracoles|caracois|caracols;caracolis|Caracol é aguda en -l: cambia -l por -is: caracois.|n} despois da chuvia.']},
+ r4:[['colibrí','colibrís',['colibríes','colibrises'],'remata en vogal: + -s'],['álbum','álbums',['álbumes','álbunes'],'remata en consoante: + -s'],
+     ['capataz','capataces',['capatazes','capatazs'],'remata en -z: + -es (z → c)'],['mártir','mártires',['mártirs','mártiris'],'remata en -r: + -es'],
+     ['ciprés','cipreses',['ciprés','cipréses'],'aguda en -s: + -es'],['túnel','túneles',['túneis','túnels'],'grave en -l: + -es'],
+     ['cadril','cadrís',['cadriles','cadrils'],'aguda en -il: -l → -is'],['bíceps','bíceps',['bícepses','bícepss'],'grave en -s: invariable']],
+ r5:[{q:'Cal destes substantivos é masculino?',o:['crise','cárcere','ponte','orde'],a:1,h:'Cárcere é masculino en galego: o cárcere.'},
+     {q:'Cal destas oracións é correcta?',o:['Saíulle a sangue do nariz','Saíulle o sangue do nariz','Saíulle as sangue do nariz','Saíulle a sangre do nariz'],a:1,h:'Sangue é masculino en galego: o sangue.'},
+     {q:'Cal é o feminino de "pagán"?',o:['pagana','pagoa','pagá','pagás'],a:2,h:'En xeral, os rematados en -án fan o feminino en -á.'},
+     {q:'Cal é o plural de "dátil"?',o:['datís','dátiles','dátils','dátil'],a:1,h:'Dátil é grave: as graves en -l engaden -es.'},
+     {q:'Cal destes substantivos NON cambia en plural?',o:['o martes','o mes','o ananás','o autobús'],a:0,h:'As graves e esdrúxulas rematadas en -s son invariables: os martes.'}]
+}
+];
+const GN=['Grupo 1','Grupo 2','Grupo 3'];
+const TIMES=[90,60,105,120,75,90];
+const MAX=[10,8,10,10,8,10];
+const FIRST=5,NR=6,BOARD=FIRST+NR;
+const RNAMES=['Intruso','Caixa','Tres en raia','Detective','Globos','Concurso'];
+const RFULL=['Caza o intruso','A caixa do "o" e da "a"','Tres en raia do feminino','Detective de erros','Estoupa o globo','O gran concurso'];
+const ORDER=[[0,1,2],[1,2,0],[2,0,1],[0,1,2],[1,2,0],[2,0,1]];   /* orde das quendas en cada rolda */
+const STEAL_S=8;
+
+/* =================== ESTADO (gárdase no navegador) =================== */
+const blank=()=>[0,1,2].map(()=>Array(6).fill(null));
+const zero=()=>[0,1,2].map(()=>Array(6).fill(0));
+const nolog=()=>[0,1,2].map(()=>[[],[],[],[],[],[]]);
+let scores=blank(),steals=zero(),turn=Array(6).fill(0),logs=nolog();
+try{const s=JSON.parse(localStorage.getItem('xn_estado3'));if(s&&s.scores&&s.steals&&s.turn&&s.logs){scores=s.scores;steals=s.steals;turn=s.turn;logs=s.logs;}}catch(e){}
+const save=()=>{try{localStorage.setItem('xn_estado3',JSON.stringify({scores,steals,turn,logs}));}catch(e){}};
+const own=g=>scores[g].reduce((a,b)=>a+(b||0),0);
+const stol=g=>steals[g].reduce((a,b)=>a+b,0);
+const total=g=>own(g)+stol(g);
+const played=g=>scores[g].some(v=>v!==null);
+
+/* =================== NAVEGACIÓN =================== */
+const slides=[...document.querySelectorAll('.slide')];
+const prev=$('prev'),next=$('next');let cur=0;
+function go(n){
+  if(n<0||n>=slides.length)return;
+  slides.forEach((s,k)=>{s.classList.toggle('active',k===n);s.classList.toggle('prev',k<n);});
+  cur=n;slides[n].scrollTop=0;
+  prev.disabled=n===0;next.disabled=n===slides.length-1;
+  $('bar').style.width=((n+1)/slides.length*100)+'%';
+  $('counter').textContent=(n+1)+' / '+slides.length;
+  if(n>=FIRST&&n<BOARD)document.body.dataset.g=R[n-FIRST].g;
+  if(n===BOARD)renderBoard();
+  if(n===0)renderOrder();
+}
+prev.onclick=()=>go(cur-1);next.onclick=()=>go(cur+1);
+document.querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>go(+b.dataset.goto));
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1);
+  if(cur===FIRST+1){const k=e.key.toLowerCase();if(k==='o'||k==='a'){e.preventDefault();r1answer(k);}}
+});
+let tx=null,ty=null;
+document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>90&&Math.abs(dx)>Math.abs(dy)*1.5)go(cur+(dx<0?1:-1));tx=null;},{passive:true});
+const root=document.documentElement;
+try{const th=localStorage.getItem('tema');if(th)root.dataset.theme=th;}catch(e){}
+$('themeBtn').onclick=()=>{const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;root.dataset.theme=dark?'light':'dark';try{localStorage.setItem('tema',root.dataset.theme);}catch(e){}};
+
+/* =================== PORTADA E MARCADOR =================== */
+const pill=g=>`<span class="gname" style="--c:var(--g${g+1})">${GN[g]}</span>`;
+function renderOrder(){
+  $('order').innerHTML=`<thead><tr><th>Rolda</th><th>Reto</th><th>Tempo por quenda</th><th>Orde das quendas</th></tr></thead><tbody>`+
+    ORDER.map((o,i)=>`<tr><td><strong>${i+1}</strong></td><td>${RFULL[i]}</td><td>${fmt(TIMES[i])}</td><td>${o.map(pill).join(' → ')}</td></tr>`).join('')+'</tbody>';
+  const started=turn.some(t=>t>0);
+  $('startBtn').textContent=started?'Continuar o xogo':'Comezar o xogo';
+}
+function firstPending(){const i=turn.findIndex(t=>t<3);return i<0?BOARD:FIRST+i;}
+$('startBtn').onclick=()=>go(firstPending());
+function renderBoard(){
+  const done=[0,1,2].filter(played);const best=Math.max(...[0,1,2].map(total));
+  $('board').innerHTML=`<thead><tr><th>Grupo</th>${RNAMES.map((r,i)=>`<th>${i+1}. ${r}<br><small>máx. ${MAX[i]}</small></th>`).join('')}<th>Roubos</th><th>Total</th></tr></thead><tbody>`+
+    [0,1,2].map(g=>`<tr class="${done.length&&total(g)===best&&best>0?'lead':''}"><td>${pill(g)}</td>${scores[g].map((v,i)=>`<td>${v===null?'—':v}${steals[g][i]?` <small class="st">+${steals[g][i]}</small>`:''}</td>`).join('')}<td>${stol(g)}</td><td class="tot">${total(g)}</td></tr>`).join('')+'</tbody>';
+  const fp=firstPending();
+  $('boardtools').innerHTML=(fp<BOARD?`<button class="btn" id="bNext">Continuar: rolda ${fp-FIRST+1}</button>`:'')+
+    `<button class="btn alt" id="bCsv">Descargar resultados (CSV)</button><button class="btn alt" id="bPrint">Imprimir resultados</button><button class="btn alt" id="bHome">Ir á portada</button><button class="btn alt" id="bReset">Comezar unha partida nova</button>`;
+  if(fp<BOARD)$('bNext').onclick=()=>go(fp);
+  $('bHome').onclick=()=>go(0);
+  $('bCsv').onclick=downloadCsv;$('bPrint').onclick=()=>window.print();
+  $('details').innerHTML='<h3>Detalle por grupo</h3>'+[0,1,2].map(g=>`<details class="gdet" ${played(g)?'open':''}><summary>${pill(g)} · ${total(g)} puntos (${own(g)} propios + ${stol(g)} roubados)</summary>`+
+    RFULL.map((r,i)=>`<h4>${i+1}. ${r}: ${scores[g][i]===null?'sen xogar':scores[g][i]+' / '+MAX[i]}${steals[g][i]?` · ${steals[g][i]} roubo(s)`:''}</h4>`+
+      (logs[g][i].length?`<ul>${logs[g][i].map(t=>`<li>${t}</li>`).join('')}</ul>`:(scores[g][i]!==null?'<ul><li>Sen fallos.</li></ul>':''))).join('')+'</details>').join('');
+  $('bReset').onclick=()=>{if(confirm('Seguro que queres borrar todos os puntos e comezar de novo?')){scores=blank();steals=zero();turn=Array(6).fill(0);logs=nolog();save();R.forEach((r,i)=>resetReto(i));renderBoard();renderMini();}};
+}
+function downloadCsv(){
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const rows=[['Grupo',...RFULL.map((r,i)=>`${r} (máx. ${MAX[i]})`),'Roubos','Total']];
+  [0,1,2].forEach(g=>rows.push([GN[g],...scores[g].map(v=>v===null?'':v),stol(g),total(g)]));
+  rows.push([]);rows.push(['Grupo','Reto','Detalle']);
+  [0,1,2].forEach(g=>RFULL.forEach((r,i)=>logs[g][i].forEach(t=>rows.push([GN[g],r,t]))));
+  const csv='\ufeff'+rows.map(r=>r.map(q).join(';')).join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='resultados_xenero_numero.csv';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+function renderMini(){
+  retoEls.forEach((el,i)=>{
+    const q=el.querySelector('.queue');
+    q.innerHTML=ORDER[i].map((g,k)=>`<span class="qpill ${k<turn[i]?'past':''} ${k===Math.min(turn[i],2)&&turn[i]<3?'now':''}" style="--c:var(--g${g+1})">${GN[g]} <b>${total(g)}</b></span>`).join('<span class="arrow">→</span>');
+  });
+}
+
+/* =================== MOTOR DE RETOS =================== */
+const R=[];
+const retoEls=[...document.querySelectorAll('.reto')];
+retoEls.forEach((el,i)=>{
+  const ctl=el.querySelector('.rctl');
+  ctl.innerHTML=`<span class="gbadge"></span><span class="pts">0 / 10</span><span class="timer off">${fmt(TIMES[i])}</span><button class="btn alt pause" hidden>Pausa</button>`;
+  el.querySelector('.tbar').insertAdjacentHTML('afterend','<div class="queue" aria-label="Orde das quendas"></div>');
+  el.querySelector('.rbody').insertAdjacentHTML('beforebegin','<div class="stealbar" hidden></div>');
+  R[i]={el,g:0,pts:0,left:TIMES[i],tick:null,state:'idle',stealN:0};
+  ctl.querySelector('.pause').onclick=()=>togglePause(i);
+});
+function setPts(i,p){R[i].pts=Math.max(0,Math.min(MAX[i],p));R[i].el.querySelector('.pts').textContent=R[i].pts+' / '+MAX[i];}
+function paintTime(i){
+  const r=R[i],t=r.el.querySelector('.timer'),b=r.el.querySelector('.tbar');
+  t.textContent=fmt(r.left);t.classList.toggle('hurry',r.state==='run'&&r.left<=15);b.classList.toggle('hurry',r.left<=15);
+  b.querySelector('span').style.width=(r.left/TIMES[i]*100)+'%';
+}
+function resetReto(i){
+  const r=R[i];clearInterval(r.tick);r.state='idle';r.left=TIMES[i];r.stealN=0;setPts(i,0);
+  const k=Math.min(turn[i],2);r.g=ORDER[i][k];
+  if(cur===FIRST+i)document.body.dataset.g=r.g;
+  r.el.style.setProperty('--gc',`var(--g${r.g+1})`);
+  r.el.querySelector('.gbadge').textContent=GN[r.g];
+  r.el.querySelector('.timer').className='timer off';paintTime(i);
+  r.el.querySelector('.pause').hidden=true;r.el.querySelector('.pause').textContent='Pausa';
+  r.el.querySelector('.stealbar').hidden=true;
+  const em=r.el.querySelector('.endmsg');em.hidden=true;em.className='endmsg';
+  const body=r.el.querySelector('.rbody');body.classList.add('locked');
+  const veil=body.querySelector('.veil');
+  if(turn[i]>=3){
+    veil.innerHTML=`<div><b>Rolda ${i+1} completada</b><p>Os tres grupos xa xogaron este reto.</p><button class="btn gbtn">${i<NR-1?'Ir á rolda '+(i+2):'Ver o marcador'}</button></div>`;
+    veil.querySelector('.btn').onclick=()=>go(i<NR-1?FIRST+i+1:BOARD);
+  }else{
+    veil.innerHTML=`<div><b>Rolda ${i+1} · quenda ${k+1} de 3</b><p>Sae ao encerado o <strong>${GN[r.g]}</strong>. Tedes <strong>${fmt(TIMES[i])}</strong> minutos. ${i!==1?'Os outros dous grupos, atentos: se fallan, podedes roubar!':'Os outros grupos, atentos á vosa quenda.'}</p><button class="btn gbtn">Comezar a quenda</button></div>`;
+    veil.querySelector('.btn').onclick=()=>startReto(i);
+  }
+  BUILD[i](DATA[r.g]);renderMini();
+}
+function startReto(i){
+  const r=R[i];r.state='run';r.el.querySelector('.rbody').classList.remove('locked');
+  r.el.querySelector('.timer').classList.remove('off');r.el.querySelector('.pause').hidden=false;
+  clearInterval(r.tick);
+  r.tick=setInterval(()=>{if(r.state!=='run')return;r.left--;paintTime(i);if(r.left<=0)endReto(i,true);},1000);
+}
+function togglePause(i){
+  const r=R[i];if(r.state==='run'){r.state='pause';r.el.querySelector('.pause').textContent='Continuar';r.el.querySelector('.rbody').classList.add('locked');
+    r.el.querySelector('.veil').innerHTML='<div><b>Pausa</b><p>O reloxo está detido.</p><button class="btn gbtn">Continuar</button></div>';
+    r.el.querySelector('.veil .btn').onclick=()=>togglePause(i);}
+  else if(r.state==='pause'){r.state='run';r.el.querySelector('.pause').textContent='Pausa';r.el.querySelector('.rbody').classList.remove('locked');}
+  paintTime(i);
+}
+function endReto(i,timeout){
+  const r=R[i];if(r.state==='done')return;
+  clearInterval(r.tick);r.state='done';r.el.querySelector('.pause').hidden=true;r.el.querySelector('.timer').classList.remove('hurry');
+  if(timeout)log(i,'Esgotouse o tempo antes de rematar');
+  LOCK[i]();
+  scores[r.g][i]=r.pts;turn[i]=Math.min(3,turn[i]+1);save();renderMini();
+  const em=r.el.querySelector('.endmsg');em.hidden=false;em.classList.toggle('good',!timeout);
+  let btn;
+  if(turn[i]<3)btn=`Seguinte quenda: ${GN[ORDER[i][turn[i]]]}`;
+  else btn=i<NR-1?`Ir á rolda ${i+2}`:'Ver o marcador final';
+  em.innerHTML=(timeout?'⏰ Tempo esgotado! ':'✅ Quenda completada! ')+`${GN[r.g]} consegue <strong>${r.pts} puntos</strong>.`+
+    ` <button class="btn gbtn" style="margin-left:.6rem">${btn}</button>`;
+  em.querySelector('.btn').onclick=()=>{
+    if(turn[i]<3){resetReto(i);document.body.dataset.g=R[i].g;r.el.scrollTop=0;}
+    else{resetReto(i);go(i<NR-1?FIRST+i+1:BOARD);}
+  };
+}
+const running=i=>R[i].state==='run';
+
+/* =================== ROUBOS =================== */
+const OPTMK={ok:b=>b.classList.add('right'),bad:b=>b.classList.add('wrong')};
+function log(i,txt){logs[R[i].g][i].push(txt);save();}
+function thiefFor(i){
+  const o=ORDER[i],k=o.indexOf(R[i].g),others=[o[(k+1)%3],o[(k+2)%3]];
+  return others[R[i].stealN%2];
+}
+/* btns: opcións dispoñibles; isRight(b); mk.ok/mk.bad marcan a opción; after(stolen) continúa o reto */
+function startSteal(i,btns,isRight,mk,after){
+  const r=R[i];r.state='steal';const thief=thiefFor(i);r.stealN++;
+  const bar=r.el.querySelector('.stealbar');bar.hidden=false;bar.style.setProperty('--tc',`var(--g${thief+1})`);
+  bar.innerHTML=`🔁 <b>Roubo para o ${GN[thief]}!</b> Tedes <span class="sc">${STEAL_S}</span> segundos para escoller a resposta correcta. <button class="btn alt skip">Ninguén rouba</button>`;
+  let s=STEAL_S,done=false;
+  const t=setInterval(()=>{s--;const sc=bar.querySelector('.sc');if(sc)sc.textContent=s;if(s<=0)resolve(null);},1000);
+  bar.querySelector('.skip').onclick=()=>resolve(null);
+  btns.forEach(b=>{b.disabled=false;b.classList.add('stealable');b.onclick=()=>resolve(b);});
+  function resolve(b){
+    if(done)return;done=true;clearInterval(t);
+    btns.forEach(x=>{x.disabled=true;x.classList.remove('stealable');x.onclick=null;});
+    const ok=!!b&&isRight(b);
+    if(ok){steals[thief][i]++;logs[thief][i].push('Roubo conseguido ao '+GN[R[i].g]);mk.ok(b);bar.innerHTML=`🎉 <b>Roubo conseguido!</b> +1 punto para o ${GN[thief]}.`;}
+    else{if(b)mk.bad(b);bar.innerHTML=b?`<b>Roubo fallado.</b> Ninguén suma este punto.`:`<b>Sen roubo.</b> Seguimos.`;}
+    save();renderMini();
+    setTimeout(()=>{bar.hidden=true;if(r.state==='steal')r.state='run';after(ok);},1300);
+  }
+}
+
+/* =================== RETO 0 · Caza o intruso =================== */
+let r0list,r0k;
+function r0build(d){r0list=shuffle(d.r0).map(q=>{const idx=shuffle([0,1,2,3]);return{c:q.c,w:idx.map(i=>q.w[i]),a:idx.indexOf(q.a),h:q.h};});r0k=0;$('r0fb').textContent='';$('r0fb').className='fb';r0show();}
+function r0show(){
+  const it=r0list[r0k];$('r0count').textContent=`Grupo de palabras ${r0k+1} de ${r0list.length}`;$('r0cat').textContent=it.c;
+  $('r0cards').innerHTML=it.w.map((w,i)=>`<button class="icard" data-i="${i}">${w}</button>`).join('');
+  [...$('r0cards').children].forEach((b,i)=>b.onclick=()=>r0pick(i));
+}
+function r0pick(i){
+  if(!running(0))return;const it=r0list[r0k],bs=[...$('r0cards').children];bs.forEach(b=>b.disabled=true);
+  if(i===it.a){bs[i].classList.add('right');setPts(0,R[0].pts+2);$('r0fb').className='fb ok';$('r0fb').innerHTML=`<b>Cazado!</b> ${it.h}`;r0after(900);}
+  else{bs[i].classList.add('wrong');log(0,`Tres son ${it.c}: escolleron «${it.w[i]}»; o intruso era «${it.w[it.a]}»`);$('r0fb').className='fb bad';$('r0fb').innerHTML='<b>Non é ese.</b>';
+    startSteal(0,bs.filter(b=>b!==bs[i]),b=>+b.dataset.i===it.a,OPTMK,()=>{bs[it.a].classList.add('right');$('r0fb').innerHTML=`<b>Non é ese.</b> ${it.h}`;r0after(1300);});}
+}
+function r0after(ms){setTimeout(()=>{r0k++;if(r0k<r0list.length)r0show();else{$('r0cards').innerHTML='';$('r0count').textContent='';$('r0fb').textContent='';endReto(0,false);}},ms);}
+function r0lockAll(){[...$('r0cards').children].forEach(b=>b.disabled=true);}
+
+/* =================== RETO 1 · Caixa =================== */
+let r1list,r1k,r1lock;
+const bins={o:document.querySelector('#r1 .bin.o'),a:document.querySelector('#r1 .bin.a')};
+function r1build(d){
+  r1list=shuffle(d.r1);r1k=0;r1lock=false;
+  Object.values(bins).forEach(b=>{b.querySelector('.inside').innerHTML='';b.disabled=false;});
+  $('r1fb').textContent='';$('r1fb').className='fb';r1show();
+}
+function r1show(){$('r1count').textContent=`Palabra ${r1k+1} de ${r1list.length}`;$('r1card').textContent=r1list[r1k][0];}
+function r1answer(g){
+  if(!running(1)||r1lock||r1k>=r1list.length)return;
+  const [w,right,ex]=r1list[r1k];const chip=document.createElement('span');chip.textContent=w;
+  if(g===right){
+    setPts(1,R[1].pts+1);$('r1fb').className='fb ok';$('r1fb').innerHTML=`<b>Ben!</b> ${right} ${w}. ${ex}`;
+    bins[right].classList.add('flash');setTimeout(()=>bins[right].classList.remove('flash'),350);r1next(chip,right,300);
+  }else{
+    chip.className='err';log(1,`Caixa: «${w}» é ${right==='o'?'masculino (o '+w+')':'feminino (a '+w+')'}`);$('r1fb').className='fb bad';$('r1fb').innerHTML=`<b>Non.</b> Dise <strong>${right} ${w}</strong>. ${ex}`;
+    const c=$('r1card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');r1next(chip,right,1200);
+  }
+}
+function r1next(chip,right,ms){
+  bins[right].querySelector('.inside').appendChild(chip);r1lock=true;
+  setTimeout(()=>{r1lock=false;r1k++;if(r1k<r1list.length)r1show();else{$('r1card').textContent='Feito!';$('r1count').textContent='';endReto(1,false);}},ms);
+}
+Object.entries(bins).forEach(([g,b])=>b.onclick=()=>r1answer(g));
+function r1lockAll(){Object.values(bins).forEach(b=>b.disabled=true);}
+
+/* =================== RETO 2 · Tres en raia =================== */
+let r2cells,r2sel,r2done;
+const LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+function r2build(d){
+  r2cells=shuffle(d.r2).map(it=>({m:it[0],f:it[1],opts:shuffle([it[1],...it[2]]),why:it[3],own:null}));
+  r2sel=null;r2done=0;$('r2grid').innerHTML='';
+  r2cells.forEach((c,i)=>{const b=document.createElement('button');b.className='cell';b.innerHTML=`<span class="mk"></span><span>${c.m}</span>`;b.onclick=()=>r2pick(i);$('r2grid').appendChild(b);});
+  $('r2ch').innerHTML='<div class="ask">Tocade unha casa do taboleiro para comezar.</div>';
+}
+function r2pick(i){
+  if(!running(2)||r2cells[i].own)return;r2sel=i;
+  [...$('r2grid').children].forEach((b,k)=>b.classList.toggle('sel',k===i));
+  const c=r2cells[i];
+  $('r2ch').innerHTML=`<div class="ask">Cal é o feminino de…</div><div class="big">${c.m}</div><div class="opts">${c.opts.map(o=>`<button class="opt">${o}</button>`).join('')}</div><p class="fb" id="r2fb"></p>`;
+  $('r2ch').querySelectorAll('.opt').forEach(b=>b.onclick=()=>r2answer(b));
+}
+function r2answer(btn){
+  if(!running(2)||r2sel===null)return;const idx=r2sel,c=r2cells[idx],cell=$('r2grid').children[idx];r2sel=null;
+  const all=[...$('r2ch').querySelectorAll('.opt')];all.forEach(b=>b.disabled=true);
+  cell.classList.remove('sel');cell.disabled=true;
+  if(btn.textContent===c.f){btn.classList.add('right');c.own='me';cell.classList.add('me');cell.querySelector('.mk').textContent='○';setPts(2,R[2].pts+1);
+    $('r2fb').className='fb ok';$('r2fb').innerHTML=`<b>Casa vosa!</b> ${c.m} → ${c.f}. ${c.why}`;r2after(c,cell);}
+  else{btn.classList.add('wrong');log(2,`Feminino de «${c.m}»: escolleron «${btn.textContent}»; era «${c.f}»`);c.own='cpu';cell.classList.add('cpu');cell.querySelector('.mk').textContent='✕';
+    $('r2fb').className='fb bad';$('r2fb').innerHTML='<b>Casa para a máquina.</b>';
+    startSteal(2,all.filter(b=>b!==btn),b=>b.textContent===c.f,OPTMK,()=>{
+      all.forEach(b=>{if(b.textContent===c.f)b.classList.add('right');});
+      $('r2fb').innerHTML=`<b>Casa para a máquina.</b> ${c.m} → <strong>${c.f}</strong>. ${c.why}`;r2after(c,cell);});}
+}
+function r2after(c,cell){
+  cell.insertAdjacentHTML('beforeend',`<small>${c.f}</small>`);r2done++;
+  if(r2done===9){
+    const win=LINES.filter(l=>l.every(k=>r2cells[k].own==='me'));
+    if(win.length){win.flat().forEach(k=>$('r2grid').children[k].classList.add('win'));setPts(2,R[2].pts+1);
+      $('r2fb').insertAdjacentHTML('afterend','<p class="fb ok"><b>Tres en raia!</b> Gañades 1 punto extra.</p>');}
+    setTimeout(()=>endReto(2,false),600);
+  }
+}
+function r2lockAll(){[...$('r2grid').children].forEach(b=>b.disabled=true);$('r2ch').querySelectorAll('.opt').forEach(b=>b.disabled=true);}
+
+/* =================== RETO 3 · Detective =================== */
+const TYPES={x:'xénero',f:'formación do feminino',n:'número'};
+let r3sel,r3left;
+function r3build(d){
+  r3sel=null;$('r3lupa').hidden=true;$('r3fb').textContent='';$('r3fb').className='fb';$('r3lens').disabled=false;
+  const st=$('r3story');st.innerHTML=`<h3>${d.r3.title}</h3>`;const clues=[];
+  d.r3.lines.forEach((ln,li)=>{
+    const row=document.createElement('div');row.className='line';row.innerHTML=`<span class="ln">${li+1}</span>`;
+    const p=document.createElement('p');const types=[];
+    ln.split(/(\{[^}]+\})/).forEach(seg=>{
+      if(!seg)return;
+      if(seg.startsWith('{')){
+        const [wrong,right,ds,why,ty]=seg.slice(1,-1).split('|');types.push(ty);
+        const s=document.createElement('span');s.className='w';s.textContent=wrong;
+        Object.assign(s.dataset,{err:'1',right,opts:JSON.stringify(shuffle([right,...ds.split(';')])),why,line:li});p.appendChild(s);return;
+      }
+      seg.split(/([A-Za-zÁÉÍÓÚáéíóúÑñÜü]+)/).forEach(t=>{
+        if(/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü]+$/.test(t)){const s=document.createElement('span');s.className='w';s.textContent=t;p.appendChild(s);}
+        else if(t)p.appendChild(document.createTextNode(t));
+      });
+    });
+    row.appendChild(p);st.appendChild(row);
+    const tx=types.map(t=>TYPES[t]);
+    clues.push(`<li data-line="${li}"><strong>Liña ${li+1}:</strong> ${types.length===1?'un erro de '+tx[0]:types.length+' erros: '+tx.join(' e ')}.</li>`);
+  });
+  $('r3clues').innerHTML=clues.join('');r3left=st.querySelectorAll('.w[data-err]').length;
+}
+$('r3story').addEventListener('click',e=>{
+  const s=e.target.closest('.w');if(!s||!running(3)||s.matches('.fixed,.given,.clean'))return;
+  if(r3sel&&!$('r3lupa').hidden&&r3sel.dataset.err===undefined)return;
+  document.querySelectorAll('#r3story .w.sel').forEach(x=>x.classList.remove('sel'));
+  if(!s.dataset.err){
+    s.classList.add('clean');log(3,`Falsa alarma: «${s.textContent}» estaba ben`);$('r3lupa').hidden=true;setPts(3,R[3].pts-1);
+    $('r3fb').className='fb bad';$('r3fb').innerHTML=`<b>Falsa alarma.</b> "${s.textContent}" está ben. Perdedes 1 punto.`;return;
+  }
+  r3sel=s;s.classList.add('sel');$('r3lupa').hidden=false;$('r3fb').textContent='';
+  $('r3q').innerHTML=`Que debería poñer en lugar de <strong>"${s.textContent}"</strong>?`;
+  $('r3opts').innerHTML=JSON.parse(s.dataset.opts).map(o=>`<button class="opt">${o}</button>`).join('');
+  $('r3opts').querySelectorAll('.opt').forEach(b=>b.onclick=()=>r3answer(b));
+});
+function r3answer(btn){
+  if(!running(3)||!r3sel)return;const s=r3sel;
+  const all=[...$('r3opts').querySelectorAll('.opt')];all.forEach(b=>b.disabled=true);
+  const hinted=s.classList.contains('hinted');const right=s.dataset.right;
+  if(btn.textContent===right){btn.classList.add('right');setPts(3,R[3].pts+(hinted?1:2));s.className='w fixed';$('r3fb').className='fb ok';$('r3fb').innerHTML=`<b>Ben visto!</b> ${s.dataset.why}`;r3after(s);}
+  else{btn.classList.add('wrong');log(3,`«${s.textContent}»: escolleron «${btn.textContent}»; era «${right}»`);$('r3fb').className='fb bad';$('r3fb').innerHTML='<b>Non era esa.</b>';
+    startSteal(3,all.filter(b=>b!==btn),b=>b.textContent===right,OPTMK,()=>{
+      all.forEach(b=>{if(b.textContent===right)b.classList.add('right');});
+      s.className='w given';$('r3fb').innerHTML=`<b>Non era esa.</b> ${s.dataset.why}`;r3after(s);});}
+}
+function r3after(s){
+  s.textContent=s.dataset.right;const line=s.dataset.line;delete s.dataset.err;r3sel=null;r3left--;
+  if(!$('r3story').querySelector(`.w[data-err][data-line="${line}"]`))$('r3clues').querySelector(`li[data-line="${line}"]`).classList.add('done');
+  setTimeout(()=>{if(!r3sel)$('r3lupa').hidden=true;},900);
+  if(r3left===0){$('r3lens').disabled=true;setTimeout(()=>endReto(3,false),900);}
+}
+$('r3lens').onclick=()=>{
+  if(!running(3))return;const c=[...$('r3story').querySelectorAll('.w[data-err]:not(.hinted)')];
+  if(!c.length)return;c[0].classList.add('hinted');
+  $('r3fb').className='fb';$('r3fb').innerHTML='<b>Lupa:</b> a palabra subliñada en laranxa ten un erro. Agora vale só 1 punto.';
+  if(c.length===1)$('r3lens').disabled=true;
+};
+function r3lockAll(){
+  $('r3lupa').hidden=true;$('r3lens').disabled=true;
+  $('r3story').querySelectorAll('.w[data-err]').forEach(s=>{s.className='w given';s.textContent=s.dataset.right;delete s.dataset.err;});
+}
+
+/* =================== RETO 4 · Globos =================== */
+let r4list,r4k,r4lock;
+const BCOL=['#E0533D','#2F8FD8','#E3A21A'];
+const BALMK={ok:b=>b.classList.add('pop'),bad:b=>b.classList.add('flat')};
+function r4build(d){r4list=shuffle(d.r4);r4k=0;r4lock=false;$('r4fb').textContent='';$('r4fb').className='fb';r4show();}
+function r4show(){
+  const [s,p,ds]=r4list[r4k];$('r4count').textContent=`Globo ${r4k+1} de ${r4list.length}`;$('r4word').textContent=s;
+  $('r4bal').innerHTML=shuffle([p,...ds]).map((o,i)=>`<button class="bal" style="--bc:${BCOL[i]}"><span class="body">${o}</span><span class="knot"></span><span class="str"></span></button>`).join('');
+  $('r4bal').querySelectorAll('.bal').forEach(b=>b.onclick=()=>r4answer(b));
+}
+function r4answer(b){
+  if(!running(4)||r4lock)return;r4lock=true;const [s,p,,why]=r4list[r4k];
+  const all=[...$('r4bal').querySelectorAll('.bal')];all.forEach(x=>x.disabled=true);
+  const isP=x=>x.textContent.trim()===p;
+  if(isP(b)){b.classList.add('pop');setPts(4,R[4].pts+1);$('r4fb').className='fb ok';$('r4fb').innerHTML=`<b>Pum!</b> ${s} → ${p} (${why}).`;r4after(700);}
+  else{b.classList.add('flat');log(4,`Plural de «${s}»: escolleron «${b.textContent.trim()}»; era «${p}»`);$('r4fb').className='fb bad';$('r4fb').innerHTML='<b>Desinflouse.</b>';
+    startSteal(4,all.filter(x=>x!==b),isP,BALMK,ok=>{
+      if(!ok)all.find(isP).classList.add('show');
+      $('r4fb').innerHTML=`<b>Desinflouse.</b> ${s} → <strong>${p}</strong> (${why}).`;r4after(ok?500:1200);});}
+}
+function r4after(ms){setTimeout(()=>{r4lock=false;r4k++;if(r4k<r4list.length)r4show();else{$('r4word').textContent='Feito!';$('r4bal').innerHTML='';$('r4count').textContent='';endReto(4,false);}},ms);}
+function r4lockAll(){$('r4bal').querySelectorAll('.bal').forEach(x=>x.disabled=true);}
+
+/* =================== RETO 5 · Concurso =================== */
+let r5list,r5k,r5answered,r5half,r5clue;
+function r5build(d){
+  r5list=d.r5.map(q=>{const idx=shuffle([0,1,2,3]);return{q:q.q,o:idx.map(i=>q.o[i]),a:idx.indexOf(q.a),h:q.h};});
+  r5k=0;r5half=false;r5clue=false;$('r5half').disabled=false;$('r5clue').disabled=false;
+  $('r5ladder').innerHTML=r5list.map((_,i)=>`<li><span>${i+1}</span><span>2 puntos</span></li>`).join('');r5show();
+}
+function r5show(){
+  r5answered=false;const it=r5list[r5k];
+  $('r5qn').textContent=`Pregunta ${r5k+1} de ${r5list.length}`;$('r5qt').textContent=it.q;
+  $('r5hint').hidden=true;$('r5fb').textContent='';$('r5fb').className='fb';$('r5next').hidden=true;
+  $('r5ans').innerHTML=it.o.map((t,i)=>`<button class="ans" data-i="${i}"><b>${'ABCD'[i]}</b>${t}</button>`).join('');
+  [...$('r5ans').children].forEach((b,i)=>b.onclick=()=>r5pick(i));
+  [...$('r5ladder').children].forEach((li,i)=>li.classList.toggle('now',i===r5k));
+}
+function r5pick(i){
+  if(!running(5)||r5answered)return;r5answered=true;const it=r5list[r5k],bs=[...$('r5ans').children],li=$('r5ladder').children[r5k];
+  bs.forEach(b=>b.disabled=true);li.classList.remove('now');
+  if(i===it.a){bs[i].classList.add('right');li.classList.add('won');setPts(5,R[5].pts+2);$('r5fb').className='fb ok';$('r5fb').innerHTML=`<b>Correcto!</b> ${it.h}`;r5after();}
+  else{bs[i].classList.add('wrong');log(5,`${it.q} Escolleron «${it.o[i]}»; era «${it.o[it.a]}»`);li.classList.add('lost');$('r5fb').className='fb bad';$('r5fb').innerHTML='<b>Non.</b>';
+    startSteal(5,bs.filter(b=>b!==bs[i]&&!b.classList.contains('gone')),b=>+b.dataset.i===it.a,OPTMK,()=>{
+      bs[it.a].classList.add('right');$('r5fb').innerHTML=`<b>Non.</b> ${it.h}`;r5after();});}
+}
+function r5after(){if(r5k===r5list.length-1)setTimeout(()=>endReto(5,false),900);else $('r5next').hidden=false;}
+$('r5next').onclick=()=>{if(!running(5))return;r5k++;r5show();};
+$('r5half').onclick=()=>{if(!running(5)||r5half||r5answered)return;r5half=true;$('r5half').disabled=true;
+  const it=r5list[r5k];shuffle([0,1,2,3].filter(i=>i!==it.a)).slice(0,2).forEach(i=>$('r5ans').children[i].classList.add('gone'));};
+$('r5clue').onclick=()=>{if(!running(5)||r5clue||r5answered)return;r5clue=true;$('r5clue').disabled=true;$('r5hint').hidden=false;$('r5hint').innerHTML='<strong>Pista:</strong> '+r5list[r5k].h;};
+function r5lockAll(){[...$('r5ans').children].forEach(b=>b.disabled=true);$('r5next').hidden=true;$('r5half').disabled=true;$('r5clue').disabled=true;}
+
+const BUILD=[r0build,r1build,r2build,r3build,r4build,r5build];
+const LOCK=[r0lockAll,r1lockAll,r2lockAll,r3lockAll,r4lockAll,r5lockAll];
+
+R.forEach((r,i)=>resetReto(i));go(0);
+})();
+</script>
+</body>
+</html>
