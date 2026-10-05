@@ -154,6 +154,10 @@ em{font-style:italic;color:var(--muted)}
 .btn{border:none;border-radius:10px;padding:.55rem 1.1rem;font-weight:700;background:var(--sea);color:var(--paper)}
 .btn.alt{background:transparent;border:2px solid var(--sea);color:var(--sea)}
 .btn.plain{background:transparent;color:var(--muted);text-decoration:underline}
+.cols.sem .box p{margin:0 0 .7em}
+.lvl{display:block;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:.4rem}
+.semsteps .gsel{flex-wrap:wrap;margin:.25rem 0}
+.semsteps .gsel button{font-size:.92rem;padding:.2rem .7rem}
 .score{font-family:var(--display);font-weight:700;color:var(--sea)}
 
 .end{min-height:100%;display:flex;flex-direction:column;justify-content:center}
@@ -175,6 +179,7 @@ em{font-style:italic;color:var(--muted)}
 #schema .node.fem rect{stroke:var(--fem)}
 #schema .node.box rect{stroke-width:2}
 #schema .node .r{font-family:var(--body);font-weight:600;font-size:14px;fill:var(--ink)}
+#schema .node.sem rect{stroke:var(--sea)}
 #schema .node,#schema .edge{transition:opacity .45s ease}
 #schema .off{opacity:0}
 @media (max-width:700px){
@@ -411,7 +416,54 @@ em{font-style:italic;color:var(--muted)}
   </div>
 </section>
 
-<!-- 15 esquema -->
+<!-- 15 clasificación semántica -->
+<section class="slide" aria-label="Clasificación semántica do substantivo">
+  <div class="wrap">
+    <h2>Clasificación semántica do substantivo</h2>
+    <p>Segundo o concepto que designan, os substantivos clasifícanse en grupos que se van encadeando: só os <strong>comúns</strong> se dividen en concretos e abstractos, só os <strong>concretos</strong> se dividen en contables e non contables, e só os <strong>contables</strong> se dividen en individuais e colectivos.</p>
+    <div class="cols sem">
+      <div class="box">
+        <span class="lvl">1 · Todos os substantivos</span>
+        <span class="tag">Comúns</span>
+        <p>Nomean calquera ser ou obxecto dunha clase de xeito xeral: <em>rapaza, paz, cidade</em>.</p>
+        <span class="tag">Propios</span>
+        <p style="margin:0">Identifican un ser ou un lugar de xeito individual, non como membro dunha clase. Escríbense con maiúscula: <em>Uxía, Baiona, Miño</em>.</p>
+      </div>
+      <div class="box">
+        <span class="lvl">2 · Dentro dos comúns</span>
+        <span class="tag">Concretos</span>
+        <p>Designan realidades que se poden percibir cos sentidos: <em>can, reloxo</em>.</p>
+        <span class="tag">Abstractos</span>
+        <p style="margin:0">Designan ideas, sentimentos ou calidades que non se perciben cos sentidos e que só se coñecen co pensamento: <em>xustiza, solidariedade</em>.</p>
+      </div>
+      <div class="box">
+        <span class="lvl">3 · Dentro dos concretos</span>
+        <span class="tag">Contables</span>
+        <p>Designan seres ou cousas que se poden contar: <em>unha flor, tres casas</em>.</p>
+        <span class="tag">Non contables</span>
+        <p style="margin:0">Designan cousas que non se poden contar, aínda que algunhas se poden pesar ou medir: <em>vento, leite</em>.</p>
+      </div>
+      <div class="box">
+        <span class="lvl">4 · Dentro dos contables</span>
+        <span class="tag">Individuais</span>
+        <p>En singular, nomean un só elemento: <em>prato, árbore</em>.</p>
+        <span class="tag">Colectivos</span>
+        <p style="margin:0">En singular, nomean un conxunto de elementos da mesma clase: <em>rabaño, arboredo</em>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 actividade 5 -->
+<section class="slide" aria-label="Actividade 5">
+  <div class="wrap">
+    <div class="act-head"><span class="act-num">5</span><h2 style="margin:0">Clasificación semántica</h2></div>
+    <p>Clasifica os seguintes substantivos. Elixe unha opción en cada paso ata completar a clasificación.</p>
+    <div class="act" data-act="a5"></div>
+  </div>
+</section>
+
+<!-- 17 esquema -->
 <section class="slide" aria-label="Esquema final">
   <div class="wrap">
     <h2>Esquema final</h2>
@@ -420,7 +472,7 @@ em{font-style:italic;color:var(--muted)}
       <button class="btn alt" id="schAll">Ver completo</button>
     </div>
     <div class="schema-wrap">
-      <svg id="schema" viewBox="0 0 900 870" role="img" aria-label="Esquema: a palabra clasifícase polo significado e pola forma; o substantivo é variable e léxico, e ten xénero e número, coas regras de formación do feminino e do plural">
+      <svg id="schema" viewBox="0 0 1240 1060" role="img" aria-label="Esquema: a palabra clasifícase polo significado e pola forma; o substantivo é variable e léxico, e ten xénero, número e unha clasificación semántica">
         <defs>
           <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10 z" class="arrhead"/>
@@ -442,7 +494,7 @@ em{font-style:italic;color:var(--muted)}
 <div class="bottombar">
   <button class="themebtn" id="themeBtn" aria-label="Cambiar tema claro ou escuro">◐ Tema</button>
   <div class="progress"><span id="bar"></span></div>
-  <div class="counter" id="counter">1 / 15</div>
+  <div class="counter" id="counter">1 / 17</div>
 </div>
 
 <script>
@@ -632,8 +684,15 @@ const acts={
     ['baúl',['baúis'],'Aguda en -l → -is'],['móbil',['móbiles'],'Grave en -l → -es'],['colar',['colares'],'-r → -es'],
     ['dobrez',['dobreces'],'-z → -ces'],['téxtil',['téxtiles'],'Grave en -l → -es'],['perfil',['perfís'],'Aguda en -il → -ís'],
     ['dólar',['dólares'],'-r → -es'],['alemá',['alemás'],'Vogal → -s'],['pub',['pubs'],'Consoante → -s'],
-    ['choromicas',['choromicas'],'Grave en -s → invariable'],['portal',['portais'],'Aguda en -l → -is'],['venres',['venres'],'Grave en -s → invariable']]}
+    ['choromicas',['choromicas'],'Grave en -s → invariable'],['portal',['portais'],'Aguda en -l → -is'],['venres',['venres'],'Grave en -s → invariable']]},
+  a5:{type:'sem',items:[
+    ['arboredo',['común','concreto','contable','colectivo']],['Vigo',['propio']],['auga',['común','concreto','non contable']],
+    ['medo',['común','abstracto']],['bicicleta',['común','concreto','contable','individual']],['enxame',['común','concreto','contable','colectivo']],
+    ['amizade',['común','abstracto']],['Atlántico',['propio']],['area',['común','concreto','non contable']],
+    ['frota',['común','concreto','contable','colectivo']],['abella',['común','concreto','contable','individual']],['liberdade',['común','abstracto']],
+    ['fariña',['común','concreto','non contable']],['alumnado',['común','concreto','contable','colectivo']]]}
 };
+const SEM=[['común','propio'],['concreto','abstracto'],['contable','non contable'],['individual','colectivo']];
 
 document.querySelectorAll('.act').forEach(el=>{
   const a=acts[el.dataset.act];
@@ -644,6 +703,18 @@ document.querySelectorAll('.act').forEach(el=>{
       d.innerHTML=`<label for="${id}">${it[0]}</label><input id="${id}" autocomplete="off" autocapitalize="off" spellcheck="false">
       <div class="msg"></div><div class="sol">${it[1].join(' / ')}${it[2]?`<span>${it[2]}</span>`:''}</div>`;
       d.querySelector('input').addEventListener('keydown',e=>{if(e.key==='Enter'){const ins=[...el.querySelectorAll('input')];const n=ins[ins.indexOf(e.target)+1];if(n)n.focus();else check();}});
+    }else if(a.type==='sem'){
+      d.innerHTML=`<label>${it[0]}</label><div class="semsteps"></div><div class="msg"></div><div class="sol">${it[1].join(' › ')}</div>`;
+      const st=d.querySelector('.semsteps');d.path=[];
+      d.draw=()=>{st.innerHTML='';
+        for(let lv=0;lv<=d.path.length&&lv<SEM.length;lv++){
+          if(lv>0&&d.path[lv-1]!==SEM[lv-1][0])break;
+          const g=document.createElement('div');g.className='gsel';g.setAttribute('role','group');
+          SEM[lv].forEach(o=>{const b=document.createElement('button');b.textContent=o;b.setAttribute('aria-pressed',d.path[lv]===o?'true':'false');
+            b.onclick=()=>{d.path=d.path.slice(0,lv);d.path[lv]=o;d.draw();};g.appendChild(b);});
+          st.appendChild(g);}
+      };
+      d.draw();
     }else{
       d.innerHTML=`<label>${it[0]}</label><div class="gsel" role="group" aria-label="Xénero de ${it[0]}">
         <button data-g="o" aria-pressed="false">o · masculino</button><button data-g="a" aria-pressed="false">a · feminino</button></div>
@@ -668,6 +739,12 @@ document.querySelectorAll('.act').forEach(el=>{
         if(ans.includes(v)){d.classList.add('ok');ok++;}
         else if(ans.map(deacc).includes(deacc(v))){d.classList.add('warn');msg.textContent='Case! Revisa o til.';}
         else{d.classList.add('bad');msg.textContent='Non é correcto.';}
+      }else if(a.type==='sem'){
+        if(!d.path.length)return;
+        const pj=d.path.join('|'),rj=it[1].join('|');
+        if(pj===rj){d.classList.add('ok');ok++;}
+        else if(rj.startsWith(pj+'|')){d.classList.add('warn');msg.textContent='Vas ben: completa a clasificación.';}
+        else{d.classList.add('bad');msg.textContent='Revisa a clasificación.';}
       }else{
         const p=d.querySelector('.gsel [aria-pressed="true"]');if(!p)return;
         if(p.dataset.g===it[1]){d.classList.add('ok');ok++;}else{d.classList.add('bad');msg.textContent='Revisa o xénero.';}
@@ -678,20 +755,20 @@ document.querySelectorAll('.act').forEach(el=>{
   bCheck.onclick=check;
   bSol.onclick=()=>{const on=grid.classList.toggle('showsol');bSol.textContent=on?'Ocultar solucións':'Ver solucións';};
   bClear.onclick=()=>{grid.querySelectorAll('input,textarea').forEach(x=>x.value='');grid.querySelectorAll('.gsel button').forEach(x=>x.setAttribute('aria-pressed','false'));
-    grid.querySelectorAll('.item').forEach(d=>{d.classList.remove('ok','bad','warn');d.querySelector('.msg').textContent='';});grid.classList.remove('showsol');bSol.textContent='Ver solucións';score.textContent='';};
+    grid.querySelectorAll('.item').forEach(d=>{d.classList.remove('ok','bad','warn');d.querySelector('.msg').textContent='';});grid.querySelectorAll('.item').forEach(d=>{if(d.draw){d.path=[];d.draw();}});grid.classList.remove('showsol');bSol.textContent='Ver solucións';score.textContent='';};
 });
 
 /* ---------- esquema ---------- */
 const NS='http://www.w3.org/2000/svg';
 const nodes=[
-  {id:'pal',x:450,y:20,w:220,t:'A PALABRA',l:0,c:'root'},
-  {id:'sig',x:220,y:110,w:200,t:'Polo significado',l:1,c:'cat'},
-  {id:'for',x:680,y:110,w:200,t:'Pola forma',l:1,c:'cat'},
-  {id:'lex',x:115,y:200,w:170,t:'Léxico',s:'casa, branca, xogar',l:2},
-  {id:'gra',x:320,y:200,w:170,t:'Gramatical',s:'estas, con, e',l:2},
-  {id:'inv',x:580,y:200,w:170,t:'Invariables',s:'alí, en, pero',l:2},
-  {id:'var',x:785,y:200,w:170,t:'Variables',s:'gato, feliz, amo',l:2},
-  {id:'sub',x:450,y:300,w:250,t:'O SUBSTANTIVO',s:'obxectos, persoas, animais, ideas',l:3,c:'key'},
+  {id:'pal',x:620,y:20,w:220,t:'A PALABRA',l:0,c:'root'},
+  {id:'sig',x:390,y:110,w:200,t:'Polo significado',l:1,c:'cat'},
+  {id:'for',x:850,y:110,w:200,t:'Pola forma',l:1,c:'cat'},
+  {id:'lex',x:285,y:200,w:170,t:'Léxico',s:'casa, branca, xogar',l:2},
+  {id:'gra',x:490,y:200,w:170,t:'Gramatical',s:'estas, con, e',l:2},
+  {id:'inv',x:750,y:200,w:170,t:'Invariables',s:'alí, en, pero',l:2},
+  {id:'var',x:955,y:200,w:170,t:'Variables',s:'gato, feliz, amo',l:2},
+  {id:'sub',x:620,y:300,w:250,t:'O SUBSTANTIVO',s:'obxectos, persoas, animais, ideas',l:3,c:'key'},
   {id:'xen',x:250,y:400,w:190,t:'Xénero',s:'masculino / feminino',l:4,c:'cat'},
   {id:'num',x:650,y:400,w:190,t:'Número',s:'singular / plural',l:4,c:'cat'},
   {id:'xv',x:145,y:500,w:190,t:'Variables',s:'oso / osa, home / muller',l:5,c:'fem'},
@@ -709,15 +786,25 @@ const nodes=[
     ['-r, -z e agudas en -s → + -es','xogador / xogadores, raíz / raíces, compás / compases'],
     ['-l en monosílabas e graves → + -es','ril / riles, fácil / fáciles'],
     ['-l en polisílabas agudas → -is','canal / canais, mandil / mandís'],
-    ['Graves e esdrúxulas en -s, e todas en -x → invariables','o lapis / os lapis, o tórax / os tórax']]}
+    ['Graves e esdrúxulas en -s, e todas en -x → invariables','o lapis / os lapis, o tórax / os tórax']]},
+  {id:'sem',x:1080,y:400,w:300,t:'Clasificación semántica',s:'segundo o que designan',l:4,c:'cat'},
+  {id:'sco',x:1096,y:490,w:268,t:'Comúns',s:'rapaza, paz, cidade',l:5,c:'sem',tree:1},
+  {id:'scn',x:1112,y:560,w:236,t:'Concretos',s:'can, reloxo',l:6,c:'sem',tree:1},
+  {id:'sct',x:1128,y:630,w:204,t:'Contables',s:'flor, casa',l:7,c:'sem',tree:1},
+  {id:'sin',x:1144,y:700,w:172,t:'Individuais',s:'prato, árbore',l:8,c:'sem',tree:1},
+  {id:'scl',x:1144,y:770,w:172,t:'Colectivos',s:'rabaño, arboredo',l:8,c:'sem',tree:1},
+  {id:'snc',x:1128,y:840,w:204,t:'Non contables',s:'vento, leite',l:7,c:'sem',tree:1},
+  {id:'sab',x:1112,y:910,w:236,t:'Abstractos',s:'xustiza, solidariedade',l:6,c:'sem',tree:1},
+  {id:'spr',x:1096,y:980,w:268,t:'Propios',s:'Uxía, Baiona, Miño',l:5,c:'sem',tree:1}
 ];
-const edges=[['pal','sig'],['pal','for'],['sig','lex'],['sig','gra'],['for','inv'],['for','var'],['lex','sub'],['var','sub'],['sub','xen'],['sub','num'],['xen','xv'],['xen','xi'],['num','ns'],['num','np'],['xv','rf'],['np','rp']];
+const edges=[['pal','sig'],['pal','for'],['sig','lex'],['sig','gra'],['for','inv'],['for','var'],['lex','sub'],['var','sub'],['sub','xen'],['sub','num'],['xen','xv'],['xen','xi'],['num','ns'],['num','np'],['xv','rf'],['np','rp'],['sub','sem'],['sem','sco',1],['sem','spr',1],['sco','scn',1],['sco','sab',1],['scn','sct',1],['scn','snc',1],['sct','sin',1],['sct','scl',1]];
 const byId={};nodes.forEach(n=>{n.h=n.rules?50+n.rules.length*42:(n.s?60:46);byId[n.id]=n;});
 const gN=document.getElementById('schNodes'),gE=document.getElementById('schEdges');
-edges.forEach(([a,b])=>{
+edges.forEach(([a,b,el])=>{
   const A=byId[a],B=byId[b],x1=A.x,y1=A.y+A.h,x2=B.x,y2=B.y-3,my=(y1+y2)/2;
   const p=document.createElementNS(NS,'path');p.setAttribute('class','edge');p.dataset.l=B.l;
-  p.setAttribute('d',`M${x1} ${y1} C${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`);p.setAttribute('marker-end','url(#arr)');gE.appendChild(p);
+  if(el){const tx=A.x-A.w/2+16;p.setAttribute('d',`M${tx} ${y1} V${B.y+B.h/2} H${B.x-B.w/2-3}`);}
+  else p.setAttribute('d',`M${x1} ${y1} C${x1} ${my}, ${x2} ${my}, ${x2} ${y2}`);p.setAttribute('marker-end','url(#arr)');gE.appendChild(p);
 });
 nodes.forEach(n=>{
   const g=document.createElementNS(NS,'g');g.setAttribute('class','node '+(n.c||''));g.dataset.l=n.l;
@@ -729,7 +816,7 @@ nodes.forEach(n=>{
     const b=document.createElementNS(NS,'text');b.setAttribute('class','s');b.setAttribute('x',x0+12);b.setAttribute('y',y+18);b.textContent=e;g.appendChild(b);});}
   gN.appendChild(g);
 });
-let schLevel=6;const maxL=6,stepBtn=document.getElementById('schStep');
+let schLevel=8;const maxL=8,stepBtn=document.getElementById('schStep');
 function schShow(l){schLevel=l;document.querySelectorAll('#schema [data-l]').forEach(el=>el.classList.toggle('off',+el.dataset.l>l));
   stepBtn.textContent=l>=maxL?'Construír paso a paso':'Seguinte paso';}
 stepBtn.onclick=()=>schShow(schLevel>=maxL?0:schLevel+1);
