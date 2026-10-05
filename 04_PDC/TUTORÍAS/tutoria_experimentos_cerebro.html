@@ -1,1 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tutoría experimentos cerebro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#EEF3F6; --tinta:#13294B; --tinta-suave:#3D5373; --fosforito:#F5E663;
+  --verde:#1F8A5B; --rojo:#C93838; --linea:#C9D5DE; --blanco:#FFFFFF;
+  --titulo:'Bricolage Grotesque','Segoe UI',Arial,sans-serif;
+  --texto:'Atkinson Hyperlegible','Segoe UI',Verdana,sans-serif;
+  box-sizing:border-box;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0;height:100%;background:var(--papel);color:var(--tinta);font-family:var(--texto)}
+body{overflow:hidden}
+.slide{position:absolute;inset:0;padding:3.2rem 6.5rem 4.2rem;display:none;flex-direction:column;overflow-y:auto}
+.slide.activa{display:flex}
+.slide>*{flex-shrink:0}
+h1,h2,h3{font-family:var(--titulo);margin:0 0 .6em;line-height:1.05}
+h1{font-size:clamp(2.6rem,6vw,5.4rem);font-weight:800}
+h2{font-size:clamp(2rem,4.2vw,3.4rem);font-weight:800}
+h3{font-size:clamp(1.3rem,2.2vw,1.8rem);font-weight:700}
+p,li{font-size:clamp(1.15rem,1.9vw,1.6rem);line-height:1.5;text-align:justify;hyphens:auto}
+.marca{background:linear-gradient(transparent 55%,var(--fosforito) 55%);padding:0 .1em}
+.etiqueta{font-family:var(--titulo);font-weight:700;font-size:1.1rem;color:var(--tinta-suave);margin-bottom:.4rem}
+.portada{justify-content:center}
+.portada h1{max-width:none}
+.portada .sub{font-size:clamp(1.3rem,2.4vw,2rem)}
+.bloque{background:var(--blanco);border:2px solid var(--linea);border-radius:14px;padding:1.4rem 1.8rem;margin:.6rem 0}
+.bloque.amarillo{background:#FFF9D6;border-color:#E8D86A}
+.fila{display:flex;gap:1.4rem;flex-wrap:wrap;align-items:stretch}
+.fila>*{flex:1 1 280px}
+ol.pasos li{margin-bottom:.4rem}
+/* Cronómetro y temporizador */
+.reloj{display:flex;align-items:center;gap:1.4rem;flex-wrap:wrap;margin:.8rem 0}
+.digitos{font-family:var(--titulo);font-weight:800;font-size:clamp(4rem,11vw,9rem);font-variant-numeric:tabular-nums;line-height:1;min-width:4.2ch}
+.digitos.fin{color:var(--rojo)}
+.btn{font-family:var(--titulo);font-weight:700;font-size:1.35rem;border:none;border-radius:999px;padding:.8rem 1.6rem;cursor:pointer;background:var(--tinta);color:var(--blanco);touch-action:manipulation}
+.btn.claro{background:var(--blanco);color:var(--tinta);border:2px solid var(--tinta)}
+.btn.verde{background:var(--verde)}.btn.rojo{background:var(--rojo)}
+.btn:focus-visible,.flecha:focus-visible{outline:4px solid var(--fosforito);outline-offset:3px}
+.botones{display:flex;gap:.8rem;flex-wrap:wrap}
+/* Flechas laterales */
+.flecha{position:fixed;top:50%;transform:translateY(-50%);width:4.2rem;height:4.2rem;border-radius:50%;border:none;background:var(--tinta);color:var(--blanco);font-size:2rem;cursor:pointer;z-index:10;opacity:.85}
+.flecha:hover{opacity:1}
+#ant{left:1rem}#sig{right:1rem}
+.flecha[disabled]{opacity:.2;cursor:default}
+#contador{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);font-family:var(--titulo);color:var(--tinta-suave);font-size:1rem;z-index:10}
+/* Memoria */
+.palabras{display:grid;grid-template-columns:repeat(5,1fr);gap:.8rem;margin:1rem 0}
+.palabras span{background:var(--blanco);border:2px solid var(--linea);border-radius:10px;padding:1rem .5rem;text-align:center;font-family:var(--titulo);font-weight:700;font-size:clamp(1.3rem,2.4vw,2.1rem)}
+.grupos{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:1rem 0}
+.grupo{background:var(--blanco);border:2px solid var(--linea);border-radius:12px;padding:1rem 1.2rem}
+.grupo h3{margin-bottom:.4em;color:var(--tinta-suave)}
+.grupo div{font-family:var(--titulo);font-weight:700;font-size:clamp(1.3rem,2.3vw,2rem);line-height:1.5}
+.oculto{display:none!important}
+.tapa{background:var(--tinta);color:var(--blanco);border-radius:14px;padding:2.4rem;text-align:center;font-family:var(--titulo);font-size:clamp(1.6rem,3vw,2.6rem);margin:1rem 0}
+/* Bulos */
+.titular{background:var(--blanco);border-left:10px solid var(--tinta);border-radius:8px;padding:2rem 2.2rem;font-family:var(--titulo);font-weight:700;font-size:clamp(1.8rem,3.6vw,3.1rem);line-height:1.2;margin:1rem 0}
+.veredicto{border-radius:12px;padding:1.2rem 1.6rem;color:var(--blanco);margin:.6rem 0}
+.veredicto.noticia{background:var(--verde)}.veredicto.bulo{background:var(--rojo)}
+.veredicto strong{font-family:var(--titulo);font-size:1.8rem;display:block;margin-bottom:.3rem}
+.veredicto p{margin:0}
+/* Registro */
+.tabla-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;background:var(--blanco);font-size:1.1rem}
+th,td{border:1px solid var(--linea);padding:.3rem .5rem;text-align:center}
+th{background:var(--tinta);color:var(--blanco);font-family:var(--titulo);font-weight:700}
+th small{display:block;font-weight:500;opacity:.85}
+td.nombre{text-align:left;font-weight:700;white-space:nowrap}
+td input[type=number]{width:5.2rem;font-size:1.2rem;padding:.35rem;text-align:center;border:2px solid var(--linea);border-radius:6px;font-family:var(--texto)}
+.sino{display:inline-flex;gap:.3rem}
+.sino button{font-size:1rem;padding:.4rem .7rem;border-radius:6px;border:2px solid var(--linea);background:var(--blanco);cursor:pointer;font-family:var(--texto)}
+.sino button.on-si{background:var(--verde);color:#fff;border-color:var(--verde)}
+.sino button.on-no{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+#aviso{font-size:1.05rem;color:var(--tinta-suave);margin-top:.6rem;text-align:justify}
+/* Resultados */
+.graficos{display:grid;grid-template-columns:repeat(2,1fr);gap:1.4rem}
+.graficos .bloque{margin:0}
+.barra-fila{display:flex;align-items:center;gap:.8rem;margin:.6rem 0;font-size:1.2rem}
+.barra-fila .lab{width:9.5rem;flex:none}
+.barra-fila .pista{flex:1;background:var(--papel);border-radius:6px;height:2.4rem;position:relative}
+.barra-fila .rel{height:100%;border-radius:6px;background:var(--tinta);transition:width .6s}
+.barra-fila .rel.b{background:var(--fosforito)}
+.barra-fila .val{width:6.5rem;flex:none;font-family:var(--titulo);font-weight:800;font-size:1.4rem;text-align:right}
+.enlace-video{display:inline-block;text-decoration:none}
+@media (max-width:800px){
+  .slide{padding:2rem 4.6rem 4rem}
+  .palabras{grid-template-columns:repeat(3,1fr)}
+  .grupos,.graficos{grid-template-columns:1fr}
+  .flecha{width:3.2rem;height:3.2rem;font-size:1.5rem}
+}
+@media (prefers-reduced-motion:reduce){.barra-fila .rel{transition:none}}
 
+.lienzo-wrap{position:relative;margin-top:1rem;width:min(100%,calc(46vh*900/420))}
+.lienzo-wrap.pequeno{width:min(100%,calc(24vh*900/420));margin:.6rem 0}
+.lienzo-wrap canvas{width:100%;height:auto;display:block;border-radius:12px}
+.lienzo-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem;background:rgba(19,41,75,.88);color:#fff;font-family:var(--titulo);font-weight:700;font-size:clamp(1.4rem,2.6vw,2.2rem);border-radius:12px}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{font-size:1.15rem;padding:.5rem .95rem;border-radius:999px;border:2px solid var(--linea);background:#fff;cursor:pointer;font-family:var(--texto);color:var(--tinta);touch-action:manipulation}
+.chip.sel{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+.chip.hecho::after{content:" ✓"}
+.notis-grid{display:grid;grid-template-columns:minmax(250px,.75fr) 1.5fr;gap:2.2rem;align-items:start}
+.notis-panel h3{margin-top:.6rem}
+.btn.modo.sel{background:var(--tinta);color:#fff}
+.estado{font-size:1.2rem;margin-top:1rem}
+.notis-juego{position:relative;display:flex;flex-direction:column;align-items:flex-start}
+.digitos.peque{font-size:3.2rem;min-width:0;margin-bottom:.6rem;width:min(calc(100% - 270px),60vh);text-align:center}
+.schulte{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;width:min(calc(100% - 270px),60vh)}
+.schulte button{aspect-ratio:1;font-family:var(--titulo);font-weight:800;font-size:clamp(1.6rem,4.5vh,2.8rem);border:2px solid var(--linea);background:#fff;border-radius:10px;cursor:pointer;color:var(--tinta);touch-action:manipulation}
+.schulte button.ok{background:#DDEFE6;color:#A9C4B6;border-color:#C5DDD0}
+.schulte button.mal{background:#F6D3D3;border-color:var(--rojo)}
+.schulte.inactivo{opacity:.35;pointer-events:none}
+.avisos{position:absolute;top:3.8rem;right:0;width:255px;display:flex;flex-direction:column;gap:.5rem;pointer-events:none;z-index:5}
+.aviso-movil{background:rgba(28,28,34,.94);color:#fff;border-radius:16px;padding:.65rem 1rem;font-size:1.05rem;line-height:1.3;box-shadow:0 8px 22px rgba(0,0,0,.28);animation:entra .25s ease-out;text-align:left}
+.aviso-movil b{display:block;font-size:.85rem;opacity:.7;font-weight:400}
+@keyframes entra{from{transform:translateY(-12px);opacity:0}}
+.titular{font-size:clamp(1.5rem,3vw,2.5rem);padding:1.2rem 1.6rem;margin:.4rem 0 .8rem}
+.votos{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.zona{border-radius:12px;padding:.7rem 1rem;border:3px solid}
+.zona h3{margin-bottom:.4rem}
+.zona.noticia{border-color:var(--verde);background:#E5F2EB}.zona.noticia h3{color:var(--verde)}
+.zona.bulo{border-color:var(--rojo);background:#F8E5E5}.zona.bulo h3{color:var(--rojo)}
+.zona.noticia .chip.sel{background:var(--verde);border-color:var(--verde)}
+.zona.bulo .chip.sel{background:var(--rojo);border-color:var(--rojo)}
+.chip.acierto::after{content:" ✓"}
+.chip.fallo::after{content:" ✗"}
+table{font-size:1rem}
+td input[type=number]{width:4.6rem}
+@media (max-width:800px){.notis-grid,.votos{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<button class="flecha" id="ant" aria-label="Diapositiva anterior">&#10094;</button>
+<button class="flecha" id="sig" aria-label="Diapositiva siguiente">&#10095;</button>
+<div id="contador"></div>
+
+<!-- PORTADA -->
+<section class="slide portada">
+  <div class="etiqueta">Tutoría · 3º ESO PDC</div>
+  <h1>Experimentos con tu cerebro</h1>
+</section>
+
+<!-- NORMAS -->
+<section class="slide">
+  <h2>Antes de empezar</h2>
+  <div class="bloque">
+    <ol class="pasos">
+      <li>Cada uno tiene su <span class="marca">hoja de registro</span>. Escribe tu nombre arriba.</li>
+      <li>Las pruebas son individuales y en silencio. No mires la hoja del compañero: no es un examen, es un experimento.</li>
+      <li>Al terminar cada prueba, apunta enseguida tu resultado en la hoja. Tarda diez segundos.</li>
+      <li>Sé sincero con tus datos. Si haces trampa, el experimento no sirve para nada.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- PRUEBA 1 -->
+<section class="slide">
+  <div class="etiqueta">Prueba 1 de 4</div>
+  <h2>Prueba de rapidez</h2>
+  <p>Vais a recibir una hoja boca abajo. Cuando el temporizador empiece, dadle la vuelta y haced la tarea lo más rápido que podáis. Tenéis tres minutos.</p>
+  <div class="reloj" data-cuenta="180">
+    <div class="digitos">3:00</div>
+    <div class="botones">
+      <button class="btn" data-acc="iniciar">Empezar</button>
+      <button class="btn claro" data-acc="pausar">Pausar</button>
+      <button class="btn claro" data-acc="reiniciar">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 1 · ¿Qué ha pasado?</div>
+  <h2>La primera instrucción lo decía todo</h2>
+  <p>La primera línea pedía leer todas las instrucciones antes de empezar, y la última decía que solo había que hacer la número 2. Quien leyó todo primero escribió su nombre y esperó tranquilo. Quien se lanzó sin leer acabó dando palmadas y levantándose de la silla.</p>
+  <div class="bloque amarillo">
+    <h3>Apunta en tu hoja: ¿leíste todo antes de empezar?</h3>
+    <p>Esto pasa en los exámenes cada semana: alumnos que saben la respuesta pero contestan otra cosa porque no leyeron el enunciado entero. Antes de hacer cualquier tarea, léela completa y <span class="marca">planifica qué vas a hacer</span>. Los treinta segundos que tardas en leer te ahorran muchos errores.</p>
+  </div>
+</section>
+
+<!-- PRUEBA 2: VÍDEO -->
+<section class="slide">
+  <div class="etiqueta">Prueba 2 de 4</div>
+  <h2>Prueba de atención</h2>
+  <p>Vamos a ver un vídeo corto. Haz exactamente lo que te pida el vídeo y <span class="marca">concéntrate al máximo en la tarea</span>. No comentes nada en voz alta hasta que termine.</p>
+  <p>Cuando el vídeo dé la respuesta y haga su pregunta, apunta en tu hoja si acertaste la tarea y si te diste cuenta de lo que pasaba.</p>
+  <div class="botones">
+    <a class="btn enlace-video" href="https://youtu.be/xNSgmm9FX2s?si=19dJZLnP2B8iKWrS" target="_blank" rel="noopener">Abrir el vídeo en YouTube</a>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 2 · ¿Qué ha pasado?</div>
+  <h2>¿Te diste cuenta?</h2>
+  <p>Mientras toda tu atención estaba puesta en la tarea, delante de tus ojos pasaba algo que muchas personas no ven. No es falta de vista: es que el cerebro, cuando se concentra en una cosa, deja fuera todo lo demás.</p>
+  <div class="bloque amarillo">
+    <h3>Apunta en tu hoja: ¿te diste cuenta?</h3>
+    <p>Nuestra atención es limitada. Si estudias con el móvil al lado, tu atención está repartida y se te escapan cosas del tema sin que lo notes. La <span class="marca">concentración</span> no es fuerza de voluntad: es quitar de delante lo que te distrae.</p>
+  </div>
+</section>
+
+<!-- PRUEBA 4: MULTITAREA -->
+<section class="slide">
+  <div class="etiqueta">Prueba 3 de 4 · Ronda A</div>
+  <h2>Una cosa detrás de otra</h2>
+  <p>En el recuadro de la ronda A de tu hoja, escribe la frase <strong>ESTUDIAR ES UN ARTE</strong>, una letra en cada casilla. Después, en la línea de abajo, escribe los números del <strong>1 al 16</strong>. Cuando termines, mira el cronómetro y apunta tu tiempo.</p>
+  <div class="reloj" data-crono>
+    <div class="digitos">0,0</div>
+    <div class="botones">
+      <button class="btn" data-acc="iniciar">Empezar</button>
+      <button class="btn claro" data-acc="pausar">Parar</button>
+      <button class="btn claro" data-acc="reiniciar">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 3 de 4 · Ronda B</div>
+  <h2>Todo a la vez</h2>
+  <p>Ahora lo mismo, pero <span class="marca">alternando una letra y un número</span>: primero la E arriba, luego el 1 abajo; la S arriba, el 2 abajo; la T arriba, el 3 abajo… y así hasta el final. Cuando termines, apunta tu tiempo.</p>
+  <div class="reloj" data-crono>
+    <div class="digitos">0,0</div>
+    <div class="botones">
+      <button class="btn" data-acc="iniciar">Empezar</button>
+      <button class="btn claro" data-acc="pausar">Parar</button>
+      <button class="btn claro" data-acc="reiniciar">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 3 · ¿Qué ha pasado?</div>
+  <h2>Has escrito exactamente lo mismo dos veces</h2>
+  <p>Las mismas 16 letras y los mismos 16 números. Lo único que ha cambiado es que en la ronda B saltabas de una tarea a otra. Comparad vuestros dos tiempos: lo normal es tardar bastante más en la segunda ronda y cometer más errores.</p>
+  <div class="bloque amarillo">
+    <h3>El cerebro no hace dos cosas a la vez: salta de una a otra</h3>
+    <p>Cada salto tiene un coste: el cerebro necesita un momento para volver a situarse. Eso es lo que pasa cuando estudias y contestas mensajes al mismo tiempo. Crees que haces dos cosas, pero en realidad haces las dos peor y más despacio. Es mejor estudiar un rato seguido, de 20 a 25 minutos, y después mirar el móvil en un descanso.</p>
+  </div>
+</section>
+
+<!-- PRUEBA 5: MEMORIA -->
+<section class="slide">
+  <div class="etiqueta">Prueba 4 de 4 · Ronda A</div>
+  <h2>Memoria: palabras sueltas</h2>
+  <p>Vas a ver 15 palabras durante 30 segundos. No se puede escribir mientras están en pantalla. Cuando desaparezcan, tendrás un minuto para escribir en tu hoja todas las que recuerdes, en cualquier orden.</p>
+  <div class="botones"><button class="btn" data-mem="A">Mostrar las palabras</button></div>
+  <div class="reloj mem-reloj oculto"><div class="digitos">0:30</div></div>
+  <div class="palabras mem-contenido oculto">
+    <span>reloj</span><span>nube</span><span>tijeras</span><span>caballo</span><span>lámpara</span>
+    <span>guitarra</span><span>pan</span><span>volcán</span><span>calcetín</span><span>ancla</span>
+    <span>sobre</span><span>tomate</span><span>escalera</span><span>pingüino</span><span>martillo</span>
+  </div>
+  <div class="tapa mem-tapa oculto">¡Ya! Escribe en tu hoja todas las palabras que recuerdes.</div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 4 de 4 · Ronda B</div>
+  <h2>Memoria: palabras organizadas</h2>
+  <p>Otras 15 palabras, el mismo tiempo y las mismas normas. La única diferencia es que esta vez llegan ordenadas en grupos.</p>
+  <div class="botones"><button class="btn" data-mem="B">Mostrar las palabras</button></div>
+  <div class="reloj mem-reloj oculto"><div class="digitos">0:30</div></div>
+  <div class="grupos mem-contenido oculto">
+    <div class="grupo"><h3>Frutas</h3><div>manzana<br>plátano<br>fresa<br>pera<br>uva</div></div>
+    <div class="grupo"><h3>Ropa</h3><div>camisa<br>bufanda<br>zapato<br>gorro<br>chaqueta</div></div>
+    <div class="grupo"><h3>Animales</h3><div>perro<br>león<br>águila<br>delfín<br>serpiente</div></div>
+  </div>
+  <div class="tapa mem-tapa oculto">¡Ya! Escribe en tu hoja todas las palabras que recuerdes.</div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">Prueba 4 · ¿Qué ha pasado?</div>
+  <h2>Mismo número de palabras, distinto resultado</h2>
+  <p>Contad cuántas palabras habéis acertado en cada ronda y apuntadlo. La mayoría recuerda bastantes más en la ronda B. No es que de repente tengáis más memoria: es que las palabras llegaban organizadas, y el cerebro guarda mucho mejor la información cuando tiene un orden.</p>
+  <div class="bloque amarillo">
+    <h3>Para eso sirven los esquemas</h3>
+    <p>Un tema de Ciencias o de Historia leído de corrido es como la ronda A: datos sueltos que se olvidan. Si antes de memorizar <span class="marca">organizas la información</span> en grupos, apartados o un esquema, estás convirtiendo el tema en la ronda B.</p>
+  </div>
+</section>
+
+<!-- BULOS -->
+<section class="slide">
+  <div class="etiqueta">Segunda parte</div>
+  <h2>¿Noticia o bulo?</h2>
+  <p>Ahora vamos a entrenar otra forma de atención: la que necesitas para no tragarte cualquier cosa que leas en internet. Vais a ver ocho titulares. Algunos son reales y otros están inventados, y no todos son fáciles. Cuando lea cada uno, cada alumno dice en voz alta «noticia» o «bulo» y queda anotado en la pantalla.</p>
+</section>
+
+<section class="slide" id="bulos">
+  <div class="etiqueta" id="bulo-num">Titular 1 de 8</div>
+  <div class="titular" id="bulo-texto"></div>
+  <div class="votos">
+    <div class="zona noticia"><h3>Noticia</h3><div class="chips" data-zona="noticia"></div></div>
+    <div class="zona bulo"><h3>Bulo</h3><div class="chips" data-zona="bulo"></div></div>
+  </div>
+  <div class="botones" style="margin-top:.8rem">
+    <button class="btn" id="bulo-revelar">Revelar</button>
+    <button class="btn claro" id="bulo-ant">Titular anterior</button>
+    <button class="btn claro" id="bulo-sig">Titular siguiente</button>
+  </div>
+  <div id="bulo-respuesta"></div>
+</section>
+
+<section class="slide">
+  <div class="etiqueta">¿Noticia o bulo? · Lo que hemos aprendido</div>
+  <h2>Cuatro preguntas antes de creerte algo</h2>
+  <div class="fila">
+    <div class="bloque"><h3>¿Quién lo dice?</h3><p>Un medio conocido o un organismo oficial no es lo mismo que una cuenta anónima o un mensaje reenviado.</p></div>
+    <div class="bloque"><h3>¿Lo cuentan otros?</h3><p>Una noticia importante aparece en muchos medios. Si solo la cuenta uno, sospecha.</p></div>
+  </div>
+  <div class="fila">
+    <div class="bloque"><h3>¿Mezcla algo real con algo falso?</h3><p>Los mejores bulos parten de un dato cierto y lo cambian un poco. Que suene familiar no significa que sea verdad.</p></div>
+    <div class="bloque"><h3>¿El titular exagera?</h3><p>Una noticia puede ser real y su titular, engañoso. Hay que leer más allá de la primera línea.</p></div>
+  </div>
+  <p>Es la misma lección que en la prueba de las instrucciones: quien lee entero y con calma, se equivoca mucho menos.</p>
+</section>
+
+<!-- CIERRE -->
+<section class="slide">
+  <div class="etiqueta">Cierre</div>
+  <h2>Mi plan de ataque</h2>
+  <p>Mira tus resultados de hoy y rellena la ficha. Elige <span class="marca">un solo cambio</span> para esta semana, concreto y que se pueda comprobar. «Voy a concentrarme más» no vale; «Voy a estudiar 25 minutos con el móvil en otra habitación» sí vale. Recorta la tarjeta del compromiso y pégala en la agenda o en el cuaderno.</p>
+  <div class="reloj" data-cuenta="300">
+    <div class="digitos">5:00</div>
+    <div class="botones">
+      <button class="btn" data-acc="iniciar">Empezar</button>
+      <button class="btn claro" data-acc="pausar">Pausar</button>
+      <button class="btn claro" data-acc="reiniciar">Reiniciar</button>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRO -->
+<section class="slide" id="registro">
+  <div class="etiqueta">Registro de la clase</div>
+  <h2>Resultados de hoy</h2>
+  <div class="tabla-wrap">
+    <table>
+      <thead><tr>
+        <th>Alumno</th>
+        <th>P1<small>¿Leyó todo?</small></th>
+        <th>P2<small>¿Se dio cuenta?</small></th>
+        <th>P3<small>Ronda A (s)</small></th>
+        <th>P3<small>Ronda B (s)</small></th>
+        <th>P4<small>Ronda A (palabras)</small></th>
+        <th>P4<small>Ronda B (palabras)</small></th>
+        <th>Bulos<small>Aciertos</small></th>
+      </tr></thead>
+      <tbody id="tabla-cuerpo"></tbody>
+    </table>
+  </div>
+  <div class="botones" style="margin-top:1rem">
+    <button class="btn verde" id="descargar">Descargar datos (hoja de cálculo)</button>
+    <button class="btn claro" id="borrar" style="color:var(--rojo);border-color:var(--rojo)">Borrar todos los datos</button>
+  </div>
+  <p id="aviso">Los votos de «¿Noticia o bulo?» se anotan solos. El resto se rellena a partir de las hojas. Los datos se guardan automáticamente en este navegador y en este ordenador; descárgalos al terminar la sesión como copia de seguridad.</p>
+</section>
+
+<!-- RESULTADOS -->
+<section class="slide" id="resultados">
+  <div class="etiqueta">Resultados de la clase</div>
+  <h2>Lo que dicen nuestros datos</h2>
+  <div class="graficos">
+    <div class="bloque"><h3>P3 · Tiempo medio escribiendo</h3><div id="g-multi"></div></div>
+    <div class="bloque"><h3>P4 · Palabras recordadas de media</h3><div id="g-mem"></div></div>
+    <div class="bloque" style="grid-column:1/-1"><h3>P1 y P2 · Cuántos…</h3><div id="g-sino"></div></div>
+  </div>
+</section>
+
+<script>
+
+/* ---------- Navegación ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let actual=0;
+const ant=document.getElementById('ant'),sig=document.getElementById('sig'),cont=document.getElementById('contador');
+function ir(n){
+  if(n<0||n>=slides.length)return;
+  slides[actual].classList.remove('activa');
+  actual=n;
+  slides[actual].classList.add('activa');
+  ant.disabled=actual===0; sig.disabled=actual===slides.length-1;
+  cont.textContent=(actual+1)+' / '+slides.length;
+  const id=slides[actual].id;
+  if(id==='resultados')pintarResultados();
+  if(id==='registro')pintarTabla();
+}
+ant.onclick=()=>ir(actual-1); sig.onclick=()=>ir(actual+1);
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key==='PageDown')ir(actual+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp')ir(actual-1);
+});
+
+/* ---------- Sonido ---------- */
+let audio=null;
+function sonido(freq=880,ms=600){try{audio=audio||new (window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;g.gain.value=.15;o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+ms/1000);}catch(e){}}
+
+/* ---------- Temporizadores y cronómetros ---------- */
+function mmss(s){s=Math.max(0,Math.ceil(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+document.querySelectorAll('.reloj[data-cuenta]').forEach(r=>{
+  const total=+r.dataset.cuenta,d=r.querySelector('.digitos');let resta=total,t=null,ultimo;
+  const tick=()=>{const ahora=performance.now();resta-=(ahora-ultimo)/1000;ultimo=ahora;d.textContent=mmss(resta);
+    if(resta<=0){clearInterval(t);t=null;d.classList.add('fin');d.textContent='0:00';sonido();}};
+  r.querySelector('[data-acc=iniciar]').onclick=()=>{if(t||resta<=0)return;ultimo=performance.now();t=setInterval(tick,200);};
+  r.querySelector('[data-acc=pausar]').onclick=()=>{clearInterval(t);t=null;};
+  r.querySelector('[data-acc=reiniciar]').onclick=()=>{clearInterval(t);t=null;resta=total;d.classList.remove('fin');d.textContent=mmss(total);};
+});
+const fmt1=s=>s.toFixed(1).replace('.',',');
+document.querySelectorAll('.reloj[data-crono]').forEach(r=>{
+  const d=r.querySelector('.digitos');let acum=0,inicio=null,t=null;
+  r.querySelector('[data-acc=iniciar]').onclick=()=>{if(t)return;inicio=performance.now();t=setInterval(()=>{d.textContent=fmt1(acum+(performance.now()-inicio)/1000)},100);};
+  r.querySelector('[data-acc=pausar]').onclick=()=>{if(!t)return;clearInterval(t);t=null;acum+=(performance.now()-inicio)/1000;d.textContent=fmt1(acum);};
+  r.querySelector('[data-acc=reiniciar]').onclick=()=>{clearInterval(t);t=null;acum=0;d.textContent='0,0';};
+});
+
+/* ---------- Memoria ---------- */
+document.querySelectorAll('[data-mem]').forEach(b=>{
+  b.onclick=()=>{
+    const s=b.closest('.slide'),reloj=s.querySelector('.mem-reloj'),d=reloj.querySelector('.digitos'),
+      c=s.querySelector('.mem-contenido'),tapa=s.querySelector('.mem-tapa');
+    b.disabled=true;b.textContent='Mirando…';tapa.classList.add('oculto');tapa.textContent='¡Ya! Escribe en tu hoja todas las palabras que recuerdes.';
+    c.classList.remove('oculto');reloj.classList.remove('oculto');d.classList.remove('fin');
+    let resta=30;d.textContent=mmss(resta);
+    const t=setInterval(()=>{resta--;d.textContent=mmss(resta);
+      if(resta<=0){clearInterval(t);c.classList.add('oculto');tapa.classList.remove('oculto');sonido();
+        let esc=60;d.textContent=mmss(esc);
+        const t2=setInterval(()=>{esc--;d.textContent=mmss(esc);
+          if(esc<=0){clearInterval(t2);d.classList.add('fin');tapa.textContent='Tiempo. Bolígrafos abajo.';sonido();
+            b.disabled=false;b.textContent='Volver a mostrar las palabras';}},1000);}},1000);
+  };
+});
+
+/* ---------- Datos ---------- */
+const alumnos=['Jorge','Diego','Emma','Kristine','Irene','Zoe','Zacaría','Brais','Lucía'];
+const CLAVE='tutoria_pdc_experimentos_cerebro_v2';
+let datos={},votos={},revelados={};
+function cargar(){try{const g=JSON.parse(localStorage.getItem(CLAVE))||{};datos=g.datos||{};votos=g.votos||{};revelados=g.revelados||{};}catch(e){}}
+function guardar(){try{localStorage.setItem(CLAVE,JSON.stringify({datos,votos,revelados}));}catch(e){document.getElementById('aviso').textContent='No se han podido guardar los datos en este navegador. Descárgalos antes de cerrar la página.';}}
+cargar();
+alumnos.forEach(a=>datos[a]=datos[a]||{});
+
+/* ---------- Noticia o bulo ---------- */
+const titulares=[
+ {t:'La DGT multará con 200 euros a los peatones que crucen la calle mirando el móvil',v:'bulo',p:'En España no existe esa multa. El bulo funciona porque mezcla algo real: la ciudad de Honolulu, en Hawái, sí multa desde 2017 a los peatones que cruzan mirando el móvil. Que un dato suene familiar no significa que sea cierto aquí.'},
+ {t:'Finlandia enseña a sus alumnos a detectar noticias falsas desde primaria',v:'noticia',p:'La alfabetización mediática forma parte del currículo escolar finlandés desde hace años, y Finlandia aparece de forma habitual en los primeros puestos de los índices europeos de resistencia a la desinformación.'},
+ {t:'WhatsApp prohibirá su aplicación a los menores de 16 años en toda la Unión Europea a partir de enero',v:'bulo',p:'Pasó justo lo contrario: en 2024 WhatsApp bajó la edad mínima en Europa de 16 a 13 años. Es un bulo verosímil porque se habla mucho de limitar las redes a los menores, pero no existe esa prohibición.'},
+ {t:'Una inteligencia artificial aprueba el examen para ejercer de abogado en Estados Unidos',v:'noticia',p:'En 2023, el modelo GPT-4 superó una versión del examen de abogacía estadounidense en una prueba de investigación. Es real, aunque el titular exagera un poco: aprobó un examen, no puede ejercer de abogado. Una noticia cierta también puede tener un titular engañoso.'},
+ {t:'La Xunta obligará a hacer todos los exámenes de la ESO en tableta a partir del próximo curso',v:'bulo',p:'No existe ninguna norma así. Suena creíble porque en Galicia hay centros que usan libros digitales, pero un cambio de este tamaño se publicaría en el Diario Oficial de Galicia y saldría en todos los medios. Ante la duda, busca la fuente oficial.'},
+ {t:'Australia aprueba una ley que prohíbe las redes sociales a los menores de 16 años',v:'noticia',p:'El Parlamento australiano la aprobó a finales de 2024 y obliga a las plataformas a impedir que los menores de 16 tengan cuenta. La publicaron medios de todo el mundo.'},
+ {t:'2024 fue el año más cálido registrado en la Tierra',v:'noticia',p:'Lo confirmaron el servicio europeo Copernicus y otros organismos científicos de forma independiente. Que varias fuentes fiables coincidan es una buena señal de que un dato es cierto.'},
+ {t:'La UE obligará a que todos los móviles nuevos tengan un «modo estudio» que bloquee las redes sociales',v:'bulo',p:'No existe esa ley. El bulo se aprovecha de una norma europea real que obliga a que los móviles nuevos usen el mismo cargador USB-C. Los bulos más eficaces se apoyan en algo verdadero para colar lo falso.'}
+];
+let bi=0;
+const bNum=document.getElementById('bulo-num'),bTxt=document.getElementById('bulo-texto'),bResp=document.getElementById('bulo-respuesta');
+function pintarBulo(){
+  bNum.textContent='Titular '+(bi+1)+' de '+titulares.length;
+  bTxt.textContent='«'+titulares[bi].t+'»';
+  const v=votos[bi]||{},rev=revelados[bi],ok=titulares[bi].v;
+  document.querySelectorAll('#bulos .chips').forEach(z=>{
+    const zona=z.dataset.zona;z.innerHTML='';
+    alumnos.forEach(a=>{
+      const c=document.createElement('button');c.textContent=a;
+      let cl='chip';if(v[a]===zona){cl+=' sel';if(rev)cl+=zona===ok?' acierto':' fallo';}
+      c.className=cl;
+      c.onclick=()=>{votos[bi]=votos[bi]||{};votos[bi][a]=votos[bi][a]===zona?'':zona;guardar();pintarBulo();};
+      z.appendChild(c);
+    });
+  });
+  if(rev){
+    const x=titulares[bi],vs=Object.values(v).filter(Boolean),ac=vs.filter(y=>y===x.v).length;
+    bResp.innerHTML='<div class="veredicto '+x.v+'"><strong>'+(x.v==='noticia'?'Noticia real':'Bulo')+(vs.length?' · Han acertado '+ac+' de '+vs.length:'')+'</strong><p>'+x.p+'</p></div>';
+  }else bResp.innerHTML='';
+}
+document.getElementById('bulo-revelar').onclick=()=>{revelados[bi]=true;guardar();pintarBulo();};
+document.getElementById('bulo-sig').onclick=()=>{if(bi<titulares.length-1){bi++;pintarBulo();}};
+document.getElementById('bulo-ant').onclick=()=>{if(bi>0){bi--;pintarBulo();}};
+pintarBulo();
+function aciertosBulos(a){let ac=0,n=0;titulares.forEach((x,i)=>{const v=(votos[i]||{})[a];if(v){n++;if(v===x.v)ac++;}});return{ac,n};}
+
+/* ---------- Registro ---------- */
+const campos=[{k:'inst',tipo:'op',ops:[['si','Sí'],['no','No']]},{k:'gor',tipo:'op',ops:[['si','Sí'],['no','No']]},{k:'mA',tipo:'num',d:1},{k:'mB',tipo:'num',d:1},{k:'pA',tipo:'num'},{k:'pB',tipo:'num'}];
+function pintarTabla(){
+  const tb=document.getElementById('tabla-cuerpo');tb.innerHTML='';
+  alumnos.forEach(a=>{
+    const tr=document.createElement('tr');tr.innerHTML='<td class="nombre">'+a+'</td>';
+    campos.forEach(c=>{
+      const td=document.createElement('td');
+      if(c.tipo==='num'){
+        const i=document.createElement('input');i.type='number';i.min='0';i.step=c.d?'0.1':'1';i.inputMode='decimal';i.value=datos[a][c.k]??'';
+        i.oninput=()=>{datos[a][c.k]=i.value.replace(',','.');guardar();};td.appendChild(i);
+      }else{
+        const w=document.createElement('div');w.className='sino';
+        c.ops.forEach(([val,txt],j)=>{const b=document.createElement('button');b.textContent=txt;
+          if(datos[a][c.k]===val)b.className=j===0?'on-si':'on-no';
+          b.onclick=()=>{datos[a][c.k]=datos[a][c.k]===val?'':val;guardar();pintarTabla();};w.appendChild(b);});
+        td.appendChild(w);
+      }
+      tr.appendChild(td);
+    });
+    const r=aciertosBulos(a),td=document.createElement('td');td.textContent=r.n?r.ac+' / '+r.n:'—';tr.appendChild(td);
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('descargar').onclick=()=>{
+  const cab=['Alumno','P1 Leyó todo antes','P2 Se dio cuenta','P3 Ronda A (s)','P3 Ronda B (s)','P4 Ronda A (palabras)','P4 Ronda B (palabras)','Bulos aciertos','Bulos votados'];
+  const tx={si:'Sí',no:'No',sin:'Sin notificaciones',con:'Con notificaciones'},num=v=>(v??'').toString().replace('.',',');
+  const filas=alumnos.map(a=>{const d=datos[a],r=aciertosBulos(a);return[a,tx[d.inst]||'',tx[d.gor]||'',num(d.mA),num(d.mB),d.pA||'',d.pB||'',r.ac,r.n].join(';');});
+  const csv='\ufeff'+cab.join(';')+'\n'+filas.join('\n');
+  const f=new Date(),fecha=f.getFullYear()+'_'+String(f.getMonth()+1).padStart(2,'0')+'_'+String(f.getDate()).padStart(2,'0');
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  const l=document.createElement('a');l.href=url;l.download='registro_tutoria_pdc_'+fecha+'.csv';document.body.appendChild(l);l.click();l.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+document.getElementById('borrar').onclick=()=>{
+  if(confirm('¿Seguro que quieres borrar todos los resultados, incluidos los votos de los titulares? Esta acción no se puede deshacer.')){
+    datos={};votos={};revelados={};alumnos.forEach(a=>datos[a]={});guardar();pintarTabla();pintarBulo();}
+};
+pintarTabla();
+
+/* ---------- Resultados ---------- */
+function media(k,filtro){const v=alumnos.filter(a=>!filtro||filtro(datos[a])).map(a=>parseFloat(datos[a][k])).filter(x=>!isNaN(x));return v.length?v.reduce((s,x)=>s+x,0)/v.length:null;}
+function barras(el,items,unidad,max){
+  el.innerHTML=items.map(it=>{
+    const pct=it.v==null||!max?0:Math.round(it.v/max*100);
+    const val=it.v==null?'—':(it.txt||(Math.round(it.v*10)/10).toString().replace('.',',')+(unidad?' '+unidad:''));
+    return '<div class="barra-fila"><div class="lab">'+it.l+'</div><div class="pista"><div class="rel '+(it.b?'b':'')+'" style="width:'+pct+'%"></div></div><div class="val">'+val+'</div></div>';
+  }).join('');
+}
+function pintarResultados(){
+  const mA=media('mA'),mB=media('mB');
+  barras(document.getElementById('g-multi'),[{l:'Por orden',v:mA},{l:'Alternando',v:mB,b:1}],'s',Math.max(mA||0,mB||0));
+  barras(document.getElementById('g-mem'),[{l:'Sueltas',v:media('pA')},{l:'Organizadas',v:media('pB'),b:1}],'',15);
+  const n=k=>alumnos.filter(a=>datos[a][k]==='si').length,hay=k=>alumnos.some(a=>datos[a][k]);
+  barras(document.getElementById('g-sino'),[
+    {l:'Leyeron todo',v:hay('inst')?n('inst'):null,txt:n('inst')+' de 9'},
+    {l:'Se dieron cuenta',v:hay('gor')?n('gor'):null,txt:n('gor')+' de 9',b:1}],'',9);
+}
+ir(0);
+</script>
+</body>
+</html>
