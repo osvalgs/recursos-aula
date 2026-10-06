@@ -268,6 +268,76 @@ body:has(#end:not([hidden])) footer{display:none}
 .kb button.go{background:#2F7048;color:#fff;max-width:170px;flex-grow:2.4;font-size:clamp(.85rem,2.4vw,1.1rem);white-space:normal;line-height:1.1}
 .kb .kb-row{width:min(1100px,calc(100vw - 16px))}
 body.kb-open{padding-bottom:var(--kbh,300px)}
+
+
+/* Plantillas imprimibles: 3 por A4 vertical */
+#tplPrint{display:none}
+@page tpl{size:A4 portrait;margin:8mm 10mm}
+@media print{
+  body.print-tpl>*:not(#tplPrint){display:none!important}
+  body.print-tpl{background:#fff;padding:0}
+  body.print-tpl #tplPrint{display:block;page:tpl}
+}
+#tplPrint{color:#1C2733;font-family:'Archivo',system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ptpl{box-sizing:border-box;height:93mm;padding:3mm 5mm;border:.5mm solid #1C2733;border-radius:2mm;display:flex;flex-direction:column;justify-content:space-between;break-inside:avoid}
+.pcut{height:0;border-top:.4mm dashed #8A97A3;margin:0 -4mm;position:relative}
+.pcut::after{content:"✂";position:absolute;left:0;top:-3.2mm;font-size:9pt;color:#8A97A3;background:#fff;padding-right:1mm}
+.ptpl .ph{display:flex;justify-content:space-between;align-items:baseline;border-bottom:.6mm solid #1C2733;padding-bottom:1.2mm}
+.ptpl .ph strong{font-size:13pt;font-weight:800;font-stretch:115%}
+.ptpl .ph span{font-size:10pt;color:#4A5866;font-weight:650}
+.ptpl .pr{display:flex;align-items:flex-end;gap:2mm;font-size:11.5pt}
+.ptpl .pr b{width:44mm;flex:none;font-weight:800;white-space:nowrap;line-height:1.15}
+.ptpl .pr b small{display:block;font-weight:600}
+.ptpl .pr i{flex:none}
+.ptpl .pr b.sm{width:auto}
+.ptpl .pr i{font-style:normal;font-weight:800;font-size:12pt}
+.ptpl .pr .bl{display:inline-block;flex:none;width:34mm;border-bottom:.35mm solid #1C2733;height:10mm;margin-right:4mm}
+.ptpl .pr .bl.fill{flex:1;width:auto;margin-right:3mm}
+.ptpl .pr small{font-size:8.5pt;color:#4A5866;white-space:nowrap}
+.ptpl .pline{border-bottom:.35mm solid #1C2733;height:9mm}
+.tplbtn{align-self:center}
+
+/* Repaso final (ficha proyectada) */
+.review{display:grid;gap:12px;background:var(--card);border:2px solid var(--ink);border-left:12px solid var(--gold);border-radius:6px;padding:18px 20px}
+.review p{margin:0;text-align:justify;hyphens:auto}
+.review .wbtns{display:flex;flex-wrap:wrap;gap:10px}
+.qslide{flex:1;height:100%;overflow:auto;display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,3vh,28px);padding:10px clamp(4px,1vw,16px)}
+.qk{margin:0;font-weight:800;font-stretch:115%;color:var(--sea);font-size:clamp(1rem,2vw,1.4rem);text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:1.9em;height:1.9em;border-radius:50%;background:var(--ink);color:var(--paper);margin-right:.4em;letter-spacing:0}
+.qh{margin:0;font-size:clamp(1.7rem,3.8vw,3.1rem);font-weight:800;font-stretch:115%;line-height:1.1;text-align:center}
+.qtext{margin:0;font-family:'Newsreader',Georgia,serif;font-size:clamp(1.35rem,2.7vw,2.3rem);line-height:1.4;text-align:justify;hyphens:auto;border-left:6px solid var(--gold);padding-left:clamp(12px,2vw,24px)}
+.qbig{margin:0;font-size:clamp(2rem,5vw,4rem);font-weight:800;font-stretch:125%;text-align:center;line-height:1.05}
+.qflag{width:min(62vw,40vh*1.5,620px);aspect-ratio:3/2;border:3px solid var(--ink);background:var(--paper-2);padding:2.5%;align-self:center;flex:none}
+.qflag svg,.qfl .mini svg{width:100%;height:100%;display:block}
+.qopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:clamp(10px,2vw,22px)}
+.qopt{display:flex;align-items:center;gap:14px;border:3px solid var(--ink);border-radius:10px;background:var(--card);padding:clamp(10px,2vh,18px) 18px;font-weight:750;font-size:clamp(1.25rem,2.6vw,2.1rem);line-height:1.15}
+.qlet{flex:none;display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:8px;background:var(--ink);color:var(--paper);font-weight:800}
+.qopt.ok{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.qopt.ok .qlet{background:#fff;color:var(--leaf)}
+.qfl{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:clamp(12px,2vw,24px)}
+.qfl figure{margin:0;display:grid;gap:8px;justify-items:center;border:3px solid transparent;border-radius:10px;padding:8px}
+.qfl .mini{width:100%;aspect-ratio:3/2;background:var(--paper-2);padding:6px;border:2px solid var(--ink)}
+.qfl figcaption{font-weight:800;font-size:clamp(1.3rem,2.6vw,2rem)}
+.qfl figure.ok{border-color:var(--leaf);background:rgba(47,112,72,.12)}
+.qvf{display:flex;justify-content:center;gap:clamp(16px,4vw,48px)}
+.qvf span{display:inline-flex;align-items:center;justify-content:center;width:clamp(70px,10vw,120px);height:clamp(70px,10vw,120px);border:4px solid var(--ink);border-radius:14px;font-size:clamp(2rem,5vw,3.6rem);font-weight:800;background:var(--card)}
+.qvf span.ok{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.qlines{display:grid;gap:clamp(18px,4vh,36px);margin-top:6px}
+.qlines i{display:block;border-bottom:3px dashed var(--ink-2);height:1px}
+.qreveal{align-self:center}
+.qnote{margin:0;color:var(--ink-2);font-size:clamp(1rem,1.8vw,1.25rem);text-align:justify;hyphens:auto}
+.tpl{background:#fff;color:#1C2733;border:3px solid #1C2733;border-radius:6px;padding:clamp(14px,2.5vw,30px);display:grid;gap:clamp(10px,2vh,18px);font-size:clamp(1.05rem,2vw,1.6rem)}
+.tpl .trow{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 28px;border-bottom:1px solid #C9D3CE;padding-bottom:clamp(8px,1.6vh,14px)}
+.tpl .trow:last-child{border-bottom:0}
+.tpl b{font-weight:800;min-width:9.5em}
+.tpl .blank{display:inline-block;min-width:3.2em;border-bottom:2px solid #1C2733;margin-left:6px}
+.tpl .blank.long{min-width:12em}
+.tpl small{color:#4A5866;font-size:.8em}
+.qsol{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 22px;font-size:clamp(1.1rem,2.1vw,1.7rem)}
+.qsol div{border-bottom:2px solid var(--paper-2);padding:6px 0;display:flex;gap:10px;align-items:baseline}
+.qsol strong{min-width:1.6em;color:var(--sea)}
+.remember{margin-top:10px;text-align:justify;background:rgba(212,167,44,.16);border-left:6px solid var(--gold);padding:10px 14px;border-radius:4px}
+.solution .remember{margin:4px 0 12px}
 </style>
 </head>
 <body>
@@ -308,7 +378,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
       <div class="rules-body">
         <div class="rule">
           <h3>Cómo se responde</h3>
-          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista; en el modo Pistas, leer la siguiente) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla, pasa o se acaba el tiempo, el turno rebota al siguiente equipo. Si el profesor pasa el turno por error, puede deshacerlo.</p>
+          <p>Se juega por turnos. Cada bandera la empieza el equipo que va después del que tuvo el último turno en la anterior, haya acertado o no. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista; en el modo Pistas, leer la siguiente) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla o pasa, el turno rebota al siguiente equipo. Cuando se acaba el tiempo, el profesor decide si pasa el turno. Si el profesor pasa el turno por error, puede deshacerlo.</p>
         </div>
         <div class="modes-wrap">
           <h3 class="modes-title">Tres formas de jugar</h3>
@@ -328,10 +398,11 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <div class="rule">
           <h3>Final</h3>
           <p>Gana el equipo con más puntos al acabar las banderas.</p>
+          <p class="remember"><strong>¡Atención!</strong> Cada vez que se descubre una bandera aparecen sus datos: capital, continente, un dato curioso y un personaje famoso. Fijaos bien y recordadlos, porque al final hay un <strong>repaso en ficha</strong> con preguntas sobre las banderas de la partida, y esa ficha se puntúa.</p>
         </div>
       </div>
     </details>
-    <div><button id="startBtn" class="primary">Empezar partida</button></div>
+    <div class="wbtns" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center"><button id="startBtn" class="primary">Empezar partida</button><button class="secondary tplPrintBtn" type="button">Imprimir plantillas del repaso (3 por A4)</button></div>
   </section>
 
   <!-- JUEGO -->
@@ -389,6 +460,12 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <p class="msg" id="wMsg" role="status"></p>
       </div>
     </section>
+    <section class="review" aria-labelledby="revTitle">
+      <h2 id="revTitle">Repaso final: ficha</h2>
+      <p>Diez preguntas sobre las banderas de esta partida para proyectar. El alumnado copia primero la plantilla en una hoja o en el cuaderno y anota solo respuestas cortas: una letra, V o F y una frase final. Al terminar se proyectan las soluciones para corregir en voz alta.</p>
+      <div class="wbtns"><button id="quizBtn" class="primary" type="button">Proyectar el repaso</button><button id="quizNew" class="secondary" type="button">Generar otras preguntas</button><button id="tplBtn" class="secondary tplPrintBtn" type="button">Imprimir plantillas (3 por A4)</button></div>
+      <p class="msg" id="quizMsg" role="status"></p>
+    </section>
     <h2>Banderas de la partida</h2>
     <div class="recap" id="recap"></div>
     <div><button id="againBtn" class="primary">Nueva partida</button></div>
@@ -403,7 +480,17 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
   </div>
   <div class="dots" id="dots"></div>
 </div>
+<div class="slides" id="quiz" hidden role="dialog" aria-modal="true" aria-label="Repaso final">
+  <div class="slides-top"><span id="quizInfo"></span><button class="slides-close" id="quizClose">Cerrar ✕</button></div>
+  <div class="slides-stage">
+    <button class="slides-nav" id="quizPrev" aria-label="Anterior">‹</button>
+    <div class="qslide" id="qslide" aria-live="polite"></div>
+    <button class="slides-nav" id="quizNext" aria-label="Siguiente">›</button>
+  </div>
+  <div class="dots" id="quizDots"></div>
+</div>
 <div id="diploma" aria-hidden="true"></div>
+<div id="tplPrint" aria-hidden="true"></div>
 <div class="kb" id="kb" hidden role="group" aria-label="Teclado en pantalla"></div>
 <footer>Atajos: barra espaciadora para destapar o pasar de pista, Intro para comprobar, N para la siguiente bandera. Banderas dibujadas de forma simplificada.</footer>
 
@@ -701,16 +788,16 @@ $('#againBtn').addEventListener('click',()=>{$('#end').hidden=true;$('#setup').h
 /* ---------- partida ---------- */
 function start(){
   teams=Array.from({length:cfg.teams},(_,i)=>({name:(cfg.names[i]||'').trim()||('Equipo '+(i+1)),score:0,nota:0,members:splitNames(cfg.members[i]||'')}));
-  deck=shuffle(C).slice(0,cfg.rounds);idx=0;history=[];
+  deck=shuffle(C).slice(0,cfg.rounds);idx=0;history=[];nextStart=0;
   $('#setup').hidden=true;$('#end').hidden=true;$('#game').hidden=false;
   newRound();
 }
-let turn=0,acted=false;
+let turn=0,acted=false,nextStart=0;
 function newRound(){
   cur=deck[idx];
   roundMode=cfg.mode==='alt'?(Math.floor(idx/teams.length)%2?'clues':'flag'):cfg.mode;
   revealed=new Set();penalty=0;hintStep=0;clueStep=roundMode==='clues'?1:0;solved=false;awaiting=false;
-  turn=idx%teams.length;acted=false;
+  turn=teams.length>1?nextStart%teams.length:0;acted=false;
   $('#flag').innerHTML=cur.svg;
   const t=$('#tiles');t.innerHTML='';
   for(let r=0;r<4;r++)for(let c=0;c<6;c++){
@@ -825,7 +912,7 @@ function startTimer(){
   timerId=setInterval(()=>{
     if(solved||$('#game').hidden){stopTimer();return;}
     timeLeft--;drawClock();
-    if(timeLeft<=0){stopTimer();snap();passTurn('¡Se acabó el tiempo!');}
+    if(timeLeft<=0){stopTimer();setMsg(`¡Se acabó el tiempo de ${teams[turn].name}! El profesor decide si pasa el turno.`,'no');}
   },1000);
 }
 function snap(){if(multiT())lastSnap={turn,acted,scores:teams.map(t=>t.score)};}
@@ -866,6 +953,7 @@ function solve(t,pts){
   solved=true;awaiting=false;
   [...$('#tiles').children].forEach(b=>b.classList.add('open'));
   history.push({c:cur,team:t,pts:pts||0});
+  if(teams.length>1)nextStart=((t!=null?t:turn)+1)%teams.length;
   setMsg('');
   const last=idx>=deck.length-1;
   const kicker=t!=null?`${esc(teams[t].name)} suma ${pts} ${pts===1?'punto':'puntos'}`:'Sin puntos en esta ronda';
@@ -873,6 +961,7 @@ function solve(t,pts){
   s.innerHTML=`
     <p class="kicker">${kicker}</p>
     <h2 class="country">${esc(cur.n)}</h2>
+    <p class="remember"><strong>Recordad estos datos:</strong> la capital, el dato curioso y el personaje de esta bandera pueden salir en el repaso final. Mirad las diapositivas antes de seguir.</p>
     <dl class="facts">
       <div><dt>Capital</dt><dd>${esc(cur.cap)}</dd></div>
       <div><dt>Continente</dt><dd>${esc(cur.cont)}</dd></div>
@@ -924,6 +1013,7 @@ function finish(){
   const top=Math.max(...teams.map(t=>t.score));
   teams.forEach(t=>{t.nota=top>0?Math.max(0,Math.round(t.score/top*20)/2):0;});
   renderRanking();
+  quiz=null;quizState();
   $('#recap').innerHTML=history.map(h=>`<figure><div class="mini">${uniq(h.c.svg)}</div><figcaption>${esc(h.c.n)}<small>${h.team!=null?esc(teams[h.team].name)+' (+'+h.pts+')':'Sin acierto'}</small></figcaption></figure>`).join('');
   $('#wMsg').textContent='';$('#wMsg').className='msg';$('#wSend').disabled=false;$('#wSend').textContent='Enviar notas al formulario';
   window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
@@ -1010,6 +1100,137 @@ document.addEventListener('keydown',e=>{
 let tx=null;
 $('#slides').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
 $('#slides').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)goSlide(dx<0?1:-1);tx=null;});
+
+
+/* ---------- repaso final (ficha proyectada) ---------- */
+const QL='abcd';
+const SIMILAR=[['Colombia','Ecuador','Venezuela'],['Noruega','Islandia'],['Australia','Nueva Zelanda'],['Irlanda','México']];
+const simGroup=n=>SIMILAR.find(g=>g.includes(n))||[n];
+let quiz=null,qIdx=0,qShow=false,quizReturn=null;
+const simpleCap=c=>!/[(:]/.test(c.cap);
+const leaks=c=>{const w=norm(c.n).split(' ').filter(x=>x.length>3);const d=norm(c.dato);return w.some(x=>d.includes(x));};
+function playedPool(){const seen=new Set(),out=[];history.forEach(h=>{if(!seen.has(h.c.n)){seen.add(h.c.n);out.push(h.c);}});return out;}
+function quizState(){
+  const n=playedPool().length,ok=n>=3;
+  $('#quizBtn').disabled=!ok;$('#quizNew').disabled=!ok;
+  $('#quizMsg').textContent=ok?'':'Para el repaso hacen falta al menos 3 banderas jugadas.';
+  $('#quizMsg').className='msg'+(ok?'':' no');
+}
+function makePicker(pool){
+  const used=new Set();
+  return (filter=()=>true)=>{
+    const cand=shuffle(pool.filter(filter));if(!cand.length)return null;
+    const fresh=cand.filter(c=>!used.has(c.n));const c=(fresh.length?fresh:cand)[0];used.add(c.n);return c;
+  };
+}
+function options(target,flagQ){
+  const bad=flagQ?simGroup(target.n):[target.n];
+  const ds=shuffle(C.filter(c=>c!==target&&!bad.includes(c.n))).slice(0,2);
+  const opts=shuffle([target,...ds]);
+  return {opts:opts.map(c=>c.n),ans:opts.indexOf(target)};
+}
+function buildQuiz(){
+  const pool=playedPool(),pick=makePicker(pool),qs=[];
+  for(let i=0;i<3;i++){const c=pick();qs.push({t:'flag',c,...options(c,true)});}
+  for(let i=0;i<2;i++){const c=pick(x=>!leaks(x))||pick();qs.push({t:'dato',c,...options(c,false)});}
+  {const c=pick();qs.push({t:'per',c,...options(c,false)});}
+  const vf=shuffle([true,false]);
+  vf.forEach(truth=>{
+    const c=pick(simpleCap)||pick();let cap=c.cap;
+    if(!truth){const o=shuffle(C.filter(x=>x!==c&&simpleCap(x)))[0];cap=o.cap;}
+    qs.push({t:'vf',c,cap,ans:truth?0:1});
+  });
+  const outside=shuffle(C.filter(c=>!pool.some(p=>p.n===c.n)));
+  if(outside.length){
+    const ins=shuffle(pool).slice(0,3),odd=outside[0],flags=shuffle([...ins,odd]);
+    qs.push({t:'odd',flags,ans:flags.indexOf(odd)});
+  }else{
+    const c=pick(),others=shuffle(C.filter(x=>x!==c&&!simGroup(c.n).includes(x.n))).slice(0,3),flags=shuffle([c,...others]);
+    qs.push({t:'which',c,flags,ans:flags.indexOf(c)});
+  }
+  qs.push({t:'open'});
+  return qs;
+}
+const QN=12; // plantilla + 10 preguntas + soluciones
+function optHTML(q){return `<div class="qopts">${q.opts.map((o,i)=>`<div class="qopt${qShow&&i===q.ans?' ok':''}"><span class="qlet">${QL[i]}</span>${esc(o)}</div>`).join('')}</div>`;}
+function ansText(q){
+  if(q.t==='open')return 'Respuesta libre';
+  if(q.t==='vf')return q.ans===0?'V':`F (la capital es ${q.c.cap})`;
+  if(q.t==='odd'||q.t==='which')return `${QL[q.ans]}) ${q.flags[q.ans].n}`;
+  return `${QL[q.ans]}) ${q.opts[q.ans]}`;
+}
+function renderQuiz(){
+  const el=$('#qslide');let h='';
+  const revealBtn=`<button class="secondary qreveal" id="qRev" type="button">${qShow?'Ocultar respuesta':'Mostrar respuesta'}</button>`;
+  if(qIdx===0){
+    h=`<p class="qk">Antes de empezar</p><h2 class="qh">Copia esta plantilla en tu hoja</h2>
+    <div class="tpl">
+      <div class="trow"><b>Nombre:</b><span class="blank long"></span><b style="min-width:auto">Equipo:</b><span class="blank long"></span></div>
+      <div class="trow"><b>Banderas</b>1 <span class="blank"></span> 2 <span class="blank"></span> 3 <span class="blank"></span><small>(a, b o c)</small></div>
+      <div class="trow"><b>Datos y personaje</b>4 <span class="blank"></span> 5 <span class="blank"></span> 6 <span class="blank"></span><small>(a, b o c)</small></div>
+      <div class="trow"><b>Verdadero o falso</b>7 <span class="blank"></span> 8 <span class="blank"></span><small>(V o F)</small></div>
+      <div class="trow"><b>Cuatro banderas</b>9 <span class="blank"></span><small>(a, b, c o d)</small></div>
+      <div class="trow"><b>Lo que más me sorprendió</b>10 <span class="blank" style="flex:1"></span></div>
+    </div><button class="secondary tplbtn tplPrintBtn" type="button">🖨 Imprimir plantillas (3 por A4)</button>`;
+  }else if(qIdx<=10){
+    const q=quiz[qIdx-1],n=qIdx,k=t=>`<p class="qk"><span class="qnum">${n}</span>${t}</p>`;
+    if(q.t==='flag')h=k('Banderas')+`<h2 class="qh">¿De qué país es esta bandera?</h2><div class="qflag">${uniq(q.c.svg)}</div>`+optHTML(q)+revealBtn;
+    else if(q.t==='dato')h=k('Dato curioso')+`<h2 class="qh">¿De qué país es este dato?</h2><p class="qtext">${esc(q.c.dato)}</p>`+optHTML(q)+revealBtn;
+    else if(q.t==='per')h=k('Personaje')+`<h2 class="qh">¿De qué país era este personaje?</h2><p class="qbig">${esc(q.c.per[0])}</p>`+optHTML(q)+revealBtn;
+    else if(q.t==='vf')h=k('Verdadero o falso')+`<p class="qbig">La capital de ${esc(q.c.n)} es ${esc(q.cap)}.</p><div class="qvf"><span class="${qShow&&q.ans===0?'ok':''}">V</span><span class="${qShow&&q.ans===1?'ok':''}">F</span></div>`+revealBtn;
+    else if(q.t==='odd'||q.t==='which')h=k(q.t==='odd'?'El intruso':'Busca la bandera')+`<h2 class="qh">${q.t==='odd'?'Una de estas banderas <u>no</u> ha salido en la partida. ¿Cuál es?':'¿Cuál de estas banderas es la de '+esc(q.c.n)+'?'}</h2><div class="qfl">${q.flags.map((f,i)=>`<figure class="${qShow&&i===q.ans?'ok':''}"><div class="mini">${uniq(f.svg)}</div><figcaption>${QL[i]}${qShow&&i===q.ans?' · '+esc(f.n):''}</figcaption></figure>`).join('')}</div>`+revealBtn;
+    else h=k('Tu opinión')+`<h2 class="qh">¿Qué dato te ha sorprendido más?</h2><p class="qtext">Escribe el país y explica el dato con tus palabras en una o dos líneas.</p><div class="qlines"><i></i><i></i></div>`;
+  }else{
+    h=`<p class="qk">Corrección</p><h2 class="qh">Soluciones</h2><div class="qsol">${quiz.map((q,i)=>`<div><strong>${i+1}</strong><span>${esc(ansText(q))}</span></div>`).join('')}</div><p class="qnote">Cada respuesta correcta vale 1 punto; la pregunta 10 la valora el profesor.</p>`;
+  }
+  el.innerHTML=h;el.scrollTop=0;
+  const rb=$('#qRev');if(rb)rb.addEventListener('click',()=>{qShow=!qShow;renderQuiz();});
+  $('#quizInfo').textContent=qIdx===0?'Plantilla':qIdx<=10?`Pregunta ${qIdx} de 10`:'Soluciones';
+  $('#quizPrev').disabled=qIdx===0;$('#quizNext').disabled=qIdx===QN-1;
+  $('#quizDots').innerHTML=Array.from({length:QN},(_,i)=>`<button data-i="${i}" aria-label="${i===0?'Plantilla':i<=10?'Pregunta '+i:'Soluciones'}" aria-current="${i===qIdx}"></button>`).join('');
+}
+function openQuiz(){
+  if(playedPool().length<3)return;
+  if(!quiz)quiz=buildQuiz();
+  quizReturn=document.activeElement;qIdx=0;qShow=false;$('#quiz').hidden=false;document.body.style.overflow='hidden';
+  renderQuiz();$('#quizClose').focus();
+}
+function closeQuiz(){$('#quiz').hidden=true;document.body.style.overflow='';if(quizReturn&&quizReturn.focus)quizReturn.focus();}
+function goQuiz(d){const n=qIdx+d;if(n<0||n>=QN)return;qIdx=n;qShow=false;renderQuiz();}
+
+function tplOne(){
+  const r=(lab,nums,hint)=>`<div class="pr"><b>${lab}<small>${hint}</small></b>${nums.map(n=>`<i>${n}</i><span class="bl"></span>`).join('')}</div>`;
+  return `<div class="ptpl">
+    <div class="ph"><strong>Atlas oculto · Repaso final</strong><span>Fecha: _____ / _____ / __________</span></div>
+    <div class="pr"><b class="sm">Nombre</b><span class="bl fill"></span><b class="sm">Equipo</b><span class="bl fill" style="flex:.6;margin-right:0"></span></div>
+    ${r('Banderas',[1,2,3],'a, b o c')}
+    ${r('Datos y personaje',[4,5,6],'a, b o c')}
+    ${r('Verdadero o falso',[7,8],'V o F')}
+    ${r('Cuatro banderas',[9],'a, b, c o d')}
+    <div class="pr" style="margin-top:1.5mm"><b class="sm">10 · Lo que más me sorprendió (país y dato):</b></div>
+    <div class="pline"></div><div class="pline"></div>
+  </div>`;
+}
+function printTemplates(){
+  $('#tplPrint').innerHTML=[tplOne(),'<div class="pcut"></div>',tplOne(),'<div class="pcut"></div>',tplOne()].join('');
+  document.body.classList.add('print-tpl');
+  const done=()=>{document.body.classList.remove('print-tpl');window.removeEventListener('afterprint',done);};
+  window.addEventListener('afterprint',done);
+  setTimeout(()=>{window.print();setTimeout(done,500);},50);
+}
+document.addEventListener('click',e=>{if(e.target.closest('.tplPrintBtn'))printTemplates();});
+$('#quizBtn').addEventListener('click',openQuiz);
+$('#quizNew').addEventListener('click',()=>{quiz=buildQuiz();$('#quizMsg').textContent='Preguntas nuevas preparadas.';$('#quizMsg').className='msg ok';});
+$('#quizPrev').addEventListener('click',()=>goQuiz(-1));
+$('#quizNext').addEventListener('click',()=>goQuiz(1));
+$('#quizClose').addEventListener('click',closeQuiz);
+$('#quizDots').addEventListener('click',e=>{const b=e.target.closest('button');if(b){qIdx=+b.dataset.i;qShow=false;renderQuiz();}});
+document.addEventListener('keydown',e=>{
+  if($('#quiz').hidden)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goQuiz(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goQuiz(-1);}
+  else if(e.key==='Escape'){closeQuiz();}
+});
 
 /* ---------- resultados: formulario, Excel y diploma ---------- */
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfy3EnllkwywISGxt-hqL5tFcTyQ5adyZA8oaKA_9hMTgL0Ww/viewform';

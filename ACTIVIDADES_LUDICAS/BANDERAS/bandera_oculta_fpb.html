@@ -339,6 +339,8 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
 .qsol{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 22px;font-size:clamp(1.1rem,2.1vw,1.7rem)}
 .qsol div{border-bottom:2px solid var(--paper-2);padding:6px 0;display:flex;gap:10px;align-items:baseline}
 .qsol strong{min-width:1.6em;color:var(--sea)}
+.remember{margin-top:10px;text-align:justify;background:rgba(212,167,44,.16);border-left:6px solid var(--gold);padding:10px 14px;border-radius:4px}
+.solution .remember{margin:4px 0 12px}
 </style>
 </head>
 <body>
@@ -379,7 +381,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
       <div class="rules-body">
         <div class="rule">
           <h3>Cómo se responde</h3>
-          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla, pasa o se acaba el tiempo, el turno rebota al siguiente equipo. Si el profesor pasa el turno por error, puede deshacerlo.</p>
+          <p>Se juega por turnos. Cuando un equipo acierta una bandera, la siguiente la empieza el equipo que va después de él. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla o pasa, el turno rebota al siguiente equipo. Cuando se acaba el tiempo, el profesor decide si pasa el turno. Si el profesor pasa el turno por error, puede deshacerlo.</p>
         </div>
         <div class="modes-wrap">
           <h3 class="modes-title">Bandera oculta</h3>
@@ -393,6 +395,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <div class="rule">
           <h3>Final</h3>
           <p>Gana el equipo con más puntos al acabar las banderas.</p>
+          <p class="remember"><strong>¡Atención!</strong> Cada vez que se descubre una bandera aparecen sus datos: capital, continente, un dato curioso y un personaje famoso. Fijaos bien y recordadlos, porque al final hay un <strong>repaso en ficha</strong> con preguntas sobre las banderas de la partida, y esa ficha se puntúa.</p>
         </div>
       </div>
     </details>
@@ -782,16 +785,16 @@ $('#againBtn').addEventListener('click',()=>{$('#end').hidden=true;$('#setup').h
 /* ---------- partida ---------- */
 function start(){
   teams=Array.from({length:cfg.teams},(_,i)=>({name:(cfg.names[i]||'').trim()||('Equipo '+(i+1)),score:0,nota:0,members:splitNames(cfg.members[i]||'')}));
-  deck=shuffle(C).slice(0,cfg.rounds);idx=0;history=[];
+  deck=shuffle(C).slice(0,cfg.rounds);idx=0;history=[];nextStart=0;
   $('#setup').hidden=true;$('#end').hidden=true;$('#game').hidden=false;
   newRound();
 }
-let turn=0,acted=false;
+let turn=0,acted=false,nextStart=0;
 function newRound(){
   cur=deck[idx];
   roundMode=cfg.mode==='alt'?(Math.floor(idx/teams.length)%2?'clues':'flag'):cfg.mode;
   revealed=new Set();penalty=0;hintStep=0;clueStep=roundMode==='clues'?1:0;solved=false;awaiting=false;
-  turn=idx%teams.length;acted=false;
+  turn=teams.length>1?nextStart%teams.length:0;acted=false;
   $('#flag').innerHTML=cur.svg;
   const t=$('#tiles');t.innerHTML='';
   for(let r=0;r<4;r++)for(let c=0;c<6;c++){
@@ -867,7 +870,7 @@ function update(){
   $('#hintBtn').textContent=hintStep===0?'Pista: continente (−2)':'Pista: capital (−2)';
   $('#clueBtn').disabled=solved||revealed.size>=24;
   $('#clueBtn').textContent=clueStep<4?'Siguiente pista':'Destapar casilla al azar';
-  $('#stage').classList.toggle('locked',solved||(!isFlag&&clueStep<5));
+  $('#stage').classList.toggle('locked',solved||(!isFlag&&clueStep<5)||(multiT()&&acted));
   [...$('#tiles').children].forEach((b,i)=>{const bl=!solved&&!revealed.has(i)&&!canOpen(i);b.classList.toggle('blocked',bl);b.setAttribute('aria-disabled',bl);});
   const shown=isFlag?[]:clueTexts(cur).slice(0,Math.min(clueStep,4));
   $('#clues').innerHTML=shown.map(t=>`<li>${esc(t)}</li>`).join('');
@@ -906,7 +909,7 @@ function startTimer(){
   timerId=setInterval(()=>{
     if(solved||$('#game').hidden){stopTimer();return;}
     timeLeft--;drawClock();
-    if(timeLeft<=0){stopTimer();snap();passTurn('¡Se acabó el tiempo!');}
+    if(timeLeft<=0){stopTimer();setMsg(`¡Se acabó el tiempo de ${teams[turn].name}! El profesor decide si pasa el turno.`,'no');}
   },1000);
 }
 function snap(){if(multiT())lastSnap={turn,acted,scores:teams.map(t=>t.score)};}
@@ -947,6 +950,7 @@ function solve(t,pts){
   solved=true;awaiting=false;
   [...$('#tiles').children].forEach(b=>b.classList.add('open'));
   history.push({c:cur,team:t,pts:pts||0});
+  if(teams.length>1)nextStart=((t!=null?t:turn)+1)%teams.length;
   setMsg('');
   const last=idx>=deck.length-1;
   const kicker=t!=null?`${esc(teams[t].name)} suma ${pts} ${pts===1?'punto':'puntos'}`:'Sin puntos en esta ronda';
@@ -954,6 +958,7 @@ function solve(t,pts){
   s.innerHTML=`
     <p class="kicker">${kicker}</p>
     <h2 class="country">${esc(cur.n)}</h2>
+    <p class="remember"><strong>Recordad estos datos:</strong> la capital, el dato curioso y el personaje de esta bandera pueden salir en el repaso final. Mirad las diapositivas antes de seguir.</p>
     <dl class="facts">
       <div><dt>Capital</dt><dd>${esc(cur.cap)}</dd></div>
       <div><dt>Continente</dt><dd>${esc(cur.cont)}</dd></div>
