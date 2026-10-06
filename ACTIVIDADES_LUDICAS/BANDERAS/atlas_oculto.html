@@ -88,7 +88,19 @@ input{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:4
 .value{display:flex;align-items:baseline;gap:12px;border-bottom:2px solid var(--ink);padding-bottom:12px}
 .value .num{font-size:4.2rem;font-weight:800;font-stretch:115%;line-height:.9}
 .value .lbl{color:var(--ink-2);font-weight:650}
-.actions{display:flex;flex-wrap:wrap;gap:10px}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.actions>button{width:100%;white-space:normal;line-height:1.2}
+.actions>button[hidden]{display:none}
+#clueBtn{grid-column:1/-1}
+#passBtn{grid-column:1/-1;background:#B3261E;border-color:#B3261E;color:#fff}
+#passBtn:hover{background:#8F1D17;border-color:#8F1D17}
+#undoBtn{grid-column:1/-1;justify-self:center;width:auto}
+.turn{grid-template-columns:auto 1fr auto}
+.turn small{grid-column:1/-1}
+.clock{grid-row:1;grid-column:3;font-weight:800;font-size:2rem;font-variant-numeric:tabular-nums;min-width:2.4em;text-align:center;border-radius:8px;padding:2px 8px;background:var(--paper-2)}
+.clock.low{background:#B3261E;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.clock.low{animation:none}}
 .clues{margin:0;padding-left:1.4em;display:grid;gap:10px;font-family:'Newsreader',Georgia,serif;font-size:1.14rem;line-height:1.5}
 .clues li::marker{font-family:'Archivo',sans-serif;font-weight:800;color:var(--sea)}
 .hints{font-family:'Newsreader',Georgia,serif;font-size:1.14rem;border-left:4px solid var(--gold);padding-left:12px;display:grid;gap:4px}
@@ -296,7 +308,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
       <div class="rules-body">
         <div class="rule">
           <h3>Cómo se responde</h3>
-          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. En su turno, el equipo puede usar una ayuda (destapar una casilla o pedir una pista, solo una de las dos) y después decir el país o pasar. El profesor escribe la respuesta y pulsa «Comprobar»: si acierta, el equipo suma los puntos en juego. Si falla o pasa, el turno rebota al siguiente equipo, que también puede usar una ayuda.</p>
+          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista; en el modo Pistas, leer la siguiente) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla, pasa o se acaba el tiempo, el turno rebota al siguiente equipo. Si el profesor pasa el turno por error, puede deshacerlo.</p>
         </div>
         <div class="modes-wrap">
           <h3 class="modes-title">Tres formas de jugar</h3>
@@ -342,6 +354,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
           <button id="clueBtn" class="secondary">Siguiente pista</button>
           <button id="hintBtn" class="secondary">Pista: continente (−2)</button>
           <button id="passBtn" class="secondary" hidden>Pasar turno</button>
+          <button id="undoBtn" class="link" hidden>↶ Deshacer el último pase</button>
         </div>
         <ol class="clues" id="clues"></ol>
         <div class="hints" id="hints"></div>
@@ -712,7 +725,7 @@ function newRound(){
   $('#roundInfo').textContent=`Bandera ${idx+1} de ${deck.length}`;
   $('#modeInfo').textContent=MODE_NAMES[roundMode];
   if(roundMode==='flag') randomReveal();
-  update();
+  lastSnap=null;update();startTimer();
 }
 function value(){
   if(roundMode==='flag') return Math.max(1,11-revealed.size-penalty);
@@ -762,7 +775,7 @@ function hint(){
 function update(){
   const v=value();
   const ti=$('#turnInfo');
-  if(teams.length>1&&!solved){ti.hidden=false;ti.style.setProperty('--tc',COLORS[turn]);ti.innerHTML=`<span class="tl">Turno</span><strong>${esc(teams[turn].name)}</strong><small>${acted?'Ya ha usado su ayuda: ahora responde o pasa.':'Puede destapar una casilla o pedir una pista, y después responder o pasar.'}</small>`;}
+  if(teams.length>1&&!solved){ti.hidden=false;ti.style.setProperty('--tc',COLORS[turn]);ti.innerHTML=`<span class="tl">Turno</span><strong>${esc(teams[turn].name)}</strong><span class="clock${timeLeft<=10?' low':''}" id="clock" aria-live="off">${timeLeft}</span><small>${acted?'Ya ha usado su ayuda: ahora responde o pasa.':'Puede destapar una casilla o pedir una pista, y después responder o pasar.'}</small>`;}
   else ti.hidden=true;
   $('#valNum').textContent=solved?'—':v;
   $('#valLbl').textContent=solved?'ronda terminada':(v===1?'punto en juego':'puntos en juego');
@@ -780,6 +793,7 @@ function update(){
   const lock=multiT()&&acted&&!solved;
   if(lock){$('#revealBtn').disabled=true;$('#hintBtn').disabled=true;$('#clueBtn').disabled=true;}
   $('#passBtn').hidden=!multiT()||solved;
+  $('#undoBtn').hidden=!lastSnap||solved;
   $('#solveBtn').hidden=solved;$('#checkBtn').disabled=solved;$('#guessIn').disabled=solved;
   renderTeams();
 }
@@ -799,24 +813,48 @@ function canAct(){
 }
 function didAct(){
   if(!multiT())return;
-  acted=true;update();setMsg(`Ahora, ${teams[turn].name}: decid el país o pasad el turno.`);
+  lastSnap=null;acted=true;update();setMsg(`Ahora, ${teams[turn].name}: decid el país o pasad el turno.`);
+}
+const TURN_SECS=30;
+let timeLeft=TURN_SECS,timerId=null,lastSnap=null;
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function drawClock(){const k=$('#clock');if(k){k.textContent=timeLeft;k.classList.toggle('low',timeLeft<=10);}}
+function startTimer(){
+  stopTimer();timeLeft=TURN_SECS;drawClock();
+  if(!multiT()||solved||$('#game').hidden)return;
+  timerId=setInterval(()=>{
+    if(solved||$('#game').hidden){stopTimer();return;}
+    timeLeft--;drawClock();
+    if(timeLeft<=0){stopTimer();snap();passTurn('¡Se acabó el tiempo!');}
+  },1000);
+}
+function snap(){if(multiT())lastSnap={turn,acted,scores:teams.map(t=>t.score)};}
+function undoPass(){
+  if(!lastSnap||solved)return;
+  turn=lastSnap.turn;acted=lastSnap.acted;teams.forEach((t,i)=>t.score=lastSnap.scores[i]);
+  lastSnap=null;update();startTimer();
+  setMsg(`Se ha deshecho el último pase: vuelve a jugar ${teams[turn].name}.`);
 }
 function passTurn(prefix){
   if(teams.length<2||solved){if(prefix)setMsg(prefix,'no');return;}
-  turn=(turn+1)%teams.length;acted=false;update();
+  turn=(turn+1)%teams.length;acted=false;update();startTimer();
   setMsg((prefix?prefix+' ':'')+`Rebote: turno para ${teams[turn].name}.`,prefix?'no':'');
 }
 function check(){
   if(solved)return;
   const raw=$('#guessIn').value,v=norm(raw);if(!v)return;
+  stopTimer();
   const ok=v===norm(cur.n)||cur.a.some(a=>norm(a)===v);
   if(ok){
     award(teams.length===1?0:turn);
   }else{
     const inp=$('#guessIn');inp.classList.remove('shake');void inp.offsetWidth;inp.classList.add('shake');
+    const who=teams.length>1?turn:0;
+    snap();teams[who].score-=3;
     if(teams.length>1){inp.value='';}
     else inp.select();
-    passTurn(`«${raw.trim()}» no es la respuesta.`);
+    passTurn(`«${raw.trim()}» no es la respuesta: ${teams[who].name} pierde 3 puntos.`);
+    renderTeams();
   }
 }
 function award(t){
@@ -824,6 +862,7 @@ function award(t){
   const pts=value();teams[t].score+=pts;solve(t,pts);
 }
 function solve(t,pts){
+  stopTimer();lastSnap=null;
   solved=true;awaiting=false;
   [...$('#tiles').children].forEach(b=>b.classList.add('open'));
   history.push({c:cur,team:t,pts:pts||0});
@@ -880,9 +919,10 @@ $('#ranking').addEventListener('input',e=>{
   renderGrades();
 });
 function finish(){
+  stopTimer();
   $('#game').hidden=true;$('#end').hidden=false;
   const top=Math.max(...teams.map(t=>t.score));
-  teams.forEach(t=>{t.nota=top>0?Math.round(t.score/top*20)/2:0;});
+  teams.forEach(t=>{t.nota=top>0?Math.max(0,Math.round(t.score/top*20)/2):0;});
   renderRanking();
   $('#recap').innerHTML=history.map(h=>`<figure><div class="mini">${uniq(h.c.svg)}</div><figcaption>${esc(h.c.n)}<small>${h.team!=null?esc(teams[h.team].name)+' (+'+h.pts+')':'Sin acierto'}</small></figcaption></figure>`).join('');
   $('#wMsg').textContent='';$('#wMsg').className='msg';$('#wSend').disabled=false;$('#wSend').textContent='Enviar notas al formulario';
@@ -892,7 +932,8 @@ function finish(){
 $('#revealBtn').addEventListener('click',()=>{if(canAct()&&randomReveal())didAct();});
 $('#clueBtn').addEventListener('click',()=>{if(canAct()&&nextClue())didAct();});
 $('#hintBtn').addEventListener('click',()=>{if(canAct()&&hint())didAct();});
-$('#passBtn').addEventListener('click',()=>{if(!solved)passTurn('');});
+$('#passBtn').addEventListener('click',()=>{if(!solved){stopTimer();snap();passTurn('');}});
+$('#undoBtn').addEventListener('click',undoPass);
 $('#checkBtn').addEventListener('click',check);
 $('#guessIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();}});
 $('#solveBtn').addEventListener('click',()=>{if(!solved)solve(null,0);});
