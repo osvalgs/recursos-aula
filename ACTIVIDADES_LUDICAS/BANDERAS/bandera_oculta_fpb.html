@@ -93,6 +93,13 @@ input{font:inherit;padding:10px 12px;border:2px solid var(--ink);border-radius:4
 .actions>button[hidden]{display:none}
 #passBtn{grid-column:1/-1;background:#B3261E;border-color:#B3261E;color:#fff}
 #passBtn:hover{background:#8F1D17;border-color:#8F1D17}
+#undoBtn{grid-column:1/-1;justify-self:center;width:auto}
+.turn{grid-template-columns:auto 1fr auto}
+.turn small{grid-column:1/-1}
+.clock{grid-row:1;grid-column:3;font-weight:800;font-size:2rem;font-variant-numeric:tabular-nums;min-width:2.4em;text-align:center;border-radius:8px;padding:2px 8px;background:var(--paper-2)}
+.clock.low{background:#B3261E;color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.clock.low{animation:none}}
 .clues{margin:0;padding-left:1.4em;display:grid;gap:10px;font-family:'Newsreader',Georgia,serif;font-size:1.14rem;line-height:1.5}
 .clues li::marker{font-family:'Archivo',sans-serif;font-weight:800;color:var(--sea)}
 .hints{font-family:'Newsreader',Georgia,serif;font-size:1.14rem;border-left:4px solid var(--gold);padding-left:12px;display:grid;gap:4px}
@@ -262,6 +269,76 @@ body:has(#end:not([hidden])) footer{display:none}
 .kb button.go{background:#2F7048;color:#fff;max-width:170px;flex-grow:2.4;font-size:clamp(.85rem,2.4vw,1.1rem);white-space:normal;line-height:1.1}
 .kb .kb-row{width:min(1100px,calc(100vw - 16px))}
 body.kb-open{padding-bottom:var(--kbh,300px)}
+.slide .dpic{width:min(62vw,42vh*1.6,720px);aspect-ratio:16/10;border:3px solid var(--ink);border-radius:6px;background:var(--paper-2);overflow:hidden;display:flex;align-items:center;justify-content:center;flex:none}
+.slide .dpic img{width:100%;height:100%;object-fit:cover;display:block}
+.slide .dpic .icon{font-size:clamp(3rem,9vh,6rem)}
+
+/* Plantillas imprimibles: 3 por A4 vertical */
+#tplPrint{display:none}
+@page tpl{size:A4 portrait;margin:8mm 10mm}
+@media print{
+  body.print-tpl>*:not(#tplPrint){display:none!important}
+  body.print-tpl{background:#fff;padding:0}
+  body.print-tpl #tplPrint{display:block;page:tpl}
+}
+#tplPrint{color:#1C2733;font-family:'Archivo',system-ui,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ptpl{box-sizing:border-box;height:93mm;padding:3mm 5mm;border:.5mm solid #1C2733;border-radius:2mm;display:flex;flex-direction:column;justify-content:space-between;break-inside:avoid}
+.pcut{height:0;border-top:.4mm dashed #8A97A3;margin:0 -4mm;position:relative}
+.pcut::after{content:"✂";position:absolute;left:0;top:-3.2mm;font-size:9pt;color:#8A97A3;background:#fff;padding-right:1mm}
+.ptpl .ph{display:flex;justify-content:space-between;align-items:baseline;border-bottom:.6mm solid #1C2733;padding-bottom:1.2mm}
+.ptpl .ph strong{font-size:13pt;font-weight:800;font-stretch:115%}
+.ptpl .ph span{font-size:10pt;color:#4A5866;font-weight:650}
+.ptpl .pr{display:flex;align-items:flex-end;gap:2mm;font-size:11.5pt}
+.ptpl .pr b{width:44mm;flex:none;font-weight:800;white-space:nowrap;line-height:1.15}
+.ptpl .pr b small{display:block;font-weight:600}
+.ptpl .pr i{flex:none}
+.ptpl .pr b.sm{width:auto}
+.ptpl .pr i{font-style:normal;font-weight:800;font-size:12pt}
+.ptpl .pr .bl{display:inline-block;flex:none;width:34mm;border-bottom:.35mm solid #1C2733;height:10mm;margin-right:4mm}
+.ptpl .pr .bl.fill{flex:1;width:auto;margin-right:3mm}
+.ptpl .pr small{font-size:8.5pt;color:#4A5866;white-space:nowrap}
+.ptpl .pline{border-bottom:.35mm solid #1C2733;height:9mm}
+.tplbtn{align-self:center}
+
+/* Repaso final (ficha proyectada) */
+.review{display:grid;gap:12px;background:var(--card);border:2px solid var(--ink);border-left:12px solid var(--gold);border-radius:6px;padding:18px 20px}
+.review p{margin:0;text-align:justify;hyphens:auto}
+.review .wbtns{display:flex;flex-wrap:wrap;gap:10px}
+.qslide{flex:1;height:100%;overflow:auto;display:flex;flex-direction:column;justify-content:center;gap:clamp(14px,3vh,28px);padding:10px clamp(4px,1vw,16px)}
+.qk{margin:0;font-weight:800;font-stretch:115%;color:var(--sea);font-size:clamp(1rem,2vw,1.4rem);text-transform:uppercase;letter-spacing:.06em;text-align:center}
+.qnum{display:inline-flex;align-items:center;justify-content:center;width:1.9em;height:1.9em;border-radius:50%;background:var(--ink);color:var(--paper);margin-right:.4em;letter-spacing:0}
+.qh{margin:0;font-size:clamp(1.7rem,3.8vw,3.1rem);font-weight:800;font-stretch:115%;line-height:1.1;text-align:center}
+.qtext{margin:0;font-family:'Newsreader',Georgia,serif;font-size:clamp(1.35rem,2.7vw,2.3rem);line-height:1.4;text-align:justify;hyphens:auto;border-left:6px solid var(--gold);padding-left:clamp(12px,2vw,24px)}
+.qbig{margin:0;font-size:clamp(2rem,5vw,4rem);font-weight:800;font-stretch:125%;text-align:center;line-height:1.05}
+.qflag{width:min(62vw,40vh*1.5,620px);aspect-ratio:3/2;border:3px solid var(--ink);background:var(--paper-2);padding:2.5%;align-self:center;flex:none}
+.qflag svg,.qfl .mini svg{width:100%;height:100%;display:block}
+.qopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:clamp(10px,2vw,22px)}
+.qopt{display:flex;align-items:center;gap:14px;border:3px solid var(--ink);border-radius:10px;background:var(--card);padding:clamp(10px,2vh,18px) 18px;font-weight:750;font-size:clamp(1.25rem,2.6vw,2.1rem);line-height:1.15}
+.qlet{flex:none;display:inline-flex;align-items:center;justify-content:center;width:1.7em;height:1.7em;border-radius:8px;background:var(--ink);color:var(--paper);font-weight:800}
+.qopt.ok{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.qopt.ok .qlet{background:#fff;color:var(--leaf)}
+.qfl{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:clamp(12px,2vw,24px)}
+.qfl figure{margin:0;display:grid;gap:8px;justify-items:center;border:3px solid transparent;border-radius:10px;padding:8px}
+.qfl .mini{width:100%;aspect-ratio:3/2;background:var(--paper-2);padding:6px;border:2px solid var(--ink)}
+.qfl figcaption{font-weight:800;font-size:clamp(1.3rem,2.6vw,2rem)}
+.qfl figure.ok{border-color:var(--leaf);background:rgba(47,112,72,.12)}
+.qvf{display:flex;justify-content:center;gap:clamp(16px,4vw,48px)}
+.qvf span{display:inline-flex;align-items:center;justify-content:center;width:clamp(70px,10vw,120px);height:clamp(70px,10vw,120px);border:4px solid var(--ink);border-radius:14px;font-size:clamp(2rem,5vw,3.6rem);font-weight:800;background:var(--card)}
+.qvf span.ok{background:var(--leaf);border-color:var(--leaf);color:#fff}
+.qlines{display:grid;gap:clamp(18px,4vh,36px);margin-top:6px}
+.qlines i{display:block;border-bottom:3px dashed var(--ink-2);height:1px}
+.qreveal{align-self:center}
+.qnote{margin:0;color:var(--ink-2);font-size:clamp(1rem,1.8vw,1.25rem);text-align:justify;hyphens:auto}
+.tpl{background:#fff;color:#1C2733;border:3px solid #1C2733;border-radius:6px;padding:clamp(14px,2.5vw,30px);display:grid;gap:clamp(10px,2vh,18px);font-size:clamp(1.05rem,2vw,1.6rem)}
+.tpl .trow{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 28px;border-bottom:1px solid #C9D3CE;padding-bottom:clamp(8px,1.6vh,14px)}
+.tpl .trow:last-child{border-bottom:0}
+.tpl b{font-weight:800;min-width:9.5em}
+.tpl .blank{display:inline-block;min-width:3.2em;border-bottom:2px solid #1C2733;margin-left:6px}
+.tpl .blank.long{min-width:12em}
+.tpl small{color:#4A5866;font-size:.8em}
+.qsol{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px 22px;font-size:clamp(1.1rem,2.1vw,1.7rem)}
+.qsol div{border-bottom:2px solid var(--paper-2);padding:6px 0;display:flex;gap:10px;align-items:baseline}
+.qsol strong{min-width:1.6em;color:var(--sea)}
 </style>
 </head>
 <body>
@@ -302,7 +379,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
       <div class="rules-body">
         <div class="rule">
           <h3>Cómo se responde</h3>
-          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. En su turno, el equipo puede usar una ayuda (destapar una casilla o pedir una pista, solo una de las dos) y después decir el país o pasar. El profesor escribe la respuesta y pulsa «Comprobar»: si acierta, el equipo suma los puntos en juego. Si falla o pasa, el turno rebota al siguiente equipo, que también puede usar una ayuda.</p>
+          <p>Se juega por turnos y cada bandera la empieza un equipo distinto. Cada equipo tiene <strong>30 segundos</strong> por turno. En ese tiempo puede usar una ayuda (destapar una casilla o pedir una pista) y después decir el país o pasar. Si acierta, suma los puntos en juego; si se arriesga y <strong>falla, pierde 3 puntos</strong> de los que ya tiene. Si falla, pasa o se acaba el tiempo, el turno rebota al siguiente equipo. Si el profesor pasa el turno por error, puede deshacerlo.</p>
         </div>
         <div class="modes-wrap">
           <h3 class="modes-title">Bandera oculta</h3>
@@ -319,7 +396,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         </div>
       </div>
     </details>
-    <div><button id="startBtn" class="primary">Empezar partida</button></div>
+    <div class="wbtns" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center"><button id="startBtn" class="primary">Empezar partida</button><button class="secondary tplPrintBtn" type="button">Imprimir plantillas del repaso (3 por A4)</button></div>
   </section>
 
   <!-- JUEGO -->
@@ -342,6 +419,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
           <button id="clueBtn" class="secondary">Siguiente pista</button>
           <button id="hintBtn" class="secondary">Pista: continente (−2)</button>
           <button id="passBtn" class="secondary" hidden>Pasar turno</button>
+          <button id="undoBtn" class="link" hidden>↶ Deshacer el último pase</button>
         </div>
         <ol class="clues" id="clues"></ol>
         <div class="hints" id="hints"></div>
@@ -376,6 +454,12 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <p class="msg" id="wMsg" role="status"></p>
       </div>
     </section>
+    <section class="review" aria-labelledby="revTitle">
+      <h2 id="revTitle">Repaso final: ficha</h2>
+      <p>Diez preguntas sobre las banderas de esta partida para proyectar. El alumnado copia primero la plantilla en una hoja o en el cuaderno y anota solo respuestas cortas: una letra, V o F y una frase final. Al terminar se proyectan las soluciones para corregir en voz alta.</p>
+      <div class="wbtns"><button id="quizBtn" class="primary" type="button">Proyectar el repaso</button><button id="quizNew" class="secondary" type="button">Generar otras preguntas</button><button id="tplBtn" class="secondary tplPrintBtn" type="button">Imprimir plantillas (3 por A4)</button></div>
+      <p class="msg" id="quizMsg" role="status"></p>
+    </section>
     <h2>Banderas de la partida</h2>
     <div class="recap" id="recap"></div>
     <div><button id="againBtn" class="primary">Nueva partida</button></div>
@@ -390,7 +474,17 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
   </div>
   <div class="dots" id="dots"></div>
 </div>
+<div class="slides" id="quiz" hidden role="dialog" aria-modal="true" aria-label="Repaso final">
+  <div class="slides-top"><span id="quizInfo"></span><button class="slides-close" id="quizClose">Cerrar ✕</button></div>
+  <div class="slides-stage">
+    <button class="slides-nav" id="quizPrev" aria-label="Anterior">‹</button>
+    <div class="qslide" id="qslide" aria-live="polite"></div>
+    <button class="slides-nav" id="quizNext" aria-label="Siguiente">›</button>
+  </div>
+  <div class="dots" id="quizDots"></div>
+</div>
 <div id="diploma" aria-hidden="true"></div>
+<div id="tplPrint" aria-hidden="true"></div>
 <div class="kb" id="kb" hidden role="group" aria-label="Teclado en pantalla"></div>
 <footer>Atajos: barra espaciadora para destapar o pasar de pista, Intro para comprobar, N para la siguiente bandera. Banderas dibujadas de forma simplificada.</footer>
 
@@ -436,215 +530,215 @@ function uniq(svg){const r='r'+Math.random().toString(36).slice(2,7);return svg.
 
 /* ---------- datos ---------- */
 const C=[
-{n:'Grecia',a:['greece','hellas'],cont:'Europa',cap:'Atenas',pob:'≈ 10,4 millones',len:'Griego',
+{n:'Grecia',s2:'per',a:['greece','hellas'],cont:'Europa',cap:'Atenas',pob:'≈ 10,4 millones',len:'Griego',
  band:'Las nueve franjas se asocian a las nueve sílabas del lema «Libertad o muerte» (Eleftheria i Thanatos). La cruz representa la fe ortodoxa.',
- dato:'Es la cuna de la democracia, del teatro y de los Juegos Olímpicos. Tiene unas 6.000 islas e islotes, aunque solo unas 200 están habitadas.',
- per:['Pericles','Gobernó en el siglo V a. C., en la época dorada de su ciudad: consolidó la democracia e impulsó la construcción del Partenón.'],
+ img:'Santorini', dato:'Es la cuna de la democracia, del teatro y de los Juegos Olímpicos. Tiene unas 6.000 islas e islotes, aunque solo unas 200 están habitadas.',
+ per:['Alec Issigonis','Ingeniero británico de familia griega, nacido en Esmirna. En 1959 diseñó el Mini, uno de los coches más famosos e influyentes de la historia.'],
  svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#0D5EAF"/><g fill="#fff"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#0D5EAF"/><rect x="4" width="2" height="10" fill="#fff"/><rect y="4" width="10" height="2" fill="#fff"/></svg>`},
 
-{n:'República Checa',a:['chequia','checa','republica checa','czechia','czech republic'],cont:'Europa',cap:'Praga',pob:'≈ 10,9 millones',len:'Checo',
+{n:'República Checa',s2:'dato',a:['chequia','checa','republica checa','czechia','czech republic'],cont:'Europa',cap:'Praga',pob:'≈ 10,9 millones',len:'Checo',
  band:'El blanco y el rojo proceden del escudo de Bohemia; el triángulo azul se añadió por Moravia. Es la antigua bandera de Checoslovaquia.',
- dato:'La palabra «robot» nació aquí: la popularizó el escritor Karel Čapek en su obra de teatro R.U.R. (1920). Es también el país que más cerveza consume por habitante.',
+ img:'Laurin & Klement', dato:'Allí nació Škoda, una de las marcas de coches más antiguas del mundo: empezó en 1895 fabricando bicicletas con el nombre de Laurin & Klement. Hoy pertenece al grupo Volkswagen.',
  per:['Václav Havel','Dramaturgo perseguido por el régimen comunista, lideró la Revolución de Terciopelo (1989) y llegó a presidente de su país.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D7141A"/><polygon points="0,0 15,10 0,20" fill="#11457E"/></svg>`},
 
-{n:'Macedonia del Norte',a:['macedonia','north macedonia'],cont:'Europa',cap:'Skopie',pob:'≈ 1,8 millones',len:'Macedonio y albanés',
- band:'Un sol dorado de ocho rayos sobre fondo rojo: «el nuevo sol de la libertad», cantado en su himno.',
- dato:'Cambió oficialmente de nombre en 2019 tras un acuerdo con su vecino del sur que puso fin a casi 30 años de disputa. El lago Ohrid es uno de los más antiguos de Europa.',
- per:['Madre Teresa de Calcuta','Nació en Skopie en 1910 con el nombre de Anjezë Gonxhe Bojaxhiu. Recibió el Nobel de la Paz en 1979 por su labor con los más pobres en la India.'],
- svg:`<svg viewBox="0 0 28 14"><rect width="28" height="14" fill="#D20000"/><g fill="#FFE600"><polygon points="14,7 12.6,0 15.4,0"/><polygon points="14,7 12.6,14 15.4,14"/><polygon points="14,7 0,5.6 0,8.4"/><polygon points="14,7 28,5.6 28,8.4"/><polygon points="14,7 3,0 0,0 0,2"/><polygon points="14,7 25,0 28,0 28,2"/><polygon points="14,7 3,14 0,14 0,12"/><polygon points="14,7 25,14 28,14 28,12"/></g><circle cx="14" cy="7" r="3.1" fill="#D20000"/><circle cx="14" cy="7" r="2.6" fill="#FFE600"/></svg>`},
-
-{n:'Turquía',a:['turkiye','turkey'],cont:'Europa y Asia',cap:'Ankara',pob:'≈ 85 millones',len:'Turco',
+{n:'Turquía',s2:'dato',a:['turkiye','turkey'],cont:'Europa y Asia',cap:'Ankara',pob:'≈ 85 millones',len:'Turco',
  band:'La media luna y la estrella blancas sobre rojo. Según la leyenda, reproducen el reflejo de la luna y una estrella en un charco de sangre tras una batalla.',
- dato:'Su ciudad más poblada, Estambul, está partida entre Europa y Asia por el estrecho del Bósforo; sin embargo, no es la capital.',
+ img:'Togg T10X', dato:'En 2023 empezó a venderse Togg, la primera marca de coches eléctricos turca. Su circuito de Istanbul Park ha acogido Grandes Premios de Fórmula 1 y de MotoGP.',
  per:['Mustafa Kemal Atatürk','Fundó la república en 1923 y en 1928 sustituyó el alfabeto árabe por el latino para escribir su lengua.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#E30A17"/><circle cx="10.5" cy="10" r="5" fill="#fff"/><circle cx="11.75" cy="10" r="4" fill="#E30A17"/><polygon points="${star(16.3,10,2.5,null,5,180)}" fill="#fff"/></svg>`},
 
-{n:'Corea del Sur',a:['corea','republica de corea','south korea','korea'],cont:'Asia',cap:'Seúl',pob:'≈ 51 millones',len:'Coreano',
+{n:'Corea del Sur',s2:'dato',a:['corea','republica de corea','south korea','korea'],cont:'Asia',cap:'Seúl',pob:'≈ 51 millones',len:'Coreano',
  band:'El círculo central representa el equilibrio entre el yin y el yang; los cuatro trigramas simbolizan el cielo, la tierra, el agua y el fuego.',
- dato:'Es una potencia tecnológica y cultural: su música pop, sus series y su cine se siguen en todo el mundo.',
- per:['Rey Sejong el Grande','En 1443 impulsó la creación del hangul, un alfabeto diseñado para que todo el pueblo, y no solo la élite, pudiera leer y escribir.'],
+ img:'Hyundai Pony', dato:'Hyundai y Kia la han convertido en uno de los grandes fabricantes de coches del mundo. En la ciudad de Ulsan, Hyundai tiene una de las mayores fábricas de automóviles del planeta.',
+ per:['Chung Ju-yung','Fundador del grupo Hyundai. Hijo de campesinos, en 1940 abrió un taller de reparación de coches en Seúl; de ahí nació una empresa que hoy fabrica coches, barcos y edificios.'],
  svg:`<svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#fff"/><g transform="rotate(33.69 18 12)"><path d="M12,12 A6,6 0 0 1 24,12 Z" fill="#CD2E3A"/><path d="M12,12 A6,6 0 0 0 24,12 Z" fill="#0047A0"/><circle cx="15" cy="12" r="3" fill="#CD2E3A"/><circle cx="21" cy="12" r="3" fill="#0047A0"/></g>${trigram(-56.31,[1,1,1])}${trigram(56.31,[0,1,0])}${trigram(123.69,[0,0,0])}${trigram(-123.69,[1,0,1])}</svg>`},
 
-{n:'India',a:['la india'],cont:'Asia',cap:'Nueva Delhi',pob:'≈ 1.430 millones',len:'Hindi e inglés, más 22 lenguas reconocidas en la Constitución',
+{n:'India',s2:'dato',a:['la india'],cont:'Asia',cap:'Nueva Delhi',pob:'≈ 1.430 millones',len:'Hindi e inglés, más 22 lenguas reconocidas en la Constitución',
  band:'Azafrán (valor), blanco (paz) y verde (fe y fertilidad). En el centro, la rueda de Ashoka, con 24 radios.',
- dato:'Desde 2023 es el país más poblado del mundo. De aquí proceden el ajedrez y el sistema de numeración que acabó llegando a Europa a través de los árabes.',
+ img:'Royal Enfield Bullet', dato:'La empresa india Tata es dueña de Jaguar y Land Rover desde 2008. Allí se fabrican las motos Royal Enfield, la marca de motos más antigua que sigue en producción.',
  per:['Mahatma Gandhi','Dirigió la independencia frente al Imperio británico (1947) mediante la resistencia no violenta.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FF9933"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><g stroke="#000080" fill="none"><circle cx="15" cy="10" r="2.9" stroke-width="0.35"/><g stroke-width="0.15">${indiaWheel()}</g></g><circle cx="15" cy="10" r="0.5" fill="#000080"/></svg>`},
 
-{n:'Sudáfrica',a:['sudafrica','republica de sudafrica','south africa'],cont:'África',cap:'Tres: Pretoria (Gobierno), Ciudad del Cabo (Parlamento) y Bloemfontein (justicia)',pob:'≈ 62 millones',len:'12 oficiales, entre ellas zulú, xhosa, afrikáans, inglés y lengua de signos',
+{n:'Sudáfrica',s2:'dato',a:['sudafrica','republica de sudafrica','south africa'],cont:'África',cap:'Tres: Pretoria (Gobierno), Ciudad del Cabo (Parlamento) y Bloemfontein (justicia)',pob:'≈ 62 millones',len:'12 oficiales, entre ellas zulú, xhosa, afrikáans, inglés y lengua de signos',
  band:'Adoptada en 1994. La forma de Y simboliza la unión de los distintos pueblos que avanzan juntos por un mismo camino.',
- dato:'Entre 1948 y 1994 impuso el apartheid, un sistema legal de segregación racial. Es el único país con tres capitales.',
+ img:'Jody Scheckter', dato:'El sudafricano Jody Scheckter fue campeón del mundo de Fórmula 1 en 1979 con Ferrari. En Rosslyn está la primera fábrica que BMW abrió fuera de Alemania, en 1973.',
  per:['Nelson Mandela','Pasó 27 años en prisión por luchar contra el apartheid. En 1994 fue elegido presidente y recibió el Nobel de la Paz en 1993.'],
  svg:`<svg viewBox="0 0 900 600"><rect width="900" height="600" fill="#001489"/><rect width="900" height="300" fill="#E03C31"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#fff" stroke-width="200"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#007749" stroke-width="120"/><polygon points="0,72 342,300 0,528" fill="#FFB81C"/><polygon points="0,132 252,300 0,468" fill="#000"/></svg>`},
 
-{n:'Jamaica',a:[],cont:'América (Caribe)',cap:'Kingston',pob:'≈ 2,8 millones',len:'Inglés; en la calle, patois jamaicano',
+{n:'Jamaica',s2:'dato',a:[],cont:'América (Caribe)',cap:'Kingston',pob:'≈ 2,8 millones',len:'Inglés; en la calle, patois jamaicano',
  band:'Es la única bandera nacional sin rojo, blanco ni azul. Negro (fortaleza), oro (sol y riqueza) y verde (tierra y esperanza).',
- dato:'Es la cuna del reggae y la tierra de Usain Bolt, plusmarquista mundial de los 100 y 200 metros.',
+ img:'Kingston, Jamaica', dato:'Es la cuna del reggae y de Usain Bolt. Como antigua colonia británica, allí se conduce por la izquierda, igual que en el Reino Unido.',
  per:['Bob Marley','Músico que llevó el reggae a todo el mundo con canciones como «One Love» o «Redemption Song».'],
  svg:`<svg viewBox="0 0 12 6"><rect width="12" height="6" fill="#009B3A"/><polygon points="0,0 6,3 0,6" fill="#000"/><polygon points="12,0 6,3 12,6" fill="#000"/><path d="M0,0 L12,6 M0,6 L12,0" stroke="#FED100" stroke-width="0.8"/></svg>`},
 
-{n:'Uruguay',a:[],cont:'América del Sur',cap:'Montevideo',pob:'≈ 3,4 millones',len:'Español',
+{n:'Uruguay',s2:'dato',a:[],cont:'América del Sur',cap:'Montevideo',pob:'≈ 3,4 millones',len:'Español',
  band:'Las nueve franjas representan los departamentos originales del país; el Sol de Mayo es símbolo de la independencia.',
- dato:'Organizó y ganó el primer Mundial de fútbol de la historia, en 1930.',
+ img:'Estadio Centenario', dato:'Organizó y ganó el primer Mundial de fútbol, en 1930. En Punta del Este se han corrido carreras de la Fórmula E, el campeonato de coches eléctricos.',
  per:['José Gervasio Artigas','Héroe de la independencia y considerado el padre de la nación. Aquí también nació el escritor Mario Benedetti.'],
  svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#fff"/><g fill="#0038A8"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#fff"/><polygon points="${star(5,5,4.2,2.6,16)}" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/><circle cx="5" cy="5" r="1.9" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/></svg>`},
 
-{n:'Chile',a:[],cont:'América del Sur',cap:'Santiago',pob:'≈ 19,5 millones',len:'Español',
+{n:'Chile',s2:'dato',a:[],cont:'América del Sur',cap:'Santiago',pob:'≈ 19,5 millones',len:'Español',
  band:'Conocida como «la estrella solitaria». El azul es el cielo; el blanco, la nieve de los Andes; el rojo, la sangre de la independencia.',
- dato:'Mide unos 4.300 km de norte a sur y apenas 180 km de ancho medio. En el norte está el desierto de Atacama, el desierto no polar más árido del mundo.',
+ img:'Atacama Desert', dato:'Mide unos 4.300 km de norte a sur. El rally Dakar recorrió durante varios años su desierto de Atacama, uno de los lugares más secos del planeta.',
  per:['Gabriela Mistral','Poeta y maestra; en 1945 se convirtió en la primera persona de América Latina en ganar el Nobel de Literatura.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D52B1E"/><rect width="10" height="10" fill="#0039A6"/><polygon points="${star(5,5,2.6)}" fill="#fff"/></svg>`},
 
-{n:'Nueva Zelanda',a:['new zealand','aotearoa'],cont:'Oceanía',cap:'Wellington',pob:'≈ 5,2 millones',len:'Inglés, maorí y lengua de signos neozelandesa',
+{n:'Nueva Zelanda',s2:'per',a:['new zealand','aotearoa'],cont:'Oceanía',cap:'Wellington',pob:'≈ 5,2 millones',len:'Inglés, maorí y lengua de signos neozelandesa',
  band:'La bandera del Reino Unido recuerda su pasado colonial; las cuatro estrellas rojas forman la Cruz del Sur. En 2016 se votó en referéndum si cambiarla y ganó mantenerla.',
- dato:'En 1893 fue el primer país del mundo en reconocer el voto de las mujeres en elecciones nacionales.',
- per:['Kate Sheppard','Encabezó la campaña sufragista que logró el voto femenino en 1893. Su rostro aparece en los billetes de 10 dólares del país.'],
+ img:'Burt Munro', dato:'Burt Munro batió en 1967 un récord de velocidad con una moto Indian de 1920 que había modificado él mismo durante años. Su historia se llevó al cine con Anthony Hopkins.',
+ per:['Bruce McLaren','Piloto y constructor que fundó en 1963 la escudería McLaren, una de las más laureadas de la Fórmula 1. Murió en 1970 probando uno de sus coches.'],
  svg:`<svg viewBox="0 0 60 30"><defs><clipPath id="nzA"><rect width="60" height="30"/></clipPath><clipPath id="nzB"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath></defs><rect width="60" height="30" fill="#00247D"/><g transform="scale(0.5)" clip-path="url(#nzA)"><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#nzB)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g><polygon points="${star(45,6.5,2.1)}" fill="#fff"/><polygon points="${star(45,6.5,1.55)}" fill="#CC142B"/><polygon points="${star(40.5,13.5,1.9)}" fill="#fff"/><polygon points="${star(40.5,13.5,1.4)}" fill="#CC142B"/><polygon points="${star(50.5,12,1.9)}" fill="#fff"/><polygon points="${star(50.5,12,1.4)}" fill="#CC142B"/><polygon points="${star(45,24,2.4)}" fill="#fff"/><polygon points="${star(45,24,1.85)}" fill="#CC142B"/></svg>`},
 
-{n:'Países Bajos',a:['holanda','paises bajos','netherlands','nederland'],cont:'Europa',cap:'Ámsterdam (el Gobierno está en La Haya)',pob:'≈ 18 millones',len:'Neerlandés',
+{n:'Países Bajos',s2:'per',a:['holanda','paises bajos','netherlands','nederland'],cont:'Europa',cap:'Ámsterdam (el Gobierno está en La Haya)',pob:'≈ 18 millones',len:'Neerlandés',
  band:'Es una de las tricolores más antiguas del mundo. La franja superior fue naranja, por Guillermo de Orange; con el tiempo se cambió a rojo, pero el naranja sigue siendo su color nacional.',
- dato:'Alrededor de una cuarta parte del territorio está por debajo del nivel del mar, protegida por diques y pólderes. Hay más bicicletas que habitantes.',
- per:['Ana Frank','Niña judía que escribió su famoso diario mientras vivía escondida de los nazis en un anexo secreto (1942-1944).'],
+ img:'Kinderdijk', dato:'Alrededor de una cuarta parte del territorio está por debajo del nivel del mar, protegida por diques y pólderes. Hay más bicicletas que habitantes.',
+ per:['Max Verstappen','Piloto de Fórmula 1, campeón del mundo cuatro veces seguidas (2021-2024) con Red Bull. Con 18 años se convirtió en el ganador más joven de un Gran Premio.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#AE1C28"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#21468B"/></svg>`},
 
-{n:'Irlanda',a:['ireland','eire'],cont:'Europa',cap:'Dublín',pob:'≈ 5,3 millones',len:'Irlandés (gaélico) e inglés',
+{n:'Irlanda',s2:'dato',a:['ireland','eire'],cont:'Europa',cap:'Dublín',pob:'≈ 5,3 millones',len:'Irlandés (gaélico) e inglés',
  band:'El verde representa la tradición gaélica y católica; el naranja, a los protestantes; el blanco, la paz entre ambas comunidades.',
- dato:'Su fiesta más famosa, el 17 de marzo, se celebra en medio mundo con ropa verde y tréboles. La isla está dividida: el norte pertenece al Reino Unido.',
+ img:'Jordan 191', dato:'El irlandés Eddie Jordan fundó la escudería de Fórmula 1 Jordan, en la que debutó Michael Schumacher en 1991. Su fiesta más famosa, San Patricio, se celebra el 17 de marzo.',
  per:['James Joyce','Autor de «Ulises» (1922), novela que transcurre en un solo día y revolucionó la literatura con la técnica del monólogo interior.'],
  svg:`<svg viewBox="0 0 60 30"><rect width="20" height="30" fill="#169B62"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#FF883E"/></svg>`},
 
-{n:'Bélgica',a:['belgica','belgium'],cont:'Europa',cap:'Bruselas',pob:'≈ 11,8 millones',len:'Neerlandés, francés y alemán',
+{n:'Bélgica',s2:'dato',a:['belgica','belgium'],cont:'Europa',cap:'Bruselas',pob:'≈ 11,8 millones',len:'Neerlandés, francés y alemán',
  band:'Sus colores proceden del escudo del antiguo ducado de Brabante: un león dorado con garras rojas sobre fondo negro.',
- dato:'Su capital es la sede principal de la Unión Europea y de la OTAN. Es famosa por su chocolate, sus gofres y sus cómics.',
- per:['Hergé','Seudónimo de Georges Remi, creador de las aventuras de Tintín (1929), uno de los cómics más leídos del mundo.'],
+ img:'Circuit de Spa-Francorchamps', dato:'Allí está Spa-Francorchamps, uno de los circuitos favoritos de los pilotos de Fórmula 1, famoso por la curva de Eau Rouge y porque puede llover en una parte del trazado y en otra no.',
+ per:['Jacky Ickx','Piloto legendario: ganó seis veces las 24 Horas de Le Mans, corrió en Fórmula 1 con Ferrari y ganó el rally Dakar en 1983.'],
  svg:`<svg viewBox="0 0 15 13"><rect width="5" height="13" fill="#000"/><rect x="5" width="5" height="13" fill="#FDDA24"/><rect x="10" width="5" height="13" fill="#EF3340"/></svg>`},
 
-{n:'Suecia',a:['sweden','sverige'],cont:'Europa',cap:'Estocolmo',pob:'≈ 10,5 millones',len:'Sueco',
+{n:'Suecia',s2:'dato',a:['sweden','sverige'],cont:'Europa',cap:'Estocolmo',pob:'≈ 10,5 millones',len:'Sueco',
  band:'Cruz nórdica amarilla sobre azul, colores tomados de su escudo de las tres coronas doradas.',
- dato:'Cada 10 de diciembre, en su capital, se entregan los Premios Nobel (todos salvo el de la Paz).',
- per:['Astrid Lindgren','Escritora de literatura infantil, creadora de Pippi Calzaslargas (1945). Sus libros se han traducido a más de cien lenguas.'],
+ img:'Volvo Amazon', dato:'El cinturón de seguridad de tres puntos lo inventó en 1959 Nils Bohlin, ingeniero de Volvo. La marca dejó la patente libre para que todos los fabricantes pudieran usarlo y salvar vidas.',
+ per:['Christian von Koenigsegg','Fundó en 1994, con solo 22 años, la marca Koenigsegg, que fabrica algunos de los superdeportivos más rápidos y exclusivos del mundo.'],
  svg:`<svg viewBox="0 0 16 10"><rect width="16" height="10" fill="#006AA7"/><rect x="5" width="2" height="10" fill="#FECC00"/><rect y="4" width="16" height="2" fill="#FECC00"/></svg>`},
 
-{n:'Noruega',a:['norway','norge'],cont:'Europa',cap:'Oslo',pob:'≈ 5,5 millones',len:'Noruego (también sami)',
+{n:'Noruega',s2:'dato',a:['norway','norge'],cont:'Europa',cap:'Oslo',pob:'≈ 5,5 millones',len:'Noruego (también sami)',
  band:'Cruz nórdica en rojo, blanco y azul, los colores asociados a la libertad por las banderas de Francia, Estados Unidos y el Reino Unido.',
- dato:'Es tierra de fiordos y del sol de medianoche. En su capital se entrega cada año el Nobel de la Paz.',
+ img:'Plug-in electric vehicles in Norway', dato:'Es el país con más coches eléctricos del mundo: en 2024, casi 9 de cada 10 coches nuevos vendidos eran eléctricos. Es tierra de fiordos y del sol de medianoche.',
  per:['Roald Amundsen','Explorador que dirigió la primera expedición en llegar al Polo Sur, en diciembre de 1911.'],
  svg:`<svg viewBox="0 0 22 16"><rect width="22" height="16" fill="#BA0C2F"/><rect x="6" width="4" height="16" fill="#fff"/><rect y="6" width="22" height="4" fill="#fff"/><rect x="7" width="2" height="16" fill="#00205B"/><rect y="7" width="22" height="2" fill="#00205B"/></svg>`},
 
-{n:'Suiza',a:['switzerland','schweiz','suisse'],cont:'Europa',cap:'Berna',pob:'≈ 8,9 millones',len:'Alemán, francés, italiano y romanche',
+{n:'Suiza',s2:'per',a:['switzerland','schweiz','suisse'],cont:'Europa',cap:'Berna',pob:'≈ 8,9 millones',len:'Alemán, francés, italiano y romanche',
  band:'Es una de las dos únicas banderas nacionales cuadradas (la otra es la del Vaticano). El emblema de la Cruz Roja es su bandera con los colores invertidos.',
- dato:'Es famosa por su neutralidad y porque sus ciudadanos votan en referéndum varias veces al año. Los Alpes cubren gran parte de su territorio.',
- per:['Henri Dunant','Fundador de la Cruz Roja (1863) y primer Premio Nobel de la Paz, en 1901.'],
+ img:'Palexpo', dato:'Durante décadas acogió el Salón del Automóvil de Ginebra, uno de los más importantes del mundo, aunque el país apenas fabrica coches. Es famosa por su neutralidad y por los Alpes.',
+ per:['Louis Chevrolet','Mecánico y piloto de carreras nacido en Suiza que emigró a Estados Unidos. En 1911 fundó la marca Chevrolet, que todavía lleva su apellido.'],
  svg:`<svg viewBox="0 0 32 32"><rect width="32" height="32" fill="#DA291C"/><rect x="13" y="6" width="6" height="20" fill="#fff"/><rect x="6" y="13" width="20" height="6" fill="#fff"/></svg>`},
 
-{n:'Venezuela',a:[],cont:'América del Sur',cap:'Caracas',pob:'≈ 28 millones',len:'Español',
+{n:'Venezuela',s2:'per',a:[],cont:'América del Sur',cap:'Caracas',pob:'≈ 28 millones',len:'Español',
  band:'Diseñada a partir de la de Francisco de Miranda. Las ocho estrellas representan las siete provincias que firmaron la independencia más la de Guayana, añadida en 2006.',
- dato:'Allí está el Salto Ángel, la cascada más alta del mundo (979 m), y posee las mayores reservas de petróleo conocidas del planeta.',
- per:['Simón Bolívar','«El Libertador»: dirigió la independencia de buena parte de América del Sur. Un país, Bolivia, lleva su nombre.'],
+ img:'Angel Falls', dato:'Allí está el Salto Ángel, la cascada más alta del mundo (979 m), y posee las mayores reservas de petróleo conocidas del planeta.',
+ per:['Pastor Maldonado','Piloto de Fórmula 1, el único venezolano que ha ganado un Gran Premio: el de España de 2012, con el equipo Williams.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FFCC00"/><rect y="6.67" width="30" height="6.67" fill="#00247D"/><rect y="13.33" width="30" height="6.67" fill="#CF142B"/><g fill="#fff">${[0,1,2,3,4,5,6,7].map(k=>{const a=(160-k*20)*Math.PI/180;return `<polygon points="${star(15+5.5*Math.cos(a),14-5.5*Math.sin(a),0.65)}"/>`;}).join('')}</g></svg>`},
 
-{n:'Colombia',a:[],cont:'América del Sur',cap:'Bogotá',pob:'≈ 52 millones',len:'Español (y más de 60 lenguas indígenas)',
+{n:'Colombia',s2:'dato',a:[],cont:'América del Sur',cap:'Bogotá',pob:'≈ 52 millones',len:'Español (y más de 60 lenguas indígenas)',
  band:'También deriva de la bandera de Miranda. El amarillo ocupa la mitad superior; el azul y el rojo, un cuarto cada uno.',
- dato:'Es el segundo país con más biodiversidad del mundo y el único de América del Sur con costas en el Pacífico y en el Caribe.',
+ img:'Juan Pablo Montoya', dato:'El colombiano Juan Pablo Montoya ganó Grandes Premios de Fórmula 1 y dos veces las 500 Millas de Indianápolis (2000 y 2015). Es el segundo país con más biodiversidad del mundo.',
  per:['Gabriel García Márquez','Autor de «Cien años de soledad» (1967), obra cumbre del realismo mágico. Premio Nobel de Literatura en 1982.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg>`},
 
-{n:'Ecuador',a:[],cont:'América del Sur',cap:'Quito',pob:'≈ 18 millones',len:'Español (el kichwa y el shuar son lenguas oficiales de relación intercultural)',
+{n:'Ecuador',s2:'dato',a:[],cont:'América del Sur',cap:'Quito',pob:'≈ 18 millones',len:'Español (el kichwa y el shuar son lenguas oficiales de relación intercultural)',
  band:'Casi idéntica a la colombiana, pero con escudo: un cóndor sobre un paisaje con el volcán Chimborazo.',
- dato:'Las islas Galápagos, que inspiraron a Darwin su teoría de la evolución, forman parte de este país. La cima del Chimborazo es el punto más alejado del centro de la Tierra.',
+ img:'Galápagos Islands', dato:'Las islas Galápagos forman parte de este país. En Quito, según el último número de la matrícula, cada coche tiene un día a la semana en que no puede circular en horas punta: es el «pico y placa».',
  per:['Manuela Sáenz','Heroína de la independencia y compañera de Simón Bolívar, al que salvó de un atentado; él la llamó «la Libertadora del Libertador».'],
  svg:`<svg viewBox="0 0 36 24"><rect width="36" height="12" fill="#FFDD00"/><rect y="12" width="36" height="6" fill="#034EA2"/><rect y="18" width="36" height="6" fill="#ED1C24"/><ellipse cx="18" cy="11.8" rx="2.4" ry="2.9" fill="#7FB2E5" stroke="#C8A200" stroke-width="0.4"/><polygon points="16,13.4 17.4,11 18.2,11.9 19,11.2 20,13.4" fill="#4E8A3A"/><path d="M13.6,8.6 Q18,5.4 22.4,8.6 L20.3,9.1 Q18,7.9 15.7,9.1 Z" fill="#333"/><circle cx="18" cy="8.2" r="0.6" fill="#333"/><g><rect x="13.6" y="10" width="0.5" height="4" fill="#FFDD00"/><rect x="14.1" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="14.6" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="20.9" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="21.4" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="21.9" y="10" width="0.5" height="4" fill="#FFDD00"/></g></svg>`},
 
-{n:'Perú',a:['peru'],cont:'América del Sur',cap:'Lima',pob:'≈ 34 millones',len:'Español, quechua y aimara',
+{n:'Perú',s2:'dato',a:['peru'],cont:'América del Sur',cap:'Lima',pob:'≈ 34 millones',len:'Español, quechua y aimara',
  band:'Según la leyenda, el general San Martín se inspiró en unas parihuanas (flamencos) de alas rojas y pecho blanco. La versión oficial del Estado lleva además un escudo.',
- dato:'Aquí se encuentra Machu Picchu, la ciudadela inca, y comparte con Bolivia el lago Titicaca, el lago navegable más alto del mundo.',
+ img:'Huacachina', dato:'Aquí se encuentra Machu Picchu, la ciudadela inca. En 2019, el rally Dakar se disputó entero en Perú, entre las enormes dunas de su desierto costero.',
  per:['Mario Vargas Llosa','Novelista, autor de «La ciudad y los perros» y «Conversación en La Catedral». Premio Nobel de Literatura en 2010.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#D91023"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#D91023"/></svg>`},
 
-{n:'Cuba',a:[],cont:'América (Caribe)',cap:'La Habana',pob:'≈ 11 millones',len:'Español',
+{n:'Cuba',s2:'dato',a:[],cont:'América (Caribe)',cap:'La Habana',pob:'≈ 11 millones',len:'Español',
  band:'Las tres franjas azules representan los tres departamentos en que se dividía la isla; el triángulo rojo, la sangre derramada; la estrella solitaria, la independencia.',
- dato:'Fue, junto con Puerto Rico, una de las últimas colonias españolas en América, hasta 1898. Es la isla más grande del Caribe.',
+ img:'Yank tank', dato:'Por sus calles siguen circulando miles de coches estadounidenses de los años 50, los «almendrones», que se mantienen en marcha gracias al ingenio de sus mecánicos.',
  per:['José Martí','Poeta y héroe de la independencia. Versos de sus «Versos sencillos» forman la letra de la canción «Guantanamera».'],
  svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#fff"/><g fill="#002A8F"><rect width="60" height="6"/><rect y="12" width="60" height="6"/><rect y="24" width="60" height="6"/></g><polygon points="0,0 26,15 0,30" fill="#CF142B"/><polygon points="${star(8.7,15,3.6)}" fill="#fff"/></svg>`},
 
-{n:'México',a:['mexico'],cont:'América del Norte',cap:'Ciudad de México',pob:'≈ 130 millones',len:'Español y 68 lenguas indígenas, como el náhuatl o el maya',
+{n:'México',s2:'per',a:['mexico'],cont:'América del Norte',cap:'Ciudad de México',pob:'≈ 130 millones',len:'Español y 68 lenguas indígenas, como el náhuatl o el maya',
  band:'El escudo recrea la leyenda de la fundación de Tenochtitlan: los mexicas debían asentarse donde vieran un águila sobre un nopal devorando una serpiente.',
- dato:'Es el país con más hispanohablantes del mundo. Palabras como «chocolate», «tomate» o «aguacate» llegaron al español desde el náhuatl.',
- per:['Sor Juana Inés de la Cruz','Monja y escritora del Barroco (s. XVII), llamada «la décima musa». Defendió el derecho de las mujeres al conocimiento.'],
+ img:'Volkswagen Beetle', dato:'Es uno de los grandes fabricantes de coches del mundo. En Puebla se fabricó el Volkswagen Escarabajo original hasta 2003, cuando salió de la cadena la última unidad.',
+ per:['Sergio Pérez','Piloto de Fórmula 1 conocido como «Checo», el mexicano con más victorias en la categoría. Fue subcampeón del mundo en 2023 con Red Bull.'],
  svg:`<svg viewBox="0 0 35 20"><rect width="11.67" height="20" fill="#006847"/><rect x="11.67" width="11.67" height="20" fill="#fff"/><rect x="23.33" width="11.67" height="20" fill="#CE1126"/><path d="M14.3,10.6 A3.3,3.3 0 0 0 20.7,10.6" stroke="#2E7D32" stroke-width="0.6" fill="none"/><rect x="17" y="10.8" width="1" height="1.5" fill="#3A7D2C"/><path d="M17,8 L14.8,6.3 L15.3,9.4 L16.8,10 Z" fill="#5C3A1C"/><ellipse cx="17.8" cy="8.9" rx="1.3" ry="1.9" fill="#7A4B24"/><circle cx="18.6" cy="6.9" r="0.6" fill="#7A4B24"/><path d="M18.3,9 q1.2,-0.6 1.8,0.4" stroke="#3A7D2C" stroke-width="0.35" fill="none"/></svg>`},
 
-{n:'Bangladés',a:['banglades','bangladesh'],cont:'Asia',cap:'Daca',pob:'≈ 171 millones',len:'Bengalí',
+{n:'Bangladés',s2:'dato',a:['banglades','bangladesh'],cont:'Asia',cap:'Daca',pob:'≈ 171 millones',len:'Bengalí',
  band:'El verde es la tierra fértil y la juventud; el disco rojo, el sol que sale y la sangre de la guerra de independencia de 1971. Está algo desplazado hacia el asta para que parezca centrado al ondear.',
- dato:'El Día Internacional de la Lengua Materna (21 de febrero) recuerda a los estudiantes que murieron en 1952 defendiendo el bengalí. En su delta viven tigres de Bengala.',
+ img:'Cycle rickshaw', dato:'A su capital, Daca, la llaman la «capital mundial de los rickshaws»: por sus calles circulan cientos de miles de bicitaxis decorados a mano con colores vivos.',
  per:['Muhammad Yunus','Economista, Premio Nobel de la Paz en 2006. Creó el Banco Grameen, que presta pequeñas cantidades de dinero (microcréditos) a personas pobres.'],
  svg:`<svg viewBox="0 0 10 6"><rect width="10" height="6" fill="#006A4E"/><circle cx="4.5" cy="3" r="2" fill="#F42A41"/></svg>`},
 
-{n:'Kenia',a:['kenya'],cont:'África',cap:'Nairobi',pob:'≈ 55 millones',len:'Suajili e inglés',
+{n:'Kenia',s2:'dato',a:['kenya'],cont:'África',cap:'Nairobi',pob:'≈ 55 millones',len:'Suajili e inglés',
  band:'El negro representa al pueblo; el rojo, la sangre derramada por la independencia; el verde, la tierra y sus recursos; los bordes blancos, la paz. El escudo masái y las dos lanzas simbolizan la defensa de la libertad.',
- dato:'En la reserva de Masái Mara se ve cada año la gran migración de ñus y cebras. Sus atletas de fondo están entre los mejores del mundo: Eliud Kipchoge corrió un maratón en menos de dos horas en 2019.',
+ img:'Safari Rally', dato:'El Safari Rally de Kenia, que forma parte del Mundial de Rallies, está considerado uno de los más duros del mundo por sus pistas de tierra, el barro y el polvo. Allí se ve la gran migración de ñus.',
  per:['Wangari Maathai','Bióloga y activista, primera mujer africana en recibir el Nobel de la Paz (2004). Su movimiento Cinturón Verde plantó millones de árboles.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6" fill="#000"/><rect y="6" width="30" height="8" fill="#fff"/><rect y="7" width="30" height="6" fill="#BB0000"/><rect y="14" width="30" height="6" fill="#006600"/><g stroke="#fff" stroke-width="0.5"><line x1="11" y1="17.5" x2="19" y2="2.5"/><line x1="19" y1="17.5" x2="11" y2="2.5"/></g><g fill="#fff"><polygon points="19,2.5 18.2,4.3 19.2,4.8"/><polygon points="11,2.5 11.8,4.3 10.8,4.8"/></g><ellipse cx="15" cy="10" rx="3.3" ry="7.2" fill="#000"/><ellipse cx="15" cy="10" rx="2" ry="7.2" fill="#BB0000"/><ellipse cx="15" cy="10" rx="0.6" ry="1.3" fill="#fff"/><path d="M15,4 q0.9,1.5 0,3 q-0.9,-1.5 0,-3 Z M15,13 q0.9,1.5 0,3 q-0.9,-1.5 0,-3 Z" fill="#fff"/></svg>`},
 
-{n:'Egipto',a:['egypt'],cont:'África',cap:'El Cairo',pob:'≈ 110 millones',len:'Árabe',
+{n:'Egipto',s2:'dato',a:['egypt'],cont:'África',cap:'El Cairo',pob:'≈ 110 millones',len:'Árabe',
  band:'En el centro, el águila de Saladino. El rojo recuerda la lucha contra la opresión; el blanco, la revolución de 1952; el negro, el fin de los tiempos oscuros.',
- dato:'La Gran Pirámide de Guiza es la única de las siete maravillas del mundo antiguo que sigue en pie. Casi toda su población vive junto al Nilo.',
+ img:'Great Pyramid of Giza', dato:'La Gran Pirámide de Guiza es la única maravilla del mundo antiguo que sigue en pie. Desde 1982 se celebra el Rally de los Faraones, una carrera de motos y coches por el desierto.',
  per:['Cleopatra VII','Última reina de la dinastía ptolemaica (s. I a. C.), aliada de Julio César y de Marco Antonio. Hablaba varias lenguas.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#CE1126"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#000"/><polygon points="15,7.6 16.2,8.3 18.3,8 17.5,11 16,11.6 16,12.6 14,12.6 14,11.6 12.5,11 11.7,8 13.8,8.3" fill="#C09300"/><circle cx="15" cy="7.7" r="0.6" fill="#C09300"/></svg>`},
 
-{n:'Australia',a:[],cont:'Oceanía',cap:'Canberra',pob:'≈ 27 millones',len:'Inglés',
+{n:'Australia',s2:'per',a:[],cont:'Oceanía',cap:'Canberra',pob:'≈ 27 millones',len:'Inglés',
  band:'La bandera británica recuerda su origen colonial; la gran estrella de siete puntas representa la federación de estados y territorios; las demás forman la Cruz del Sur.',
- dato:'Frente a su costa está la Gran Barrera de Coral, el mayor arrecife del mundo. Su ciudad más conocida, Sídney, no es la capital.',
- per:['Cathy Freeman','Atleta aborigen que encendió el pebetero y ganó el oro en los 400 metros en los Juegos Olímpicos de Sídney 2000.'],
+ img:'Great Barrier Reef', dato:'Frente a su costa está la Gran Barrera de Coral, el mayor arrecife del mundo. Su ciudad más conocida, Sídney, no es la capital.',
+ per:['Jack Brabham','Piloto tres veces campeón del mundo de Fórmula 1. En 1966 ganó el título con un coche construido por su propia escudería, algo que nadie más ha conseguido.'],
  svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#00008B"/>${uj('au',0.5)}<g fill="#fff"><polygon points="${star(15,22.5,4.5,2,7)}"/><polygon points="${star(45,25.5,1.9,0.85,7)}"/><polygon points="${star(37.5,13.5,1.9,0.85,7)}"/><polygon points="${star(45,4.8,1.9,0.85,7)}"/><polygon points="${star(52,11.3,1.9,0.85,7)}"/><polygon points="${star(48.2,15.6,1.1)}"/></g></svg>`},
 
-{n:'Islandia',a:['iceland'],cont:'Europa',cap:'Reikiavik',pob:'≈ 390.000',len:'Islandés',
+{n:'Islandia',s2:'dato',a:['iceland'],cont:'Europa',cap:'Reikiavik',pob:'≈ 390.000',len:'Islandés',
  band:'Cruz nórdica: el azul es el mar y las montañas; el blanco, el hielo y la nieve; el rojo, el fuego de sus volcanes.',
- dato:'No tiene ejército. Los apellidos se forman con el nombre del padre o de la madre: el hijo de Jón se apellida Jónsson y la hija, Jónsdóttir.',
+ img:'Formula Offroad', dato:'No tiene ejército. Allí nació la «torfæra», carreras en las que todoterrenos trucados suben laderas casi verticales y cruzan ríos.',
  per:['Björk','Cantante y compositora de música experimental, conocida en todo el mundo. Empezó su carrera con el grupo The Sugarcubes.'],
  svg:`<svg viewBox="0 0 25 18"><rect width="25" height="18" fill="#02529C"/><rect x="7" width="4" height="18" fill="#fff"/><rect y="7" width="25" height="4" fill="#fff"/><rect x="8" width="2" height="18" fill="#DC1E35"/><rect y="8" width="25" height="2" fill="#DC1E35"/></svg>`},
 
-{n:'Vietnam',a:['viet nam'],cont:'Asia',cap:'Hanói',pob:'≈ 100 millones',len:'Vietnamita',
- band:'El rojo representa la revolución; la estrella amarilla de cinco puntas, a obreros, campesinos, intelectuales, jóvenes y soldados.',
- dato:'El vietnamita se escribe con el alfabeto latino y muchísimas tildes, porque tiene seis tonos. Es el segundo exportador de café del mundo.',
- per:['Thich Nhat Hanh','Monje budista, poeta y pacifista. Difundió en Occidente la meditación de la atención plena; Martin Luther King lo propuso para el Nobel de la Paz.'],
- svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#DA251D"/><polygon points="${star(15,10,6)}" fill="#FFFF00"/></svg>`},
-
-{n:'Filipinas',a:['philippines'],cont:'Asia',cap:'Manila',pob:'≈ 112 millones',len:'Filipino (tagalo) e inglés',
+{n:'Filipinas',s2:'dato',a:['philippines'],cont:'Asia',cap:'Manila',pob:'≈ 112 millones',len:'Filipino (tagalo) e inglés',
  band:'El sol de ocho rayos recuerda las ocho provincias que se sublevaron contra España en 1896; las tres estrellas, las grandes zonas del país. En tiempo de guerra se iza con el rojo arriba.',
- dato:'Debe su nombre al rey Felipe II y tiene más de 7.600 islas. El tagalo usa muchas palabras de origen español, como «mesa», «silla» o «kumusta» (¿cómo está?).',
+ img:'Jeepney', dato:'Su transporte más típico es el jeepney: autobuses muy decorados que nacieron de los jeeps que dejó el ejército estadounidense tras la Segunda Guerra Mundial.',
  per:['José Rizal','Escritor y héroe nacional. Escribió en español la novela «Noli me tángere» y fue fusilado por las autoridades españolas en 1896.'],
  svg:`<svg viewBox="0 0 40 20"><rect width="40" height="10" fill="#0038A8"/><rect y="10" width="40" height="10" fill="#CE1126"/><polygon points="0,0 17.32,10 0,20" fill="#fff"/><g fill="#FCD116"><circle cx="6" cy="10" r="1.8"/>${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180,c=Math.cos(r),s=Math.sin(r),px=-s,py=c;return `<polygon points="${(6+2.2*c+0.45*px).toFixed(2)},${(10+2.2*s+0.45*py).toFixed(2)} ${(6+2.2*c-0.45*px).toFixed(2)},${(10+2.2*s-0.45*py).toFixed(2)} ${(6+4*c).toFixed(2)},${(10+4*s).toFixed(2)}"/>`}).join('')}<polygon points="${star(2,2.3,1.1)}"/><polygon points="${star(2,17.7,1.1)}"/><polygon points="${star(14.3,10,1.1)}"/></g></svg>`},
 
-{n:'Tailandia',a:['thailand'],cont:'Asia',cap:'Bangkok',pob:'≈ 66 millones',len:'Tailandés',
+{n:'Tailandia',s2:'dato',a:['thailand'],cont:'Asia',cap:'Bangkok',pob:'≈ 66 millones',len:'Tailandés',
  band:'Rojo por la nación, blanco por la religión y azul (la franja doble del centro) por la monarquía.',
- dato:'Es el único país del sudeste asiático que nunca fue colonizado por europeos. El nombre ceremonial completo de Bangkok es uno de los topónimos más largos del mundo.',
- per:['Bhumibol Adulyadej','Rey que reinó 70 años, de 1946 a 2016. Era también un gran aficionado al jazz y tocaba el saxofón.'],
+ img:'Auto rickshaw', dato:'La llaman el «Detroit de Asia» porque es uno de los grandes fabricantes de coches del sudeste asiático. Sus tuk-tuks, triciclos con motor, deben su nombre al ruido que hacen.',
+ per:['Alexander Albon','Piloto de Fórmula 1 nacido en Londres que compite con la bandera de Tailandia, el país de su madre.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#A51931"/><rect y="3.33" width="30" height="13.34" fill="#F4F5F8"/><rect y="6.67" width="30" height="6.66" fill="#2D2A4A"/></svg>`},
 
-{n:'Nigeria',a:[],cont:'África',cap:'Abuya',pob:'≈ 225 millones',len:'Inglés (también hausa, yoruba e igbo)',
- band:'El verde representa la agricultura y los bosques; el blanco, la paz y la unidad. La diseñó un estudiante, Taiwo Akinkunmi, en 1959.',
- dato:'Es el país más poblado de África. Su industria de cine, «Nollywood», es una de las que más películas produce en el mundo.',
- per:['Chinua Achebe','Novelista, uno de los grandes de la literatura africana. Su obra más conocida es «Todo se desmorona» (1958).'],
- svg:`<svg viewBox="0 0 30 15"><rect width="30" height="15" fill="#008751"/><rect x="10" width="10" height="15" fill="#fff"/></svg>`},
-
-{n:'Ghana',a:[],cont:'África',cap:'Acra',pob:'≈ 34 millones',len:'Inglés (también twi, ewe y otras)',
- band:'Rojo por la sangre de la independencia, oro por la riqueza minera y verde por los bosques. La estrella negra simboliza la libertad de África.',
- dato:'En 1957 fue el primer país del África subsahariana en independizarse de una potencia colonial. Es uno de los mayores productores de cacao del mundo.',
- per:['Kofi Annan','Diplomático, secretario general de las Naciones Unidas entre 1997 y 2006 y Premio Nobel de la Paz en 2001.'],
- svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#CE1126"/><rect y="6.67" width="30" height="6.66" fill="#FCD116"/><rect y="13.33" width="30" height="6.67" fill="#006B3F"/><polygon points="${star(15,10,3.3)}" fill="#000"/></svg>`},
-
-{n:'Senegal',a:[],cont:'África',cap:'Dakar',pob:'≈ 18 millones',len:'Francés (el wolof es la lengua más hablada)',
+{n:'Senegal',s2:'dato',a:[],cont:'África',cap:'Dakar',pob:'≈ 18 millones',len:'Francés (el wolof es la lengua más hablada)',
  band:'Verde, amarillo y rojo, los colores panafricanos, con una estrella verde en el centro.',
- dato:'Allí terminaba el famoso rally París-Dakar. La isla de Gorée, frente a la capital, es Patrimonio de la Humanidad y recuerda la trata de esclavos.',
+ img:'Lake Retba', dato:'Allí terminaba el famoso rally París-Dakar. La isla de Gorée, frente a la capital, es Patrimonio de la Humanidad y recuerda la trata de esclavos.',
  per:['Léopold Sédar Senghor','Poeta y primer presidente del país. Fue el primer africano elegido miembro de la Academia Francesa.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#00853F"/><rect x="10" width="10" height="20" fill="#FDEF42"/><rect x="20" width="10" height="20" fill="#E31B23"/><polygon points="${star(15,10,3)}" fill="#00853F"/></svg>`},
 
-{n:'Costa Rica',a:[],cont:'América',cap:'San José',pob:'≈ 5,2 millones',len:'Español',
+{n:'Costa Rica',s2:'dato',a:[],cont:'América',cap:'San José',pob:'≈ 5,2 millones',len:'Español',
  band:'El azul es el cielo; el blanco, la paz; el rojo, la sangre derramada por la libertad. Sus colores se inspiraron en la bandera de Francia.',
- dato:'Abolió su ejército en 1948. Con muy poca superficie, alberga alrededor del 5 % de la biodiversidad del planeta. Su saludo típico es «¡pura vida!».',
+ img:'Arenal Volcano', dato:'Abolió su ejército en 1948. Casi toda su electricidad sale de fuentes renovables, así que cargar allí un coche eléctrico es prácticamente limpio.',
  per:['Óscar Arias','Presidente del país y Premio Nobel de la Paz en 1987 por su plan para acabar con las guerras de Centroamérica.'],
- svg:`<svg viewBox="0 0 30 18"><rect width="30" height="18" fill="#002B7F"/><rect y="3" width="30" height="12" fill="#fff"/><rect y="6" width="30" height="6" fill="#CE1126"/></svg>`}
+ svg:`<svg viewBox="0 0 30 18"><rect width="30" height="18" fill="#002B7F"/><rect y="3" width="30" height="12" fill="#fff"/><rect y="6" width="30" height="6" fill="#CE1126"/></svg>`},
+
+{n:'Marruecos',s2:'dato',a:['morocco','maroc'],cont:'África',cap:'Rabat',pob:'≈ 37 millones',len:'Árabe y amazigh (bereber)',
+ band:'La estrella verde de cinco puntas entrelazadas es el «sello de Salomón», símbolo de protección; el rojo es el color de la dinastía reinante.',
+ img:'Dacia Sandero', dato:'Solo 14 km de mar lo separan de España. En Tánger, Renault tiene una de las mayores fábricas de coches de África, donde se fabrican modelos de Dacia que se venden en Europa.',
+ per:['Ibn Battuta','Viajero nacido en Tánger en el siglo XIV; recorrió unos 120.000 km por África, Asia y Europa y dejó escrito el relato de sus viajes.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#C1272D"/><polygon points="${[0,2,4,1,3].map(k=>{const a=(-90+72*k)*Math.PI/180;return (15+5*Math.cos(a)).toFixed(2)+','+(10.4+5*Math.sin(a)).toFixed(2);}).join(' ')}" fill="none" stroke="#006233" stroke-width="0.7"/></svg>`},
+
+{n:'Italia',s2:'per',a:['italy'],cont:'Europa',cap:'Roma',pob:'≈ 59 millones',len:'Italiano',
+ band:'«Il Tricolore» se inspiró en la bandera francesa que llevaron las tropas de Napoleón. Según la tradición, el verde es la esperanza; el blanco, la fe; el rojo, la caridad.',
+ img:'Vespa', dato:'Allí nacieron Fiat, Lamborghini, Maserati, Ducati y la Vespa. El piloto Valentino Rossi ganó nueve títulos mundiales de motociclismo.',
+ per:['Enzo Ferrari','Piloto y empresario que fundó la marca Ferrari en Maranello. Su escudería es la única que ha corrido todas las temporadas del Mundial de Fórmula 1 desde 1950.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>`},
+
+{n:'Francia',s2:'dato',a:['france'],cont:'Europa',cap:'París',pob:'≈ 68 millones',len:'Francés',
+ band:'Nació con la Revolución de 1789: el azul y el rojo son los colores de París, y el blanco, el de la monarquía.',
+ img:'24 Hours of Le Mans', dato:'Peugeot empezó fabricando molinillos de café y de pimienta antes que coches. Las 24 Horas de Le Mans se corren desde 1923, y Sébastien Loeb ganó nueve Mundiales de Rallies seguidos.',
+ per:['Victor Hugo','Escritor romántico, autor de «Los miserables» y «Nuestra Señora de París». Pasó casi 20 años en el exilio por oponerse a Napoleón III.'],
+ svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>`},
+
+{n:'Finlandia',s2:'per',a:['finland'],cont:'Europa',cap:'Helsinki',pob:'≈ 5,6 millones',len:'Finés y sueco',
+ band:'Cruz nórdica azul sobre fondo blanco: el azul representa sus miles de lagos y el cielo; el blanco, la nieve que cubre el país en invierno.',
+ img:'Rally Finland',dato:'Tiene tantos campeones de rallies y de Fórmula 1 que a sus pilotos los llaman «los finlandeses voladores». Su rally, con enormes saltos en caminos de tierra, es uno de los más rápidos del Mundial.',
+ per:['Kimi Räikkönen','Piloto de Fórmula 1, campeón del mundo en 2007 con Ferrari. Famoso por su carácter frío y sus respuestas cortas por la radio del equipo.'],
+ svg:`<svg viewBox="0 0 18 11"><rect width="18" height="11" fill="#fff"/><rect x="5" width="3" height="11" fill="#002F6C"/><rect y="4" width="18" height="3" fill="#002F6C"/></svg>`}
 ];
 
 /* ---------- estado ---------- */
@@ -712,7 +806,7 @@ function newRound(){
   $('#roundInfo').textContent=`Bandera ${idx+1} de ${deck.length}`;
   $('#modeInfo').textContent=MODE_NAMES[roundMode];
   if(roundMode==='flag') randomReveal();
-  update();
+  lastSnap=null;update();startTimer();
 }
 function value(){
   if(roundMode==='flag') return Math.max(1,11-revealed.size-penalty);
@@ -762,7 +856,7 @@ function hint(){
 function update(){
   const v=value();
   const ti=$('#turnInfo');
-  if(teams.length>1&&!solved){ti.hidden=false;ti.style.setProperty('--tc',COLORS[turn]);ti.innerHTML=`<span class="tl">Turno</span><strong>${esc(teams[turn].name)}</strong><small>${acted?'Ya ha usado su ayuda: ahora responde o pasa.':'Puede destapar una casilla o pedir una pista, y después responder o pasar.'}</small>`;}
+  if(teams.length>1&&!solved){ti.hidden=false;ti.style.setProperty('--tc',COLORS[turn]);ti.innerHTML=`<span class="tl">Turno</span><strong>${esc(teams[turn].name)}</strong><span class="clock${timeLeft<=10?' low':''}" id="clock" aria-live="off">${timeLeft}</span><small>${acted?'Ya ha usado su ayuda: ahora responde o pasa.':'Puede destapar una casilla o pedir una pista, y después responder o pasar.'}</small>`;}
   else ti.hidden=true;
   $('#valNum').textContent=solved?'—':v;
   $('#valLbl').textContent=solved?'ronda terminada':(v===1?'punto en juego':'puntos en juego');
@@ -780,6 +874,7 @@ function update(){
   const lock=multiT()&&acted&&!solved;
   if(lock){$('#revealBtn').disabled=true;$('#hintBtn').disabled=true;$('#clueBtn').disabled=true;}
   $('#passBtn').hidden=!multiT()||solved;
+  $('#undoBtn').hidden=!lastSnap||solved;
   $('#solveBtn').hidden=solved;$('#checkBtn').disabled=solved;$('#guessIn').disabled=solved;
   renderTeams();
 }
@@ -799,24 +894,48 @@ function canAct(){
 }
 function didAct(){
   if(!multiT())return;
-  acted=true;update();setMsg(`Ahora, ${teams[turn].name}: decid el país o pasad el turno.`);
+  lastSnap=null;acted=true;update();setMsg(`Ahora, ${teams[turn].name}: decid el país o pasad el turno.`);
+}
+const TURN_SECS=30;
+let timeLeft=TURN_SECS,timerId=null,lastSnap=null;
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function drawClock(){const k=$('#clock');if(k){k.textContent=timeLeft;k.classList.toggle('low',timeLeft<=10);}}
+function startTimer(){
+  stopTimer();timeLeft=TURN_SECS;drawClock();
+  if(!multiT()||solved||$('#game').hidden)return;
+  timerId=setInterval(()=>{
+    if(solved||$('#game').hidden){stopTimer();return;}
+    timeLeft--;drawClock();
+    if(timeLeft<=0){stopTimer();snap();passTurn('¡Se acabó el tiempo!');}
+  },1000);
+}
+function snap(){if(multiT())lastSnap={turn,acted,scores:teams.map(t=>t.score)};}
+function undoPass(){
+  if(!lastSnap||solved)return;
+  turn=lastSnap.turn;acted=lastSnap.acted;teams.forEach((t,i)=>t.score=lastSnap.scores[i]);
+  lastSnap=null;update();startTimer();
+  setMsg(`Se ha deshecho el último pase: vuelve a jugar ${teams[turn].name}.`);
 }
 function passTurn(prefix){
   if(teams.length<2||solved){if(prefix)setMsg(prefix,'no');return;}
-  turn=(turn+1)%teams.length;acted=false;update();
+  turn=(turn+1)%teams.length;acted=false;update();startTimer();
   setMsg((prefix?prefix+' ':'')+`Rebote: turno para ${teams[turn].name}.`,prefix?'no':'');
 }
 function check(){
   if(solved)return;
   const raw=$('#guessIn').value,v=norm(raw);if(!v)return;
+  stopTimer();
   const ok=v===norm(cur.n)||cur.a.some(a=>norm(a)===v);
   if(ok){
     award(teams.length===1?0:turn);
   }else{
     const inp=$('#guessIn');inp.classList.remove('shake');void inp.offsetWidth;inp.classList.add('shake');
+    const who=teams.length>1?turn:0;
+    snap();teams[who].score-=3;
     if(teams.length>1){inp.value='';}
     else inp.select();
-    passTurn(`«${raw.trim()}» no es la respuesta.`);
+    passTurn(`«${raw.trim()}» no es la respuesta: ${teams[who].name} pierde 3 puntos.`);
+    renderTeams();
   }
 }
 function award(t){
@@ -824,6 +943,7 @@ function award(t){
   const pts=value();teams[t].score+=pts;solve(t,pts);
 }
 function solve(t,pts){
+  stopTimer();lastSnap=null;
   solved=true;awaiting=false;
   [...$('#tiles').children].forEach(b=>b.classList.add('open'));
   history.push({c:cur,team:t,pts:pts||0});
@@ -880,10 +1000,12 @@ $('#ranking').addEventListener('input',e=>{
   renderGrades();
 });
 function finish(){
+  stopTimer();
   $('#game').hidden=true;$('#end').hidden=false;
   const top=Math.max(...teams.map(t=>t.score));
-  teams.forEach(t=>{t.nota=top>0?Math.round(t.score/top*20)/2:0;});
+  teams.forEach(t=>{t.nota=top>0?Math.max(0,Math.round(t.score/top*20)/2):0;});
   renderRanking();
+  quiz=null;quizState();
   $('#recap').innerHTML=history.map(h=>`<figure><div class="mini">${uniq(h.c.svg)}</div><figcaption>${esc(h.c.n)}<small>${h.team!=null?esc(teams[h.team].name)+' (+'+h.pts+')':'Sin acierto'}</small></figcaption></figure>`).join('');
   $('#wMsg').textContent='';$('#wMsg').className='msg';$('#wSend').disabled=false;$('#wSend').textContent='Enviar notas al formulario';
   window.scrollTo({top:0,behavior:reduceMotion?'auto':'smooth'});
@@ -892,7 +1014,8 @@ function finish(){
 $('#revealBtn').addEventListener('click',()=>{if(canAct()&&randomReveal())didAct();});
 $('#clueBtn').addEventListener('click',()=>{if(canAct()&&nextClue())didAct();});
 $('#hintBtn').addEventListener('click',()=>{if(canAct()&&hint())didAct();});
-$('#passBtn').addEventListener('click',()=>{if(!solved)passTurn('');});
+$('#passBtn').addEventListener('click',()=>{if(!solved){stopTimer();snap();passTurn('');}});
+$('#undoBtn').addEventListener('click',undoPass);
 $('#checkBtn').addEventListener('click',check);
 $('#guessIn').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();check();}});
 $('#solveBtn').addEventListener('click',()=>{if(!solved)solve(null,0);});
@@ -907,10 +1030,10 @@ document.addEventListener('keydown',e=>{
 /* ---------- diapositivas ---------- */
 const WIKI={'Madre Teresa de Calcuta':'Teresa de Calcuta','Rey Sejong el Grande':'Sejong el Grande','Sor Juana Inés de la Cruz':'Juana Inés de la Cruz','Cleopatra VII':'Cleopatra','Martin Luther King':'Martin Luther King Jr.'};
 const photoCache={};
-async function getPhoto(name){
+async function getPhoto(name,langs=['es','en']){
   if(name in photoCache)return photoCache[name];
-  const title=WIKI[name]||name;
-  for(const lang of ['es','en']){
+  const title=WIKI[name]||name.replace(/^img:/,'');
+  for(const lang of langs){
     try{
       const r=await fetch(`https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g,'_'))}`);
       if(!r.ok)continue;
@@ -922,22 +1045,28 @@ async function getPhoto(name){
   photoCache[name]=null;return null;
 }
 let slideIdx=0,slideReturn=null;
-const SLIDE_N=3;
+const SLIDE_N=2;
 function initials(n){return n.split(' ').filter(w=>/^[A-ZÁÉÍÓÚ]/.test(w)).slice(0,2).map(w=>w[0]).join('');}
 function renderSlide(){
   const c=cur,el=$('#slide');
   el.className='slide';
   if(slideIdx===0){
     el.innerHTML=`<p class="skicker">La bandera</p><h2>${esc(c.n)}</h2><div class="bigflag">${uniq(c.svg)}</div><p>${esc(c.band)}</p>`;
-  }else if(slideIdx===1){
-    el.innerHTML=`<p class="skicker">Dato curioso</p><div class="icon" aria-hidden="true">💡</div><h2>${esc(c.n)}</h2><p>${esc(c.dato)}</p>`;
+  }else if(c.s2!=='per'){
+    el.innerHTML=`<p class="skicker">Dato curioso · ${esc(c.n)}</p><div class="dpic" id="dpic"><span class="icon" aria-hidden="true">💡</span></div><p>${esc(c.dato)}</p><p class="credit" id="dcredit"></p>`;
+    if(c.img)getPhoto('img:'+c.img,['en','es']).then(src=>{
+      if(!src||slideIdx!==1||cur!==c)return;
+      const img=new Image();img.alt='';
+      img.onload=()=>{const p=$('#dpic');if(p){p.innerHTML='';p.appendChild(img);$('#dcredit').textContent='Imagen: Wikipedia';}};
+      img.src=src;
+    });
   }else{
     el.classList.add('person');
     const name=c.per[0];
     el.innerHTML=`<div><div class="portrait" id="portrait"><span class="ini">${esc(initials(name))}</span></div><p class="credit" id="credit"></p></div>
       <div class="ptext"><p class="skicker">Personaje · ${esc(c.n)}</p><h2>${esc(name)}</h2><p>${esc(c.per[1])}</p></div>`;
     getPhoto(name).then(src=>{
-      if(!src||slideIdx!==2||cur!==c)return;
+      if(!src||slideIdx!==1||cur!==c)return;
       const img=new Image();img.alt=name;
       img.onload=()=>{const p=$('#portrait');if(p){p.innerHTML='';p.appendChild(img);$('#credit').textContent='Imagen: Wikipedia';}};
       img.src=src;
@@ -969,6 +1098,136 @@ document.addEventListener('keydown',e=>{
 let tx=null;
 $('#slides').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
 $('#slides').addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)goSlide(dx<0?1:-1);tx=null;});
+
+/* ---------- repaso final (ficha proyectada) ---------- */
+const QL='abcd';
+const SIMILAR=[['Colombia','Ecuador','Venezuela'],['Noruega','Islandia'],['Australia','Nueva Zelanda'],['Irlanda','México']];
+const simGroup=n=>SIMILAR.find(g=>g.includes(n))||[n];
+let quiz=null,qIdx=0,qShow=false,quizReturn=null;
+const simpleCap=c=>!/[(:]/.test(c.cap);
+const leaks=c=>{const w=norm(c.n).split(' ').filter(x=>x.length>3);const d=norm(c.dato);return w.some(x=>d.includes(x));};
+function playedPool(){const seen=new Set(),out=[];history.forEach(h=>{if(!seen.has(h.c.n)){seen.add(h.c.n);out.push(h.c);}});return out;}
+function quizState(){
+  const n=playedPool().length,ok=n>=3;
+  $('#quizBtn').disabled=!ok;$('#quizNew').disabled=!ok;
+  $('#quizMsg').textContent=ok?'':'Para el repaso hacen falta al menos 3 banderas jugadas.';
+  $('#quizMsg').className='msg'+(ok?'':' no');
+}
+function makePicker(pool){
+  const used=new Set();
+  return (filter=()=>true)=>{
+    const cand=shuffle(pool.filter(filter));if(!cand.length)return null;
+    const fresh=cand.filter(c=>!used.has(c.n));const c=(fresh.length?fresh:cand)[0];used.add(c.n);return c;
+  };
+}
+function options(target,flagQ){
+  const bad=flagQ?simGroup(target.n):[target.n];
+  const ds=shuffle(C.filter(c=>c!==target&&!bad.includes(c.n))).slice(0,2);
+  const opts=shuffle([target,...ds]);
+  return {opts:opts.map(c=>c.n),ans:opts.indexOf(target)};
+}
+function buildQuiz(){
+  const pool=playedPool(),pick=makePicker(pool),qs=[];
+  for(let i=0;i<3;i++){const c=pick();qs.push({t:'flag',c,...options(c,true)});}
+  for(let i=0;i<2;i++){const c=pick(x=>!leaks(x))||pick();qs.push({t:'dato',c,...options(c,false)});}
+  {const c=pick();qs.push({t:'per',c,...options(c,false)});}
+  const vf=shuffle([true,false]);
+  vf.forEach(truth=>{
+    const c=pick(simpleCap)||pick();let cap=c.cap;
+    if(!truth){const o=shuffle(C.filter(x=>x!==c&&simpleCap(x)))[0];cap=o.cap;}
+    qs.push({t:'vf',c,cap,ans:truth?0:1});
+  });
+  const outside=shuffle(C.filter(c=>!pool.some(p=>p.n===c.n)));
+  if(outside.length){
+    const ins=shuffle(pool).slice(0,3),odd=outside[0],flags=shuffle([...ins,odd]);
+    qs.push({t:'odd',flags,ans:flags.indexOf(odd)});
+  }else{
+    const c=pick(),others=shuffle(C.filter(x=>x!==c&&!simGroup(c.n).includes(x.n))).slice(0,3),flags=shuffle([c,...others]);
+    qs.push({t:'which',c,flags,ans:flags.indexOf(c)});
+  }
+  qs.push({t:'open'});
+  return qs;
+}
+const QN=12; // plantilla + 10 preguntas + soluciones
+function optHTML(q){return `<div class="qopts">${q.opts.map((o,i)=>`<div class="qopt${qShow&&i===q.ans?' ok':''}"><span class="qlet">${QL[i]}</span>${esc(o)}</div>`).join('')}</div>`;}
+function ansText(q){
+  if(q.t==='open')return 'Respuesta libre';
+  if(q.t==='vf')return q.ans===0?'V':`F (la capital es ${q.c.cap})`;
+  if(q.t==='odd'||q.t==='which')return `${QL[q.ans]}) ${q.flags[q.ans].n}`;
+  return `${QL[q.ans]}) ${q.opts[q.ans]}`;
+}
+function renderQuiz(){
+  const el=$('#qslide');let h='';
+  const revealBtn=`<button class="secondary qreveal" id="qRev" type="button">${qShow?'Ocultar respuesta':'Mostrar respuesta'}</button>`;
+  if(qIdx===0){
+    h=`<p class="qk">Antes de empezar</p><h2 class="qh">Copia esta plantilla en tu hoja</h2>
+    <div class="tpl">
+      <div class="trow"><b>Nombre:</b><span class="blank long"></span><b style="min-width:auto">Equipo:</b><span class="blank long"></span></div>
+      <div class="trow"><b>Banderas</b>1 <span class="blank"></span> 2 <span class="blank"></span> 3 <span class="blank"></span><small>(a, b o c)</small></div>
+      <div class="trow"><b>Datos y personaje</b>4 <span class="blank"></span> 5 <span class="blank"></span> 6 <span class="blank"></span><small>(a, b o c)</small></div>
+      <div class="trow"><b>Verdadero o falso</b>7 <span class="blank"></span> 8 <span class="blank"></span><small>(V o F)</small></div>
+      <div class="trow"><b>Cuatro banderas</b>9 <span class="blank"></span><small>(a, b, c o d)</small></div>
+      <div class="trow"><b>Lo que más me sorprendió</b>10 <span class="blank" style="flex:1"></span></div>
+    </div><button class="secondary tplbtn tplPrintBtn" type="button">🖨 Imprimir plantillas (3 por A4)</button>`;
+  }else if(qIdx<=10){
+    const q=quiz[qIdx-1],n=qIdx,k=t=>`<p class="qk"><span class="qnum">${n}</span>${t}</p>`;
+    if(q.t==='flag')h=k('Banderas')+`<h2 class="qh">¿De qué país es esta bandera?</h2><div class="qflag">${uniq(q.c.svg)}</div>`+optHTML(q)+revealBtn;
+    else if(q.t==='dato')h=k('Dato curioso')+`<h2 class="qh">¿De qué país es este dato?</h2><p class="qtext">${esc(q.c.dato)}</p>`+optHTML(q)+revealBtn;
+    else if(q.t==='per')h=k('Personaje')+`<h2 class="qh">¿De qué país era este personaje?</h2><p class="qbig">${esc(q.c.per[0])}</p>`+optHTML(q)+revealBtn;
+    else if(q.t==='vf')h=k('Verdadero o falso')+`<p class="qbig">La capital de ${esc(q.c.n)} es ${esc(q.cap)}.</p><div class="qvf"><span class="${qShow&&q.ans===0?'ok':''}">V</span><span class="${qShow&&q.ans===1?'ok':''}">F</span></div>`+revealBtn;
+    else if(q.t==='odd'||q.t==='which')h=k(q.t==='odd'?'El intruso':'Busca la bandera')+`<h2 class="qh">${q.t==='odd'?'Una de estas banderas <u>no</u> ha salido en la partida. ¿Cuál es?':'¿Cuál de estas banderas es la de '+esc(q.c.n)+'?'}</h2><div class="qfl">${q.flags.map((f,i)=>`<figure class="${qShow&&i===q.ans?'ok':''}"><div class="mini">${uniq(f.svg)}</div><figcaption>${QL[i]}${qShow&&i===q.ans?' · '+esc(f.n):''}</figcaption></figure>`).join('')}</div>`+revealBtn;
+    else h=k('Tu opinión')+`<h2 class="qh">¿Qué dato te ha sorprendido más?</h2><p class="qtext">Escribe el país y explica el dato con tus palabras en una o dos líneas.</p><div class="qlines"><i></i><i></i></div>`;
+  }else{
+    h=`<p class="qk">Corrección</p><h2 class="qh">Soluciones</h2><div class="qsol">${quiz.map((q,i)=>`<div><strong>${i+1}</strong><span>${esc(ansText(q))}</span></div>`).join('')}</div><p class="qnote">Cada respuesta correcta vale 1 punto; la pregunta 10 la valora el profesor.</p>`;
+  }
+  el.innerHTML=h;el.scrollTop=0;
+  const rb=$('#qRev');if(rb)rb.addEventListener('click',()=>{qShow=!qShow;renderQuiz();});
+  $('#quizInfo').textContent=qIdx===0?'Plantilla':qIdx<=10?`Pregunta ${qIdx} de 10`:'Soluciones';
+  $('#quizPrev').disabled=qIdx===0;$('#quizNext').disabled=qIdx===QN-1;
+  $('#quizDots').innerHTML=Array.from({length:QN},(_,i)=>`<button data-i="${i}" aria-label="${i===0?'Plantilla':i<=10?'Pregunta '+i:'Soluciones'}" aria-current="${i===qIdx}"></button>`).join('');
+}
+function openQuiz(){
+  if(playedPool().length<3)return;
+  if(!quiz)quiz=buildQuiz();
+  quizReturn=document.activeElement;qIdx=0;qShow=false;$('#quiz').hidden=false;document.body.style.overflow='hidden';
+  renderQuiz();$('#quizClose').focus();
+}
+function closeQuiz(){$('#quiz').hidden=true;document.body.style.overflow='';if(quizReturn&&quizReturn.focus)quizReturn.focus();}
+function goQuiz(d){const n=qIdx+d;if(n<0||n>=QN)return;qIdx=n;qShow=false;renderQuiz();}
+
+function tplOne(){
+  const r=(lab,nums,hint)=>`<div class="pr"><b>${lab}<small>${hint}</small></b>${nums.map(n=>`<i>${n}</i><span class="bl"></span>`).join('')}</div>`;
+  return `<div class="ptpl">
+    <div class="ph"><strong>Bandera oculta FPB · Repaso final</strong><span>Fecha: _____ / _____ / __________</span></div>
+    <div class="pr"><b class="sm">Nombre</b><span class="bl fill"></span><b class="sm">Equipo</b><span class="bl fill" style="flex:.6;margin-right:0"></span></div>
+    ${r('Banderas',[1,2,3],'a, b o c')}
+    ${r('Datos y personaje',[4,5,6],'a, b o c')}
+    ${r('Verdadero o falso',[7,8],'V o F')}
+    ${r('Cuatro banderas',[9],'a, b, c o d')}
+    <div class="pr" style="margin-top:1.5mm"><b class="sm">10 · Lo que más me sorprendió (país y dato):</b></div>
+    <div class="pline"></div><div class="pline"></div>
+  </div>`;
+}
+function printTemplates(){
+  $('#tplPrint').innerHTML=[tplOne(),'<div class="pcut"></div>',tplOne(),'<div class="pcut"></div>',tplOne()].join('');
+  document.body.classList.add('print-tpl');
+  const done=()=>{document.body.classList.remove('print-tpl');window.removeEventListener('afterprint',done);};
+  window.addEventListener('afterprint',done);
+  setTimeout(()=>{window.print();setTimeout(done,500);},50);
+}
+document.addEventListener('click',e=>{if(e.target.closest('.tplPrintBtn'))printTemplates();});
+$('#quizBtn').addEventListener('click',openQuiz);
+$('#quizNew').addEventListener('click',()=>{quiz=buildQuiz();$('#quizMsg').textContent='Preguntas nuevas preparadas.';$('#quizMsg').className='msg ok';});
+$('#quizPrev').addEventListener('click',()=>goQuiz(-1));
+$('#quizNext').addEventListener('click',()=>goQuiz(1));
+$('#quizClose').addEventListener('click',closeQuiz);
+$('#quizDots').addEventListener('click',e=>{const b=e.target.closest('button');if(b){qIdx=+b.dataset.i;qShow=false;renderQuiz();}});
+document.addEventListener('keydown',e=>{
+  if($('#quiz').hidden)return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();goQuiz(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();goQuiz(-1);}
+  else if(e.key==='Escape'){closeQuiz();}
+});
 
 /* ---------- resultados: formulario, Excel y diploma ---------- */
 const FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSfy3EnllkwywISGxt-hqL5tFcTyQ5adyZA8oaKA_9hMTgL0Ww/viewform';
