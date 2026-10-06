@@ -214,12 +214,13 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
 .vbox h3{margin-bottom:.2em}
 .feat{display:flex;gap:.5em;flex-wrap:wrap;margin-top:.4em}
 .demo{font-size:1.15em;background:var(--paper);border-radius:10px;padding:.5em .8em;margin-top:.5em;min-height:2.2em}
-.words{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw}
+.words{display:grid;align-items:start;grid-template-columns:repeat(3,1fr);gap:1vw}
 @media (max-width:820px){.words{grid-template-columns:1fr}}
 .wbox{background:var(--card);border-radius:14px;padding:.8em 1em;border:1px solid var(--line)}
 .wbox .q{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.2em}
-.wbox ul{list-style:none;padding:0;margin:.4em 0 0;display:none}
-.wbox.open ul{display:block}
+.wbox ul{list-style:none;padding:0;margin:.4em 0 0}
+.wbox li:not(.shown){display:none}
+.wbox li.shown{animation:entra .3s ease}
 .wbox li{display:flex;justify-content:space-between;gap:.6em;border-top:1px dashed var(--line);padding:.25em 0;text-align:left}
 .wbox li b{font-family:'Bricolage Grotesque',sans-serif}
 
@@ -261,6 +262,8 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
 .esq.quiz .node .v{filter:blur(6px);cursor:pointer;user-select:none}
 .esq.quiz .node .v.seen{filter:none}
 .esq.brief .node{font-size:1em}.esq.brief .node .v{font-weight:700}
+.lcard .hid{text-align:justify;hyphens:auto}
+.lcard .ex{margin-top:.45em;padding:.4em .6em;background:rgba(255,255,255,.7);border-radius:8px}
 .final{background:var(--cas-l);border-radius:12px;padding:.7em 1em;font-weight:700}
 </style>
 </head>
@@ -417,7 +420,12 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
       <p>Als teus fills els hi agrada llegir, dibuixar, imaginar o crear? Llavors no poden perdre's Comic Kids! Una divertida àrea pedagògica plena d'activitats, dirigida a què les noves generacions descobreixin la seva passió per les vinyetes. Per aprendre a observar el món en què viuen a través dels còmics de forma didàctica i original.</p>
     </div>
   </div>
-  <div class="row"><button class="btn dark" id="sol6b">Ver solución</button><button class="btn" id="rst6">Reiniciar</button><span id="res6" class="muted"></span></div>
+  <div class="row"><button class="btn dark" id="sol6b">Ver solución</button><button class="btn" id="tr6b">Ver traducción</button><button class="btn" id="rst6">Reiniciar</button><span id="res6" class="muted"></span></div>
+  <div class="sol" id="tr6">
+    <h3>Traducción al castellano</h3>
+    <p style="margin:.2em 0"><b>Niños y niñas de 5 a 12 años, ¡este es vuestro espacio!</b></p>
+    <p style="margin:.2em 0">¿A tus hijos les gusta leer, dibujar, imaginar o crear? ¡Entonces no pueden perderse Comic Kids! Una divertida área pedagógica llena de actividades, dirigida a que las nuevas generaciones descubran su pasión por las viñetas. Para aprender a observar el mundo en que viven a través de los cómics de forma didáctica y original.</p>
+  </div>
 </section>
 
 <!-- 10 CURIOSIDAD: GLOSAS -->
@@ -425,7 +433,7 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
   <div class="sh"><span class="tag t-cur">Curiosidad</span><h2>Unas notas en el margen de un libro</h2></div>
   <div class="cols">
     <div>
-      <p style="margin-top:0">En el monasterio de <b>San Millán de la Cogolla</b> (La Rioja), hace unos mil años, un monje leía un texto en latín que le costaba entender. Para aclararse, fue escribiendo pequeñas notas en los márgenes: las <b>Glosas Emilianenses</b>.</p>
+      <p style="margin-top:0">En el monasterio de <b>San Millán de la Cogolla</b> (La Rioja), <b>hacia el año 1000</b> (entre finales del siglo X y principios del XI), un monje leía un texto en latín que le costaba entender. Para aclararse, fue escribiendo pequeñas notas en los márgenes: las <b>Glosas Emilianenses</b>.</p>
       <p>Lo sorprendente es la lengua de algunas de esas notas: no están en latín, sino en un <b>romance</b> temprano, el idioma que ya hablaba la gente. Por eso a San Millán se le llama a menudo «la cuna del castellano».</p>
       <p>Y hay más: entre esas notas aparecen dos frases muy breves en <b>euskera</b>, consideradas las primeras escritas en esta lengua. ¡Dos lenguas que nacen por escrito en la misma página!</p>
     </div>
@@ -450,12 +458,15 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
 <!-- 11 CURIOSIDAD: MÁS LENGUAS -->
 <section class="slide" data-title="Curiosidad: las lenguas que casi nadie conoce" data-k="cur">
   <div class="sh"><span class="tag t-cur">Curiosidad</span><h2>Más lenguas de las que crees</h2></div>
-  <p style="margin:0">Además de las lenguas oficiales, en España se conservan otras lenguas y hablas que muchas personas ni siquiera conocen. Toca cada tarjeta.</p>
-  <div class="lgrid">
-    <button class="lcard" style="background:#DCEEF3;border-color:var(--ara)"><h3>Aranés <span class="hint">tocar</span></h3><div class="hid">Variedad del occitano (la lengua del sur de Francia) que se habla en el Valle de Arán, en Lleida. Es oficial en Cataluña.</div></button>
-    <button class="lcard" style="background:#E9ECEA;border-color:var(--ink2)"><h3>Asturiano o bable <span class="hint">tocar</span></h3><div class="hid">Lengua romance de Asturias. Está protegida por las leyes asturianas y se puede estudiar en los colegios, pero no es oficial.</div></button>
-    <button class="lcard" style="background:#E9ECEA;border-color:var(--ink2)"><h3>Aragonés <span class="hint">tocar</span></h3><div class="hid">Lengua romance de los valles del Pirineo aragonés. Tiene pocos hablantes y se intenta recuperar. Tampoco es oficial.</div></button>
-    <button class="lcard" style="background:var(--gal-l);border-color:var(--gal)"><h3>A fala <span class="hint">tocar</span></h3><div class="hid">Se habla en tres pueblos del valle de Jálama, en Cáceres (Extremadura). Es de la familia del gallego-portugués. ¿Entenderíamos a sus hablantes desde Galicia? ¡Bastante!</div></button>
+  <p style="margin:0">Además de las lenguas oficiales, en España se conservan otras lenguas y hablas que muchas personas ni siquiera conocen. Toca cada tarjeta o cada zona del mapa.</p>
+  <div class="cols c46">
+    <div class="lgrid" id="minCards" style="grid-template-columns:1fr 1fr">
+      <button class="lcard" data-m="arn" style="background:#DCEEF3;border-color:var(--ara)"><h3>Aranés <span class="hint">tocar</span></h3><div class="hid">Variedad del occitano (la lengua del sur de Francia) que se habla en el Valle de Arán, en Lleida. Es oficial en Cataluña.<div class="ex"><b>«Bon dia»</b> (Buenos días)<br><b>«Benvenguts ena Val d'Aran»</b> (Bienvenidos al Valle de Arán)</div></div></button>
+      <button class="lcard" data-m="ast" style="background:#FBE3CF;border-color:#D9772B"><h3>Asturiano o bable <span class="hint">tocar</span></h3><div class="hid">Lengua romance de Asturias (en zonas de León y Zamora se llama <i>leonés</i>). Está protegida por las leyes asturianas, pero no es oficial.<div class="ex"><b>«Bonos díes»</b> (Buenos días)<br><b>«¿Cómo te llames?»</b> (¿Cómo te llamas?)</div></div></button>
+      <button class="lcard" data-m="ara" style="background:#FFF1C2;border-color:#C9A100"><h3>Aragonés <span class="hint">tocar</span></h3><div class="hid">Lengua romance de los valles del Pirineo aragonés. Tiene pocos hablantes y se intenta recuperar. Tampoco es oficial.<div class="ex"><b>«¡Bienplegaus!»</b> (¡Bienvenidos!)<br><b>«Grazias»</b> (Gracias)</div></div></button>
+      <button class="lcard" data-m="fal" style="background:var(--gal-l);border-color:var(--gal)"><h3>A fala <span class="hint">tocar</span></h3><div class="hid">Se habla en tres pueblos del valle de Jálama, en Cáceres (Extremadura). Es de la familia del gallego-portugués. ¿La entenderíamos desde Galicia? ¡Bastante!<div class="ex"><b>«Bos días»</b> (Buenos días)<br><b>«Falamos a fala»</b> (Hablamos a fala)</div></div></button>
+    </div>
+    <div class="map" id="mapMin"></div>
   </div>
 </section>
 
@@ -494,8 +505,10 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
   </div>
   <div class="row"><button class="btn dark" data-sol="sol10">Ver solución</button></div>
   <div class="sol" id="sol10">
-    <h3>Respuesta modelo</h3>
-    <p style="margin:.2em 0">Saber más de una lengua es bueno, en primer lugar, porque nos permite comunicarnos con más personas y conocer otras culturas. Además, los textos aportan evidencias científicas: según el texto <b>a</b>, practicar idiomas durante toda la vida podría retrasar hasta cinco años los síntomas del alzhéimer, porque estimula y aumenta las conexiones del cerebro, igual que el ejercicio fortalece el cuerpo. Según el texto <b>b</b>, las personas bilingües podrían atender mejor a lo importante e ignorar las interferencias, como hemos visto en el experimento de los colores. En resumen, aprender lenguas nos ayuda a comunicarnos, a pensar mejor y a cuidar nuestro cerebro.</p>
+    <h3>Explicación</h3>
+    <p style="margin:.2em 0">Para responder hay que unir lo que ya sabemos con las evidencias de los textos. El texto <b>a</b> explica que practicar idiomas durante toda la vida podría retrasar hasta cinco años los síntomas del alzhéimer, porque aprender una lengua estimula y aumenta las conexiones del cerebro, igual que el ejercicio fortalece el cuerpo. El texto <b>b</b> habla de la «ventaja bilingüe»: quienes dominan varias lenguas podrían concentrarse mejor en lo importante e ignorar las interferencias, como hemos visto en el experimento de los colores. A esto añadimos lo que ya sabemos: con más lenguas podemos comunicarnos con más personas y conocer otras culturas.</p>
+    <h3 style="margin-top:.6em">Respuesta modelo</h3>
+    <p style="margin:.2em 0;background:var(--card);border-radius:10px;padding:.5em .8em">Saber más de una lengua es bueno porque nos permite comunicarnos con más personas y conocer otras culturas. Además, ejercita el cerebro: puede retrasar los síntomas del alzhéimer (texto a) y mejora la atención para ignorar distracciones (texto b).</p>
   </div>
 </section>
 
@@ -503,10 +516,10 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
 <section class="slide" data-title="Teoría: las variedades de una lengua" data-k="teo">
   <div class="sh"><span class="tag t-teo">Teoría</span><h2>Una lengua, muchas formas de hablarla</h2></div>
   <p style="font-size:1.12em;margin:0">Las lenguas mantienen la homogeneidad suficiente como para que todos sus hablantes puedan entenderse entre sí. Sin embargo, no todos los hablantes de una lengua hablamos exactamente igual. Existen <b>variedades</b> de una lengua que se asocian a una zona geográfica concreta.</p>
-  <p class="muted small" style="margin:0">¿Cómo lo llamas tú? Toca cada tarjeta para ver cómo se dice en distintos lugares.</p>
+  <p class="muted small" style="margin:0">¿Cómo lo llamas tú? Toca cada tarjeta varias veces: irán apareciendo, una a una, las formas de decirlo en distintos lugares.</p>
   <div class="words">
     <button class="wbox"><div class="q">Lluvia fina</div><ul><li><b>orvallo</b><span>Galicia, Asturias</span></li><li><b>sirimiri</b><span>País Vasco, Navarra</span></li><li><b>calabobos</b><span>Castilla</span></li><li><b>llovizna</b><span>en general</span></li></ul></button>
-    <button class="wbox"><div class="q">Autobús</div><ul><li><b>guagua</b><span>Canarias</span></li><li><b>autobús</b><span>en general</span></li><li><b>bus</b><span>en general, coloquial</span></li></ul></button>
+    <button class="wbox"><div class="q">Autobús</div><ul><li><b>guagua</b><span>Canarias</span></li><li><b>bus</b><span>en general, coloquial</span></li></ul></button>
     <button class="wbox"><div class="q">Niño o chico</div><ul><li><b>rapaz</b><span>Galicia, León</span></li><li><b>guaje</b><span>Asturias</span></li><li><b>chiquillo</b><span>Andalucía</span></li><li><b>chaval</b><span>en general</span></li></ul></button>
   </div>
 </section>
@@ -555,12 +568,11 @@ abbr.ab:hover::after,abbr.ab.show::after{opacity:1}
   <div class="cols c64">
     <div>
       <div class="vwrap"><iframe id="vid" title="Vídeo sobre el silbo gomero" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></div>
-      <div class="vcfg" style="margin-top:.5em"><input id="vidUrl" placeholder="Pega aquí otro enlace de YouTube para cambiar el vídeo"><button class="fbtn" id="vidSet">Cambiar</button><a class="fbtn" id="vidOpen" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">Abrir en YouTube</a></div>
+      <div class="vcfg" style="margin-top:.5em"><a class="fbtn" id="vidOpen" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">Abrir en YouTube</a></div>
     </div>
     <div>
       <p style="margin-top:0">En la isla de <b>La Gomera</b> (Canarias), los barrancos son tan profundos que gritar no sirve de nada. Por eso sus habitantes aprendieron a hablar… <b>silbando</b>.</p>
       <p>El silbo gomero no es otra lengua: <b>reproduce el castellano</b> con silbidos, que pueden oírse a varios kilómetros. Desde 2009 es Patrimonio Cultural Inmaterial de la Humanidad (UNESCO) y se estudia en los colegios de la isla.</p>
-      <div class="card small"><b>Mientras lo veis:</b> ¿distinguís cuándo cambian las vocales? ¿Para qué podría servir hoy el silbo?</div>
       <p class="small muted">Si el vídeo no carga en la diapositiva, pulsa «Abrir en YouTube».</p>
     </div>
   </div>
@@ -684,7 +696,7 @@ $('#fsBtn').onclick=()=>{if(!document.fullscreenElement)document.documentElement
 $$('.tile').forEach(t=>t.onclick=()=>t.classList.toggle('flip'));
 $$('.lcard').forEach(c=>c.onclick=()=>c.classList.toggle('open'));
 $$('#tl button').forEach(b=>b.onclick=()=>b.classList.toggle('open'));
-$$('.wbox').forEach(b=>b.onclick=()=>b.classList.toggle('open'));
+$$('.wbox').forEach(b=>b.onclick=()=>{const li=$$('li',b),n=li.filter(x=>x.classList.contains('shown')).length;if(n<li.length)li[n].classList.add('shown');else li.forEach(x=>x.classList.remove('shown'))});
 $$('.qc').forEach(b=>b.onclick=()=>b.classList.toggle('open'));
 $$('.gl').forEach(b=>b.onclick=()=>b.classList.toggle('open'));
 $$('abbr.ab').forEach(a=>a.onclick=()=>a.classList.toggle('show'));
@@ -861,12 +873,29 @@ $$('#esq .v').forEach(v=>v.onclick=()=>v.classList.add('seen'));
 
 /* ---------- vídeo ---------- */
 const VDEF='puozihRyAhU';
-function getVid(){try{return localStorage.getItem('lenguasEsp_vid2')||VDEF}catch(e){return VDEF}}
+function getVid(){return VDEF}
 function ytId(u){const m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);return m?m[1]:(/^[\w-]{11}$/.test(u.trim())?u.trim():null)}
 function loadVideo(){const id=getVid();$('#vid').src=`https://www.youtube-nocookie.com/embed/${id}?rel=0`;$('#vidOpen').href=`https://www.youtube.com/watch?v=${id}`}
 function stopVideo(){$('#vid').src='about:blank'}
-$('#vidSet').onclick=()=>{const id=ytId($('#vidUrl').value);if(!id){$('#vidUrl').value='';$('#vidUrl').placeholder='Ese enlace no es de YouTube. Prueba con otro.';return}try{localStorage.setItem('lenguasEsp_vid2',id)}catch(e){}$('#vidUrl').value='';loadVideo()};
 
+/* mapa lenguas no oficiales */
+(function(){
+  const el=$('#mapMin');let g='';
+  REG.forEach(r=>{const a='fill="#E3E7E5" stroke="#fff" stroke-width="2"';
+    if(r.sh[0]==='r'){const[_,x,y,w,h]=r.sh;g+=`<rect ${a} x="${x}" y="${y}" width="${w}" height="${h}" rx="7"/>`}
+    else if(r.sh[0]==='p')g+=`<polygon ${a} points="${r.sh[1]}"/>`;
+    else if(r.sh[0]==='e')g+=r.sh[1].map(e=>`<ellipse ${a} cx="${e[0]}" cy="${e[1]}" rx="${e[2]}" ry="${e[3]}"/>`).join('');
+    else if(r.sh[0]==='c')g+=`<circle ${a} cx="${r.sh[1]}" cy="${r.sh[2]}" r="${r.sh[3]}"/>`});
+  const Z=[
+   ['arn','#2F7F9A',`<rect x="468" y="53" width="34" height="24" rx="5"/>`,485,92,'Aranés'],
+   ['ast','#D9772B',`<rect x="120" y="40" width="95" height="45" rx="7"/><polygon points="122,92 185,92 185,150 122,150" opacity=".55"/>`,167,62,'Asturiano'],
+   ['ara','#C9A100',`<rect x="403" y="43" width="54" height="34" rx="5"/>`,430,92,'Aragonés'],
+   ['fal','#7B67B5',`<circle cx="56" cy="222" r="11"/>`,100,224,'A fala']];
+  Z.forEach(z=>{g+=`<g class="reg" data-m="${z[0]}" style="fill:${z[1]}">${z[2]}</g><text x="${z[3]}" y="${z[4]}" text-anchor="middle" dominant-baseline="middle">${z[5]}</text>`});
+  el.innerHTML=`<svg viewBox="0 0 600 462" role="img" aria-label="Mapa de las zonas donde se hablan aranés, asturiano, aragonés y a fala">${g}</svg>`;
+  $$('.reg',el).forEach(n=>n.addEventListener('click',()=>{const c=$(`#minCards [data-m="${n.dataset.m}"]`);c.classList.add('open')}));
+})();
+$('#tr6b').onclick=()=>{const t=$('#tr6');t.classList.toggle('show');$('#tr6b').textContent=t.classList.contains('show')?'Ocultar traducción':'Ver traducción'};
 /* glosa */
 $('#glosaImg').onclick=()=>{$('#lbImg').src=$('#glosaImg').src;$('#lb').style.display='grid'};
 $('#lb').onclick=()=>{$('#lb').style.display='none'};
