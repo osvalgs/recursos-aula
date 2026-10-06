@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>presentacion_humanismo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Alegreya:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pared:#F4F4EF;       /* xeso branco das igrexas de Brunelleschi */
+  --pedra:#7E8780;       /* pietra serena */
+  --pedra-clara:#D9DDD7;
+  --lapis:#23407A;       /* azul lapislázuli */
+  --lapis-claro:#E3E9F4;
+  --ouro:#B8892B;        /* pan de ouro */
+  --tinta:#1E2421;
+  --ben:#2F6B3F;
+  --mal:#9A2E22;
+  --serif:'Alegreya', Georgia, 'Times New Roman', serif;
+  --titulo:'Cinzel', 'Trajan Pro', Georgia, serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--pared);color:var(--tinta);font-family:var(--serif);overflow:hidden}
+body{font-size:clamp(17px,1.55vw,26px);line-height:1.5}
+p,li,.texto{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+
+/* ---------- Diapositivas ---------- */
+.diapo{position:absolute;inset:0;padding:clamp(18px,3.2vh,44px) clamp(70px,7vw,120px) clamp(44px,6vh,70px);
+  display:none;flex-direction:column;overflow-y:auto}
+.diapo.activa{display:flex;animation:entra .45s ease}
+@keyframes entra{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.diapo.activa{animation:none}}
+
+h1,h2{font-family:var(--titulo);color:var(--lapis);font-weight:700;letter-spacing:.04em;line-height:1.15}
+h2{font-size:clamp(26px,2.9vw,48px);padding-bottom:.35em;margin-bottom:.6em;border-bottom:3px solid var(--pedra-clara);position:relative}
+h2::after{content:"";position:absolute;left:0;bottom:-3px;width:90px;height:3px;background:var(--ouro)}
+h3{font-family:var(--serif);font-weight:800;color:var(--lapis);font-size:1.1em;margin-bottom:.25em}
+
+.columnas{display:grid;grid-template-columns:1fr minmax(220px,32%);gap:clamp(20px,3vw,48px);align-items:start;flex:1}
+.columnas.inv{grid-template-columns:minmax(220px,32%) 1fr}
+figure{background:#fff;border:1px solid var(--pedra-clara);padding:10px 10px 6px}
+figure img{width:100%;display:block;max-height:58vh;object-fit:contain;background:var(--pedra-clara)}
+figcaption{font-size:.72em;color:var(--pedra);font-style:italic;padding-top:6px;text-align:justify}
+.sen-imaxe{display:flex;align-items:center;justify-content:center;min-height:200px;background:var(--lapis-claro);
+  color:var(--lapis);font-family:var(--titulo);font-size:1.2em;text-align:center;padding:20px}
+
+.arco{border:2px solid var(--pedra);border-radius:200px 200px 0 0;padding:clamp(18px,2.5vw,34px) clamp(16px,2vw,28px) clamp(14px,2vw,22px);background:#fff}
+.lista{list-style:none;display:grid;gap:.7em}
+.lista li{padding-left:1.1em;position:relative}
+.lista li::before{content:"";position:absolute;left:0;top:.62em;width:.45em;height:.45em;background:var(--ouro);transform:rotate(45deg)}
+.destaque{background:var(--lapis-claro);border-left:5px solid var(--lapis);padding:.8em 1.1em;margin-top:.9em}
+
+/* ---------- Portada ---------- */
+#portada{justify-content:center;align-items:stretch;background:
+  linear-gradient(var(--pared),var(--pared)) padding-box}
+.portada-marco{border:2px solid var(--pedra);border-radius:48vh 48vh 0 0;padding:12vh 6vw 7vh;background:#fff;
+  display:flex;flex-direction:column;justify-content:center;flex:1}
+.portada-marco h1{font-size:clamp(48px,8.5vw,140px);text-align:center;letter-spacing:.08em}
+.portada-marco .sub{font-size:clamp(20px,2.2vw,36px);color:var(--pedra);font-style:italic;text-align:center;margin-top:.4em}
+.portada-marco .liña{height:3px;background:var(--ouro);width:30%;margin:3vh auto}
+.portada-marco .datas{font-family:var(--titulo);color:var(--ouro);text-align:center;font-size:clamp(18px,1.8vw,30px);letter-spacing:.2em}
+
+/* ---------- Introdución: as dúas selfies ---------- */
+.selfies{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,3vw,48px);flex:1;margin-top:.5em}
+.selfie{border:2px solid var(--pedra);background:#fff;display:flex;flex-direction:column}
+.selfie .ano{font-family:var(--titulo);font-size:clamp(28px,3.4vw,58px);color:var(--lapis);text-align:center;padding:.3em 0;border-bottom:2px solid var(--pedra-clara)}
+.selfie .visor{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:1.2em;min-height:30vh}
+.selfie button{font:inherit;font-weight:600;background:var(--lapis);color:#fff;border:none;padding:.6em 1.2em;cursor:pointer;font-size:1em}
+.selfie .revelado{display:none;text-align:center}
+.selfie.aberta .revelado{display:block}
+.selfie.aberta button{display:none}
+.revelado .icona{font-size:clamp(60px,8vw,130px);line-height:1}
+.revelado .quen{font-family:var(--titulo);font-size:clamp(22px,2.4vw,40px);color:var(--ouro);margin:.2em 0}
+.revelado p{text-align:justify}
+
+/* ---------- Vídeos ---------- */
+.video-caixa{flex:1;display:flex;flex-direction:column;gap:.8em;min-height:0}
+.video-marco{position:relative;width:100%;flex:1;min-height:40vh;background:#000;border:2px solid var(--pedra)}
+.video-marco iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.botoeira{display:flex;gap:.8em;flex-wrap:wrap;align-items:center}
+.boton{font:inherit;font-weight:600;font-size:.9em;background:var(--lapis);color:#fff;border:none;padding:.55em 1.1em;cursor:pointer;text-decoration:none;display:inline-block}
+.boton.secundario{background:#fff;color:var(--lapis);border:2px solid var(--lapis)}
+.boton.ouro{background:var(--ouro)}
+.nota{font-size:.75em;color:var(--pedra);font-style:italic}
+
+/* ---------- Comparación ---------- */
+.fronte{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid var(--pedra);background:#fff}
+.fronte > div{padding:1em 1.2em}
+.fronte > div:first-child{border-right:2px solid var(--pedra-clara)}
+.fronte h3{font-family:var(--titulo);letter-spacing:.04em}
+
+/* ---------- Características ---------- */
+.catro{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(14px,2vw,28px);flex:1}
+.cadro{background:#fff;border:1px solid var(--pedra-clara);border-top:4px solid var(--lapis);padding:.9em 1.1em}
+
+/* ---------- Autores ---------- */
+.autores{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,30px);flex:1}
+.autor{background:#fff;border:2px solid var(--pedra);border-radius:160px 160px 0 0;overflow:hidden;display:flex;flex-direction:column}
+.autor img{width:100%;height:34vh;object-fit:cover;object-position:top;display:block;background:var(--pedra-clara)}
+.autor .info{padding:.7em 1em 1em}
+.autor h3{font-family:var(--titulo);text-align:center;letter-spacing:.03em}
+.autor .anos{text-align:center;color:var(--ouro);font-weight:600;margin-bottom:.3em}
+
+/* ---------- Exercicio 5 ---------- */
+.enunciado{background:#fff;border:2px solid var(--lapis);padding:1em 1.3em;font-size:1.05em}
+.enunciado b.num{color:var(--lapis);font-family:var(--titulo)}
+.apoios{display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(14px,2vw,30px);margin-top:1em}
+.tic,.axuda{background:#fff;border:1px solid var(--pedra-clara);padding:.9em 1.1em}
+.tic{border-top:4px solid var(--ouro)}
+.axuda{border-top:4px solid var(--ben)}
+.tic h3,.axuda h3{font-family:var(--titulo);letter-spacing:.05em}
+.tic a.enlace{display:block;margin-top:.6em;font-size:1.05em;word-break:break-all}
+.axuda ul{padding-left:1.1em}
+.axuda li{margin-bottom:.25em}
+
+.documentos{display:grid;gap:.75em}
+.doc{display:grid;grid-template-columns:1fr auto;gap:1em;align-items:center;background:#fff;border:1px solid var(--pedra-clara);border-left:5px solid var(--pedra-clara);padding:.6em .9em}
+.doc .letra{font-weight:800;color:var(--lapis);margin-right:.25em}
+.doc.dante{border-left-color:#23407A}
+.doc.petrarca{border-left-color:#B8892B}
+.doc.boccaccio{border-left-color:#6B4E8A}
+.doc.correcto{background:#EEF6F0}
+.doc.erro{background:#FBEFED}
+.elixir{display:flex;gap:.35em}
+.elixir button{font:inherit;font-size:.78em;font-weight:600;padding:.4em .7em;border:2px solid var(--pedra);background:#fff;cursor:pointer;color:var(--tinta);min-width:3.2em}
+.elixir button.sel[data-a="dante"]{background:#23407A;border-color:#23407A;color:#fff}
+.elixir button.sel[data-a="petrarca"]{background:#B8892B;border-color:#B8892B;color:#fff}
+.elixir button.sel[data-a="boccaccio"]{background:#6B4E8A;border-color:#6B4E8A;color:#fff}
+
+.moreas{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,28px);flex:1}
+.morea{background:#fff;border:2px solid var(--pedra);display:flex;flex-direction:column}
+.morea h3{font-family:var(--titulo);color:#fff;text-align:center;padding:.4em;margin:0}
+.morea[data-a="petrarca"] h3{background:#B8892B}
+.morea[data-a="dante"] h3{background:#23407A}
+.morea[data-a="boccaccio"] h3{background:#6B4E8A}
+.morea .follas{padding:.8em;display:flex;flex-wrap:wrap;gap:.5em;align-content:flex-start;flex:1;min-height:20vh}
+.folla{font-weight:800;font-size:1.2em;width:2.2em;height:2.6em;display:flex;align-items:center;justify-content:center;background:var(--pared);border:1px solid var(--pedra);box-shadow:3px 3px 0 var(--pedra-clara)}
+.folla.ok{background:#DDEFE2;border-color:var(--ben)}
+.folla.ko{background:#F6DAD5;border-color:var(--mal)}
+.resultado{margin-top:.8em;font-weight:600;min-height:1.5em}
+
+/* ---------- Repaso ---------- */
+.vf{display:grid;gap:.6em}
+.vf .fila{display:grid;grid-template-columns:auto 1fr auto;gap:1em;align-items:center;background:#fff;border:1px solid var(--pedra-clara);padding:.55em .9em}
+.vf .n{font-family:var(--titulo);color:var(--ouro);font-weight:700}
+.vf .xs{display:flex;gap:.4em}
+.vf .xs button{font:inherit;font-weight:700;width:2.6em;height:2.2em;border:2px solid var(--pedra);background:#fff;cursor:pointer}
+.vf .xs button.sel{background:var(--lapis);border-color:var(--lapis);color:#fff}
+.vf .fila.correcto{background:#EEF6F0;border-color:var(--ben)}
+.vf .fila.erro{background:#FBEFED;border-color:var(--mal)}
+
+.relacion{display:grid;gap:.6em}
+.relacion .fila{display:grid;grid-template-columns:minmax(180px,26%) 1fr;gap:1em;align-items:center;background:#fff;border:1px solid var(--pedra-clara);padding:.5em .9em}
+.relacion .termo{font-weight:800;color:var(--lapis)}
+.relacion select{font:inherit;font-size:.85em;width:100%;padding:.35em;border:2px solid var(--pedra);background:#fff;color:var(--tinta)}
+.relacion .fila.correcto{background:#EEF6F0;border-color:var(--ben)}
+.relacion .fila.erro{background:#FBEFED;border-color:var(--mal)}
+
+/* ---------- Esquema ---------- */
+.esquema{flex:1;display:flex;flex-direction:column;align-items:stretch}
+.raiz{align-self:center;font-family:var(--titulo);font-size:clamp(24px,2.6vw,44px);color:#fff;background:var(--lapis);padding:.3em 1.2em;border-radius:60px 60px 0 0}
+.tronco{align-self:center;width:3px;height:2.5vh;background:var(--pedra)}
+@media (max-width:800px){.conectores{display:none}}
+.conectores{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.5vw,22px);position:relative;height:5vh}
+.conectores::before{content:"";position:absolute;top:0;left:12.5%;right:12.5%;height:3px;background:var(--pedra)}
+.conectores span{position:relative}
+.conectores span::before{content:"";position:absolute;left:50%;top:0;bottom:12px;width:3px;margin-left:-1.5px;background:var(--pedra)}
+.conectores span::after{content:"";position:absolute;left:50%;bottom:0;margin-left:-10px;border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid var(--pedra)}
+.ramas{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.5vw,22px);position:relative;flex:1}
+.rama li{padding-left:1.3em;position:relative}
+.rama li::before{content:"➜";position:absolute;left:0;color:var(--ouro);font-size:.9em}
+.rama{background:#fff;border:2px solid var(--pedra);padding:.7em .9em;font-size:.9em}
+.rama h3{font-family:var(--titulo);text-align:center;font-size:1em;border-bottom:2px solid var(--ouro);padding-bottom:.3em;margin-bottom:.5em}
+.rama ul{list-style:none;display:grid;gap:.45em}
+.rama li{text-align:justify}
+.rama li b{color:var(--lapis)}
+
+/* ---------- Navegación ---------- */
+.frecha{position:fixed;top:50%;transform:translateY(-50%);z-index:10;width:clamp(48px,4.5vw,70px);height:clamp(80px,12vh,120px);
+  border:2px solid var(--pedra);background:rgba(255,255,255,.92);color:var(--lapis);font-size:clamp(28px,3vw,46px);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-family:var(--titulo)}
+.frecha:hover{background:var(--lapis);color:#fff}
+.frecha:disabled{opacity:.25;cursor:default;background:#fff;color:var(--lapis)}
+#ant{left:8px;border-radius:0 60px 60px 0}
+#seg{right:8px;border-radius:60px 0 0 60px}
+button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid var(--ouro);outline-offset:2px}
+.pe{position:fixed;left:0;right:0;bottom:0;height:clamp(30px,4.5vh,44px);display:flex;align-items:center;gap:1em;padding:0 clamp(70px,7vw,120px);
+  padding-bottom:env(safe-area-inset-bottom,0px);background:var(--pared);z-index:5}
+.progreso{flex:1;height:4px;background:var(--pedra-clara)}
+.progreso span{display:block;height:100%;background:var(--ouro);width:0;transition:width .3s}
+.contador{font-family:var(--titulo);color:var(--pedra);font-size:.75em;min-width:4em;text-align:right}
+
+@media (max-width:800px){
+  .columnas,.columnas.inv,.apoios,.selfies,.fronte,.catro,.autores,.moreas,.ramas{grid-template-columns:1fr}
+  .diapo{padding-left:60px;padding-right:60px}
+  .fronte > div:first-child{border-right:none;border-bottom:2px solid var(--pedra-clara)}
+  .doc{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- 1. PORTADA -->
+<section class="diapo activa" id="portada">
+  <div class="portada-marco">
+    <div class="datas">Italia · séculos XIV–XVI</div>
+    <div class="liña"></div>
+    <h1>O humanismo</h1>
+    <p class="sub" style="text-align:center">Cando o ser humano pasou ao centro do cadro</p>
+  </div>
+</section>
+
+<!-- 2. INTRODUCIÓN ORIXINAL -->
+<section class="diapo">
+  <h2>Dúas selfies separadas por 150 anos</h2>
+  <p>Imaxina que tes unha cámara máxica e fas dúas fotos de Europa: unha no ano 1300 e outra no 1450. Antes de abrilas, pensa: <b>quen ou que aparecerá no centro de cada foto?</b> Comentádeo en voz alta e despois descubrimos a resposta.</p>
+  <div class="selfies">
+    <div class="selfie" id="s1">
+      <div class="ano">1300</div>
+      <div class="visor">
+        <button onclick="this.parentNode.parentNode.classList.add('aberta')">Revelar a foto</button>
+        <div class="revelado">
+          <div class="icona">⛪</div>
+          <div class="quen">Deus</div>
+          <p>Idade Media. Todo xira arredor de Deus e da Igrexa. As persoas son pequenas e o importante é salvar a alma. Isto chámase <b>teocentrismo</b>.</p>
+        </div>
+      </div>
+    </div>
+    <div class="selfie" id="s2">
+      <div class="ano">1450</div>
+      <div class="visor">
+        <button onclick="this.parentNode.parentNode.classList.add('aberta')">Revelar a foto</button>
+        <div class="revelado">
+          <div class="icona">🧍</div>
+          <div class="quen">O ser humano</div>
+          <p>Florencia e outras cidades italianas descobren a grandeza das persoas: a súa razón, a súa liberdade e a súa beleza. Isto chámase <b>antropocentrismo</b>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. QUE É O HUMANISMO -->
+<section class="diapo">
+  <h2>Que é o humanismo?</h2>
+  <div class="columnas">
+    <div>
+      <p>O humanismo é un movemento <b>pedagóxico, literario, estético, filosófico e relixioso</b> europeo. Tamén é un modo de pensar e de vivir cunha idea principal: <b>no centro do Universo está o ser humano</b>, imaxe de Deus, criatura privilexiada e digna sobre todas as cousas da Terra.</p>
+      <p style="margin-top:.8em">Inspírase na <b>Antigüidade clásica</b> (Grecia e Roma) e mantense en boa parte de Europa ata finais do <b>século XVI</b>.</p>
+      <div class="destaque">
+        <p>Os seus grandes escritores foron tres italianos: <b>Dante Alighieri, Francesco Petrarca e Giovanni Boccaccio</b>.</p>
+      </div>
+    </div>
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Portrait_de_Dante.jpg?width=700" alt="Retrato de Dante Alighieri pintado por Botticelli" onerror="semImaxe(this,'Dante Alighieri')">
+      <figcaption>Dante Alighieri retratado por Sandro Botticelli. Coroado de loureiro, como os poetas da Antigüidade.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 4. VÍDEO 1 -->
+<section class="diapo">
+  <h2>O humanismo en vídeo</h2>
+  <div class="video-caixa">
+    <div class="video-marco">
+      <iframe src="https://www.youtube-nocookie.com/embed/yXXK2C0ZbDk?rel=0" title="O humanismo" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="botoeira">
+      <a class="boton secundario" href="https://youtube.com/shorts/yXXK2C0ZbDk" target="_blank" rel="noopener">Abrir en YouTube</a>
+      <span class="nota">Mentres o vedes, apuntade dúas características do humanismo.</span>
+    </div>
+  </div>
+</section>
+
+<!-- 5. TEOCENTRISMO / ANTROPOCENTRISMO -->
+<section class="diapo">
+  <h2>Do teocentrismo ao antropocentrismo</h2>
+  <div class="columnas inv">
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Da_Vinci_Vitruve_Luc_Viatour.jpg?width=700" alt="O home de Vitruvio, debuxo de Leonardo da Vinci" onerror="semImaxe(this,'O home de Vitruvio')">
+      <figcaption>O home de Vitruvio, de Leonardo da Vinci: o corpo humano como medida perfecta de todas as cousas.</figcaption>
+    </figure>
+    <div>
+      <div class="fronte">
+        <div>
+          <h3>Idade Media</h3>
+          <p>Mentalidade <b>teocéntrica</b>: o Universo enteiro xira arredor de Deus. A Igrexa ten un enorme poder e a fe está por riba da razón.</p>
+        </div>
+        <div>
+          <h3>Humanismo</h3>
+          <p>Mentalidade <b>antropocéntrica</b>: admírase a grandeza do ser humano como centro da creación. Valóranse a <b>liberdade</b> e a <b>razón</b>.</p>
+        </div>
+      </div>
+      <div class="destaque">
+        <p>Consecuencia: a Igrexa perde poder fronte ao poder temporal do monarca.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. CARACTERÍSTICAS -->
+<section class="diapo">
+  <h2>Características do humanismo</h2>
+  <div class="catro">
+    <div class="cadro">
+      <h3>Antropocentrismo</h3>
+      <p>Exaltación do ser humano e dos seus valores, especialmente a liberdade e a razón.</p>
+    </div>
+    <div class="cadro">
+      <h3>Renacemento da cultura grecolatina</h3>
+      <p>Gusto pola Antigüidade clásica grega e polas ruínas da cidade de Roma, que inspiran arte, literatura e pensamento.</p>
+    </div>
+    <div class="cadro">
+      <h3>Técnica e ciencia</h3>
+      <p>O pensamento científico ábrese paso grazas á aparición de novos inventos.</p>
+    </div>
+    <div class="cadro">
+      <h3>Linguas vernáculas</h3>
+      <p>As linguas que falaba a xente (italiano, castelán, galego…), fronte ao latín tradicional, permitiron o acceso á cultura de moitas máis persoas.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7. OS TRES GRANDES -->
+<section class="diapo">
+  <h2>Os tres grandes do humanismo italiano</h2>
+  <div class="autores">
+    <div class="autor">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Portrait_de_Dante.jpg?width=600" alt="Dante Alighieri" onerror="semImaxe(this,'Dante')">
+      <div class="info">
+        <h3>Dante Alighieri</h3>
+        <div class="anos">1265–1321</div>
+        <p>Florentino. Escribiu a <i>Divina comedia</i>, considerada a maior obra poética da cristiandade.</p>
+      </div>
+    </div>
+    <div class="autor">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Francesco_Petrarca00.jpg?width=600" alt="Francesco Petrarca" onerror="semImaxe(this,'Petrarca')">
+      <div class="info">
+        <h3>Francesco Petrarca</h3>
+        <div class="anos">1304–1374</div>
+        <p>Poeta do amor. A súa obra máis coñecida é o <i>Cancioneiro</i>, que influíu na poesía de toda Europa.</p>
+      </div>
+    </div>
+    <div class="autor">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Andrea_del_Castagno_Giovanni_Boccaccio_c_1450.jpg?width=600" alt="Giovanni Boccaccio" onerror="semImaxe(this,'Boccaccio')">
+      <div class="info">
+        <h3>Giovanni Boccaccio</h3>
+        <div class="anos">1313–1375</div>
+        <p>Narrador. Escribiu o <i>Decamerón</i>, unha colección de cen contos en prosa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. EXPANSIÓN -->
+<section class="diapo">
+  <h2>Como se espallou o humanismo?</h2>
+  <div class="columnas">
+    <ul class="lista">
+      <li><b>A imprenta</b> supuxo a posibilidade de divulgar as novas ideas a maior velocidade do que se podía facer na Idade Media.</li>
+      <li><b>As academias</b>, inspiradas nas gregas, reunían estudosos de todas as ramas do saber (filólogos, poetas, científicos…) en faladoiros e centros de investigación.</li>
+      <li><b>Os mecenas</b>, como os Medici, protexían os artistas e científicos custeando os seus proxectos. O mecenado achegaba prestixio.</li>
+      <li><b>As universidades</b> renováronse e apareceron novos centros por toda Europa, como Alcalá de Henares, Valencia, Sevilla, Toledo e <b>Santiago de Compostela</b>, ou Wittenberg, en Alemaña.</li>
+    </ul>
+    <figure>
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Printer_in_1568-ce.png?width=600" alt="Gravado dun taller de imprenta do século XVI" onerror="semImaxe(this,'A imprenta')">
+      <figcaption>Taller de imprenta (gravado de 1568). Gutenberg inventou a imprenta a mediados do século XV; antes, cada libro copiábase a man.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 9. VÍDEO 2 -->
+<section class="diapo">
+  <h2>Gutenberg: o home que cambiou o mundo</h2>
+  <div class="video-caixa">
+    <div class="video-marco">
+      <iframe src="https://www.youtube-nocookie.com/embed/N43CE8aUbEA?rel=0" title="Johannes Gutenberg, el hombre que cambió el mundo" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="botoeira">
+      <a class="boton secundario" href="https://www.youtube.com/shorts/N43CE8aUbEA" target="_blank" rel="noopener">Abrir en YouTube</a>
+      <span class="nota">Pregunta para despois: por que se di que a imprenta foi «o internet» do século XV?</span>
+    </div>
+  </div>
+</section>
+
+<!-- 10. EXERCICIO 5: ENUNCIADO -->
+<section class="diapo">
+  <h2>Exercicio 5</h2>
+  <div class="enunciado">
+    <p><b class="num">5.</b> Houbo un accidente na biblioteca do museo e esparexéronse varios documentos da sección de humanismo renacentista. Trata de reunir os documentos seguintes en tres moreas, correspondentes a Petrarca, Dante e Boccaccio.</p>
+  </div>
+  <div class="apoios">
+    <div class="tic">
+      <h3>TIC</h3>
+      <p>Para investigar:</p>
+      <a class="enlace" href="http://www.biografiasyvidas.com/" target="_blank" rel="noopener">http://www.biografiasyvidas.com/</a>
+      <p style="margin-top:.8em">Biografías directas:</p>
+      <div class="botoeira" style="margin-top:.4em">
+        <a class="boton" style="background:#B8892B" href="https://www.biografiasyvidas.com/biografia/p/petrarca.htm" target="_blank" rel="noopener">Petrarca</a>
+        <a class="boton" style="background:#23407A" href="https://www.biografiasyvidas.com/biografia/d/dante.htm" target="_blank" rel="noopener">Dante</a>
+        <a class="boton" style="background:#6B4E8A" href="https://www.biografiasyvidas.com/biografia/b/boccaccio.htm" target="_blank" rel="noopener">Boccaccio</a>
+      </div>
+    </div>
+    <div class="axuda">
+      <h3>Axuda</h3>
+      <ul>
+        <li>Le o texto e busca no dicionario as palabras non coñecidas, como <i>güelfo</i> e <i>xibelino</i>.</li>
+        <li>Identifica as palabras clave de cada parágrafo.</li>
+        <li>Indaga na web na dirección sinalada; busca o nome do autor e a palabra clave.</li>
+        <li>Copia no teu caderno o resultado.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 11. DOCUMENTOS a–e -->
+<section class="diapo">
+  <h2>Os documentos esparexidos (I)</h2>
+  <div class="documentos">
+    <div class="doc" data-sol="dante" data-l="a"><p><span class="letra">a)</span> <b>Nacido en Florencia</b>, desempeñou diferentes misións diplomáticas e foi elixido un dos seis priores. En plena guerra entre <b>güelfos e xibelinos</b>, foi desterrado por estes. Viviu en París e despois en <b>Rávena, onde morreu</b>.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="boccaccio" data-l="b"><p><span class="letra">b)</span> A <b>peste que asolou Florencia en 1348</b> inspiroulle a idea da súa obra mestra. A obra tivo un grande éxito, o cal lle valeu ser promovido con frecuencia a cargos oficiais honoríficos.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="dante" data-l="c"><p><span class="letra">c)</span> Nas súas obras, o dialecto florentino alcanza o estatuto de idioma, sentando as <b>bases do italiano</b>.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="petrarca" data-l="d"><p><span class="letra">d)</span> Na primeira parte do <b><i>Cancioneiro</i></b>, as poesías reflicten a sensualidade e o tormento apaixonado do poeta, pero tras a morte de <b>Laura</b>, o seu amor resulta sublimado nunha adoración espiritual. Os seus versos son de gran forza e orixinalidade.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="boccaccio" data-l="e"><p><span class="letra">e)</span> Fillo natural dun banqueiro florentino, axente da poderosa compañía financeira dos Bardi, non coñeceu a identidade da súa nai. <b>Tampouco se pode determinar se naceu en París, Certaldo ou Florencia.</b></p><div class="elixir"></div></div>
+  </div>
+</section>
+
+<!-- 12. DOCUMENTOS f–k -->
+<section class="diapo">
+  <h2>Os documentos esparexidos (II)</h2>
+  <div class="documentos">
+    <div class="doc" data-sol="petrarca" data-l="f"><p><span class="letra">f)</span> Durante a súa nenez e a súa primeira adolescencia residiu en distintas cidades italianas e francesas, debido ás persecucións políticas de que foi obxecto o seu pai, adherido ao partido negro güelfo. <b>Cursou estudos de leis</b> en Carpentras, Montpellier, Boloña e Aviñón.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="dante" data-l="g"><p><span class="letra">g)</span> Na súa infancia xa compoñía sonetos e cancións nos que reflectía un concepto de amor ideal e case místico. A súa obra maior está dividida en tres partes: <b>Inferno, Purgatorio e Paraíso</b>. O poeta describe o seu paso por estes mundos da man do poeta <b>Virxilio</b> e da súa amada <b>Beatriz</b> de xeito conmovedor, plasmando as conviccións morais e filosóficas da Idade Media, xunto con algunhas ideas que preconizan a cultura renacentista.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="boccaccio" data-l="h"><p><span class="letra">h)</span> Foi enviado polo seu pai a Nápoles, onde adquiriu unha sólida formación literaria. Impresionáronlle o <b>refinamento e a voluptuosidade</b> que reinaban na corte, na cal converxían as culturas italiana, bizantina e árabe.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="boccaccio" data-l="i"><p><span class="letra">i)</span> Sufriu unha crise espiritual que o levou a renegar da súa obra mestra e a centrarse no estudo e nas prácticas piadosas. <b>Tras ser ordenado sacerdote</b>, pasou a ocupar o cargo de confesor en 1360.</p><div class="elixir"></div></div>
+    <div class="doc" data-sol="petrarca" data-l="k"><p><span class="letra">k)</span> Realizou varias viaxes por países europeos, nas que aproveitou para rescatar antigos códices latinos de varias bibliotecas, como o <i>Pro Archia</i> de Cicerón, obra da que se tiñan referencias pero que se consideraba perdida.</p><div class="elixir"></div></div>
+  </div>
+</section>
+
+<!-- 13. AS TRES MOREAS -->
+<section class="diapo">
+  <h2>As tres moreas</h2>
+  <p>Aquí aparecen os documentos segundo os fostes asignando nas dúas diapositivas anteriores. Cando teñades todos colocados, comprobade o resultado.</p>
+  <div class="moreas" style="margin-top:.8em">
+    <div class="morea" data-a="petrarca"><h3>Petrarca</h3><div class="follas"></div></div>
+    <div class="morea" data-a="dante"><h3>Dante</h3><div class="follas"></div></div>
+    <div class="morea" data-a="boccaccio"><h3>Boccaccio</h3><div class="follas"></div></div>
+  </div>
+  <div class="botoeira" style="margin-top:1em">
+    <button class="boton" onclick="comprobarMoreas()">Comprobar</button>
+    <button class="boton ouro" onclick="solucionMoreas()">Ver solución</button>
+    <button class="boton secundario" onclick="reiniciarMoreas()">Empezar de novo</button>
+  </div>
+  <div class="resultado" id="resMoreas"></div>
+</section>
+
+<!-- 14. REPASO 1 -->
+<section class="diapo">
+  <h2>Repaso 1: verdadeiro ou falso?</h2>
+  <div class="vf" id="vf">
+    <div class="fila" data-sol="F"><span class="n">1</span><p>O humanismo sitúa a Deus no centro do Universo.</p><div class="xs"><button>V</button><button>F</button></div></div>
+    <div class="fila" data-sol="V"><span class="n">2</span><p>Dante, Petrarca e Boccaccio foron escritores humanistas italianos.</p><div class="xs"><button>V</button><button>F</button></div></div>
+    <div class="fila" data-sol="V"><span class="n">3</span><p>A imprenta permitiu difundir as novas ideas máis rápido ca na Idade Media.</p><div class="xs"><button>V</button><button>F</button></div></div>
+    <div class="fila" data-sol="F"><span class="n">4</span><p>Os humanistas rexeitaban a cultura da Grecia e da Roma antigas.</p><div class="xs"><button>V</button><button>F</button></div></div>
+    <div class="fila" data-sol="V"><span class="n">5</span><p>Os mecenas, como os Medici, pagaban os proxectos de artistas e científicos.</p><div class="xs"><button>V</button><button>F</button></div></div>
+    <div class="fila" data-sol="F"><span class="n">6</span><p>Escribir en linguas vernáculas fixo que a cultura chegase a menos persoas.</p><div class="xs"><button>V</button><button>F</button></div></div>
+  </div>
+  <div class="botoeira" style="margin-top:1em">
+    <button class="boton" onclick="comprobarVF()">Comprobar</button>
+    <button class="boton secundario" onclick="reiniciarVF()">Empezar de novo</button>
+    <span class="resultado" id="resVF"></span>
+  </div>
+</section>
+
+<!-- 15. REPASO 2 -->
+<section class="diapo">
+  <h2>Repaso 2: relaciona cada palabra co seu significado</h2>
+  <div class="relacion" id="rel">
+    <div class="fila" data-sol="a"><span class="termo">Antropocentrismo</span><select></select></div>
+    <div class="fila" data-sol="b"><span class="termo">Teocentrismo</span><select></select></div>
+    <div class="fila" data-sol="c"><span class="termo">Mecenas</span><select></select></div>
+    <div class="fila" data-sol="d"><span class="termo">Academia</span><select></select></div>
+    <div class="fila" data-sol="e"><span class="termo">Lingua vernácula</span><select></select></div>
+    <div class="fila" data-sol="f"><span class="termo">Imprenta</span><select></select></div>
+  </div>
+  <div class="botoeira" style="margin-top:1em">
+    <button class="boton" onclick="comprobarRel()">Comprobar</button>
+    <button class="boton secundario" onclick="reiniciarRel()">Empezar de novo</button>
+    <span class="resultado" id="resRel"></span>
+  </div>
+</section>
+
+<!-- 16. ESQUEMA FINAL -->
+<section class="diapo">
+  <h2>Esquema final</h2>
+  <div class="esquema">
+    <div class="raiz">O humanismo</div>
+    <div class="tronco"></div>
+    <div class="conectores"><span></span><span></span><span></span><span></span></div>
+    <div class="ramas">
+      <div class="rama">
+        <h3>Que é</h3>
+        <ul>
+          <li>Movemento europeo e modo de pensar e de vivir.</li>
+          <li>Idea central: <b>o ser humano</b> no centro do Universo.</li>
+          <li>Inspirado na <b>Antigüidade clásica</b>.</li>
+          <li>Dura ata finais do <b>século XVI</b>.</li>
+        </ul>
+      </div>
+      <div class="rama">
+        <h3>Autores</h3>
+        <ul>
+          <li><b>Dante</b>: <i>Divina comedia</i>; bases do italiano.</li>
+          <li><b>Petrarca</b>: <i>Cancioneiro</i>; amor por Laura.</li>
+          <li><b>Boccaccio</b>: <i>Decamerón</i>; inspirado na peste de 1348.</li>
+        </ul>
+      </div>
+      <div class="rama">
+        <h3>Características</h3>
+        <ul>
+          <li><b>Antropocentrismo</b>: liberdade e razón.</li>
+          <li>Renacemento da cultura <b>grecolatina</b>.</li>
+          <li>Avance da <b>técnica e a ciencia</b>.</li>
+          <li>Valor das <b>linguas vernáculas</b>.</li>
+        </ul>
+      </div>
+      <div class="rama">
+        <h3>Expansión</h3>
+        <ul>
+          <li><b>Imprenta</b>: ideas máis rápidas.</li>
+          <li><b>Academias</b>: reunión de sabios.</li>
+          <li><b>Mecenas</b>: os Medici.</li>
+          <li><b>Universidades</b>: Santiago, Alcalá…</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAVEGACIÓN -->
+<button class="frecha" id="ant" aria-label="Diapositiva anterior">‹</button>
+<button class="frecha" id="seg" aria-label="Diapositiva seguinte">›</button>
+<div class="pe"><div class="progreso"><span id="barra"></span></div><div class="contador" id="contador"></div></div>
+
+<script>
+/* ---------- Imaxes que non cargan ---------- */
+function semImaxe(img, texto){
+  const d=document.createElement('div');
+  d.className='sen-imaxe'; d.textContent=texto;
+  if(img.closest('.autor')) d.style.height='34vh';
+  img.replaceWith(d);
+}
+
+/* ---------- Navegación ---------- */
+const diapos=[...document.querySelectorAll('.diapo')];
+let actual=0;
+const ant=document.getElementById('ant'), seg=document.getElementById('seg');
+function ir(n){
+  if(n<0||n>=diapos.length) return;
+  diapos[actual].classList.remove('activa');
+  actual=n;
+  diapos[actual].classList.add('activa');
+  diapos[actual].scrollTop=0;
+  ant.disabled=actual===0; seg.disabled=actual===diapos.length-1;
+  document.getElementById('contador').textContent=(actual+1)+' / '+diapos.length;
+  document.getElementById('barra').style.width=((actual+1)/diapos.length*100)+'%';
+  if(diapos[actual].querySelector('.moreas')) pintarMoreas();
+}
+ant.onclick=()=>ir(actual-1);
+seg.onclick=()=>ir(actual+1);
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='SELECT') return;
+  if(e.key==='ArrowRight'||e.key==='PageDown') ir(actual+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp') ir(actual-1);
+});
+let x0=null;
+document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(x0===null) return;
+  const dx=e.changedTouches[0].clientX-x0;
+  if(Math.abs(dx)>80){ dx<0?ir(actual+1):ir(actual-1); }
+  x0=null;
+},{passive:true});
+
+/* ---------- Exercicio 5 ---------- */
+const nomes={petrarca:'Petrarca',dante:'Dante',boccaccio:'Boccaccio'};
+const asignado={};
+document.querySelectorAll('.doc').forEach(doc=>{
+  const caixa=doc.querySelector('.elixir');
+  ['petrarca','dante','boccaccio'].forEach(a=>{
+    const b=document.createElement('button');
+    b.textContent=nomes[a]; b.dataset.a=a;
+    b.onclick=()=>{
+      caixa.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+      asignado[doc.dataset.l]=a;
+      doc.classList.remove('dante','petrarca','boccaccio','correcto','erro');
+      doc.classList.add(a);
+    };
+    caixa.appendChild(b);
+  });
+});
+function pintarMoreas(marcar){
+  document.querySelectorAll('.morea').forEach(m=>{
+    const f=m.querySelector('.follas'); f.innerHTML='';
+    document.querySelectorAll('.doc').forEach(doc=>{
+      const l=doc.dataset.l;
+      if(asignado[l]===m.dataset.a){
+        const s=document.createElement('div'); s.className='folla'; s.textContent=l;
+        if(marcar) s.classList.add(doc.dataset.sol===asignado[l]?'ok':'ko');
+        f.appendChild(s);
+      }
+    });
+  });
+}
+function comprobarMoreas(){
+  const docs=[...document.querySelectorAll('.doc')];
+  const feitos=docs.filter(d=>asignado[d.dataset.l]);
+  pintarMoreas(true);
+  const ben=feitos.filter(d=>d.dataset.sol===asignado[d.dataset.l]).length;
+  docs.forEach(d=>{ if(asignado[d.dataset.l]) d.classList.add(d.dataset.sol===asignado[d.dataset.l]?'correcto':'erro'); });
+  const r=document.getElementById('resMoreas');
+  if(feitos.length<docs.length) r.textContent='Levades '+ben+' acertos de '+feitos.length+' documentos colocados. Faltan '+(docs.length-feitos.length)+' por colocar.';
+  else r.textContent=ben===docs.length?'Perfecto! Os '+docs.length+' documentos están na súa morea.':'Acertos: '+ben+' de '+docs.length+'. Revisade os documentos en vermello.';
+}
+function solucionMoreas(){
+  document.querySelectorAll('.doc').forEach(d=>{
+    asignado[d.dataset.l]=d.dataset.sol;
+    d.querySelectorAll('.elixir button').forEach(b=>b.classList.toggle('sel',b.dataset.a===d.dataset.sol));
+    d.classList.remove('dante','petrarca','boccaccio','erro'); d.classList.add(d.dataset.sol,'correcto');
+  });
+  pintarMoreas(true);
+  document.getElementById('resMoreas').textContent='Solución: Petrarca (d, f, k), Dante (a, c, g), Boccaccio (b, e, h, i).';
+}
+function reiniciarMoreas(){
+  Object.keys(asignado).forEach(k=>delete asignado[k]);
+  document.querySelectorAll('.doc').forEach(d=>{
+    d.classList.remove('dante','petrarca','boccaccio','correcto','erro');
+    d.querySelectorAll('.elixir button').forEach(b=>b.classList.remove('sel'));
+  });
+  pintarMoreas(); document.getElementById('resMoreas').textContent='';
+}
+
+/* ---------- Repaso 1 ---------- */
+document.querySelectorAll('#vf .fila').forEach(f=>{
+  f.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    f.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); f.classList.remove('correcto','erro');
+  });
+});
+function comprobarVF(){
+  let ben=0; const filas=document.querySelectorAll('#vf .fila');
+  filas.forEach(f=>{
+    const s=f.querySelector('button.sel');
+    f.classList.remove('correcto','erro');
+    if(s){ const ok=s.textContent===f.dataset.sol; f.classList.add(ok?'correcto':'erro'); if(ok) ben++; }
+  });
+  document.getElementById('resVF').textContent='Acertos: '+ben+' de '+filas.length;
+}
+function reiniciarVF(){
+  document.querySelectorAll('#vf .fila').forEach(f=>{f.classList.remove('correcto','erro');f.querySelectorAll('button').forEach(b=>b.classList.remove('sel'))});
+  document.getElementById('resVF').textContent='';
+}
+
+/* ---------- Repaso 2 ---------- */
+const definicions=[
+  ['c','Persoa rica que protexe e paga o traballo de artistas e científicos.'],
+  ['f','Invento que permitiu copiar libros de forma rápida e barata.'],
+  ['a','Forma de pensar que pon o ser humano no centro do Universo.'],
+  ['e','Lingua que fala o pobo, fronte ao latín culto.'],
+  ['b','Forma de pensar que pon a Deus no centro do Universo.'],
+  ['d','Lugar onde se reunían sabios de distintas ramas para debater e investigar.']
+];
+document.querySelectorAll('#rel select').forEach(s=>{
+  s.innerHTML='<option value="">Escolle o significado…</option>'+definicions.map(d=>'<option value="'+d[0]+'">'+d[1]+'</option>').join('');
+  s.onchange=()=>s.parentNode.classList.remove('correcto','erro');
+});
+function comprobarRel(){
+  let ben=0; const filas=document.querySelectorAll('#rel .fila');
+  filas.forEach(f=>{
+    const v=f.querySelector('select').value;
+    f.classList.remove('correcto','erro');
+    if(v){ const ok=v===f.dataset.sol; f.classList.add(ok?'correcto':'erro'); if(ok) ben++; }
+  });
+  document.getElementById('resRel').textContent='Acertos: '+ben+' de '+filas.length;
+}
+function reiniciarRel(){
+  document.querySelectorAll('#rel .fila').forEach(f=>{f.classList.remove('correcto','erro');f.querySelector('select').value=''});
+  document.getElementById('resRel').textContent='';
+}
+
+ir(0);
+</script>
+</body>
+</html>
