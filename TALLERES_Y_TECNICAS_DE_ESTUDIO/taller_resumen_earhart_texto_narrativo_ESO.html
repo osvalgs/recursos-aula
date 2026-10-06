@@ -279,6 +279,12 @@
   }
   .example-box.visible { display: block; }
   .example-box strong { font-style: normal; font-weight: 600; color: var(--accent3); }
+  .example-box .conector {
+    background: #ffe08a; color: #5a3d00;
+    font-style: normal; font-weight: 600;
+    padding: .05rem .4rem; border-radius: 4px;
+    box-decoration-break: clone; -webkit-box-decoration-break: clone;
+  }
 
   /* ── CHECKLIST ── */
   .checklist { list-style: none; margin: .5rem 0 0; }
@@ -841,7 +847,7 @@
         <div class="char-count" id="c5_resumen">0 caracteres</div>
         <button class="example-toggle" onclick="toggleExample('ex5_resumen')">💡 Ver resumen resuelto</button>
         <div class="example-box" id="ex5_resumen">
-          <strong>Resumen modelo:</strong> Amelia Earhart, nacida en Kansas a finales del siglo XIX, mostró desde niña un carácter aventurero que la llevó a formarse como piloto tras su primer vuelo como pasajera. Se convirtió en la primera mujer en cruzar el Atlántico en avión y, más tarde, en solitario, lo que la hizo mundialmente famosa, y además impulsó la presencia femenina en la aviación. Sin embargo, desapareció durante un intento de dar la vuelta al mundo, sin que se hallaran los restos de su avión. Finalmente, se ha convertido en un símbolo de la lucha de las mujeres por abrirse paso en terrenos dominados por hombres.
+          <strong>Resumen modelo:</strong> Amelia Earhart, nacida en Kansas a finales del siglo XIX, mostró desde niña un carácter aventurero que la llevó a formarse como piloto tras su primer vuelo como pasajera. Se convirtió en la primera mujer en cruzar el Atlántico en avión y, más tarde, en solitario, lo que la hizo mundialmente famosa. <span class="conector">Además,</span> impulsó activamente la presencia de las mujeres en la aviación, fundando una organización de apoyo a las pilotos. <span class="conector">Sin embargo,</span> desapareció durante un intento de dar la vuelta al mundo, sin que se hallaran los restos de su avión. <span class="conector">Finalmente,</span> se ha convertido en un símbolo de la lucha de las mujeres por abrirse paso en terrenos dominados por hombres.<br><br>Fíjate en los <span class="conector">conectores</span> destacados: enlazan las ideas y dan cohesión al resumen.
         </div>
       </div>
 
