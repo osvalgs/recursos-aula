@@ -395,7 +395,7 @@ body.kb-open{padding-bottom:var(--kbh,300px)}
         <div class="rule">
           <h3>Final</h3>
           <p>Gana el equipo con más puntos al acabar las banderas.</p>
-          <p class="remember"><strong>¡Atención!</strong> Cada vez que se descubre una bandera aparecen sus datos: capital, continente, un dato curioso y un personaje famoso. Fijaos bien y recordadlos, porque al final hay un <strong>repaso en ficha</strong> con preguntas sobre las banderas de la partida, y esa ficha se puntúa.</p>
+          <p class="remember"><strong>¡Atención!</strong> Cada vez que se descubre una bandera aparecen sus datos: capital, continente, dos datos curiosos (uno del motor y otro de historia) y un personaje famoso. Fijaos bien y recordadlos, porque al final hay un <strong>repaso en ficha</strong> con preguntas sobre las banderas de la partida, y esa ficha se puntúa.</p>
         </div>
       </div>
     </details>
@@ -535,211 +535,246 @@ function uniq(svg){const r='r'+Math.random().toString(36).slice(2,7);return svg.
 const C=[
 {n:'Grecia',s2:'per',a:['greece','hellas'],cont:'Europa',cap:'Atenas',pob:'≈ 10,4 millones',len:'Griego',
  band:'Las nueve franjas se asocian a las nueve sílabas del lema «Libertad o muerte» (Eleftheria i Thanatos). La cruz representa la fe ortodoxa.',
- img:'Santorini', dato:'Es la cuna de la democracia, del teatro y de los Juegos Olímpicos. Tiene unas 6.000 islas e islotes, aunque solo unas 200 están habitadas.',
+ aimg:'Acropolis Rally', auto:'El Rally Acrópolis se corre desde los años cincuenta por pistas de tierra llenas de piedras y con mucho calor: está considerado uno de los rallies más duros para los coches.',
+ himg:'Parthenon', hist:'Aquí nacieron la democracia, el teatro y los Juegos Olímpicos, que se celebraban en Olimpia en honor a Zeus. Alejandro Magno, rey de Macedonia, creó uno de los mayores imperios de la Antigüedad.',
  per:['Alec Issigonis','Ingeniero británico de familia griega, nacido en Esmirna. En 1959 diseñó el Mini, uno de los coches más famosos e influyentes de la historia.'],
  svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#0D5EAF"/><g fill="#fff"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#0D5EAF"/><rect x="4" width="2" height="10" fill="#fff"/><rect y="4" width="10" height="2" fill="#fff"/></svg>`},
 
 {n:'República Checa',s2:'dato',a:['chequia','checa','republica checa','czechia','czech republic'],cont:'Europa',cap:'Praga',pob:'≈ 10,9 millones',len:'Checo',
  band:'El blanco y el rojo proceden del escudo de Bohemia; el triángulo azul se añadió por Moravia. Es la antigua bandera de Checoslovaquia.',
- img:'Laurin & Klement', dato:'Allí nació Škoda, una de las marcas de coches más antiguas del mundo: empezó en 1895 fabricando bicicletas con el nombre de Laurin & Klement. Hoy pertenece al grupo Volkswagen.',
+ aimg:'Laurin & Klement', auto:'Allí nació Škoda, una de las marcas de coches más antiguas del mundo: empezó en 1895 fabricando bicicletas con el nombre de Laurin & Klement. Hoy pertenece al grupo Volkswagen.',
+ himg:'Prague astronomical clock', hist:'En 1968, la «Primavera de Praga» intentó dar más libertad al país, pero los tanques soviéticos la aplastaron. En su capital funciona desde 1410 un famoso reloj astronómico.',
  per:['Václav Havel','Dramaturgo perseguido por el régimen comunista, lideró la Revolución de Terciopelo (1989) y llegó a presidente de su país.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D7141A"/><polygon points="0,0 15,10 0,20" fill="#11457E"/></svg>`},
 
 {n:'Turquía',s2:'dato',a:['turkiye','turkey'],cont:'Europa y Asia',cap:'Ankara',pob:'≈ 85 millones',len:'Turco',
  band:'La media luna y la estrella blancas sobre rojo. Según la leyenda, reproducen el reflejo de la luna y una estrella en un charco de sangre tras una batalla.',
- img:'Togg T10X', dato:'En 2023 empezó a venderse Togg, la primera marca de coches eléctricos turca. Su circuito de Istanbul Park ha acogido Grandes Premios de Fórmula 1 y de MotoGP.',
+ aimg:'Togg T10X', auto:'En 2023 empezó a venderse Togg, su primera marca nacional de coches eléctricos. El circuito Istanbul Park ha acogido Grandes Premios de Fórmula 1 y de MotoGP.',
+ himg:'Hagia Sophia', hist:'Estambul, antes llamada Constantinopla, fue la capital del Imperio bizantino y después del Imperio otomano. Su conquista por los otomanos, en 1453, marca el final de la Edad Media.',
  per:['Mustafa Kemal Atatürk','Fundó la república en 1923 y en 1928 sustituyó el alfabeto árabe por el latino para escribir su lengua.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#E30A17"/><circle cx="10.5" cy="10" r="5" fill="#fff"/><circle cx="11.75" cy="10" r="4" fill="#E30A17"/><polygon points="${star(16.3,10,2.5,null,5,180)}" fill="#fff"/></svg>`},
 
 {n:'Corea del Sur',s2:'dato',a:['corea','republica de corea','south korea','korea'],cont:'Asia',cap:'Seúl',pob:'≈ 51 millones',len:'Coreano',
  band:'El círculo central representa el equilibrio entre el yin y el yang; los cuatro trigramas simbolizan el cielo, la tierra, el agua y el fuego.',
- img:'Hyundai Pony', dato:'Hyundai y Kia la han convertido en uno de los grandes fabricantes de coches del mundo. En la ciudad de Ulsan, Hyundai tiene una de las mayores fábricas de automóviles del planeta.',
+ aimg:'Hyundai Pony', auto:'Hyundai y Kia lo han convertido en uno de los grandes fabricantes de coches del mundo. En la ciudad de Ulsan, Hyundai tiene una de las mayores fábricas de automóviles del planeta.',
+ himg:'Sejong the Great', hist:'Entre 1950 y 1953 sufrió una guerra contra el norte que dejó la península dividida en dos países. En el siglo XV, el rey Sejong el Grande creó el hangul, el alfabeto que todavía usan.',
  per:['Chung Ju-yung','Fundador del grupo Hyundai. Hijo de campesinos, en 1940 abrió un taller de reparación de coches en Seúl; de ahí nació una empresa que hoy fabrica coches, barcos y edificios.'],
  svg:`<svg viewBox="0 0 36 24"><rect width="36" height="24" fill="#fff"/><g transform="rotate(33.69 18 12)"><path d="M12,12 A6,6 0 0 1 24,12 Z" fill="#CD2E3A"/><path d="M12,12 A6,6 0 0 0 24,12 Z" fill="#0047A0"/><circle cx="15" cy="12" r="3" fill="#CD2E3A"/><circle cx="21" cy="12" r="3" fill="#0047A0"/></g>${trigram(-56.31,[1,1,1])}${trigram(56.31,[0,1,0])}${trigram(123.69,[0,0,0])}${trigram(-123.69,[1,0,1])}</svg>`},
 
 {n:'India',s2:'dato',a:['la india'],cont:'Asia',cap:'Nueva Delhi',pob:'≈ 1.430 millones',len:'Hindi e inglés, más 22 lenguas reconocidas en la Constitución',
  band:'Azafrán (valor), blanco (paz) y verde (fe y fertilidad). En el centro, la rueda de Ashoka, con 24 radios.',
- img:'Royal Enfield Bullet', dato:'La empresa india Tata es dueña de Jaguar y Land Rover desde 2008. Allí se fabrican las motos Royal Enfield, la marca de motos más antigua que sigue en producción.',
+ aimg:'Royal Enfield Bullet', auto:'La empresa Tata es dueña de Jaguar y Land Rover desde 2008. Allí se fabrican las motos Royal Enfield, la marca de motos más antigua que sigue en producción.',
+ himg:'Taj Mahal', hist:'El Taj Mahal lo mandó construir un emperador en el siglo XVII como tumba para su esposa. En 1947, el país logró la independencia del Imperio británico.',
  per:['Mahatma Gandhi','Dirigió la independencia frente al Imperio británico (1947) mediante la resistencia no violenta.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FF9933"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><g stroke="#000080" fill="none"><circle cx="15" cy="10" r="2.9" stroke-width="0.35"/><g stroke-width="0.15">${indiaWheel()}</g></g><circle cx="15" cy="10" r="0.5" fill="#000080"/></svg>`},
 
 {n:'Sudáfrica',s2:'dato',a:['sudafrica','republica de sudafrica','south africa'],cont:'África',cap:'Tres: Pretoria (Gobierno), Ciudad del Cabo (Parlamento) y Bloemfontein (justicia)',pob:'≈ 62 millones',len:'12 oficiales, entre ellas zulú, xhosa, afrikáans, inglés y lengua de signos',
  band:'Adoptada en 1994. La forma de Y simboliza la unión de los distintos pueblos que avanzan juntos por un mismo camino.',
- img:'Jody Scheckter', dato:'El sudafricano Jody Scheckter fue campeón del mundo de Fórmula 1 en 1979 con Ferrari. En Rosslyn está la primera fábrica que BMW abrió fuera de Alemania, en 1973.',
+ aimg:'Jody Scheckter', auto:'Jody Scheckter fue campeón del mundo de Fórmula 1 en 1979 con Ferrari. En Rosslyn está la primera fábrica que BMW abrió fuera de Alemania, en 1973.',
+ himg:'Robben Island', hist:'Entre 1948 y 1994 sufrió el apartheid, un sistema que separaba por ley a las personas según el color de su piel. En 2010 fue el primer país africano en organizar un Mundial de fútbol, que ganó España.',
  per:['Nelson Mandela','Pasó 27 años en prisión por luchar contra el apartheid. En 1994 fue elegido presidente y recibió el Nobel de la Paz en 1993.'],
  svg:`<svg viewBox="0 0 900 600"><rect width="900" height="600" fill="#001489"/><rect width="900" height="300" fill="#E03C31"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#fff" stroke-width="200"/><path d="M0,0 L450,300 L900,300 M0,600 L450,300 L900,300" fill="none" stroke="#007749" stroke-width="120"/><polygon points="0,72 342,300 0,528" fill="#FFB81C"/><polygon points="0,132 252,300 0,468" fill="#000"/></svg>`},
 
 {n:'Jamaica',s2:'dato',a:[],cont:'América (Caribe)',cap:'Kingston',pob:'≈ 2,8 millones',len:'Inglés; en la calle, patois jamaicano',
  band:'Es la única bandera nacional sin rojo, blanco ni azul. Negro (fortaleza), oro (sol y riqueza) y verde (tierra y esperanza).',
- img:'Kingston, Jamaica', dato:'Es la cuna del reggae y de Usain Bolt. Como antigua colonia británica, allí se conduce por la izquierda, igual que en el Reino Unido.',
+ aimg:'Usain Bolt', auto:'Allí se conduce por la izquierda, como en el Reino Unido. Usain Bolt llegó a casi 45 km/h en su récord de los 100 metros: más rápido que un coche en una calle con límite de 30.',
+ himg:'Port Royal', hist:'Cristóbal Colón llegó a la isla en 1494, en su segundo viaje. En el siglo XVII, Port Royal era la «ciudad de los piratas», hasta que un terremoto la hundió en el mar en 1692.',
  per:['Bob Marley','Músico que llevó el reggae a todo el mundo con canciones como «One Love» o «Redemption Song».'],
  svg:`<svg viewBox="0 0 12 6"><rect width="12" height="6" fill="#009B3A"/><polygon points="0,0 6,3 0,6" fill="#000"/><polygon points="12,0 6,3 12,6" fill="#000"/><path d="M0,0 L12,6 M0,6 L12,0" stroke="#FED100" stroke-width="0.8"/></svg>`},
 
 {n:'Uruguay',s2:'dato',a:[],cont:'América del Sur',cap:'Montevideo',pob:'≈ 3,4 millones',len:'Español',
  band:'Las nueve franjas representan los departamentos originales del país; el Sol de Mayo es símbolo de la independencia.',
- img:'Estadio Centenario', dato:'Organizó y ganó el primer Mundial de fútbol, en 1930. En Punta del Este se han corrido carreras de la Fórmula E, el campeonato de coches eléctricos.',
+ aimg:'Punta del Este', auto:'En Punta del Este se han corrido carreras de la Fórmula E, el campeonato de coches eléctricos. Gran parte de su electricidad sale del viento, con miles de molinos eólicos.',
+ himg:'Estadio Centenario', hist:'Organizó y ganó el primer Mundial de fútbol, en 1930. La final se jugó en el Estadio Centenario, construido para celebrar los 100 años de su primera Constitución.',
  per:['José Gervasio Artigas','Héroe de la independencia y considerado el padre de la nación. Aquí también nació el escritor Mario Benedetti.'],
  svg:`<svg viewBox="0 0 27 18"><rect width="27" height="18" fill="#fff"/><g fill="#0038A8"><rect y="2" width="27" height="2"/><rect y="6" width="27" height="2"/><rect y="10" width="27" height="2"/><rect y="14" width="27" height="2"/></g><rect width="10" height="10" fill="#fff"/><polygon points="${star(5,5,4.2,2.6,16)}" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/><circle cx="5" cy="5" r="1.9" fill="#FCD116" stroke="#7B3F00" stroke-width="0.12"/></svg>`},
 
 {n:'Chile',s2:'dato',a:[],cont:'América del Sur',cap:'Santiago',pob:'≈ 19,5 millones',len:'Español',
  band:'Conocida como «la estrella solitaria». El azul es el cielo; el blanco, la nieve de los Andes; el rojo, la sangre de la independencia.',
- img:'Atacama Desert', dato:'Mide unos 4.300 km de norte a sur. El rally Dakar recorrió durante varios años su desierto de Atacama, uno de los lugares más secos del planeta.',
+ aimg:'Atacama Desert', auto:'El rally Dakar recorrió durante varios años su desierto de Atacama, uno de los lugares más secos del planeta. Es el mayor productor de cobre del mundo, un metal clave en los coches eléctricos.',
+ himg:'Moai', hist:'En la isla de Pascua hay casi 900 moáis, enormes estatuas de piedra talladas por el pueblo rapanui hace siglos. En 1973, un golpe de Estado del general Pinochet inició una dictadura de 17 años.',
  per:['Gabriela Mistral','Poeta y maestra; en 1945 se convirtió en la primera persona de América Latina en ganar el Nobel de Literatura.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#fff"/><rect y="10" width="30" height="10" fill="#D52B1E"/><rect width="10" height="10" fill="#0039A6"/><polygon points="${star(5,5,2.6)}" fill="#fff"/></svg>`},
 
 {n:'Nueva Zelanda',s2:'per',a:['new zealand','aotearoa'],cont:'Oceanía',cap:'Wellington',pob:'≈ 5,2 millones',len:'Inglés, maorí y lengua de signos neozelandesa',
  band:'La bandera del Reino Unido recuerda su pasado colonial; las cuatro estrellas rojas forman la Cruz del Sur. En 2016 se votó en referéndum si cambiarla y ganó mantenerla.',
- img:'Burt Munro', dato:'Burt Munro batió en 1967 un récord de velocidad con una moto Indian de 1920 que había modificado él mismo durante años. Su historia se llevó al cine con Anthony Hopkins.',
+ aimg:'Burt Munro', auto:'Burt Munro batió en 1967 un récord de velocidad con una moto Indian de 1920 que había modificado él mismo durante años. Su historia se llevó al cine con Anthony Hopkins.',
+ himg:'Edmund Hillary', hist:'En 1893 fue el primer país del mundo en dar el voto a las mujeres. Edmund Hillary, nacido allí, fue uno de los dos primeros hombres en subir al Everest, en 1953.',
  per:['Bruce McLaren','Piloto y constructor que fundó en 1963 la escudería McLaren, una de las más laureadas de la Fórmula 1. Murió en 1970 probando uno de sus coches.'],
  svg:`<svg viewBox="0 0 60 30"><defs><clipPath id="nzA"><rect width="60" height="30"/></clipPath><clipPath id="nzB"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath></defs><rect width="60" height="30" fill="#00247D"/><g transform="scale(0.5)" clip-path="url(#nzA)"><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#nzB)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g><polygon points="${star(45,6.5,2.1)}" fill="#fff"/><polygon points="${star(45,6.5,1.55)}" fill="#CC142B"/><polygon points="${star(40.5,13.5,1.9)}" fill="#fff"/><polygon points="${star(40.5,13.5,1.4)}" fill="#CC142B"/><polygon points="${star(50.5,12,1.9)}" fill="#fff"/><polygon points="${star(50.5,12,1.4)}" fill="#CC142B"/><polygon points="${star(45,24,2.4)}" fill="#fff"/><polygon points="${star(45,24,1.85)}" fill="#CC142B"/></svg>`},
 
 {n:'Países Bajos',s2:'per',a:['holanda','paises bajos','netherlands','nederland'],cont:'Europa',cap:'Ámsterdam (el Gobierno está en La Haya)',pob:'≈ 18 millones',len:'Neerlandés',
  band:'Es una de las tricolores más antiguas del mundo. La franja superior fue naranja, por Guillermo de Orange; con el tiempo se cambió a rojo, pero el naranja sigue siendo su color nacional.',
- img:'Kinderdijk', dato:'Alrededor de una cuarta parte del territorio está por debajo del nivel del mar, protegida por diques y pólderes. Hay más bicicletas que habitantes.',
+ aimg:'Circuit Zandvoort', auto:'El circuito de Zandvoort, entre las dunas de la playa, volvió a la Fórmula 1 en 2021 con curvas peraltadas, inclinadas como en un velódromo. Aun así, allí hay más bicicletas que habitantes.',
+ himg:'Anne Frank', hist:'Gran parte del país está por debajo del nivel del mar y se ha ganado al agua con diques y molinos. En Ámsterdam, Ana Frank escribió su famoso diario escondida de los nazis.',
  per:['Max Verstappen','Piloto de Fórmula 1, campeón del mundo cuatro veces seguidas (2021-2024) con Red Bull. Con 18 años se convirtió en el ganador más joven de un Gran Premio.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#AE1C28"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#21468B"/></svg>`},
 
 {n:'Irlanda',s2:'dato',a:['ireland','eire'],cont:'Europa',cap:'Dublín',pob:'≈ 5,3 millones',len:'Irlandés (gaélico) e inglés',
  band:'El verde representa la tradición gaélica y católica; el naranja, a los protestantes; el blanco, la paz entre ambas comunidades.',
- img:'Jordan 191', dato:'El irlandés Eddie Jordan fundó la escudería de Fórmula 1 Jordan, en la que debutó Michael Schumacher en 1991. Su fiesta más famosa, San Patricio, se celebra el 17 de marzo.',
+ aimg:'Jordan 191', auto:'Eddie Jordan fundó la escudería de Fórmula 1 Jordan. En ese equipo debutó en 1991 Michael Schumacher, que después ganaría siete Mundiales.',
+ himg:'Great Famine (Ireland)', hist:'Su fiesta más famosa, San Patricio, se celebra el 17 de marzo en todo el mundo. A mediados del siglo XIX, la Gran Hambruna de la patata obligó a emigrar a más de un millón de personas.',
  per:['James Joyce','Autor de «Ulises» (1922), novela que transcurre en un solo día y revolucionó la literatura con la técnica del monólogo interior.'],
  svg:`<svg viewBox="0 0 60 30"><rect width="20" height="30" fill="#169B62"/><rect x="20" width="20" height="30" fill="#fff"/><rect x="40" width="20" height="30" fill="#FF883E"/></svg>`},
 
 {n:'Bélgica',s2:'dato',a:['belgica','belgium'],cont:'Europa',cap:'Bruselas',pob:'≈ 11,8 millones',len:'Neerlandés, francés y alemán',
  band:'Sus colores proceden del escudo del antiguo ducado de Brabante: un león dorado con garras rojas sobre fondo negro.',
- img:'Circuit de Spa-Francorchamps', dato:'Allí está Spa-Francorchamps, uno de los circuitos favoritos de los pilotos de Fórmula 1, famoso por la curva de Eau Rouge y porque puede llover en una parte del trazado y en otra no.',
+ aimg:'Circuit de Spa-Francorchamps', auto:'Allí está Spa-Francorchamps, uno de los circuitos favoritos de los pilotos de Fórmula 1, famoso por la curva de Eau Rouge y porque puede llover en una parte del trazado y en otra no.',
+ himg:'Battle of Waterloo', hist:'En su territorio se libró en 1815 la batalla de Waterloo, donde Napoleón fue derrotado definitivamente. Hoy Bruselas es la sede principal de la Unión Europea.',
  per:['Jacky Ickx','Piloto legendario: ganó seis veces las 24 Horas de Le Mans, corrió en Fórmula 1 con Ferrari y ganó el rally Dakar en 1983.'],
  svg:`<svg viewBox="0 0 15 13"><rect width="5" height="13" fill="#000"/><rect x="5" width="5" height="13" fill="#FDDA24"/><rect x="10" width="5" height="13" fill="#EF3340"/></svg>`},
 
 {n:'Suecia',s2:'dato',a:['sweden','sverige'],cont:'Europa',cap:'Estocolmo',pob:'≈ 10,5 millones',len:'Sueco',
  band:'Cruz nórdica amarilla sobre azul, colores tomados de su escudo de las tres coronas doradas.',
- img:'Volvo Amazon', dato:'El cinturón de seguridad de tres puntos lo inventó en 1959 Nils Bohlin, ingeniero de Volvo. La marca dejó la patente libre para que todos los fabricantes pudieran usarlo y salvar vidas.',
+ aimg:'Volvo Amazon', auto:'El cinturón de seguridad de tres puntos lo inventó en 1959 Nils Bohlin, ingeniero de Volvo. La marca dejó la patente libre para que todos los fabricantes pudieran usarlo y salvar vidas.',
+ himg:'Vasa (ship)', hist:'En 1628, el Vasa, un enorme barco de guerra, se hundió en su primer viaje a los pocos minutos de zarpar. Se rescató casi entero en 1961 y hoy se visita en un museo de Estocolmo.',
  per:['Christian von Koenigsegg','Fundó en 1994, con solo 22 años, la marca Koenigsegg, que fabrica algunos de los superdeportivos más rápidos y exclusivos del mundo.'],
  svg:`<svg viewBox="0 0 16 10"><rect width="16" height="10" fill="#006AA7"/><rect x="5" width="2" height="10" fill="#FECC00"/><rect y="4" width="16" height="2" fill="#FECC00"/></svg>`},
 
 {n:'Noruega',s2:'dato',a:['norway','norge'],cont:'Europa',cap:'Oslo',pob:'≈ 5,5 millones',len:'Noruego (también sami)',
  band:'Cruz nórdica en rojo, blanco y azul, los colores asociados a la libertad por las banderas de Francia, Estados Unidos y el Reino Unido.',
- img:'Plug-in electric vehicles in Norway', dato:'Es el país con más coches eléctricos del mundo: en 2024, casi 9 de cada 10 coches nuevos vendidos eran eléctricos. Es tierra de fiordos y del sol de medianoche.',
+ aimg:'Plug-in electric vehicles in Norway', auto:'Ningún país tiene tantos coches eléctricos por habitante: en 2024, casi 9 de cada 10 coches nuevos vendidos eran eléctricos.',
+ himg:'Nobel Peace Prize', hist:'Es tierra de vikingos y del sol de medianoche: en verano, en el norte, el sol no se pone. Cada año se entrega en Oslo el Premio Nobel de la Paz.',
  per:['Roald Amundsen','Explorador que dirigió la primera expedición en llegar al Polo Sur, en diciembre de 1911.'],
  svg:`<svg viewBox="0 0 22 16"><rect width="22" height="16" fill="#BA0C2F"/><rect x="6" width="4" height="16" fill="#fff"/><rect y="6" width="22" height="4" fill="#fff"/><rect x="7" width="2" height="16" fill="#00205B"/><rect y="7" width="22" height="2" fill="#00205B"/></svg>`},
 
 {n:'Suiza',s2:'per',a:['switzerland','schweiz','suisse'],cont:'Europa',cap:'Berna',pob:'≈ 8,9 millones',len:'Alemán, francés, italiano y romanche',
  band:'Es una de las dos únicas banderas nacionales cuadradas (la otra es la del Vaticano). El emblema de la Cruz Roja es su bandera con los colores invertidos.',
- img:'Palexpo', dato:'Durante décadas acogió el Salón del Automóvil de Ginebra, uno de los más importantes del mundo, aunque el país apenas fabrica coches. Es famosa por su neutralidad y por los Alpes.',
+ aimg:'Palexpo', auto:'Durante décadas acogió el Salón del Automóvil de Ginebra, uno de los más importantes del mundo, aunque el país apenas fabrica coches.',
+ himg:'Henry Dunant', hist:'Allí nació la Cruz Roja, fundada en Ginebra en 1863 por Henry Dunant. Es famosa por su neutralidad: no participa en ninguna guerra desde hace más de 200 años.',
  per:['Louis Chevrolet','Mecánico y piloto de carreras nacido en Suiza que emigró a Estados Unidos. En 1911 fundó la marca Chevrolet, que todavía lleva su apellido.'],
  svg:`<svg viewBox="0 0 32 32"><rect width="32" height="32" fill="#DA291C"/><rect x="13" y="6" width="6" height="20" fill="#fff"/><rect x="6" y="13" width="20" height="6" fill="#fff"/></svg>`},
 
 {n:'Venezuela',s2:'per',a:[],cont:'América del Sur',cap:'Caracas',pob:'≈ 28 millones',len:'Español',
  band:'Diseñada a partir de la de Francisco de Miranda. Las ocho estrellas representan las siete provincias que firmaron la independencia más la de Guayana, añadida en 2006.',
- img:'Angel Falls', dato:'Allí está el Salto Ángel, la cascada más alta del mundo (979 m), y posee las mayores reservas de petróleo conocidas del planeta.',
+ aimg:'Oil well', auto:'Tiene las mayores reservas de petróleo conocidas del planeta, y durante años la gasolina fue tan barata que llenar el depósito de un coche costaba menos que una botella de agua.',
+ himg:'Simón Bolívar', hist:'Simón Bolívar, «el Libertador», nació en Caracas y dirigió la independencia de varios países de América del Sur frente a España. Allí está el Salto Ángel, la cascada más alta del mundo (979 m).',
  per:['Pastor Maldonado','Piloto de Fórmula 1, el único venezolano que ha ganado un Gran Premio: el de España de 2012, con el equipo Williams.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#FFCC00"/><rect y="6.67" width="30" height="6.67" fill="#00247D"/><rect y="13.33" width="30" height="6.67" fill="#CF142B"/><g fill="#fff">${[0,1,2,3,4,5,6,7].map(k=>{const a=(160-k*20)*Math.PI/180;return `<polygon points="${star(15+5.5*Math.cos(a),14-5.5*Math.sin(a),0.65)}"/>`;}).join('')}</g></svg>`},
 
 {n:'Colombia',s2:'dato',a:[],cont:'América del Sur',cap:'Bogotá',pob:'≈ 52 millones',len:'Español (y más de 60 lenguas indígenas)',
  band:'También deriva de la bandera de Miranda. El amarillo ocupa la mitad superior; el azul y el rojo, un cuarto cada uno.',
- img:'Juan Pablo Montoya', dato:'El colombiano Juan Pablo Montoya ganó Grandes Premios de Fórmula 1 y dos veces las 500 Millas de Indianápolis (2000 y 2015). Es el segundo país con más biodiversidad del mundo.',
+ aimg:'Juan Pablo Montoya', auto:'Juan Pablo Montoya ganó Grandes Premios de Fórmula 1 y dos veces las 500 Millas de Indianápolis (2000 y 2015).',
+ himg:'Gold Museum, Bogotá', hist:'El oro de sus pueblos indígenas dio origen a la leyenda de El Dorado, que buscaron muchos conquistadores españoles. Hoy el Museo del Oro de Bogotá guarda más de 30.000 piezas.',
  per:['Gabriel García Márquez','Autor de «Cien años de soledad» (1967), obra cumbre del realismo mágico. Premio Nobel de Literatura en 1982.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="10" fill="#FCD116"/><rect y="10" width="30" height="5" fill="#003893"/><rect y="15" width="30" height="5" fill="#CE1126"/></svg>`},
 
 {n:'Ecuador',s2:'dato',a:[],cont:'América del Sur',cap:'Quito',pob:'≈ 18 millones',len:'Español (el kichwa y el shuar son lenguas oficiales de relación intercultural)',
  band:'Casi idéntica a la colombiana, pero con escudo: un cóndor sobre un paisaje con el volcán Chimborazo.',
- img:'Galápagos Islands', dato:'Las islas Galápagos forman parte de este país. En Quito, según el último número de la matrícula, cada coche tiene un día a la semana en que no puede circular en horas punta: es el «pico y placa».',
+ aimg:'Quito', auto:'En Quito, según el último número de la matrícula, cada coche tiene un día a la semana en que no puede circular en horas punta: es el «pico y placa».',
+ himg:'Charles Darwin', hist:'Las islas Galápagos inspiraron a Charles Darwin su teoría de la evolución tras visitarlas en 1835. Su nombre viene de la línea imaginaria que divide la Tierra en dos mitades y que pasa por su territorio.',
  per:['Manuela Sáenz','Heroína de la independencia y compañera de Simón Bolívar, al que salvó de un atentado; él la llamó «la Libertadora del Libertador».'],
  svg:`<svg viewBox="0 0 36 24"><rect width="36" height="12" fill="#FFDD00"/><rect y="12" width="36" height="6" fill="#034EA2"/><rect y="18" width="36" height="6" fill="#ED1C24"/><ellipse cx="18" cy="11.8" rx="2.4" ry="2.9" fill="#7FB2E5" stroke="#C8A200" stroke-width="0.4"/><polygon points="16,13.4 17.4,11 18.2,11.9 19,11.2 20,13.4" fill="#4E8A3A"/><path d="M13.6,8.6 Q18,5.4 22.4,8.6 L20.3,9.1 Q18,7.9 15.7,9.1 Z" fill="#333"/><circle cx="18" cy="8.2" r="0.6" fill="#333"/><g><rect x="13.6" y="10" width="0.5" height="4" fill="#FFDD00"/><rect x="14.1" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="14.6" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="20.9" y="10" width="0.5" height="4" fill="#ED1C24"/><rect x="21.4" y="10" width="0.5" height="4" fill="#034EA2"/><rect x="21.9" y="10" width="0.5" height="4" fill="#FFDD00"/></g></svg>`},
 
 {n:'Perú',s2:'dato',a:['peru'],cont:'América del Sur',cap:'Lima',pob:'≈ 34 millones',len:'Español, quechua y aimara',
  band:'Según la leyenda, el general San Martín se inspiró en unas parihuanas (flamencos) de alas rojas y pecho blanco. La versión oficial del Estado lleva además un escudo.',
- img:'Huacachina', dato:'Aquí se encuentra Machu Picchu, la ciudadela inca. En 2019, el rally Dakar se disputó entero en Perú, entre las enormes dunas de su desierto costero.',
+ aimg:'Huacachina', auto:'En 2019, el rally Dakar se disputó entero en este país, entre las enormes dunas de su desierto costero.',
+ himg:'Machu Picchu', hist:'Machu Picchu, la ciudadela inca construida en lo alto de las montañas en el siglo XV, es una de las siete nuevas maravillas del mundo. Cuzco fue la capital del Imperio inca.',
  per:['Mario Vargas Llosa','Novelista, autor de «La ciudad y los perros» y «Conversación en La Catedral». Premio Nobel de Literatura en 2010.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#D91023"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#D91023"/></svg>`},
 
 {n:'Cuba',s2:'dato',a:[],cont:'América (Caribe)',cap:'La Habana',pob:'≈ 11 millones',len:'Español',
  band:'Las tres franjas azules representan los tres departamentos en que se dividía la isla; el triángulo rojo, la sangre derramada; la estrella solitaria, la independencia.',
- img:'Yank tank', dato:'Por sus calles siguen circulando miles de coches estadounidenses de los años 50, los «almendrones», que se mantienen en marcha gracias al ingenio de sus mecánicos.',
+ aimg:'Yank tank', auto:'Por sus calles siguen circulando miles de coches estadounidenses de los años 50, los «almendrones», que se mantienen en marcha gracias al ingenio de sus mecánicos.',
+ himg:'Old Havana', hist:'Cristóbal Colón llegó a la isla en su primer viaje, en 1492. Fue colonia española hasta 1898, y en 1959 la revolución de Fidel Castro y el Che Guevara tomó el poder.',
  per:['José Martí','Poeta y héroe de la independencia. Versos de sus «Versos sencillos» forman la letra de la canción «Guantanamera».'],
  svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#fff"/><g fill="#002A8F"><rect width="60" height="6"/><rect y="12" width="60" height="6"/><rect y="24" width="60" height="6"/></g><polygon points="0,0 26,15 0,30" fill="#CF142B"/><polygon points="${star(8.7,15,3.6)}" fill="#fff"/></svg>`},
 
 {n:'México',s2:'per',a:['mexico'],cont:'América del Norte',cap:'Ciudad de México',pob:'≈ 130 millones',len:'Español y 68 lenguas indígenas, como el náhuatl o el maya',
  band:'El escudo recrea la leyenda de la fundación de Tenochtitlan: los mexicas debían asentarse donde vieran un águila sobre un nopal devorando una serpiente.',
- img:'Volkswagen Beetle', dato:'Es uno de los grandes fabricantes de coches del mundo. En Puebla se fabricó el Volkswagen Escarabajo original hasta 2003, cuando salió de la cadena la última unidad.',
+ aimg:'Volkswagen Beetle', auto:'Es uno de los grandes fabricantes de coches del mundo. En Puebla se fabricó el Volkswagen Escarabajo original hasta 2003, cuando salió de la cadena la última unidad.',
+ himg:'Chichen Itza', hist:'Los aztecas fundaron Tenochtitlan sobre un lago, donde hoy está su capital, y Hernán Cortés la conquistó en 1521. Los mayas construyeron pirámides como la de Chichén Itzá.',
  per:['Sergio Pérez','Piloto de Fórmula 1 conocido como «Checo», el mexicano con más victorias en la categoría. Fue subcampeón del mundo en 2023 con Red Bull.'],
  svg:`<svg viewBox="0 0 35 20"><rect width="11.67" height="20" fill="#006847"/><rect x="11.67" width="11.67" height="20" fill="#fff"/><rect x="23.33" width="11.67" height="20" fill="#CE1126"/><path d="M14.3,10.6 A3.3,3.3 0 0 0 20.7,10.6" stroke="#2E7D32" stroke-width="0.6" fill="none"/><rect x="17" y="10.8" width="1" height="1.5" fill="#3A7D2C"/><path d="M17,8 L14.8,6.3 L15.3,9.4 L16.8,10 Z" fill="#5C3A1C"/><ellipse cx="17.8" cy="8.9" rx="1.3" ry="1.9" fill="#7A4B24"/><circle cx="18.6" cy="6.9" r="0.6" fill="#7A4B24"/><path d="M18.3,9 q1.2,-0.6 1.8,0.4" stroke="#3A7D2C" stroke-width="0.35" fill="none"/></svg>`},
 
 {n:'Bangladés',s2:'dato',a:['banglades','bangladesh'],cont:'Asia',cap:'Daca',pob:'≈ 171 millones',len:'Bengalí',
  band:'El verde es la tierra fértil y la juventud; el disco rojo, el sol que sale y la sangre de la guerra de independencia de 1971. Está algo desplazado hacia el asta para que parezca centrado al ondear.',
- img:'Cycle rickshaw', dato:'A su capital, Daca, la llaman la «capital mundial de los rickshaws»: por sus calles circulan cientos de miles de bicitaxis decorados a mano con colores vivos.',
+ aimg:'Cycle rickshaw', auto:'A su capital, Daca, la llaman la «capital mundial de los rickshaws»: por sus calles circulan cientos de miles de bicitaxis decorados a mano con colores vivos.',
+ himg:'Jatiyo Smriti Soudho', hist:'Formó parte de la India británica y después de Pakistán, del que se independizó en 1971 tras una guerra. Es uno de los países más poblados del mundo para su tamaño.',
  per:['Muhammad Yunus','Economista, Premio Nobel de la Paz en 2006. Creó el Banco Grameen, que presta pequeñas cantidades de dinero (microcréditos) a personas pobres.'],
  svg:`<svg viewBox="0 0 10 6"><rect width="10" height="6" fill="#006A4E"/><circle cx="4.5" cy="3" r="2" fill="#F42A41"/></svg>`},
 
 {n:'Kenia',s2:'dato',a:['kenya'],cont:'África',cap:'Nairobi',pob:'≈ 55 millones',len:'Suajili e inglés',
  band:'El negro representa al pueblo; el rojo, la sangre derramada por la independencia; el verde, la tierra y sus recursos; los bordes blancos, la paz. El escudo masái y las dos lanzas simbolizan la defensa de la libertad.',
- img:'Safari Rally', dato:'El Safari Rally de Kenia, que forma parte del Mundial de Rallies, está considerado uno de los más duros del mundo por sus pistas de tierra, el barro y el polvo. Allí se ve la gran migración de ñus.',
+ aimg:'Safari Rally', auto:'El Safari Rally, que forma parte del Mundial de Rallies, está considerado uno de los más duros del mundo por sus pistas de tierra, el barro y el polvo.',
+ himg:'Great Rift Valley', hist:'En el valle del Rift se han encontrado algunos de los fósiles humanos más antiguos: por eso se habla de esta zona como la «cuna de la humanidad». En 1963 se independizó del Reino Unido.',
  per:['Wangari Maathai','Bióloga y activista, primera mujer africana en recibir el Nobel de la Paz (2004). Su movimiento Cinturón Verde plantó millones de árboles.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6" fill="#000"/><rect y="6" width="30" height="8" fill="#fff"/><rect y="7" width="30" height="6" fill="#BB0000"/><rect y="14" width="30" height="6" fill="#006600"/><g stroke="#fff" stroke-width="0.5"><line x1="11" y1="17.5" x2="19" y2="2.5"/><line x1="19" y1="17.5" x2="11" y2="2.5"/></g><g fill="#fff"><polygon points="19,2.5 18.2,4.3 19.2,4.8"/><polygon points="11,2.5 11.8,4.3 10.8,4.8"/></g><ellipse cx="15" cy="10" rx="3.3" ry="7.2" fill="#000"/><ellipse cx="15" cy="10" rx="2" ry="7.2" fill="#BB0000"/><ellipse cx="15" cy="10" rx="0.6" ry="1.3" fill="#fff"/><path d="M15,4 q0.9,1.5 0,3 q-0.9,-1.5 0,-3 Z M15,13 q0.9,1.5 0,3 q-0.9,-1.5 0,-3 Z" fill="#fff"/></svg>`},
 
 {n:'Egipto',s2:'dato',a:['egypt'],cont:'África',cap:'El Cairo',pob:'≈ 110 millones',len:'Árabe',
  band:'En el centro, el águila de Saladino. El rojo recuerda la lucha contra la opresión; el blanco, la revolución de 1952; el negro, el fin de los tiempos oscuros.',
- img:'Great Pyramid of Giza', dato:'La Gran Pirámide de Guiza es la única maravilla del mundo antiguo que sigue en pie. Desde 1982 se celebra el Rally de los Faraones, una carrera de motos y coches por el desierto.',
+ aimg:'Sahara', auto:'Desde 1982 se celebra el Rally de los Faraones, una carrera de motos y coches por el desierto del Sáhara.',
+ himg:'Great Pyramid of Giza', hist:'La Gran Pirámide de Guiza se construyó hace unos 4.500 años como tumba del faraón Keops. Es la única de las siete maravillas del mundo antiguo que sigue en pie.',
  per:['Cleopatra VII','Última reina de la dinastía ptolemaica (s. I a. C.), aliada de Julio César y de Marco Antonio. Hablaba varias lenguas.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="6.67" fill="#CE1126"/><rect y="6.67" width="30" height="6.67" fill="#fff"/><rect y="13.33" width="30" height="6.67" fill="#000"/><polygon points="15,7.6 16.2,8.3 18.3,8 17.5,11 16,11.6 16,12.6 14,12.6 14,11.6 12.5,11 11.7,8 13.8,8.3" fill="#C09300"/><circle cx="15" cy="7.7" r="0.6" fill="#C09300"/></svg>`},
 
 {n:'Australia',s2:'per',a:[],cont:'Oceanía',cap:'Canberra',pob:'≈ 27 millones',len:'Inglés',
  band:'La bandera británica recuerda su origen colonial; la gran estrella de siete puntas representa la federación de estados y territorios; las demás forman la Cruz del Sur.',
- img:'Great Barrier Reef', dato:'Frente a su costa está la Gran Barrera de Coral, el mayor arrecife del mundo. Su ciudad más conocida, Sídney, no es la capital.',
+ aimg:'Mount Panorama Circuit', auto:'El circuito de Mount Panorama, en Bathurst, sube y baja una montaña con una diferencia de altura de 174 metros. Allí se corre su carrera de turismos más famosa.',
+ himg:'Uluru', hist:'Los aborígenes viven allí desde hace más de 50.000 años. A partir de 1788, los británicos enviaron a miles de presos a este territorio como castigo.',
  per:['Jack Brabham','Piloto tres veces campeón del mundo de Fórmula 1. En 1966 ganó el título con un coche construido por su propia escudería, algo que nadie más ha conseguido.'],
  svg:`<svg viewBox="0 0 60 30"><rect width="60" height="30" fill="#00008B"/>${uj('au',0.5)}<g fill="#fff"><polygon points="${star(15,22.5,4.5,2,7)}"/><polygon points="${star(45,25.5,1.9,0.85,7)}"/><polygon points="${star(37.5,13.5,1.9,0.85,7)}"/><polygon points="${star(45,4.8,1.9,0.85,7)}"/><polygon points="${star(52,11.3,1.9,0.85,7)}"/><polygon points="${star(48.2,15.6,1.1)}"/></g></svg>`},
 
 {n:'Islandia',s2:'dato',a:['iceland'],cont:'Europa',cap:'Reikiavik',pob:'≈ 390.000',len:'Islandés',
  band:'Cruz nórdica: el azul es el mar y las montañas; el blanco, el hielo y la nieve; el rojo, el fuego de sus volcanes.',
- img:'Formula Offroad', dato:'No tiene ejército. Allí nació la «torfæra», carreras en las que todoterrenos trucados suben laderas casi verticales y cruzan ríos.',
+ aimg:'Formula Offroad', auto:'Allí nació la «torfæra», carreras en las que todoterrenos trucados suben laderas casi verticales y cruzan ríos.',
+ himg:'Þingvellir', hist:'Tiene uno de los parlamentos más antiguos del mundo, el Althing, fundado por los vikingos en el año 930. No tiene ejército.',
  per:['Björk','Cantante y compositora de música experimental, conocida en todo el mundo. Empezó su carrera con el grupo The Sugarcubes.'],
  svg:`<svg viewBox="0 0 25 18"><rect width="25" height="18" fill="#02529C"/><rect x="7" width="4" height="18" fill="#fff"/><rect y="7" width="25" height="4" fill="#fff"/><rect x="8" width="2" height="18" fill="#DC1E35"/><rect y="8" width="25" height="2" fill="#DC1E35"/></svg>`},
 
 {n:'Filipinas',s2:'dato',a:['philippines'],cont:'Asia',cap:'Manila',pob:'≈ 112 millones',len:'Filipino (tagalo) e inglés',
  band:'El sol de ocho rayos recuerda las ocho provincias que se sublevaron contra España en 1896; las tres estrellas, las grandes zonas del país. En tiempo de guerra se iza con el rojo arriba.',
- img:'Jeepney', dato:'Su transporte más típico es el jeepney: autobuses muy decorados que nacieron de los jeeps que dejó el ejército estadounidense tras la Segunda Guerra Mundial.',
+ aimg:'Jeepney', auto:'Su transporte más típico es el jeepney: autobuses muy decorados que nacieron de los jeeps que dejó el ejército estadounidense tras la Segunda Guerra Mundial.',
+ himg:'Ferdinand Magellan', hist:'Fernando de Magallanes murió allí en 1521, durante la primera vuelta al mundo. Fue colonia española durante más de 300 años y su nombre viene del rey Felipe II.',
  per:['José Rizal','Escritor y héroe nacional. Escribió en español la novela «Noli me tángere» y fue fusilado por las autoridades españolas en 1896.'],
  svg:`<svg viewBox="0 0 40 20"><rect width="40" height="10" fill="#0038A8"/><rect y="10" width="40" height="10" fill="#CE1126"/><polygon points="0,0 17.32,10 0,20" fill="#fff"/><g fill="#FCD116"><circle cx="6" cy="10" r="1.8"/>${[0,45,90,135,180,225,270,315].map(a=>{const r=a*Math.PI/180,c=Math.cos(r),s=Math.sin(r),px=-s,py=c;return `<polygon points="${(6+2.2*c+0.45*px).toFixed(2)},${(10+2.2*s+0.45*py).toFixed(2)} ${(6+2.2*c-0.45*px).toFixed(2)},${(10+2.2*s-0.45*py).toFixed(2)} ${(6+4*c).toFixed(2)},${(10+4*s).toFixed(2)}"/>`}).join('')}<polygon points="${star(2,2.3,1.1)}"/><polygon points="${star(2,17.7,1.1)}"/><polygon points="${star(14.3,10,1.1)}"/></g></svg>`},
 
 {n:'Tailandia',s2:'dato',a:['thailand'],cont:'Asia',cap:'Bangkok',pob:'≈ 66 millones',len:'Tailandés',
  band:'Rojo por la nación, blanco por la religión y azul (la franja doble del centro) por la monarquía.',
- img:'Auto rickshaw', dato:'La llaman el «Detroit de Asia» porque es uno de los grandes fabricantes de coches del sudeste asiático. Sus tuk-tuks, triciclos con motor, deben su nombre al ruido que hacen.',
+ aimg:'Auto rickshaw', auto:'La llaman el «Detroit de Asia» porque es uno de los grandes fabricantes de coches del sudeste asiático. Sus tuk-tuks, triciclos con motor, deben su nombre al ruido que hacen.',
+ himg:'Wat Arun', hist:'Es el único país del sudeste asiático que nunca fue colonia de una potencia europea. Antes se llamaba Siam y todavía tiene rey.',
  per:['Alexander Albon','Piloto de Fórmula 1 nacido en Londres que compite con la bandera de Tailandia, el país de su madre.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#A51931"/><rect y="3.33" width="30" height="13.34" fill="#F4F5F8"/><rect y="6.67" width="30" height="6.66" fill="#2D2A4A"/></svg>`},
 
 {n:'Senegal',s2:'dato',a:[],cont:'África',cap:'Dakar',pob:'≈ 18 millones',len:'Francés (el wolof es la lengua más hablada)',
  band:'Verde, amarillo y rojo, los colores panafricanos, con una estrella verde en el centro.',
- img:'Lake Retba', dato:'Allí terminaba el famoso rally París-Dakar. La isla de Gorée, frente a la capital, es Patrimonio de la Humanidad y recuerda la trata de esclavos.',
+ aimg:'Lake Retba', auto:'Allí terminaba el famoso rally París-Dakar, que se corrió por África desde 1979 hasta 2007. La meta estaba junto al Lago Rosa, de aguas color fresa.',
+ himg:'Gorée', hist:'La isla de Gorée, frente a la capital, es Patrimonio de la Humanidad y recuerda la trata de esclavos africanos hacia América. Se independizó de Francia en 1960.',
  per:['Léopold Sédar Senghor','Poeta y primer presidente del país. Fue el primer africano elegido miembro de la Academia Francesa.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#00853F"/><rect x="10" width="10" height="20" fill="#FDEF42"/><rect x="20" width="10" height="20" fill="#E31B23"/><polygon points="${star(15,10,3)}" fill="#00853F"/></svg>`},
 
 {n:'Costa Rica',s2:'dato',a:[],cont:'América',cap:'San José',pob:'≈ 5,2 millones',len:'Español',
  band:'El azul es el cielo; el blanco, la paz; el rojo, la sangre derramada por la libertad. Sus colores se inspiraron en la bandera de Francia.',
- img:'Arenal Volcano', dato:'Abolió su ejército en 1948. Casi toda su electricidad sale de fuentes renovables, así que cargar allí un coche eléctrico es prácticamente limpio.',
+ aimg:'Arenal Volcano', auto:'Casi toda su electricidad sale de fuentes renovables, como el agua y el calor de los volcanes, así que cargar allí un coche eléctrico es prácticamente limpio.',
+ himg:'National Theatre of Costa Rica', hist:'Abolió su ejército en 1948 y dedicó ese dinero a la educación y la sanidad. Cristóbal Colón llegó a sus playas en 1502, en su último viaje.',
  per:['Óscar Arias','Presidente del país y Premio Nobel de la Paz en 1987 por su plan para acabar con las guerras de Centroamérica.'],
  svg:`<svg viewBox="0 0 30 18"><rect width="30" height="18" fill="#002B7F"/><rect y="3" width="30" height="12" fill="#fff"/><rect y="6" width="30" height="6" fill="#CE1126"/></svg>`},
 
 {n:'Marruecos',s2:'dato',a:['morocco','maroc'],cont:'África',cap:'Rabat',pob:'≈ 37 millones',len:'Árabe y amazigh (bereber)',
  band:'La estrella verde de cinco puntas entrelazadas es el «sello de Salomón», símbolo de protección; el rojo es el color de la dinastía reinante.',
- img:'Dacia Sandero', dato:'Solo 14 km de mar lo separan de España. En Tánger, Renault tiene una de las mayores fábricas de coches de África, donde se fabrican modelos de Dacia que se venden en Europa.',
+ aimg:'Dacia Sandero', auto:'En Tánger, Renault tiene una de las mayores fábricas de coches de África, donde se fabrican modelos de Dacia que se venden en Europa.',
+ himg:'Strait of Gibraltar', hist:'Solo 14 km de mar lo separan de España. Desde el año 711, durante casi 800 años, pueblos musulmanes llegados del norte de África gobernaron gran parte de la península ibérica.',
  per:['Ibn Battuta','Viajero nacido en Tánger en el siglo XIV; recorrió unos 120.000 km por África, Asia y Europa y dejó escrito el relato de sus viajes.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="30" height="20" fill="#C1272D"/><polygon points="${[0,2,4,1,3].map(k=>{const a=(-90+72*k)*Math.PI/180;return (15+5*Math.cos(a)).toFixed(2)+','+(10.4+5*Math.sin(a)).toFixed(2);}).join(' ')}" fill="none" stroke="#006233" stroke-width="0.7"/></svg>`},
 
 {n:'Italia',s2:'per',a:['italy'],cont:'Europa',cap:'Roma',pob:'≈ 59 millones',len:'Italiano',
  band:'«Il Tricolore» se inspiró en la bandera francesa que llevaron las tropas de Napoleón. Según la tradición, el verde es la esperanza; el blanco, la fe; el rojo, la caridad.',
- img:'Vespa', dato:'Allí nacieron Fiat, Lamborghini, Maserati, Ducati y la Vespa. El piloto Valentino Rossi ganó nueve títulos mundiales de motociclismo.',
+ aimg:'Vespa', auto:'Allí nacieron Fiat, Lamborghini, Maserati, Ducati y la Vespa. El piloto Valentino Rossi ganó nueve títulos mundiales de motociclismo.',
+ himg:'Colosseum', hist:'Roma fue el centro de un imperio que dominó todo el Mediterráneo, incluida Hispania. En Florencia nació el Renacimiento, con artistas como Leonardo da Vinci y Miguel Ángel.',
  per:['Enzo Ferrari','Piloto y empresario que fundó la marca Ferrari en Maranello. Su escudería es la única que ha corrido todas las temporadas del Mundial de Fórmula 1 desde 1950.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#009246"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#CE2B37"/></svg>`},
 
 {n:'Francia',s2:'dato',a:['france'],cont:'Europa',cap:'París',pob:'≈ 68 millones',len:'Francés',
  band:'Nació con la Revolución de 1789: el azul y el rojo son los colores de París, y el blanco, el de la monarquía.',
- img:'24 Hours of Le Mans', dato:'Peugeot empezó fabricando molinillos de café y de pimienta antes que coches. Las 24 Horas de Le Mans se corren desde 1923, y Sébastien Loeb ganó nueve Mundiales de Rallies seguidos.',
+ aimg:'24 Hours of Le Mans', auto:'Peugeot empezó fabricando molinillos de café y de pimienta antes que coches. Las 24 Horas de Le Mans, una carrera que dura un día entero, se corren desde 1923.',
+ himg:'Storming of the Bastille', hist:'La Revolución francesa empezó en 1789 con la toma de la Bastilla, bajo el lema «libertad, igualdad, fraternidad». Después, Napoleón se coronó emperador y conquistó media Europa, también España.',
  per:['Victor Hugo','Escritor romántico, autor de «Los miserables» y «Nuestra Señora de París». Pasó casi 20 años en el exilio por oponerse a Napoleón III.'],
  svg:`<svg viewBox="0 0 30 20"><rect width="10" height="20" fill="#0055A4"/><rect x="10" width="10" height="20" fill="#fff"/><rect x="20" width="10" height="20" fill="#EF4135"/></svg>`},
 
 {n:'Finlandia',s2:'per',a:['finland'],cont:'Europa',cap:'Helsinki',pob:'≈ 5,6 millones',len:'Finés y sueco',
  band:'Cruz nórdica azul sobre fondo blanco: el azul representa sus miles de lagos y el cielo; el blanco, la nieve que cubre el país en invierno.',
- img:'Rally Finland',dato:'Tiene tantos campeones de rallies y de Fórmula 1 que a sus pilotos los llaman «los finlandeses voladores». Su rally, con enormes saltos en caminos de tierra, es uno de los más rápidos del Mundial.',
+ aimg:'Rally Finland', auto:'A sus pilotos los llaman «flying finns» por la cantidad de campeones de rallies y de Fórmula 1. Su rally, con enormes saltos en caminos de tierra, es uno de los más rápidos del Mundial.',
+ himg:'Rovaniemi', hist:'Fue parte de Suecia durante siglos y después de Rusia, hasta su independencia en 1917. Según la tradición, Papá Noel vive en Laponia, en la ciudad de Rovaniemi.',
  per:['Kimi Räikkönen','Piloto de Fórmula 1, campeón del mundo en 2007 con Ferrari. Famoso por su carácter frío y sus respuestas cortas por la radio del equipo.'],
  svg:`<svg viewBox="0 0 18 11"><rect width="18" height="11" fill="#fff"/><rect x="5" width="3" height="11" fill="#002F6C"/><rect y="4" width="18" height="3" fill="#002F6C"/></svg>`}
 ];
@@ -750,7 +785,7 @@ const COLS='ABCDEF';
 const MODE_NAMES={flag:'Bandera oculta',clues:'Pistas',alt:'Alternar'};
 const MODE_HELP={
   flag:'Se destapan casillas de la bandera. Cuantas menos hagan falta, más puntos (máximo 10).',
-  clues:'La bandera sigue tapada y se leen pistas: un dato curioso, un personaje, el continente y la capital, y por último la lengua. La primera pista vale 8 puntos.',
+  clues:'La bandera sigue tapada y se leen pistas: un dato del motor, un personaje, el continente y la capital, y por último la lengua. La primera pista vale 8 puntos.',
   alt:'Se juegan bloques de rondas: primero una ronda de bandera oculta por equipo, después una de pistas por equipo, y así sucesivamente. Si hay un solo equipo, se alterna cada ronda.'
 };
 const CLUE_PTS=[8,6,4,2];
@@ -843,7 +878,7 @@ function nextClue(){
 }
 function clueTexts(c){
   return [
-    c.dato,
+    c.auto,
     `Personaje: ${c.per[0]}. ${c.per[1]}`,
     `Continente: ${c.cont}. Capital: ${c.cap}.`,
     `Lengua: ${c.len}.`
@@ -958,7 +993,7 @@ function solve(t,pts){
   s.innerHTML=`
     <p class="kicker">${kicker}</p>
     <h2 class="country">${esc(cur.n)}</h2>
-    <p class="remember"><strong>Recordad estos datos:</strong> la capital, el dato curioso y el personaje de esta bandera pueden salir en el repaso final. Mirad las diapositivas antes de seguir.</p>
+    <p class="remember"><strong>Recordad estos datos:</strong> la capital, los dos datos curiosos (motor e historia) y el personaje de esta bandera pueden salir en el repaso final. Mirad las diapositivas antes de seguir.</p>
     <dl class="facts">
       <div><dt>Capital</dt><dd>${esc(cur.cap)}</dd></div>
       <div><dt>Continente</dt><dd>${esc(cur.cont)}</dd></div>
@@ -1050,17 +1085,19 @@ async function getPhoto(name,langs=['es','en']){
   photoCache[name]=null;return null;
 }
 let slideIdx=0,slideReturn=null;
-const SLIDE_N=2;
+const SLIDE_N=4; // bandera, dato del motor, dato histórico, personaje
 function initials(n){return n.split(' ').filter(w=>/^[A-ZÁÉÍÓÚ]/.test(w)).slice(0,2).map(w=>w[0]).join('');}
 function renderSlide(){
   const c=cur,el=$('#slide');
   el.className='slide';
   if(slideIdx===0){
     el.innerHTML=`<p class="skicker">La bandera</p><h2>${esc(c.n)}</h2><div class="bigflag">${uniq(c.svg)}</div><p>${esc(c.band)}</p>`;
-  }else if(c.s2!=='per'){
-    el.innerHTML=`<p class="skicker">Dato curioso · ${esc(c.n)}</p><div class="dpic" id="dpic"><span class="icon" aria-hidden="true">💡</span></div><p>${esc(c.dato)}</p><p class="credit" id="dcredit"></p>`;
-    if(c.img)getPhoto('img:'+c.img,['en','es']).then(src=>{
-      if(!src||slideIdx!==1||cur!==c)return;
+  }else if(slideIdx===1||slideIdx===2){
+    const si=slideIdx,isAuto=si===1;
+    el.innerHTML=`<p class="skicker">${isAuto?'Dato curioso del motor':'Dato curioso de historia'} · ${esc(c.n)}</p><div class="dpic" id="dpic"><span class="icon" aria-hidden="true">${isAuto?'🚗':'🏛️'}</span></div><p>${esc(isAuto?c.auto:c.hist)}</p><p class="credit" id="dcredit"></p>`;
+    const im=isAuto?c.aimg:c.himg;
+    if(im)getPhoto('img:'+im,['en','es']).then(src=>{
+      if(!src||slideIdx!==si||cur!==c)return;
       const img=new Image();img.alt='';
       img.onload=()=>{const p=$('#dpic');if(p){p.innerHTML='';p.appendChild(img);$('#dcredit').textContent='Imagen: Wikipedia';}};
       img.src=src;
@@ -1071,7 +1108,7 @@ function renderSlide(){
     el.innerHTML=`<div><div class="portrait" id="portrait"><span class="ini">${esc(initials(name))}</span></div><p class="credit" id="credit"></p></div>
       <div class="ptext"><p class="skicker">Personaje · ${esc(c.n)}</p><h2>${esc(name)}</h2><p>${esc(c.per[1])}</p></div>`;
     getPhoto(name).then(src=>{
-      if(!src||slideIdx!==1||cur!==c)return;
+      if(!src||slideIdx!==3||cur!==c)return;
       const img=new Image();img.alt=name;
       img.onload=()=>{const p=$('#portrait');if(p){p.innerHTML='';p.appendChild(img);$('#credit').textContent='Imagen: Wikipedia';}};
       img.src=src;
@@ -1110,7 +1147,7 @@ const SIMILAR=[['Colombia','Ecuador','Venezuela'],['Noruega','Islandia'],['Austr
 const simGroup=n=>SIMILAR.find(g=>g.includes(n))||[n];
 let quiz=null,qIdx=0,qShow=false,quizReturn=null;
 const simpleCap=c=>!/[(:]/.test(c.cap);
-const leaks=c=>{const w=norm(c.n).split(' ').filter(x=>x.length>3);const d=norm(c.dato);return w.some(x=>d.includes(x));};
+const leaks=(c,f)=>{const w=norm(c.n).split(' ').filter(x=>x.length>3);const d=norm(c[f]);return w.some(x=>d.includes(x));};
 function playedPool(){const seen=new Set(),out=[];history.forEach(h=>{if(!seen.has(h.c.n)){seen.add(h.c.n);out.push(h.c);}});return out;}
 function quizState(){
   const n=playedPool().length,ok=n>=3;
@@ -1134,7 +1171,7 @@ function options(target,flagQ){
 function buildQuiz(){
   const pool=playedPool(),pick=makePicker(pool),qs=[];
   for(let i=0;i<3;i++){const c=pick();qs.push({t:'flag',c,...options(c,true)});}
-  for(let i=0;i<2;i++){const c=pick(x=>!leaks(x))||pick();qs.push({t:'dato',c,...options(c,false)});}
+  ['auto','hist'].forEach(f=>{const c=pick(x=>!leaks(x,f))||pick();qs.push({t:'dato',f,c,...options(c,false)});});
   {const c=pick();qs.push({t:'per',c,...options(c,false)});}
   const vf=shuffle([true,false]);
   vf.forEach(truth=>{
@@ -1177,7 +1214,7 @@ function renderQuiz(){
   }else if(qIdx<=10){
     const q=quiz[qIdx-1],n=qIdx,k=t=>`<p class="qk"><span class="qnum">${n}</span>${t}</p>`;
     if(q.t==='flag')h=k('Banderas')+`<h2 class="qh">¿De qué país es esta bandera?</h2><div class="qflag">${uniq(q.c.svg)}</div>`+optHTML(q)+revealBtn;
-    else if(q.t==='dato')h=k('Dato curioso')+`<h2 class="qh">¿De qué país es este dato?</h2><p class="qtext">${esc(q.c.dato)}</p>`+optHTML(q)+revealBtn;
+    else if(q.t==='dato')h=k(q.f==='auto'?'Dato del motor':'Dato de historia')+`<h2 class="qh">¿De qué país es este dato?</h2><p class="qtext">${esc(q.c[q.f])}</p>`+optHTML(q)+revealBtn;
     else if(q.t==='per')h=k('Personaje')+`<h2 class="qh">¿De qué país era este personaje?</h2><p class="qbig">${esc(q.c.per[0])}</p>`+optHTML(q)+revealBtn;
     else if(q.t==='vf')h=k('Verdadero o falso')+`<p class="qbig">La capital de ${esc(q.c.n)} es ${esc(q.cap)}.</p><div class="qvf"><span class="${qShow&&q.ans===0?'ok':''}">V</span><span class="${qShow&&q.ans===1?'ok':''}">F</span></div>`+revealBtn;
     else if(q.t==='odd'||q.t==='which')h=k(q.t==='odd'?'El intruso':'Busca la bandera')+`<h2 class="qh">${q.t==='odd'?'Una de estas banderas <u>no</u> ha salido en la partida. ¿Cuál es?':'¿Cuál de estas banderas es la de '+esc(q.c.n)+'?'}</h2><div class="qfl">${q.flags.map((f,i)=>`<figure class="${qShow&&i===q.ans?'ok':''}"><div class="mini">${uniq(f.svg)}</div><figcaption>${QL[i]}${qShow&&i===q.ans?' · '+esc(f.n):''}</figcaption></figure>`).join('')}</div>`+revealBtn;
