@@ -10,17 +10,18 @@
   --eje:#D2491A; --eje-soft:#FBE9E1;
   --rep:#0E7768; --rep-soft:#DFF1ED;
   --ok:#17803D; --ok-soft:#DDF3E4; --ko:#C0262D; --ko-soft:#FBE2E3;
+  --ag:#D2491A; --ll:#7B3FB5; --es:#0E7768; --sb:#2A4A8C;
   --display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
   --body:"Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
 }
 @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
   --paper:#141828; --card:#1D2236; --ink:#E9EBF4; --muted:#A3A9C2; --line:#33395240;
   --teo:#8FB0F0; --teo-soft:#22305180; --eje:#FF8A5C; --eje-soft:#4A271A90; --rep:#5DD3BF; --rep-soft:#123E3790;
-  --ok:#5BD483; --ok-soft:#173A24; --ko:#FF7A7F; --ko-soft:#43191C; color-scheme:dark }}
+  --ok:#5BD483; --ok-soft:#173A24; --ko:#FF7A7F; --ko-soft:#43191C; --ag:#FF8A5C; --ll:#C39BF0; --es:#5DD3BF; --sb:#8FB0F0; color-scheme:dark }}
 :root[data-theme="dark"]{
   --paper:#141828; --card:#1D2236; --ink:#E9EBF4; --muted:#A3A9C2; --line:#33395240;
   --teo:#8FB0F0; --teo-soft:#22305180; --eje:#FF8A5C; --eje-soft:#4A271A90; --rep:#5DD3BF; --rep-soft:#123E3790;
-  --ok:#5BD483; --ok-soft:#173A24; --ko:#FF7A7F; --ko-soft:#43191C; color-scheme:dark }
+  --ok:#5BD483; --ok-soft:#173A24; --ko:#FF7A7F; --ko-soft:#43191C; --ag:#FF8A5C; --ll:#C39BF0; --es:#5DD3BF; --sb:#8FB0F0; color-scheme:dark }
 
 html,body{height:100%}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:clamp(16px,1.45vw,24px);line-height:1.5;overflow:hidden}
@@ -62,6 +63,113 @@ th{font-family:var(--display);color:var(--c);font-weight:700}
 td.j{text-align:justify}
 .si{color:var(--ok);font-weight:700} .no{color:var(--ko);font-weight:700}
 
+
+/* vocales y sílabas */
+.vleg{display:flex;flex-wrap:wrap;gap:1.5em;align-items:center}
+.vgrp{display:flex;align-items:center;gap:.4em}
+.vlab{font-family:var(--display);font-weight:700;font-size:.8em;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:.3em}
+.vb{display:grid;place-items:center;border-radius:50%;font-family:var(--display);font-weight:800;color:var(--paper)}
+.vb.ab{width:2.2em;height:2.2em;font-size:1.25em;background:var(--eje)}
+.vb.ce{width:1.6em;height:1.6em;font-size:1.25em;background:var(--rep)}
+.dt{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9em 1.1em;display:flex;flex-direction:column;gap:.6em;min-width:0}
+.dt.hot{border:2px solid var(--eje)}
+.dt h3{font-family:var(--display);font-weight:800;color:var(--teo);margin:0;font-size:1.25em}
+.dt p{margin:0}
+.dt-h{display:flex;gap:.8em;align-items:flex-start}
+.dt-h.solo{background:var(--teo-soft);border-radius:8px;padding:.7em 1em;align-items:center}
+.dt-n{flex:none;width:1.9em;height:1.9em;border-radius:8px;background:var(--teo);color:var(--paper);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.3em}
+.rule{background:var(--teo-soft);border-radius:6px;padding:.4em .7em;text-align:justify}
+.note{font-size:.85em;color:var(--muted);text-align:justify}
+.sy-row{display:flex;flex-wrap:wrap;gap:.8em 2.2em}
+.sy{display:inline-flex;gap:3px;font-family:var(--display);font-weight:700;font-size:1.35em}
+.sy.in{font-size:1em;vertical-align:middle}
+.sy i{font-style:normal;background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:0 .3em;color:var(--ink)}
+.sy b.a{color:var(--eje)} .sy b.c{color:var(--rep)}
+.sy b.t{text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+.vs{display:flex;flex-wrap:wrap;align-items:center;gap:.8em 1.5em;justify-content:center;background:var(--card);border:1px dashed var(--teo);border-radius:8px;padding:.6em 1em}
+.vs>div{display:flex;align-items:center;gap:1.8em;flex-wrap:wrap}
+.vs-l{font-family:var(--display);font-weight:700;font-size:.8em;text-transform:uppercase;letter-spacing:.06em;color:var(--teo)}
+.vs-x{color:var(--muted);font-style:italic}
+
+
+/* regla de posición */
+.ruler{display:grid;grid-template-columns:minmax(8em,auto) repeat(5,minmax(4.2em,1fr));gap:.45em .5em;align-items:center;min-width:34em}
+.rh{font-family:var(--display);font-weight:700;font-size:.68em;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;line-height:1.2;border-bottom:2px solid var(--line);padding-bottom:.3em;align-self:end}
+.rl{font-family:var(--display);font-weight:800;color:var(--teo);font-size:1.05em}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:6px;text-align:center;font-family:var(--display);font-weight:700;font-size:1.4em;padding:.15em 0}
+.rc.tn{background:var(--eje);border-color:var(--eje);color:var(--paper)}
+.caps{display:flex;flex-wrap:wrap;gap:.6em 1.2em;align-items:center;background:var(--teo-soft);border-radius:8px;padding:.6em 1em}
+.caps-l{font-weight:700;margin-right:.5em}
+.cap{font-family:var(--display);font-weight:800;letter-spacing:.06em;font-size:1.2em;color:var(--teo)}
+/* palabras con sílaba tónica */
+.tw{display:inline-flex;gap:3px;font-family:var(--display);font-weight:700;font-size:1.3em}
+.tw i{font-style:normal;background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:0 .3em;color:var(--ink)}
+.tw i.tn{background:var(--eje);border-color:var(--eje);color:var(--paper)}
+.rules3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15em),1fr));gap:1em}
+.r3{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.9em 1.1em;display:flex;flex-direction:column;gap:.6em;min-width:0}
+.r3 p{margin:0}
+.r3-h{display:flex;align-items:center;gap:.7em}
+.r3-h h3{font-family:var(--display);font-weight:800;color:var(--teo);margin:0;font-size:1.2em}
+.dots{display:inline-flex;gap:4px}
+.dots i{width:.85em;height:.85em;border-radius:3px;background:var(--line)}
+.dots i.on{background:var(--eje)}
+.ends{display:flex;gap:.4em;flex-wrap:wrap}
+.end{font-family:var(--display);font-weight:700;font-size:.85em;padding:.1em .7em;border-radius:20px;border:2px solid}
+.end.ok{color:var(--ok);border-color:var(--ok);background:var(--ok-soft)}
+.end.ko{color:var(--ko);border-color:var(--ko);background:var(--ko-soft);text-decoration:line-through}
+.end.all{color:var(--teo);border-color:var(--teo);background:var(--teo-soft)}
+.mk{font-family:var(--display);font-weight:700;font-size:.8em;padding:.1em .6em;border-radius:20px;white-space:nowrap}
+.mk.ok{color:var(--ok);background:var(--ok-soft)} .mk.ko{color:var(--ko);background:var(--ko-soft)}
+/* interrogativas */
+.qw{display:flex;flex-wrap:wrap;gap:.6em}
+.qw span{font-family:var(--display);font-weight:800;font-size:1.5em;background:var(--eje);color:var(--paper);border-radius:8px;padding:.05em .55em}
+.frs{display:flex;flex-direction:column;gap:.35em;font-size:1.15em}
+.frs b,.fr1 b{color:var(--eje)}
+.fr1{font-size:1.15em}
+.fr1 u{text-decoration-color:var(--muted)}
+/* demostrativos y diacrítica */
+.dem{display:flex;flex-wrap:wrap;gap:.6em 1.5em;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:.7em 1.1em}
+.dem-t{flex:1 1 18em;min-width:0}
+.dem-t h3{font-family:var(--display);font-weight:800;color:var(--teo);margin:0 0 .2em}
+.dem-t p{margin:0}
+.dem-w{display:flex;flex-wrap:wrap;gap:.5em 1.2em;font-family:var(--display);font-weight:700;font-size:1.15em}
+.dem-w s{color:var(--ko);text-decoration-thickness:3px}
+.pairs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,13em),1fr));gap:.6em}
+.pr{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card);min-width:0}
+.pr>div{display:flex;flex-direction:column;align-items:center;text-align:center;padding:.35em .3em;gap:.05em;min-width:0}
+.pr>div.ac{background:var(--eje-soft)}
+.pr b{font-family:var(--display);font-weight:800;font-size:1.5em;line-height:1.1}
+.pr .ac b{color:var(--eje)}
+.pr small{font-size:.68em;color:var(--muted);line-height:1.2}
+.pr em{font-size:.78em}
+/* compuestas */
+.eqh{font-family:var(--display);font-weight:700;font-size:.78em;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.eq{display:flex;flex-wrap:wrap;align-items:center;gap:.4em .6em;font-family:var(--display);font-weight:700;font-size:1.15em}
+.term{background:var(--paper);border:1px solid var(--line);border-radius:5px;padding:0 .4em}
+.term.mt{color:var(--teo)}
+.op{color:var(--muted)}
+.res{background:var(--teo-soft);border-radius:5px;padding:0 .5em;font-weight:800}
+b.tl{color:var(--eje)}
+b.lost{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ko);text-decoration-thickness:2px}
+
+
+.ag{--tc:var(--ag)} .ll{--tc:var(--ll)} .es{--tc:var(--es)} .sb{--tc:var(--es)}
+.rc.tn{background:var(--tc,var(--eje));border-color:var(--tc,var(--eje))}
+.rl.ag,.rl.ll,.rl.es,.rl.sb{color:var(--tc)}
+.tw i.tn{background:var(--tc,var(--eje));border-color:var(--tc,var(--eje))}
+.r3.ag,.r3.ll,.r3.es{border-top:5px solid var(--tc)}
+.r3 .r3-h h3{color:var(--tc,var(--teo))}
+.r3 .dots i.on{background:var(--tc,var(--eje))}
+.truco{background:var(--card);border:1px dashed var(--teo);border-radius:8px;padding:.7em 1.1em;display:flex;flex-direction:column;gap:.6em}
+.truco-h{font-family:var(--display);font-weight:700;font-size:.8em;text-transform:uppercase;letter-spacing:.06em;color:var(--teo)}
+.tg{display:grid;grid-template-columns:auto 1fr 1fr;gap:.5em 1em;align-items:center}
+.tgh{font-family:var(--display);font-weight:800;text-align:center;color:var(--tc);border-bottom:3px solid var(--tc);padding-bottom:.15em}
+.tgl{font-size:.95em;color:var(--muted);white-space:nowrap}
+.tgl b{color:var(--ink)}
+.tc{display:flex;align-items:center;justify-content:center;gap:.8em;flex-wrap:wrap;background:var(--paper);border-radius:6px;padding:.35em .5em;min-width:0}
+
+.wab{color:var(--eje);font-weight:700} .wce{color:var(--rep);font-weight:700}
+h3 .wab,h3 .wce{font-weight:800}
 /* Navegación */
 .nav{position:fixed;top:50%;transform:translateY(-50%);z-index:10;width:clamp(40px,4.4vw,64px);height:clamp(40px,4.4vw,64px);border-radius:50%;border:2px solid var(--line);background:var(--card);color:var(--ink);font-size:clamp(20px,2vw,30px);display:grid;place-items:center;box-shadow:0 2px 10px #0002}
 .nav:hover{border-color:var(--eje);color:var(--eje)}
@@ -176,14 +284,20 @@ td.j{text-align:justify}
 <!-- 3 TEORÍA 1 -->
 <section class="slide teo">
   <div class="band"><span class="tag">Teoría</span><h2>Recuerda: la sílaba tónica</h2></div>
-  <p>Según el lugar que ocupa la sílaba que contiene la <strong>vocal tónica</strong>, las palabras se clasifican en:</p>
-  <div class="grid2">
-    <div class="box"><strong>Agudas</strong>: llevan la vocal tónica en la última sílaba.<br><span class="ex">feli<b class="hl">ci</b>dad</span> → feli·<b class="hl">dad</b></div>
-    <div class="box"><strong>Llanas</strong>: en la penúltima sílaba.<br><span class="ex"><b class="hl">ca</b>·lle</span></div>
-    <div class="box"><strong>Esdrújulas</strong>: en la antepenúltima sílaba.<br><span class="ex"><b class="hl">cál</b>·cu·lo</span></div>
-    <div class="box"><strong>Sobresdrújulas</strong>: en una sílaba anterior a la antepenúltima.<br><span class="ex"><b class="hl">re</b>·tí·ra·se·lo</span></div>
+  <p style="margin:0">Según el lugar que ocupa la sílaba que contiene la <strong>vocal tónica</strong> (la que se pronuncia con más fuerza), las palabras se clasifican en agudas, llanas, esdrújulas y sobresdrújulas. Cuenta siempre <strong>desde el final</strong>:</p>
+  <div class="tbl-wrap">
+    <div class="ruler">
+      <span></span><span class="rh" style="grid-column:span 2">anterior a la antepenúltima</span><span class="rh">antepenúltima</span><span class="rh">penúltima</span><span class="rh">última</span>
+      <span class="rl ag">Agudas</span><span></span><span class="rc">fe</span><span class="rc">li</span><span class="rc">ci</span><span class="rc tn ag">dad</span>
+      <span class="rl ll">Llanas o graves</span><span></span><span></span><span></span><span class="rc tn ll">ca</span><span class="rc">lle</span>
+      <span class="rl es">Esdrújulas</span><span></span><span></span><span class="rc tn es">cál</span><span class="rc">cu</span><span class="rc">lo</span>
+      <span class="rl sb">Sobresdrújulas</span><span class="rc">re</span><span class="rc tn sb">tí</span><span class="rc">ra</span><span class="rc">se</span><span class="rc">lo</span>
+    </div>
   </div>
-  <div class="card"><p style="margin:0"><strong>Las letras mayúsculas también cumplen estas reglas:</strong> ÁFRICA, ÁNGEL, PLAZA DE SANTA LUCÍA.</p></div>
+  <div class="caps">
+    <span class="caps-l">Las mayúsculas también cumplen estas reglas</span>
+    <span class="cap">ÁFRICA</span><span class="cap">ÁNGEL</span><span class="cap">SANTA LUCÍA</span>
+  </div>
 </section>
 
 <!-- 4 EJERCICIO 1 -->
@@ -202,13 +316,38 @@ td.j{text-align:justify}
 <!-- 5 TEORÍA 2 -->
 <section class="slide teo">
   <div class="band"><span class="tag">Teoría</span><h2>Siempre llevan tilde…</h2></div>
-  <p>Estas son las principales reglas que debes tener en cuenta sobre la acentuación:</p>
-  <div class="grid2">
-    <div class="box"><p style="margin:0"><strong>Las palabras agudas que acaban en vocal, -n o -s</strong>.</p><p class="ex" style="margin:.3em 0 0">café, canción, serás</p></div>
-    <div class="box"><p style="margin:0"><strong>Las palabras llanas o graves que no acaban en vocal, -n o -s</strong>.</p><p class="ex" style="margin:.3em 0 0">árbol, López, difícil, lápiz</p></div>
-    <div class="box"><p style="margin:0"><strong>Todas las palabras esdrújulas o sobresdrújulas</strong>.</p><p class="ex" style="margin:.3em 0 0">rápido, entrégaselo</p></div>
+  <div class="rules3">
+    <div class="r3 ag">
+      <div class="r3-h"><span class="dots"><i></i><i></i><i class="on"></i></span><h3>Agudas</h3></div>
+      <p>…que acaban en <strong>vocal, -n o -s</strong>.</p>
+      <div class="ends"><span class="end ok">vocal</span><span class="end ok">-n</span><span class="end ok">-s</span></div>
+      <div class="sy-row"><span class="tw" data-t="ca|*fé"></span><span class="tw" data-t="can|*ción"></span><span class="tw" data-t="se|*rás"></span></div>
+    </div>
+    <div class="r3 ll">
+      <div class="r3-h"><span class="dots"><i></i><i class="on"></i><i></i></span><h3>Llanas o graves</h3></div>
+      <p>…que <strong>no</strong> acaban en <strong>vocal, -n o -s</strong>.</p>
+      <div class="ends"><span class="end ko">vocal</span><span class="end ko">-n</span><span class="end ko">-s</span></div>
+      <div class="sy-row"><span class="tw" data-t="*ár|bol"></span><span class="tw" data-t="*Ló|pez"></span><span class="tw" data-t="di|*fí|cil"></span><span class="tw" data-t="*lá|piz"></span></div>
+    </div>
+    <div class="r3 es">
+      <div class="r3-h"><span class="dots"><i class="on"></i><i></i><i></i></span><h3>Esdrújulas y sobresdrújulas</h3></div>
+      <p><strong>Todas</strong>, sin excepción.</p>
+      <div class="ends"><span class="end all">siempre</span></div>
+      <div class="sy-row"><span class="tw" data-t="*rá|pi|do"></span><span class="tw" data-t="en|*tré|ga|se|lo"></span></div>
+    </div>
   </div>
-  <div class="card"><p style="margin:0">Truco: agudas y llanas funcionan al revés. Lo que hace llevar tilde a una aguda (acabar en vocal, -n o -s) es justo lo que hace que una llana <strong>no</strong> la lleve: <em>can<b class="hl">ción</b></em> / <em><b class="hl">jo</b>ven</em>; <em><b class="hl">lá</b>piz</em> / <em>fe<b class="hl">liz</b></em>.</p></div>
+  <div class="truco">
+    <div class="truco-h">Truco: agudas y llanas funcionan al revés</div>
+    <div class="tg">
+      <span></span><span class="tgh ag">Aguda</span><span class="tgh ll">Llana</span>
+      <span class="tgl">acaba en <b>vocal, -n o -s</b></span>
+      <div class="tc ag"><span class="tw" data-t="can|*ción"></span><span class="mk ok">✓ tilde</span></div>
+      <div class="tc ll"><span class="tw" data-t="*jo|ven"></span><span class="mk ko">✗ sin tilde</span></div>
+      <span class="tgl"><b>no</b> acaba en <b>vocal, -n o -s</b></span>
+      <div class="tc ag"><span class="tw" data-t="fe|*liz"></span><span class="mk ko">✗ sin tilde</span></div>
+      <div class="tc ll"><span class="tw" data-t="*lá|piz"></span><span class="mk ok">✓ tilde</span></div>
+    </div>
+  </div>
 </section>
 
 <!-- 6 EJERCICIO 2 -->
@@ -233,20 +372,54 @@ td.j{text-align:justify}
   </div>
 </section>
 
-<!-- 7 TEORÍA 3 -->
+<!-- 7 TEORÍA 3a -->
 <section class="slide teo">
-  <div class="band"><span class="tag">Teoría</span><h2>Diptongos, triptongos e hiatos</h2></div>
+  <div class="band"><span class="tag">Teoría</span><h2>Diptongos y triptongos</h2></div>
+  <div class="vleg">
+    <div class="vgrp"><span class="vlab">Vocales abiertas</span><span class="vb ab">a</span><span class="vb ab">e</span><span class="vb ab">o</span></div>
+    <div class="vgrp"><span class="vlab">Vocales cerradas</span><span class="vb ce">i</span><span class="vb ce">u</span></div>
+  </div>
   <div class="grid2">
-    <div class="box">
-      <p style="margin-top:0"><strong>Los diptongos y triptongos siguen las normas generales de acentuación</strong>: si han de llevar tilde, esta irá sobre la vocal abierta (<em>a, e, o</em>).</p>
-      <p class="ex" style="margin-bottom:0">miráis, huésped, vuelve, salió, averiguáis</p>
+    <div class="dt">
+      <div class="dt-h"><span class="dt-n">2</span><div><h3>Diptongo</h3><p>Dos vocales juntas que se pronuncian en <strong>la misma sílaba</strong>: <b class="wab">abierta</b> + <b class="wce">cerrada</b>, <b class="wce">cerrada</b> + <b class="wab">abierta</b> o dos <b class="wce">cerradas</b> distintas.</p></div></div>
+      <div class="sy-row"><span class="sy" data-s="b[ue]|no"></span><span class="sy" data-s="c[au]|sa"></span><span class="sy" data-s="c[iu]|dad"></span></div>
+      <div class="rule"><strong>¿Tilde?</strong> Siguen las normas generales. Si la llevan, va sobre la <b class="wab">vocal abierta</b>:</div>
+      <div class="sy-row"><span class="sy" data-s="mi|r[ái]s"></span><span class="sy" data-s="h[ué]s|ped"></span><span class="sy" data-s="sa|l[ió]"></span></div>
+      <p class="note">Ojo: <span class="sy in" data-s="v[ue]l|ve"></span> no lleva tilde: es llana y acaba en vocal.</p>
     </div>
-    <div class="box">
-      <p style="margin-top:0"><strong>Una palabra con vocales en hiato sigue las normas generales de acentuación</strong>. Si la vocal tónica del hiato es una vocal cerrada (<em>i, u</em>), llevará siempre tilde, aunque no le corresponda según las reglas.</p>
-      <p class="ex" style="margin-bottom:0">caoba, caótico, María, sonreír</p>
+    <div class="dt">
+      <div class="dt-h"><span class="dt-n">3</span><div><h3>Triptongo</h3><p>Tres vocales juntas en <strong>la misma sílaba</strong>: <b class="wce">cerrada</b> + <b class="wab">abierta</b> + <b class="wce">cerrada</b>.</p></div></div>
+      <div class="sy-row"><span class="sy" data-s="b[uey]"></span><span class="sy" data-s="U|ru|g[uay]"></span><span class="sy" data-s="m[iau]"></span></div>
+      <div class="rule"><strong>¿Tilde?</strong> Siguen las normas generales. Si la llevan, va sobre la <b class="wab">vocal abierta</b>:</div>
+      <div class="sy-row"><span class="sy" data-s="a|ve|ri|g[uái]s"></span><span class="sy" data-s="a|cen|t[uéi]s"></span></div>
+      <p class="note">Las dos palabras son agudas acabadas en <em>-s</em>, por eso llevan tilde.</p>
     </div>
   </div>
-  <div class="card"><p style="margin:0"><strong>Para no perderse:</strong> vocales abiertas <em>a, e, o</em>; cerradas <em>i, u</em>. Diptongo = dos vocales en la misma sílaba (<em>bue-no, ciu-dad</em>). Hiato = dos vocales en sílabas distintas (<em>ca-o-ba, Ma-rí-a</em>).</p></div>
+</section>
+
+<!-- 7b TEORÍA 3b -->
+<section class="slide teo">
+  <div class="band"><span class="tag">Teoría</span><h2>Hiatos</h2></div>
+  <div class="dt-h solo"><span class="dt-n">⇹</span><div><p style="margin:0">Hay <strong>hiato</strong> cuando dos vocales juntas se pronuncian en <strong>sílabas distintas</strong>. Una palabra con vocales en hiato sigue las normas generales de acentuación, salvo en un caso.</p></div></div>
+  <div class="grid2">
+    <div class="dt">
+      <h3>Dos vocales <b class="wab">abiertas</b> (o dos iguales)</h3>
+      <p>Siguen las <strong>normas generales</strong>: llevan tilde solo si les corresponde.</p>
+      <div class="sy-row"><span class="sy" data-s="c[a]|[o]|ba"></span><span class="sy" data-s="c[a]|[ó]|ti|co"></span><span class="sy" data-s="l[e]|[ó]n"></span><span class="sy" data-s="l[e]|[e]r"></span></div>
+      <p class="note"><em>caoba</em>: llana en vocal, sin tilde. <em>caótico</em>: esdrújula, con tilde. <em>león</em>: aguda en <em>-n</em>, con tilde.</p>
+    </div>
+    <div class="dt hot">
+      <h3><b class="wce">Cerrada</b> tónica + <b class="wab">abierta</b> (o al revés)</h3>
+      <p>Si la vocal tónica del hiato es una <b class="wce">cerrada (i, u)</b>, lleva <strong>siempre tilde</strong>, aunque no le corresponda según las reglas.</p>
+      <div class="sy-row"><span class="sy" data-s="Ma|r[í]|[a]"></span><span class="sy" data-s="son|r[e]|[í]r"></span><span class="sy" data-s="b[a]|[ú]l"></span><span class="sy" data-s="r[a]|[í]z"></span></div>
+      <p class="note"><em>María</em> es llana acabada en vocal y, aun así, lleva tilde: la tilde «rompe» el diptongo.</p>
+    </div>
+  </div>
+  <div class="vs">
+    <div><span class="vs-l">Diptongo</span><span class="sy" data-s="Ma|r[io]"></span><span class="sy" data-s="con|ti|n[uo]"></span></div>
+    <span class="vs-x">frente a</span>
+    <div><span class="vs-l">Hiato</span><span class="sy" data-s="Ma|r[í]|[o]"></span><span class="sy" data-s="con|ti|n[ú]|[o]"></span></div>
+  </div>
 </section>
 
 <!-- 8 EJERCICIO 3 -->
@@ -264,14 +437,24 @@ td.j{text-align:justify}
 <!-- 9 TEORÍA 4 -->
 <section class="slide teo">
   <div class="band"><span class="tag">Teoría</span><h2>Interrogativas y exclamativas</h2></div>
-  <div class="box">
-    <p style="margin-top:0">Las <strong>palabras interrogativas</strong> (determinantes, pronombres y adverbios interrogativos y exclamativos) <strong>siempre llevan tilde</strong>:</p>
-    <p class="ex" style="font-size:1.3em;margin-bottom:0">¿Qué hora es?, ¡qué fácil!, ¿dónde vives?, ¡cómo mola!</p>
+  <p style="margin:0">Las <strong>palabras interrogativas</strong> (determinantes, pronombres y adverbios interrogativos y exclamativos) <strong>siempre llevan tilde</strong>:</p>
+  <div class="qw"><span>qué</span><span>quién</span><span>cuál</span><span>cómo</span><span>cuándo</span><span>cuánto</span><span>dónde</span><span>adónde</span></div>
+  <div class="grid2">
+    <div class="dt">
+      <h3>Con signos ¿? ¡!</h3>
+      <div class="frs"><span>¿<b>Qué</b> hora es?</span><span>¡<b>Qué</b> fácil!</span><span>¿<b>Dónde</b> vives?</span><span>¡<b>Cómo</b> mola!</span></div>
+    </div>
+    <div class="dt">
+      <h3>Sin signos (pregunta indirecta)</h3>
+      <div class="frs"><span>No sé <b>dónde</b> vives.</span><span>Dime <b>qué</b> quieres.</span><span>Pregúntale <b>cuándo</b> llega.</span></div>
+    </div>
   </div>
-  <p>También la llevan cuando la pregunta es indirecta, es decir, sin signos de interrogación: <em>No sé <b class="hl">dónde</b> vives</em>, <em>Dime <b class="hl">qué</b> quieres</em>.</p>
-  <div class="card">
-    <p style="margin:0"><strong>¿Sabías que…?</strong> Algunos procesadores de textos no reconocen la intencionalidad comunicativa del emisor; por eso, en algunas ocasiones, si no acentúas algunas palabras interrogativas, el ordenador no va a destacar que la palabra se ha escrito de forma incorrecta.</p>
+  <div class="vs">
+    <div><span class="mk ok">✓ pregunta</span><span class="fr1">¿<b>Cuándo</b> vienes?</span></div>
+    <span class="vs-x">frente a</span>
+    <div><span class="mk ko">✗ no pregunta</span><span class="fr1"><u>Cuando</u> vengas, avísame.</span></div>
   </div>
+  <div class="card"><p style="margin:0"><strong>¿Sabías que…?</strong> Algunos procesadores de textos no reconocen la intencionalidad comunicativa del emisor; por eso, en algunas ocasiones, si no acentúas algunas palabras interrogativas, el ordenador no va a destacar que la palabra se ha escrito de forma incorrecta.</p></div>
 </section>
 
 <!-- 10 EJERCICIO 4 -->
@@ -296,38 +479,21 @@ td.j{text-align:justify}
 <!-- 11 TEORÍA 5 -->
 <section class="slide teo">
   <div class="band"><span class="tag">Teoría</span><h2>Demostrativos y tilde diacrítica</h2></div>
-  <div class="grid2">
-    <div style="display:flex;flex-direction:column;gap:1em">
-      <div class="box">
-        <p style="margin-top:0">Los <strong>demostrativos</strong> (<em>este, ese, aquel</em> y sus femeninos y plurales) <strong>no llevan tilde</strong>, ni cuando son determinantes ni cuando son pronombres:</p>
-        <p class="ex" style="margin-bottom:0">Esta tarde iré al cine. / Me gusta más esta.</p>
-      </div>
-      <p style="margin:0;font-size:.85em;color:var(--muted)">Lo mismo ocurre con el adverbio <em>solo</em>: se escribe sin tilde (<em>Solo quiero agua</em>).</p>
-      <div class="box">
-        <p style="margin:0">La <strong>tilde diacrítica</strong> es la que distingue categorías gramaticales: <em>el</em> (det.) / <em>él</em> (pron.), <em>de</em> (prep.) / <em>dé</em> (verbo)…</p>
-      </div>
-    </div>
-    <div class="tbl-wrap card" style="padding:.4em .8em">
-      <table>
-        <tr><th colspan="2">Tilde diacrítica</th></tr>
-        <tr><td><b>el</b></td><td>det. (<em>el reloj</em>)</td></tr>
-        <tr><td><b>él</b></td><td>pron. (<em>él salió</em>)</td></tr>
-        <tr><td><b>mi</b></td><td>det. (<em>mi reloj</em>)</td></tr>
-        <tr><td><b>mí</b></td><td>pron. (<em>para mí</em>)</td></tr>
-        <tr><td><b>tu</b></td><td>det. (<em>tu reloj</em>)</td></tr>
-        <tr><td><b>tú</b></td><td>pron. (<em>ven tú</em>)</td></tr>
-        <tr><td><b>mas</b></td><td>conj. = pero</td></tr>
-        <tr><td><b>más</b></td><td>adv. de cantidad</td></tr>
-        <tr><td><b>si</b></td><td>condicional (<em>si vienes…</em>)</td></tr>
-        <tr><td><b>sí</b></td><td>adv. de afirmación (<em>sí iré</em>); pron. (<em>para sí</em>)</td></tr>
-        <tr><td><b>de</b></td><td>prep.</td></tr>
-        <tr><td><b>dé</b></td><td>del verbo <em>dar</em></td></tr>
-        <tr><td><b>se</b></td><td>pron. (<em>se fue</em>)</td></tr>
-        <tr><td><b>sé</b></td><td>del verbo <em>saber</em>; del verbo <em>ser</em></td></tr>
-        <tr><td><b>te</b></td><td>pron. (<em>te vio</em>)</td></tr>
-        <tr><td><b>té</b></td><td>sust. (<em>infusión</em>)</td></tr>
-      </table>
-    </div>
+  <div class="dem">
+    <div class="dem-t"><h3>Sin tilde, siempre</h3><p>Los <strong>demostrativos</strong> no llevan tilde, ni como determinantes ni como pronombres. Tampoco el adverbio <strong>solo</strong>.</p></div>
+    <div class="dem-w"><span><s>éste</s> → este</span><span><s>ésa</s> → esa</span><span><s>aquéllos</s> → aquellos</span><span><s>sólo</s> → solo</span></div>
+    <p class="note" style="margin:0;flex-basis:100%"><em>Esta tarde iré al cine.</em> / <em>Me gusta más esta.</em> / <em>Solo quiero agua.</em></p>
+  </div>
+  <p style="margin:0">La <strong>tilde diacrítica</strong> es la que distingue categorías gramaticales en palabras que se escriben igual:</p>
+  <div class="pairs">
+    <div class="pr"><div><b>el</b><small>det.</small><em>el reloj</em></div><div class="ac"><b>él</b><small>pron.</small><em>él salió</em></div></div>
+    <div class="pr"><div><b>mi</b><small>det.</small><em>mi reloj</em></div><div class="ac"><b>mí</b><small>pron.</small><em>para mí</em></div></div>
+    <div class="pr"><div><b>tu</b><small>det.</small><em>tu reloj</em></div><div class="ac"><b>tú</b><small>pron.</small><em>ven tú</em></div></div>
+    <div class="pr"><div><b>mas</b><small>conj. = pero</small><em>quiso, mas no pudo</em></div><div class="ac"><b>más</b><small>adv. de cantidad</small><em>quiero más</em></div></div>
+    <div class="pr"><div><b>si</b><small>condicional</small><em>si vienes…</em></div><div class="ac"><b>sí</b><small>adv. afirmación; pron.</small><em>sí iré; para sí</em></div></div>
+    <div class="pr"><div><b>de</b><small>prep.</small><em>casa de Ana</em></div><div class="ac"><b>dé</b><small>verbo dar</small><em>que me dé</em></div></div>
+    <div class="pr"><div><b>se</b><small>pron.</small><em>se fue</em></div><div class="ac"><b>sé</b><small>verbos saber y ser</small><em>yo sé; sé bueno</em></div></div>
+    <div class="pr"><div><b>te</b><small>pron.</small><em>te vio</em></div><div class="ac"><b>té</b><small>sust. (infusión)</small><em>un té verde</em></div></div>
   </div>
 </section>
 
@@ -349,16 +515,26 @@ td.j{text-align:justify}
 <section class="slide teo">
   <div class="band"><span class="tag">Teoría</span><h2>Palabras compuestas y adverbios en -mente</h2></div>
   <div class="grid2">
-    <div class="box">
-      <p style="margin-top:0">Las <strong>palabras compuestas</strong> llevan tilde según las reglas generales de acentuación, pero si sus lexemas se separan con un guion, cada una conserva su tilde original:</p>
-      <p class="ex" style="margin-bottom:0">duodécimo, teórico-práctico</p>
+    <div class="dt">
+      <h3>Palabras compuestas</h3>
+      <p class="just">Llevan tilde según las reglas generales de acentuación, pero si sus lexemas se separan con un guion, cada una conserva su tilde original.</p>
+      <div class="eqh">Juntas: una sola palabra, reglas generales</div>
+      <div class="eq"><span class="term"><b class="lost">dé</b>cimo</span><span class="op">+</span><span class="term"><b class="tl">sép</b>timo</span><span class="op">→</span><span class="res">decimo<b class="tl">sép</b>timo</span></div>
+      <div class="eq"><span class="term">duo</span><span class="op">+</span><span class="term">décimo</span><span class="op">→</span><span class="res">duo<b class="tl">dé</b>cimo</span></div>
+      <p class="note"><em>Décimo</em> pierde su tilde dentro de <em>decimoséptimo</em>: ahora la tónica es <em>sép</em>.</p>
+      <div class="eqh">Con guion: cada una conserva la suya</div>
+      <div class="eq"><span class="term">teórico</span><span class="op">+</span><span class="term">práctico</span><span class="op">→</span><span class="res"><b class="tl">teó</b>rico-<b class="tl">prá</b>ctico</span></div>
     </div>
-    <div class="box">
-      <p style="margin-top:0">Los <strong>adverbios acabados en -mente</strong> conservan la tilde si el adjetivo del que derivan la tiene:</p>
-      <p class="ex" style="margin-bottom:0">alegre &gt; alegremente, débil &gt; débilmente</p>
+    <div class="dt">
+      <h3>Adverbios en -mente</h3>
+      <p class="just">Conservan la tilde si el adjetivo del que derivan la tiene.</p>
+      <div class="eq"><span class="term"><b class="tl">dé</b>bil</span><span class="op">+</span><span class="term mt">mente</span><span class="op">→</span><span class="res"><b class="tl">dé</b>bilmente</span><span class="mk ok">✓ tilde</span></div>
+      <div class="eq"><span class="term"><b class="tl">rá</b>pido</span><span class="op">+</span><span class="term mt">mente</span><span class="op">→</span><span class="res"><b class="tl">rá</b>pidamente</span><span class="mk ok">✓ tilde</span></div>
+      <div class="eq"><span class="term"><b class="tl">fá</b>cil</span><span class="op">+</span><span class="term mt">mente</span><span class="op">→</span><span class="res"><b class="tl">fá</b>cilmente</span><span class="mk ok">✓ tilde</span></div>
+      <div class="eq"><span class="term">alegre</span><span class="op">+</span><span class="term mt">mente</span><span class="op">→</span><span class="res">alegremente</span><span class="mk ko">✗ sin tilde</span></div>
+      <div class="eq"><span class="term">feliz</span><span class="op">+</span><span class="term mt">mente</span><span class="op">→</span><span class="res">felizmente</span><span class="mk ko">✗ sin tilde</span></div>
     </div>
   </div>
-  <div class="card"><p style="margin:0">Fíjate: al escribirse juntas, la primera palabra pierde su tilde. <em>Décimo</em> + <em>séptimo</em> → <em>decimoséptimo</em>. Con guion, en cambio, cada palabra la mantiene: <em>histórico-artístico</em>.</p></div>
 </section>
 
 <!-- 14 EJERCICIO 6 -->
@@ -459,6 +635,24 @@ td.j{text-align:justify}
     b.onclick=()=>{const t=document.getElementById(b.dataset.sol);t.hidden=!t.hidden;b.textContent=t.hidden?'Ver solución':'Ocultar solución';};
   });
 
+
+  // sílabas coloreadas
+  document.querySelectorAll('.sy[data-s]').forEach(el=>{
+    let inB=false;
+    el.innerHTML=el.dataset.s.split('|').map(syl=>'<i>'+[...syl].map(ch=>{
+      if(ch==='['){inB=true;return '';} if(ch===']'){inB=false;return '';}
+      const l=ch.toLowerCase();
+      if(!inB)return ch;
+      if('aeoáéó'.includes(l))return `<b class="a${'áéó'.includes(l)?' t':''}">${ch}</b>`;
+      if('iuíúüy'.includes(l))return `<b class="c${'íú'.includes(l)?' t':''}">${ch}</b>`;
+      return ch;}).join('')+'</i>').join('');
+    el.setAttribute('aria-label',el.dataset.s.replace(/[\[\]]/g,'').replace(/\|/g,'-'));
+  });
+
+  document.querySelectorAll('.tw[data-t]').forEach(el=>{
+    el.innerHTML=el.dataset.t.split('|').map(x=>x.startsWith('*')?`<i class="tn">${x.slice(1)}</i>`:`<i>${x}</i>`).join('');
+    el.setAttribute('aria-label',el.dataset.t.replace(/\*/g,'').replace(/\|/g,'-'));
+  });
   const ACC={a:'á',e:'é',i:'í',o:'ó',u:'ú'};
   const strip=s=>s.normalize('NFD').replace(/[́]/g,'').normalize('NFC');
   function renderWord(el,base,sel,onPick){
