@@ -13,6 +13,7 @@
   --claro:#f4f1ea;
   --f-titulo:"Special Elite","Courier New",monospace;
   --f-maquina:"Courier Prime","Courier New",monospace;
+  --t-cuerpo:clamp(1.15rem,min(2.3vw,4vh),2.35rem);
   --f-texto:"Atkinson Hyperlegible",system-ui,sans-serif;
   color-scheme:dark;
 }
@@ -20,7 +21,7 @@ html,body{height:100%}
 body{margin:0;background:var(--teal);color:var(--claro);font-family:var(--f-texto);overflow:hidden}
 p,li{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 .deck{position:relative;height:100%}
-.slide{position:absolute;inset:0;display:none;overflow-y:auto;padding-block:clamp(20px,5vh,56px);padding-inline:clamp(64px,8vw,120px);box-sizing:border-box;background:var(--teal)}
+.slide{position:absolute;inset:0;display:none;overflow-y:auto;padding-block:clamp(16px,3.5vh,48px);padding-inline:clamp(64px,8vw,120px);box-sizing:border-box;background:var(--teal)}
 .slide.activa{display:flex;flex-direction:column;justify-content:flex-start;animation:entra .45s ease both}
 .slide>:first-child{margin-top:auto}.slide>:last-child{margin-bottom:auto}
 .slide.obra{background:radial-gradient(circle at 85% 15%,#2a2d7a 0,var(--noche) 45%,var(--noche-2) 100%)}
@@ -28,10 +29,10 @@ p,li{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
 @media (prefers-reduced-motion:reduce){.slide.activa{animation:none}}
 
 h1,h2{font-family:var(--f-titulo);font-weight:400;line-height:1.05;margin:0;text-wrap:balance}
-h2{font-size:clamp(2rem,4.6vw,3.6rem);margin-bottom:.5em}
+h2{font-size:clamp(1.8rem,min(4vw,6.6vh),3.2rem);margin-bottom:.4em}
 .etiqueta{font-family:var(--f-maquina);font-size:clamp(.8rem,1.3vw,1rem);letter-spacing:.18em;text-transform:uppercase;color:var(--oro);margin:0 0 .6em}
 .obra .etiqueta{color:var(--cielo)}
-.texto{font-size:clamp(1.05rem,2.05vw,1.6rem);line-height:1.5}
+.texto{font-size:var(--t-cuerpo);line-height:1.45}
 .texto p{margin:0 0 .7em}
 strong{color:var(--oro);font-weight:700}
 .obra strong{color:var(--cielo)}
@@ -55,13 +56,15 @@ em{font-style:italic}
 .tres{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2.4vw,32px)}
 
 /* datos */
-.dato{border-top:2px solid var(--oro);padding-top:.7em}
-.dato .anio{font-family:var(--f-titulo);font-size:clamp(2rem,4.5vw,3.6rem);color:var(--oro);line-height:1}
-.dato p{font-size:clamp(1rem,1.7vw,1.3rem);line-height:1.4;margin:.4em 0 0}
+.fechas{display:grid;gap:clamp(10px,1.6vh,18px)}
+.dato{display:grid;grid-template-columns:minmax(0,5.2em) 1fr;gap:0 1em;align-items:baseline;border-top:2px solid var(--oro);padding-top:.35em;font-size:var(--t-cuerpo)}
+.dato>*{min-width:0}
+.dato .anio{font-family:var(--f-titulo);font-size:1.2em;color:var(--oro);line-height:1;white-space:nowrap}
+.dato p{line-height:1.4;margin:0}
 
 /* estanterías */
 .estante h3{font-family:var(--f-maquina);font-size:clamp(1rem,1.7vw,1.3rem);text-transform:uppercase;letter-spacing:.12em;color:var(--oro);margin:0 0 .6em;border-bottom:1px solid rgba(244,241,234,.3);padding-bottom:.4em}
-.estante ul{list-style:none;margin:0;padding:0;font-size:clamp(1rem,1.8vw,1.35rem);line-height:1.6}
+.estante ul{list-style:none;margin:0;padding:0;font-size:var(--t-cuerpo);line-height:1.45}
 .estante li{text-align:left}
 
 /* cita */
@@ -78,24 +81,25 @@ em{font-style:italic}
 /* eclipse */
 .eclipse{width:clamp(120px,18vw,220px);aspect-ratio:1;border-radius:50%;background:var(--noche-2);box-shadow:0 0 0 4px #fff7d6,0 0 40px 12px rgba(255,214,120,.55),0 0 120px 40px rgba(255,190,80,.25);margin:0 auto 1.4em;max-width:100%}
 .profecia{font-family:var(--f-titulo);font-size:clamp(1.6rem,3.8vw,3.1rem);line-height:1.25;text-align:center;text-wrap:balance}
-.pregunta{font-family:var(--f-maquina);font-size:clamp(1rem,1.9vw,1.45rem);text-align:center;color:var(--cielo);margin-top:1.2em}
+.pregunta{font-family:var(--f-maquina);font-size:var(--t-cuerpo);text-align:center;color:var(--cielo);margin-top:1.2em}
 
 /* eclipse en Galicia */
-.soles{display:flex;flex-wrap:wrap;gap:clamp(16px,3vw,40px);justify-content:center}
+.soles{display:flex;flex-wrap:nowrap;gap:clamp(16px,3vw,40px);justify-content:center}
 .sol-caso{margin:0;text-align:center;display:grid;gap:.8em;justify-items:center}
-.sol-caso figcaption{font-size:clamp(.95rem,1.6vw,1.2rem);line-height:1.4}
-.sol{position:relative;width:clamp(100px,13vw,170px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff3c4,#ffb93c);box-shadow:0 0 30px 6px rgba(255,190,80,.5);overflow:hidden;max-width:100%}
+.sol-caso figcaption{font-size:calc(var(--t-cuerpo)*.85);line-height:1.3}
+.sol{position:relative;width:min(9vw,17vh,150px);min-width:70px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff3c4,#ffb93c);box-shadow:0 0 30px 6px rgba(255,190,80,.5);overflow:hidden;max-width:100%}
 .sol.total{background:#fff7d6;box-shadow:0 0 0 3px #fff7d6,0 0 40px 14px rgba(255,214,120,.6)}
 .luna{position:absolute;inset:0;border-radius:50%;background:var(--noche-2);transform:translateX(var(--x))}
 
 /* personajes */
-.personajes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:clamp(12px,1.8vw,22px)}
-.ficha-p{background:rgba(255,255,255,.06);border:1px solid rgba(95,192,234,.35);padding:clamp(12px,1.6vw,20px)}
-.ficha-p h3{font-family:var(--f-titulo);font-weight:400;font-size:clamp(1.4rem,2.5vw,2rem);margin:0 0 .25em;color:var(--oro)}
-.ficha-p p{margin:0;font-size:clamp(.95rem,1.55vw,1.2rem);line-height:1.4}
+.personajes{display:grid;gap:clamp(4px,.9vh,10px)}
+.ficha-p{display:grid;grid-template-columns:minmax(0,4.6em) 1fr;gap:0 1em;align-items:baseline;font-size:var(--t-cuerpo);border-bottom:1px solid rgba(95,192,234,.3);padding-bottom:clamp(3px,.7vh,8px)}
+.ficha-p>*{min-width:0}
+.ficha-p h3{font-family:var(--f-titulo);font-weight:400;font-size:1.15em;margin:0;color:var(--oro)}
+.ficha-p p{margin:0;line-height:1.25}
 
 /* teatro */
-.guion{background:var(--papel);color:var(--tinta);font-family:var(--f-maquina);padding:clamp(18px,2.6vw,32px);font-size:clamp(.95rem,1.6vw,1.25rem);line-height:1.55;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.guion{background:var(--papel);color:var(--tinta);font-family:var(--f-maquina);padding:clamp(16px,2.2vw,28px);font-size:calc(var(--t-cuerpo)*.82);line-height:1.45;box-shadow:0 18px 40px rgba(0,0,0,.35)}
 .guion .acot{font-style:italic;color:#6a4a2f}
 .guion .nom{font-weight:700;letter-spacing:.06em}
 .guion .nota{display:block;font-family:var(--f-texto);font-size:.8em;color:var(--tinta-suave);margin-top:.9em;border-top:1px dashed #b9b2a3;padding-top:.6em;text-align:justify}
@@ -103,10 +107,10 @@ em{font-style:italic}
 .temas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(12px,2vw,24px)}
 .tema{border-left:4px solid var(--cielo);padding:.2em 0 .2em 1em}
 .tema h3{font-family:var(--f-maquina);font-size:clamp(1.05rem,1.9vw,1.45rem);margin:0 0 .2em;color:var(--claro)}
-.tema p{margin:0;font-size:clamp(.95rem,1.6vw,1.2rem);line-height:1.4;color:#d5d8f0}
+.tema p{margin:0;font-size:var(--t-cuerpo);line-height:1.35;color:#d5d8f0}
 
 .preguntas{list-style:none;margin:0;padding:0;display:grid;gap:clamp(10px,1.6vw,18px);counter-reset:q}
-.preguntas li{counter-increment:q;display:grid;grid-template-columns:auto 1fr;gap:1em;align-items:baseline;font-size:clamp(1.1rem,2.1vw,1.65rem);line-height:1.35}
+.preguntas li{counter-increment:q;display:grid;grid-template-columns:auto 1fr;gap:1em;align-items:baseline;font-size:var(--t-cuerpo);line-height:1.35}
 .preguntas li::before{content:counter(q);font-family:var(--f-titulo);color:var(--oro);font-size:1.4em;line-height:1}
 
 .boton{display:inline-block;margin-top:1.4em;font-family:var(--f-maquina);font-weight:700;font-size:clamp(1rem,1.8vw,1.35rem);background:var(--oro);color:var(--noche-2);padding:.7em 1.4em;text-decoration:none;box-shadow:4px 4px 0 var(--cielo)}
@@ -158,12 +162,12 @@ em{font-style:italic}
 <section class="slide">
   <p class="etiqueta">Su trayectoria</p>
   <h2>Algunas fechas importantes</h2>
-  <div class="tres">
-    <div class="dato"><div class="anio">2010</div><p>Finalista del <strong>Premio Nadal</strong> con <em>La edad de la ira</em>, una novela sobre la vida en un instituto que después se convirtió en obra de teatro y en serie de televisión.</p></div>
+  <div class="fechas">
+    <div class="dato"><div class="anio">2010</div><p>Finalista del <strong>Premio Nadal</strong> con <em>La edad de la ira</em>, novela sobre la vida en un instituto que después fue obra de teatro y serie de televisión.</p></div>
     <div class="dato"><div class="anio">2020</div><p>Gana el <strong>Premio Gran Angular</strong>, uno de los más importantes de literatura juvenil, con <em>La versión de Eric</em>.</p></div>
-    <div class="dato"><div class="anio">2022-23</div><p>Recibe los premios <strong>Triángulo Cultura</strong> y <strong>Arcoíris</strong> por su compromiso social: escribe historias sobre la diversidad, también la LGTBI, que casi nunca aparecían en los libros.</p></div>
+    <div class="dato"><div class="anio">2022-23</div><p>Recibe los premios <strong>Triángulo Cultura</strong> y <strong>Arcoíris</strong> por su compromiso social: da voz a la diversidad, también la LGTBI, que casi nunca aparecía en los libros.</p></div>
   </div>
-  <div class="texto" style="margin-top:1.4em"><p>En sus libros habla de temas que importan a los adolescentes: la amistad, el acoso escolar, la inclusión, las redes sociales y el derecho a ser quien eres. Muchos lectores encuentran en sus páginas <strong>experiencias parecidas a las suyas</strong>.</p></div>
+  <div class="texto" style="margin-top:.9em"><p>Sus libros hablan de lo que importa a los adolescentes: la amistad, el acoso escolar, la inclusión, las redes sociales y el derecho a ser quien eres.</p></div>
 </section>
 
 <!-- 4 OBRAS -->
@@ -210,10 +214,10 @@ em{font-style:italic}
 <section class="slide obra">
   <p class="etiqueta">¿Os acordáis?</p>
   <h2>12 de agosto de 2026: el eclipse en Galicia</h2>
-  <div class="dos" style="align-items:center">
+  <div class="dos" style="align-items:center;grid-template-columns:1fr 1.15fr">
     <div class="soles">
-      <figure class="sol-caso"><div class="sol"><div class="luna" style="--x:3%"></div></div><figcaption><strong>Vigo y el sur</strong><br>Sol tapado al 99,4 %<br>Máximo a las 20:30</figcaption></figure>
-      <figure class="sol-caso"><div class="sol total"><div class="luna" style="--x:0%"></div></div><figcaption><strong>A Coruña y Lugo</strong><br>Eclipse total<br>Más de 1 minuto de «noche»</figcaption></figure>
+      <figure class="sol-caso"><div class="sol"><div class="luna" style="--x:3%"></div></div><figcaption><strong>Vigo y el sur</strong><br>99,4 % tapado<br>Máximo: 20:30</figcaption></figure>
+      <figure class="sol-caso"><div class="sol total"><div class="luna" style="--x:0%"></div></div><figcaption><strong>A Coruña y Lugo</strong><br>Eclipse total<br>+1 min de «noche»</figcaption></figure>
     </div>
     <div class="texto">
       <p>Este verano, al atardecer, la Luna tapó el Sol sobre Galicia. En el sur casi por completo; en el norte, del todo. Se hizo de noche durante unos segundos en pleno día de agosto.</p>
@@ -250,12 +254,12 @@ em{font-style:italic}
 <section class="slide obra">
   <p class="etiqueta">Cómo se lee una obra de teatro</p>
   <h2>No es una novela: es un texto para representar</h2>
-  <div class="dos">
+  <div class="dos" style="grid-template-columns:.8fr 1.2fr;align-items:start">
     <div class="guion">
       <span class="acot">Martes por la tarde. Dani reparte unas gafas de cartón.</span><br>
       <span class="nom">DANI.</span> — ¿Y si os digo que el sábado va a pasar algo que no habéis visto nunca?<br>
       <span class="nom">CELIA.</span> — Si es un secreto, ya sabes que no me lo puedes contar.
-      <span class="nota">Ejemplo inventado para ver las partes. En cursiva, la acotación. Delante de cada intervención, el nombre del personaje.</span>
+      <span class="nota">Ejemplo inventado. En cursiva, la acotación; en negrita, quién habla.</span>
     </div>
     <div class="texto">
       <p><strong>Diálogo:</strong> lo que dicen los personajes (texto principal).</p>
