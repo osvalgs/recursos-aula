@@ -91,6 +91,12 @@ td.j{text-align:justify}
 .tabs button.sel{border-color:var(--eje);background:var(--eje);color:var(--paper)}
 .meaning{min-height:5.2em;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:.2em}
 .meaning .w1{font-family:var(--display);font-weight:800;font-size:1.6em;color:var(--eje)}
+.word button.ko{color:var(--ko);border-bottom-color:var(--ko);background:var(--ko-soft)}
+.meaning.alarm{background:var(--ko-soft);border:2px solid var(--ko);animation:shake .45s}
+.meaning .w1.bad{color:var(--ko)}
+.meaning .why{text-align:justify;max-width:100%}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:reduce){.meaning.alarm{animation:none}}
 .meaning .ej{font-style:italic;color:var(--muted)}
 
 /* chips nombres */
@@ -161,7 +167,7 @@ td.j{text-align:justify}
 <!-- 2 INTRO -->
 <section class="slide eje">
   <div class="band"><span class="tag">Para empezar</span><h2>Una rayita que lo cambia todo</h2></div>
-  <p class="enun">Pulsa una vocal para ponerle la tilde (o quitársela). Descubre cuántas palabras distintas se esconden detrás de las mismas letras.</p>
+  <p class="enun">Pulsa una vocal para ponerle la tilde (o quitársela). Descubre cuántas palabras distintas se esconden detrás de las mismas letras. Si pones la tilde donde no puede ir, saltará la alarma.</p>
   <div class="tabs" id="introTabs"></div>
   <div class="word" id="introWord"></div>
   <div class="meaning card" id="introMean"></div>
@@ -470,11 +476,11 @@ td.j{text-align:justify}
 
   // INTRO
   const intro=[
-    {base:'termino',f:{'1':['término','Sustantivo: final, fin de algo.','Llegamos al término del viaje.'],'-1':['termino','Verbo terminar, yo, ahora (presente).','Yo termino los deberes en cinco minutos.'],'6':['terminó','Verbo terminar, él o ella, ayer (pasado).','Ayer terminó la serie.']}},
-    {base:'celebre',f:{'1':['célebre','Adjetivo: famoso.','Es un cantante célebre.'],'-1':['celebre','Verbo celebrar (presente de subjuntivo).','Quiero que mi hermana celebre su cumpleaños.'],'6':['celebré','Verbo celebrar, yo, pasado.','Celebré mi cumpleaños en la playa.']}},
-    {base:'publico',f:{'1':['público','Sustantivo: las personas que asisten a un espectáculo.','El público aplaudió sin parar.'],'-1':['publico','Verbo publicar, yo, presente.','Publico un vídeo cada semana.'],'6':['publicó','Verbo publicar, él o ella, pasado.','Publicó una foto ayer.']}},
-    {base:'animo',f:{'0':['ánimo','Sustantivo: energía, valor.','¡Ánimo, que tú puedes!'],'-1':['animo','Verbo animar, yo, presente.','Siempre animo a mi equipo.'],'4':['animó','Verbo animar, él o ella, pasado.','Mi amiga me animó a presentarme.']}},
-    {base:'papa',f:{'-1':['papa','Sustantivo: patata (o el Papa de Roma).','Me encanta la tortilla de papas.'],'3':['papá','Sustantivo: padre.','Mi papá cocina genial.']}}
+    {base:'termino',bad:{'4':['termíno','No puede llevar tilde en la <b>i</b>: con la fuerza en <b>-mi-</b>, la palabra es <b>llana</b> (ter-<b>mi</b>-no) y <b>acaba en vocal</b>, y las llanas acabadas en vocal no llevan tilde. Se escribe <b>termino</b>, 1.ª persona del singular del presente de indicativo del verbo <em>terminar</em>: <em>yo termino</em>.']},f:{'1':['término','Sustantivo: final, fin de algo.','Llegamos al término del viaje.'],'-1':['termino','Verbo terminar, yo, ahora (presente).','Yo termino los deberes en cinco minutos.'],'6':['terminó','Verbo terminar, él o ella, ayer (pasado).','Ayer terminó la serie.']}},
+    {base:'celebre',bad:{'3':['celébre','No puede llevar tilde en la segunda <b>e</b>: con la fuerza en <b>-le-</b>, la palabra es <b>llana</b> (ce-<b>le</b>-bre) y <b>acaba en vocal</b>, y las llanas acabadas en vocal no llevan tilde. Se escribe <b>celebre</b>, 1.ª o 3.ª persona del singular del presente de subjuntivo del verbo <em>celebrar</em>: <em>que yo celebre</em>.']},f:{'1':['célebre','Adjetivo: famoso.','Es un cantante célebre.'],'-1':['celebre','Verbo celebrar (presente de subjuntivo).','Quiero que mi hermana celebre su cumpleaños.'],'6':['celebré','Verbo celebrar, yo, pasado.','Celebré mi cumpleaños en la playa.']}},
+    {base:'publico',bad:{'4':['publíco','No puede llevar tilde en la <b>i</b>: con la fuerza en <b>-bli-</b>, la palabra es <b>llana</b> (pu-<b>bli</b>-co) y <b>acaba en vocal</b>, y las llanas acabadas en vocal no llevan tilde. Se escribe <b>publico</b>, 1.ª persona del singular del presente de indicativo del verbo <em>publicar</em>: <em>yo publico</em>.']},f:{'1':['público','Sustantivo: las personas que asisten a un espectáculo.','El público aplaudió sin parar.'],'-1':['publico','Verbo publicar, yo, presente.','Publico un vídeo cada semana.'],'6':['publicó','Verbo publicar, él o ella, pasado.','Publicó una foto ayer.']}},
+    {base:'animo',bad:{'2':['anímo','No puede llevar tilde en la <b>i</b>: con la fuerza en <b>-ni-</b>, la palabra es <b>llana</b> (a-<b>ni</b>-mo) y <b>acaba en vocal</b>, y las llanas acabadas en vocal no llevan tilde. Se escribe <b>animo</b>, 1.ª persona del singular del presente de indicativo del verbo <em>animar</em>: <em>yo animo</em>.']},f:{'0':['ánimo','Sustantivo: energía, valor.','¡Ánimo, que tú puedes!'],'-1':['animo','Verbo animar, yo, presente.','Siempre animo a mi equipo.'],'4':['animó','Verbo animar, él o ella, pasado.','Mi amiga me animó a presentarme.']}},
+    {base:'papa',bad:{'1':['pápa','No puede llevar tilde en la primera <b>a</b>: con la fuerza en <b>pa-</b>, la palabra es <b>llana</b> (<b>pa</b>-pa) y <b>acaba en vocal</b>, y las llanas acabadas en vocal no llevan tilde. Se escribe <b>papa</b>: «patata» o el jefe de la Iglesia católica (<em>el Papa</em>).']},f:{'-1':['papa','Sustantivo: patata (o el Papa de Roma).','Me encanta la tortilla de papas.'],'3':['papá','Sustantivo: padre.','Mi papá cocina genial.']}}
   ];
   let iw=0, isel=-1;
   const tabs=document.getElementById('introTabs');
@@ -484,7 +490,15 @@ td.j{text-align:justify}
     const w=intro[iw];
     renderWord(document.getElementById('introWord'),w.base,isel,i=>{isel=i;drawIntro();});
     const m=document.getElementById('introMean'), r=w.f[String(isel)];
-    m.innerHTML=r?`<div class="w1">${r[0]}</div><div>${r[1]}</div><div class="ej">${r[2]}</div>`:`<div class="w1">${[...w.base].map((c,i)=>i===isel?ACC[c]:c).join('')}</div><div>Esa palabra no existe en español. ¡Prueba con otra vocal!</div>`;
+    m.classList.remove('alarm');
+    if(r){m.innerHTML=`<div class="w1">${r[0]}</div><div>${r[1]}</div><div class="ej">${r[2]}</div>`;}
+    else{
+      const b=w.bad&&w.bad[String(isel)];
+      const fake=[...w.base].map((c,i)=>i===isel?ACC[c]:c).join('');
+      void m.offsetWidth; m.classList.add('alarm');
+      const btn=document.querySelector('#introWord button.on'); if(btn)btn.classList.add('ko');
+      m.innerHTML=`<div class="w1 bad">⚠ ¡Alto! «${fake}» con tilde en la ${ACC[w.base[isel]]} no es posible</div><div class="why">${b?b[1]:'Esa palabra no existe en español. ¡Prueba con otra vocal!'}</div>`;
+    }
   }
   drawIntro();
 
