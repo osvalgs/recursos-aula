@@ -1,6 +1,9 @@
 /* Recursos de aula · motor de páginas */
 (function(){
-const DATA=window.RECURSOS, NEW=window.NUEVOS||[], PAGE=window.PAGE||{mode:'home',root:''};
+const HID=window.OCULTOS||[], SHOWALL=/[?&]ver=todo\b/.test(location.search);
+const isHidden=h=>!SHOWALL&&HID.some(x=>h===x||(x.endsWith('/')&&h.startsWith(x)));
+function prune(n){if(n.h)return isHidden(n.h)?null:n;const c=n.c.map(prune).filter(Boolean);return c.length?{n:n.n,c}:null}
+const DATA=(window.RECURSOS||[]).map(prune).filter(Boolean), NEW=window.NUEVOS||[], PAGE=window.PAGE||{mode:'home',root:''};
 const ROOT=PAGE.root||'';
 const CATS={
  '01. ESO':{name:'ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º y 2.º de ESO.'},
@@ -61,7 +64,7 @@ function groupHTML(g,ctx){return `<div class="group"><h3>${g.path.length?g.path.
 function stat(b,s){return `<div class="stat"><b>${b}</b><small>${s}</small></div>`}
 const app=document.getElementById('app');let html='';
 if(PAGE.mode==='course'){
- const cat=DATA.find(c=>c.n===PAGE.key);const I=info(cat);let gs=groups(cat,[],[]);
+ const cat=DATA.find(c=>c.n===PAGE.key)||{n:PAGE.key,c:[]};const I=info(cat);let gs=groups(cat,[],[]);
  // quitar el primer nivel si todos los grupos lo comparten (p. ej. «1º y 2º»)
  document.documentElement.style.setProperty('--cc',`var(${I.col})`);document.title=I.name+' · Recursos de aula';
  html+=`<header class="coursehead"><div class="hero"><div><a class="back" href="${ROOT}index.html">← Todos los recursos</a><br><span class="kicker">Recursos de aula · Lengua y Literatura</span><h1>${I.name}</h1><p class="lead">${I.desc}</p><div class="stats">${stat(count(cat),'recursos')}${stat(gs.length,gs.length===1?'apartado':'apartados')}</div></div>

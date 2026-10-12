@@ -432,3 +432,11 @@ window.RECURSOS=[
  }
 ];
 window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"];
+
+/* Recursos OCULTOS: no aparecen ni en la portada ni en la página del curso.
+   Se puede ocultar un archivo concreto o una carpeta entera (terminada en «/»).
+   Para volver a mostrarlo, basta con borrar su línea.
+   Para verlo todo como profesor, añade ?ver=todo al final de la dirección. */
+window.OCULTOS=[
+ '01_ESO/1_Y_2/ACTIVIDADES/',
+];
