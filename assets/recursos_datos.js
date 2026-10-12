@@ -439,4 +439,5 @@ window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"];
    Para verlo todo como profesor, añade ?ver=todo al final de la dirección. */
 window.OCULTOS=[
  '01_ESO/1_Y_2/ACTIVIDADES/',
+ '01_ESO/1_Y_2/PRESENTACIONES/presentacion_genero_lirico.html',
 ];
