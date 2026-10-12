@@ -1,0 +1,434 @@
+/* Listado de recursos: para añadir uno, se incluye aquí */
+window.RECURSOS=[
+ {
+  "n": "01. ESO",
+  "c": [
+   {
+    "n": "1º Y 2º",
+    "c": [
+     {
+      "n": "ACTIVIDADES",
+      "c": [
+       {
+        "n": "SINTAXIS",
+        "c": [
+         {
+          "t": "Soluciones ejercicios lenguas",
+          "h": "01_ESO/1_Y_2/ACTIVIDADES/SINTAXIS/soluciones_ejercicios_lenguas.html"
+         },
+         {
+          "t": "Sujeto complementos 1",
+          "h": "01_ESO/1_Y_2/ACTIVIDADES/SINTAXIS/sujeto_complementos_1.html"
+         },
+         {
+          "t": "Sujeto complementos todos",
+          "h": "01_ESO/1_Y_2/ACTIVIDADES/SINTAXIS/sujeto_complementos_todos.html"
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "n": "PRESENTACIONES",
+      "c": [
+       {
+        "t": "Presentación lenguas del mundo",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html"
+       },
+       {
+        "t": "Presentación lenguas de España",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html"
+       },
+       {
+        "t": "Presentación comunicación",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"
+       },
+       {
+        "t": "Presentación Nando López y libro",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_nando_lopez_libro.html"
+       },
+       {
+        "t": "Presentación género lírico",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_genero_lirico.html"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "n": "02. BACH",
+  "c": [
+   {
+    "n": "1º BACH LITERATURA",
+    "c": [
+     {
+      "n": "UNIDADES DIDÁCTICAS",
+      "c": [
+       {
+        "t": "Unidad Cervantes y Quijote",
+        "h": "02_BACH/1_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_cervantes_quijote.html"
+       },
+       {
+        "t": "Unidad literatura barroca",
+        "h": "02_BACH/1_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_literatura_barroca.html"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "n": "1º Y 2º BACH LENGUA",
+    "c": [
+     {
+      "n": "ACTIVIDADES",
+      "c": [
+       {
+        "t": "Actividades análisis verbos",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_analisis_verbos.html"
+       },
+       {
+        "t": "Actividades cláusulas se",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_clausulas_se.html"
+       },
+       {
+        "t": "Actividades elaboración textos oraciones compuestas",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_elaboracion_textos_oraciones_compuestas.html"
+       },
+       {
+        "t": "Actividades elaboración textos oraciones compuestas e impersonales",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_elaboracion_textos_oraciones_compuestas_e_impersonales.html"
+       },
+       {
+        "t": "Actividades funciones sintácticas frase y cláusula",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_funciones_sintacticas_frase_y_clausula.html"
+       },
+       {
+        "t": "Actividades palabras escritura dudosa",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_palabras_escritura_dudosa.html"
+       },
+       {
+        "t": "Actividades que quien cuando etc.",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_que_quien_cuando_etc.html"
+       },
+       {
+        "t": "Actividades unidades funciones sintácticas texto",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/ACTIVIDADES/actividades_unidades_funciones_sintacticas_texto.html"
+       }
+      ]
+     },
+     {
+      "n": "PRESENTACIONES",
+      "c": [
+       {
+        "t": "Presentación sub adj",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/PRESENTACIONES/presentacion_sub_adj.html"
+       },
+       {
+        "t": "Presentación oraciones compuestas",
+        "h": "02_BACH/1_Y_2_BACH_LENGUA/PRESENTACIONES/presentacion_oraciones_compuestas.html"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "n": "2º BACH LITERATURA",
+    "c": [
+     {
+      "n": "UNIDADES DIDÁCTICAS",
+      "c": [
+       {
+        "t": "Unidad fundación",
+        "h": "02_BACH/2_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_fundacion.html"
+       },
+       {
+        "t": "Unidad narrativa hispanoamericana",
+        "h": "02_BACH/2_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_narrativa_hispanoamericana.html"
+       },
+       {
+        "t": "Unidad narrativa peninsular 1975",
+        "h": "02_BACH/2_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_narrativa_peninsular_1975.html"
+       },
+       {
+        "t": "Unidad teatro 1936-1975",
+        "h": "02_BACH/2_BACH_LITERATURA/UNIDADES_DIDACTICAS/unidad_teatro_1936-1975.html"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "n": "03. FPB",
+  "c": [
+   {
+    "n": "ACTIVIDADES",
+    "c": [
+     {
+      "t": "Taller semana1",
+      "h": "03_FPB/ACTIVIDADES/taller-semana1.html"
+     },
+     {
+      "t": "Actividad rock y coches",
+      "h": "03_FPB/ACTIVIDADES/rock_and_road_dream_cars.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "n": "04. PDC",
+  "c": [
+   {
+    "n": "ACTIVIDADES",
+    "c": [
+     {
+      "t": "Expediente historia geografía",
+      "h": "04_PDC/ACTIVIDADES/expediente_historia_geografia.html"
+     },
+     {
+      "t": "Ejercicios tipos de frases",
+      "h": "04_PDC/ACTIVIDADES/ejercicios_tipos_frases.html"
+     },
+     {
+      "t": "Reto substantivo: xénero, número e clasificación semántica",
+      "h": "04_PDC/ACTIVIDADES/reto_substantivo_xenero_numero_clasificacion_semantica.html"
+     }
+    ]
+   },
+   {
+    "n": "PRESENTACIONES",
+    "c": [
+     {
+      "n": "COMUNICACIÓN",
+      "c": [
+       {
+        "t": "Presentación radio textos orales",
+        "h": "04_PDC/PRESENTACIONES/COMUNICACIÓN/presentacion_radio_textos_orales.html"
+       }
+      ]
+     },
+     {
+      "n": "HISTORIA",
+      "c": [
+       {
+        "t": "Presentación introdución Idade Moderna",
+        "h": "04_PDC/PRESENTACIONES/HISTORIA/presentacion_introduccion_idade_moderna.html"
+       },
+       {
+        "t": "Presentación humanismo",
+        "h": "04_PDC/PRESENTACIONES/HISTORIA/presentacion_humanismo.html"
+       }
+      ]
+     },
+     {
+      "n": "LENGUA Y LITERATURA CASTELLANAS",
+      "c": [
+       {
+        "t": "Presentación lengua = sistema",
+        "h": "04_PDC/PRESENTACIONES/LENGUA_LITERATURA_CASTELLANAS/presentacion_lengua_sistema.html"
+       },
+       {
+        "t": "Presentación clases de palabras",
+        "h": "04_PDC/PRESENTACIONES/LENGUA_LITERATURA_CASTELLANAS/presentacion_clases_palabras.html"
+       },
+       {
+        "t": "Presentación tilde",
+        "h": "04_PDC/PRESENTACIONES/LENGUA_LITERATURA_CASTELLANAS/presentacion_tilde.html"
+       }
+      ]
+     },
+     {
+      "n": "LINGUA E LITERATURA GALEGAS",
+      "c": [
+       {
+        "t": "Presentación tipos de palabras (substantivo e adxectivo)",
+        "h": "04_PDC/PRESENTACIONES/LINGUA_LITERATURA_GALEGAS/presentacion_tipos_palabras_substantivo_adxectivo.html"
+       }
+      ]
+     },
+     {
+      "n": "XEOGRAFÍA",
+      "c": [
+       {
+        "t": "Presentación estudo poboación",
+        "h": "04_PDC/PRESENTACIONES/XEOGRAFÍA/presentacion_estudo_poboacion.html"
+       },
+       {
+        "t": "Presentación distribución poboación",
+        "h": "04_PDC/PRESENTACIONES/XEOGRAFÍA/presentacion_distribucion_poboacion.html"
+       },
+       {
+        "t": "Presentación evolución poboación",
+        "h": "04_PDC/PRESENTACIONES/XEOGRAFÍA/presentacion_evolucion_poboacion.html"
+       }
+      ]
+     },
+     {
+      "t": "Presentación PDC",
+      "h": "04_PDC/PRESENTACIONES/presentacion_pdc.html"
+     },
+     {
+      "t": "Presentación familias 3º ESO PDC",
+      "h": "04_PDC/PRESENTACIONES/presentacion_tutoria_3eso_pdc.html"
+     }
+    ]
+   },
+   {
+    "n": "TUTORÍAS",
+    "c": [
+     {
+      "t": "Tutoría experimentos cerebro",
+      "h": "04_PDC/TUTORÍAS/tutoria_experimentos_cerebro.html"
+     }
+    ]
+   },
+   {
+    "t": "Repartición Ámbito Lingüístico e Social",
+    "h": "04_PDC/reparticion_ambito_linguistico_social_3eso_pdc.html"
+   }
+  ]
+ },
+ {
+  "n": "ACTIVIDADES LÚDICAS",
+  "c": [
+   {
+    "n": "BANDERAS",
+    "c": [
+     {
+      "t": "Atlas Oculto",
+      "h": "ACTIVIDADES_LUDICAS/BANDERAS/atlas_oculto.html"
+     },
+     {
+      "t": "Bandera oculta FPB",
+      "h": "ACTIVIDADES_LUDICAS/BANDERAS/bandera_oculta_fpb.html"
+     },
+     {
+      "t": "Pasaporte de lenguas",
+      "h": "ACTIVIDADES_LUDICAS/BANDERAS/pasaporte_de_lenguas.html"
+     }
+    ]
+   },
+   {
+    "n": "BINGOS",
+    "c": [
+     {
+      "t": "Bingo ortográfico castellano ESO",
+      "h": "ACTIVIDADES_LUDICAS/BINGOS/bingo_ortografico_castellano_eso.html"
+     },
+     {
+      "t": "Bingo ortográfico mecánica FPB",
+      "h": "ACTIVIDADES_LUDICAS/BINGOS/bingo_ortografico_mecanica_fpb.html"
+     },
+     {
+      "t": "Bingo ortográfico inglés ESO",
+      "h": "ACTIVIDADES_LUDICAS/BINGOS/bingo_ortografico_ingles_eso.html"
+     },
+     {
+      "t": "Bingo ortográfico mecánica FPB inglés",
+      "h": "ACTIVIDADES_LUDICAS/BINGOS/bingo_ortografico_mecanica_fpb_ingles.html"
+     }
+    ]
+   },
+   {
+    "n": "PASATIEMPOS",
+    "c": [
+     {
+      "t": "Pasatiempos LCL 1 interactivo",
+      "h": "ACTIVIDADES_LUDICAS/PASATIEMPOS/pasatiempos_lcl_1_interactivo.html"
+     }
+    ]
+   },
+   {
+    "n": "SORTEOS",
+    "c": [
+     {
+      "t": "Ruleta aleatoria grupos o individual",
+      "h": "ACTIVIDADES_LUDICAS/SORTEOS/ruleta_aleatoria_grupos_o_individual.html"
+     }
+    ]
+   },
+   {
+    "n": "VOCABULARIO",
+    "c": [
+     {
+      "t": "Vocabulario 1",
+      "h": "ACTIVIDADES_LUDICAS/VOCABULARIO/vocabulario_1.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "n": "ACTIVIDADES PERSONAJES HISTÓRICOS",
+  "c": [
+   {
+    "t": "Expediente Turing",
+    "h": "ACTIVIDADES_PERSONAJES_HISTORICOS/expediente_turing.html"
+   },
+   {
+    "t": "Expediente Benz",
+    "h": "ACTIVIDADES_PERSONAJES_HISTORICOS/expediente_benz.html"
+   }
+  ]
+ },
+ {
+  "n": "PROYECTOS COMPETENCIALES",
+  "c": [
+   {
+    "n": "PROYECTO RADIO",
+    "c": [
+     {
+      "t": "Radio presentación",
+      "h": "PROYECTOS_COMPETENCIALES/PROYECTO_RADIO/radio_presentacion.html"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "n": "TALLERES Y TÉCNICAS DE ESTUDIO",
+  "c": [
+   {
+    "t": "Organización y pautas libreta y archivador 3º ESO - PDC",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/presentacion_organizacion_y_pautas_libreta_y_archivador_3_eso_pdc.html"
+   },
+   {
+    "t": "Organización y pautas libreta y archivador LCL ESO",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/presentacion_organizacion_y_pautas_libreta_y_archivador_lcl_eso.html"
+   },
+   {
+    "t": "EPL2R",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/epl2r.html"
+   },
+   {
+    "t": "Taller resumen Turing texto narrativo ESO",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/taller_resumen_turing_texto_narrativo_eso.html"
+   },
+   {
+    "t": "Taller resumen Earhart texto narrativo ESO",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/taller_resumen_earhart_texto_narrativo_eso.html"
+   },
+   {
+    "t": "Prompts comentario literario Quevedo",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/prompts_comentario_literario_quevedo.html"
+   },
+   {
+    "t": "Prompts resumen comentario",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/promts_resumen_comentario.html"
+   },
+   {
+    "t": "Taller comentario crítico",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/taller_comentario_critico.html"
+   },
+   {
+    "t": "Taller resumen texto argumentativo",
+    "h": "TALLERES_Y_TECNICAS_DE_ESTUDIO/taller_resumen_texto_argumentativo.html"
+   }
+  ]
+ }
+];
+window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"];
