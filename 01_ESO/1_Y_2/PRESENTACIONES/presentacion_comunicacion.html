@@ -408,6 +408,24 @@ body.blackout .nav,body.blackout #fs,body.blackout #mute,body.blackout #count,bo
 .coinexp{display:flex;flex-direction:column;gap:.8em}
 .ce{background:color-mix(in srgb,var(--cc) 18%,#fff);border-left:6px solid var(--cc);border-radius:14px;padding:.7em 1em}
 .ce b{font-family:'Bricolage Grotesque';font-size:1.15em}
+.arb{background:var(--violet-l);border-left:6px solid var(--violet);border-radius:14px;padding:.7em 1em;text-align:justify;line-height:1.5}
+.langs{display:flex;flex-wrap:wrap;gap:.5em;margin-top:.5em}
+.langs span{background:#fff;border-radius:20px;padding:.2em .8em;font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.nsgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1vw}
+@media (max-width:800px){.nsgrid{grid-template-columns:1fr 1fr}}
+.nscard{perspective:900px;cursor:pointer;aspect-ratio:1/1.05}
+.nsin{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s}
+.nscard.flip .nsin{transform:rotateY(180deg)}
+.nsf,.nsb{position:absolute;inset:0;border-radius:18px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;padding:.8em;text-align:center}
+.nsf{background:var(--peach-l);border:2px solid var(--peach)}
+.nsf span{font-weight:700;color:#b35a1f;font-size:.9em}
+.nsb{background:#fff;border:2px solid var(--peach);transform:rotateY(180deg)}
+.nsb b{font-family:'Bricolage Grotesque';font-size:1.2em;color:#b35a1f}
+.nsb p{font-size:.85em;line-height:1.35;text-align:center}
+.nsimg{width:70%}
+.nsemo{font-size:clamp(50px,7vw,90px);line-height:1}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:1vw}
+@media (max-width:800px){.cmp{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -433,7 +451,33 @@ body.blackout .nav,body.blackout #fs,body.blackout #mute,body.blackout #count,bo
       <div class="ce" style="--cc:var(--sky)"><b>🔤 Significante</b><p>Es la <b>forma</b>: los sonidos que pronunciamos (/k/ /a/ /s/ /a/) o las letras que escribimos (c-a-s-a).</p></div>
     </div>
   </div>
+  <div class="arb"><b>⚖️ El signo lingüístico es arbitrario.</b> No hay ninguna razón natural que una el significante con el significado: la palabra <i>casa</i> no se parece a una casa. Es una convención que compartimos los hablantes de una lengua. Por eso cada lengua usa un significante distinto para el mismo significado:
+    <div class="langs"><span>🇪🇸 casa</span><span>🇬🇧 house</span><span>🇫🇷 maison</span><span>🇩🇪 Haus</span><span>🇯🇵 いえ (ie)</span></div></div>
   <p class="fnote" style="margin-top:.4em">Por eso la comunicación <b>verbal</b> usa signos lingüísticos (palabras), mientras que la <b>no verbal</b> usa otros signos: gestos, imágenes, colores, sonidos…</p>
+</div></div>
+<div class="signmodal" id="nsignModal" onclick="if(event.target===this)closeNSign()"><div class="signcard">
+  <button class="ctxclose" style="color:var(--ink)" onclick="closeNSign()">✕</button>
+  <h2 style="font-size:1.7em">¿Y los signos no lingüísticos?</h2>
+  <p>Muchos de ellos <b>no son arbitrarios</b>: tienen una relación natural con lo que significan, porque <b>se parecen</b> a ello o <b>son una consecuencia</b> de ello. Por eso los entiende casi cualquier persona, hable la lengua que hable. Pulsa cada tarjeta.</p>
+  <div class="nsgrid">
+    <div class="nscard" onclick="this.classList.toggle('flip')"><div class="nsin">
+      <div class="nsf"><svg viewBox="0 0 120 100" class="nsimg"><path d="M14 52 L60 14 L106 52" fill="none" stroke="#b35a1f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><rect x="26" y="48" width="68" height="44" rx="3" fill="#fff4dc" stroke="#b35a1f" stroke-width="5"/><rect x="52" y="64" width="16" height="28" fill="#d9567a"/></svg><span>¿Qué significa?</span></div>
+      <div class="nsb"><b>Una casa</b><p>El dibujo <b>se parece</b> a lo que representa (es un <b>icono</b>). Lo entiende igual un español, un inglés o un japonés.</p></div></div></div>
+    <div class="nscard" onclick="this.classList.toggle('flip')"><div class="nsin">
+      <div class="nsf"><svg viewBox="0 0 120 100" class="nsimg"><circle cx="62" cy="14" r="9" fill="#2e86c9"/><path d="M62 26 L55 58 L40 92 M57 54 L76 92 M60 32 L82 50" stroke="#2e86c9" stroke-width="11" stroke-linecap="round" fill="none"/><path d="M84 52 L100 96" stroke="#2e86c9" stroke-width="4" stroke-linecap="round"/></svg><span>¿Qué significa?</span></div>
+      <div class="nsb"><b>Persona ciega</b><p>El pictograma del autobús <b>dibuja</b> a una persona con bastón. Su forma nos lleva directamente al significado.</p></div></div></div>
+    <div class="nscard" onclick="this.classList.toggle('flip')"><div class="nsin">
+      <div class="nsf"><svg viewBox="0 0 120 100" class="nsimg"><g fill="#9aa3ad" opacity=".85"><circle cx="58" cy="30" r="14"/><circle cx="72" cy="22" r="12"/><circle cx="64" cy="12" r="9"/><circle cx="52" cy="46" r="11"/></g><path d="M30 92 h60" stroke="#6b4a2b" stroke-width="7" stroke-linecap="round"/><path d="M44 86 L52 66 L60 82 L66 60 L76 86 Z" fill="#9aa3ad" opacity=".5"/></svg><span>¿Qué significa?</span></div>
+      <div class="nsb"><b>Hay fuego</b><p>El humo <b>es una consecuencia</b> del fuego (es un <b>indicio</b>). No lo ha decidido nadie: es una relación natural.</p></div></div></div>
+    <div class="nscard" onclick="this.classList.toggle('flip')"><div class="nsin">
+      <div class="nsf"><div class="nsemo">😭</div><span>¿Qué significa?</span></div>
+      <div class="nsb"><b>Tristeza</b><p>Las lágrimas y el gesto de la cara <b>imitan</b> cómo expresamos la tristeza en la realidad. Se reconoce en todo el mundo.</p></div></div></div>
+  </div>
+  <div class="cmp">
+    <div class="ce" style="--cc:var(--sky)"><b>🔤 Signo lingüístico</b><p><b>Arbitrario</b>: la palabra <i>casa</i> no se parece a una casa; hay que conocer la lengua para entenderla.</p></div>
+    <div class="ce" style="--cc:var(--peach)"><b>🖼️ Signo no lingüístico</b><p>Muchas veces <b>motivado</b>: se parece a lo que representa o es su consecuencia, y por eso se entiende sin saber la lengua.</p></div>
+  </div>
+  <p class="hint" style="text-align:justify">Ojo: algunos signos no lingüísticos también son convencionales y hay que aprenderlos, como los colores del semáforo o de las tarjetas de fútbol.</p>
 </div></div>
 <button class="ctxbtn" id="ctxBtn" onclick="openCtx()">📖 Contexto</button>
 <div class="ctxmodal" id="ctxModal" onclick="if(event.target===this)closeCtx()"><div class="ctxcard">
@@ -680,7 +724,7 @@ body.blackout .nav,body.blackout #fs,body.blackout #mute,body.blackout #count,bo
         </div>
       </div>
       <div class="clsnv">
-        <div class="clshead nv">🚦 No verbal: se usan signos no lingüísticos.</div>
+        <div class="clshead nv">🚦 No verbal: se usan <button class="signlink" onclick="openNSign()">signos no lingüísticos</button>.</div>
         <div class="clscard nv"><div class="bigic">👋</div><h3>Sin palabras</h3><p>Gestos, dibujos, colores, sonidos…</p><div class="exs"><span>🙆 Lenguaje corporal</span><span>🖼️ Imágenes</span><span>🔔 Sonidos…</span></div></div>
       </div>
     </div>
@@ -1071,10 +1115,12 @@ function loadYT(u){u=u||document.getElementById('ytUrl').value.trim();const id=y
 
 /* contexto */
 function openSign(){const c=document.getElementById('coin');c.classList.remove('flip');document.getElementById('signModal').classList.add('open')}
+function openNSign(){document.querySelectorAll('.nscard').forEach(c=>c.classList.remove('flip'));document.getElementById('nsignModal').classList.add('open')}
+function closeNSign(){document.getElementById('nsignModal').classList.remove('open')}
 function closeSign(){document.getElementById('signModal').classList.remove('open')}
 function openCtx(){document.getElementById('ctxModal').classList.add('open')}
 function closeCtx(){document.getElementById('ctxModal').classList.remove('open')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();closeSign()}},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();closeSign();closeNSign()}},true);
 /* elementos */
 const DEFS={emi:['Emisor','Persona que emite el mensaje.','Marisa, que llama a su nieto; el profesor que explica la lección; tú, cuando mandas un wasap.'],
  rec:['Receptor','Persona que recibe el mensaje.','Diego, que contesta al teléfono; los alumnos que escuchan; el amigo que lee tu wasap.'],
