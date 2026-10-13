@@ -8,7 +8,12 @@ const ROOT=PAGE.root||'';
 /* Modo alumnado: con ?alumnado en la dirección no aparece el enlace a «Todos los recursos» */
 const ALUM=/[?&]alumnado\b/.test(location.search);
 const CATS={
- '01. ESO':{name:'ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º y 2.º de ESO.'},
+ '01. ESO':{name:'ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º y 2.º de ESO.',
+   layout:{apartados:[
+    {titulo:'Tema Lenguaje y lenguas. Lenguas de España',icon:'🗺️',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html']},
+    {titulo:'Tema Comunicación',icon:'💬',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html']},
+    {titulo:'Obras de lectura',icon:'📚',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_nando_lopez_libro.html']}],
+    quitar:['1º y 2º','Presentaciones']}},
  '02. BACH':{name:'Bachillerato',icon:'🎓',col:'--c2',desc:'Unidades didácticas, actividades y presentaciones de Lengua y Literatura para Bachillerato.'},
  '03. FPB':{name:'FP Básica',icon:'🔧',col:'--c3',desc:'Actividades y talleres para FP Básica.'},
  '04. PDC':{name:'PDC · Diversificación',icon:'🧭',col:'--c4',desc:'Materiales del Ámbito Lingüístico y Social de 3.º ESO PDC: presentaciones, actividades y tutorías.',
@@ -33,6 +38,14 @@ function kind(h){const f=h.split('/').pop().toLowerCase();
 function groups(node,path,out){const files=node.c.filter(c=>c.h);if(files.length)out.push({path,files});node.c.filter(c=>c.c).forEach(c=>groups(c,path.concat(nice(c.n)),out));return out}
 const count=n=>n.h?1:n.c.reduce((a,c)=>a+count(c),0);
 const info=c=>CATS[c.n]||{name:nice(c.n),icon:'📁',col:'--c1',desc:''};
+/* Organización a medida de un apartado: apartados con archivos concretos, niveles que se quitan, orden de materias */
+function ordenar(gs,L){let out=[];
+ (L.apartados||[]).forEach(a=>{const fs=[];a.archivos.forEach(h=>gs.forEach(g=>{const i=g.files.findIndex(x=>x.h===h);if(i>-1)fs.push(g.files.splice(i,1)[0])}));if(fs.length)out.push({path:[a.titulo],files:fs,ic:a.icon})});
+ gs=gs.filter(g=>g.files.length);
+ if(L.quitar){const m=new Map();gs.forEach(g=>{const p=g.path.filter(x=>!L.quitar.includes(x));const k=p.join(' › ');if(m.has(k))m.get(k).files.push(...g.files);else m.set(k,{path:p,files:g.files.slice()})});gs=[...m.values()]}
+ const MAT=L.materias;if(MAT){const o=Object.keys(MAT);const r=g=>{const i=o.indexOf(g.path[g.path.length-1]);return i<0?99:i};gs.sort((a,b)=>r(a)-r(b));gs.forEach(g=>g.ic=MAT[g.path[g.path.length-1]]||'📁')}
+ if(L.apartados)gs.forEach(g=>g.ic=g.ic||'📁');
+ return out.concat(gs)}
 const HERO=`<svg viewBox="0 0 420 320" aria-hidden="true">
       <defs><linearGradient id="pg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#eef3f7"/></linearGradient></defs>
       <ellipse cx="210" cy="292" rx="170" ry="16" fill="#000" opacity=".15"/>
@@ -81,23 +94,20 @@ if(PAGE.mode==='course'){
   else{const sel=gs.filter(g=>g.path[0]===d.carpeta);gs=gs.filter(g=>g.path[0]!==d.carpeta);const fs=[].concat(...sel.map(g=>g.files));if(!fs.length)return;
    top+=`<div class="feature f-${d.tipo}" id="d${k}"><div class="fhead"><span class="fic">${d.icon}</span><span><b>${d.titulo}</b><small>${d.sub||''}</small></span></div><div class="grid">${fs.map(f=>card(f,'',I.name+' '+d.titulo)).join('')}</div></div>`}
   topChips.push(`<a class="chip" style="--cc:var(${I.col})" href="#d${k}">${d.titulo.split(' ')[0]}</a>`)});
- // quitar niveles intermedios (p. ej. «Presentaciones») y juntar apartados iguales
- if(L.quitar){const m=new Map();gs.forEach(g=>{const p=g.path.filter(x=>!L.quitar.includes(x));const k=p.join(' › ');if(m.has(k))m.get(k).files.push(...g.files);else m.set(k,{path:p,files:g.files.slice()})});gs=[...m.values()]}
- // materias en el orden indicado
- const MAT=L.materias||null;if(MAT){const o=Object.keys(MAT);const r=g=>{const i=o.indexOf(g.path[g.path.length-1]);return i<0?99:i};gs.sort((a,b)=>r(a)-r(b))}
+ gs=ordenar(gs,L);
  // quitar el primer nivel si todos los grupos lo comparten (p. ej. «1º y 2º»)
  document.documentElement.style.setProperty('--cc',`var(${I.col})`);document.title=I.name+' · Recursos de aula';
  html+=`<header class="coursehead"><div class="hero"><div>${ALUM?'':`<a class="back" href="${ROOT}index.html">← Todos los recursos</a><br>`}<span class="kicker">Recursos de aula · Lengua y Literatura</span><h1>${I.name}</h1><p class="lead">${I.desc}</p><div class="stats">${stat(count(cat),'recursos')}${stat(gs.length,gs.length===1?'apartado':'apartados')}</div></div>
  <div class="bigicon"><div class="disc"></div><div class="disc2"></div><span class="orb float" style="width:22px;height:22px;top:10%;right:16%"></span><span class="orb float2" style="width:14px;height:14px;bottom:14%;left:12%"></span><span class="orb float" style="width:10px;height:10px;top:30%;left:6%;background:#fff"></span><span class="emo float">${I.icon}</span></div></div>${WAVE}</header>`;
  html+=`<div class="toolbar"><div class="searchrow"><label class="search">🔎<input id="q" type="search" placeholder="Buscar en ${I.name}…" autocomplete="off"></label><span id="count"></span></div><nav class="chips">${topChips.join('')}${gs.map((g,i)=>`<a class="chip" style="--cc:var(${I.col})" href="#g${i}">${g.path.length?g.path[g.path.length-1]:'General'}</a>`).join('')}</nav></div>`;
- html+=`<main><section class="cat" style="--cc:var(${I.col})">${top}${gs.map((g,i)=>groupHTML(g,I.name,MAT&&(MAT[g.path[g.path.length-1]]||'📁')).replace('<div class="group">',`<div class="group" id="g${i}" style="scroll-margin-top:130px">`)).join('')}</section></main>`;
+ html+=`<main><section class="cat" style="--cc:var(${I.col})">${top}${gs.map((g,i)=>groupHTML(g,I.name,g.ic).replace('<div class="group">',`<div class="group" id="g${i}" style="scroll-margin-top:130px">`)).join('')}</section></main>`;
 }else{
  let total=DATA.reduce((a,c)=>a+count(c),0);
  html+=`<header><div class="hero"><div><span class="kicker">Lengua y Literatura · Materiales interactivos</span><h1>Recursos <span>de aula</span></h1><p class="lead">Presentaciones, actividades, unidades didácticas, talleres y juegos para trabajar en clase y repasar en casa. Elige tu curso o busca directamente lo que necesitas.</p><div class="stats">${stat(total,'recursos')}${stat(DATA.length,'apartados')}${stat('100&nbsp;%','interactivos')}</div></div>${HERO}</div>${WAVE}</header>`;
  html+=`<div class="toolbar"><div class="searchrow"><label class="search">🔎<input id="q" type="search" placeholder="Buscar un recurso: «sintaxis», «Turing», «bingo»…" autocomplete="off"></label><span id="count"></span></div></div>`;
  html+=`<main><div id="coursesBlock"><h2 class="sectiontitle">Elige tu curso o apartado</h2><div class="courses">${DATA.map(c=>{const I=info(c);const n=count(c);return `<a class="course" style="--cc:var(${I.col})" href="${folderOf(c)}/index.html"><span class="arrow">↗</span><span class="ci">${I.icon}</span><h3>${I.name}</h3><span>${n} recurso${n>1?'s':''}</span></a>`}).join('')}</div></div>
  <h2 class="sectiontitle" id="allTitle">Todos los recursos</h2>`;
- DATA.forEach(c=>{const I=info(c);const Q=(I.layout||{}).quitar||[];const gs=groups(c,[],[]).map(g=>({path:g.path.filter(x=>!Q.includes(x)),files:g.files}));html+=`<section class="cat" style="--cc:var(${I.col})"><div class="cathead"><a class="caticon" href="${folderOf(c)}/index.html" style="text-decoration:none">${I.icon}</a><div><h2>${I.name}</h2><span class="n">${count(c)} recursos · <a href="${folderOf(c)}/index.html" style="color:var(--cc)">abrir página del apartado ↗</a></span></div></div>${gs.map(g=>groupHTML(g,I.name)).join('')}</section>`});
+ DATA.forEach(c=>{const I=info(c);const gs=ordenar(groups(c,[],[]),I.layout||{});html+=`<section class="cat" style="--cc:var(${I.col})"><div class="cathead"><a class="caticon" href="${folderOf(c)}/index.html" style="text-decoration:none">${I.icon}</a><div><h2>${I.name}</h2><span class="n">${count(c)} recursos · <a href="${folderOf(c)}/index.html" style="color:var(--cc)">abrir página del apartado ↗</a></span></div></div>${gs.map(g=>groupHTML(g,I.name)).join('')}</section>`});
  html+='</main>';
 }
 html+='<div class="empty" id="empty">No hay ningún recurso con esa búsqueda. 🙈</div><footer>Recursos de aula · Lengua Castellana y Literatura</footer>';
