@@ -206,6 +206,14 @@
   .word-bank-preview .wb-row-top{ display:flex; gap:8px; align-items:baseline; }
   .word-bank-preview .wb-row-top b{ color:var(--coral); min-width:20px; }
   .wb-meaning{ margin-left:28px; font-size:13px; color:#5a5648; line-height:1.5; }
+  .wb-editbtn{ margin-left:6px; font:inherit; font-size:12px; padding:1px 8px; border:1px solid #d8cfb8; border-radius:10px; background:#fffdf8; color:#6b5a2a; cursor:pointer; }
+  .wb-editbtn:hover{ background:#f6ecd0; }
+  .wb-edit{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .wb-edit textarea,.wb-edit input{ font:inherit; font-size:13px; padding:5px 8px; border:1px solid #d8cfb8; border-radius:6px; width:100%; box-sizing:border-box; text-align:justify; }
+  .we-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .we-row input{ flex:1 1 140px; width:auto; }
+  .we-row button{ font:inherit; font-size:13px; padding:4px 12px; border-radius:6px; border:1px solid #c9b98a; background:#fffdf8; cursor:pointer; }
+  .we-save{ background:#1a1a1a !important; color:#fff; border-color:#1a1a1a !important; }
   .wb-meaning .wb-es{ font-style:italic; }
   .wb-meaning .wb-syn{ font-style:italic; color:#847f6d; }
   .wb-word{
@@ -530,208 +538,386 @@
   // ---------------- word bank by orthographic difficulty ----------------
   const WORD_BANK = {
     "Adjectives — feelings & personality": [
-      {word:"happy", defEn:"Feeling or showing pleasure and enjoyment.", defEs:"feliz, contento/a", syn:["glad","cheerful"]},
-      {word:"sad", defEn:"Feeling unhappy or sorrowful.", defEs:"triste", syn:["unhappy","sorrowful"]},
-      {word:"angry", defEn:"Feeling strong annoyance or displeasure.", defEs:"enfadado/a", syn:["mad","furious"]},
-      {word:"nervous", defEn:"Feeling worried or anxious about something.", defEs:"nervioso/a", syn:["anxious","tense"]},
-      {word:"shy", defEn:"Feeling nervous or embarrassed about meeting people.", defEs:"tímido/a", syn:["timid","bashful"]},
-      {word:"confident", defEn:"Feeling sure of yourself and your abilities.", defEs:"seguro/a de sí mismo", syn:["self-assured","certain"]},
-      {word:"kind", defEn:"Friendly, generous, and thinking of others.", defEs:"amable", syn:["friendly","caring"]},
-      {word:"brave", defEn:"Ready to face danger or pain without fear.", defEs:"valiente", syn:["courageous","fearless"]},
-      {word:"proud", defEn:"Feeling pleased about something you or others have done.", defEs:"orgulloso/a", syn:["pleased","satisfied"]},
-      {word:"jealous", defEn:"Feeling envious of someone else's success or advantages.", defEs:"celoso/a, envidioso/a", syn:["envious","resentful"]},
-      {word:"curious", defEn:"Eager to know or learn something.", defEs:"curioso/a", syn:["inquisitive","interested"]},
-      {word:"calm", defEn:"Not showing or feeling nervousness or excitement.", defEs:"tranquilo/a", syn:["relaxed","peaceful"]},
-      {word:"selfish", defEn:"Caring only about yourself, not about others.", defEs:"egoísta", syn:["self-centred","inconsiderate"]},
-      {word:"honest", defEn:"Telling the truth and not cheating or stealing.", defEs:"honesto/a, sincero/a", syn:["truthful","sincere"]},
-      {word:"patient", defEn:"Able to wait calmly for a long time.", defEs:"paciente", syn:["tolerant","calm"]},
-      {word:"stubborn", defEn:"Refusing to change your opinion or way of doing things.", defEs:"terco/a, testarudo/a", syn:["obstinate","inflexible"]},
-      {word:"generous", defEn:"Willing to give more money, help or time than necessary.", defEs:"generoso/a", syn:["giving","unselfish"]},
-      {word:"cheerful", defEn:"Noticeably happy and positive.", defEs:"alegre", syn:["happy","upbeat"]},
-      {word:"embarrassed", defEn:"Feeling awkward or ashamed.", defEs:"avergonzado/a", syn:["ashamed","self-conscious"]},
-      {word:"friendly", defEn:"Kind and pleasant towards other people.", defEs:"simpático/a, amistoso/a", syn:["kind","sociable"]},
-      {word:"rude", defEn:"Not polite; showing bad manners.", defEs:"maleducado/a", syn:["impolite","disrespectful"]},
-      {word:"anxious", defEn:"Feeling worried and nervous.", defEs:"ansioso/a", syn:["worried","uneasy"]},
-      {word:"determined", defEn:"Having made a firm decision and being resolved not to change it.", defEs:"decidido/a", syn:["resolute","firm"]},
-      {word:"modest", defEn:"Not talking much about your own abilities or achievements.", defEs:"modesto/a", syn:["humble","unassuming"]},
-      {word:"grateful", defEn:"Feeling or showing thanks.", defEs:"agradecido/a", syn:["thankful","appreciative"]},
-      {word:"bored", defEn:"Feeling tired and impatient because of a lack of interest.", defEs:"aburrido/a (sentirse)", syn:["uninterested","weary"]},
-      {word:"lonely", defEn:"Feeling unhappy because you are alone.", defEs:"solo/a (sentirse)", syn:["isolated","friendless"]},
-      {word:"relaxed", defEn:"Free from tension or anxiety.", defEs:"relajado/a", syn:["calm","at ease"]},
-      {word:"ambitious", defEn:"Having a strong desire for success or achievement.", defEs:"ambicioso/a", syn:["driven","aspiring"]},
-      {word:"loyal", defEn:"Giving firm support to a person or cause.", defEs:"leal, fiel", syn:["faithful","devoted"]},
-      {word:"arrogant", defEn:"Having an exaggerated sense of your own importance.", defEs:"arrogante", syn:["conceited","haughty"]},
-      {word:"sensitive", defEn:"Easily affected or hurt by things.", defEs:"sensible", syn:["touchy","delicate"]}
+      {"word": "embarrassed", "defEn": "Feeling awkward or ashamed in front of others.", "defEs": "avergonzado/a", "syn": ["ashamed", "self-conscious"]},
+      {"word": "jealous", "defEn": "Feeling envious of someone else's success or advantages.", "defEs": "celoso/a, envidioso/a", "syn": ["envious", "resentful"]},
+      {"word": "ambitious", "defEn": "Having a strong desire for success or achievement.", "defEs": "ambicioso/a", "syn": ["driven", "aspiring"]},
+      {"word": "determined", "defEn": "Having made a firm decision and refusing to give up.", "defEs": "decidido/a", "syn": ["resolute", "firm"]},
+      {"word": "enthusiastic", "defEn": "Showing great interest and excitement.", "defEs": "entusiasta", "syn": ["eager", "keen"]},
+      {"word": "courageous", "defEn": "Not afraid of danger or pain.", "defEs": "valiente", "syn": ["brave", "fearless"]},
+      {"word": "conscientious", "defEn": "Careful and thorough in doing your work or duty.", "defEs": "concienzudo/a", "syn": ["diligent", "careful"]},
+      {"word": "independent", "defEn": "Able to do things without help from others.", "defEs": "independiente", "syn": ["self-reliant", "autonomous"]},
+      {"word": "sympathetic", "defEn": "Showing understanding of other people's feelings.", "defEs": "comprensivo/a", "syn": ["compassionate", "understanding"]},
+      {"word": "mischievous", "defEn": "Enjoying causing trouble in a playful way.", "defEs": "travieso/a", "syn": ["naughty", "playful"]},
+      {"word": "disappointed", "defEn": "Sad because something was not as good as hoped.", "defEs": "decepcionado/a", "syn": ["let down", "dismayed"]},
+      {"word": "frightened", "defEn": "Afraid or worried about something.", "defEs": "asustado/a", "syn": ["scared", "terrified"]},
+      {"word": "dissatisfied", "defEn": "Not pleased with something.", "defEs": "insatisfecho/a", "syn": ["unhappy", "discontented"]},
+      {"word": "optimistic", "defEn": "Hopeful about the future.", "defEs": "optimista", "syn": ["positive", "hopeful"]},
+      {"word": "pessimistic", "defEn": "Expecting the worst to happen.", "defEs": "pesimista", "syn": ["negative", "gloomy"]},
+      {"word": "sensible", "defEn": "Having good judgement; practical.", "defEs": "sensato/a", "syn": ["reasonable", "wise"]},
+      {"word": "sensitive", "defEn": "Easily hurt or affected by things.", "defEs": "sensible", "syn": ["delicate", "touchy"]},
+      {"word": "reluctant", "defEn": "Unwilling and hesitant to do something.", "defEs": "reacio/a", "syn": ["unwilling", "hesitant"]},
+      {"word": "irritable", "defEn": "Easily annoyed.", "defEs": "irritable", "syn": ["grumpy", "cranky"]},
+      {"word": "exhausted", "defEn": "Extremely tired.", "defEs": "agotado/a", "syn": ["worn out", "drained"]},
+      {"word": "thoughtful", "defEn": "Thinking of other people's needs.", "defEs": "considerado/a", "syn": ["considerate", "attentive"]},
+      {"word": "thoughtless", "defEn": "Not thinking about how your actions affect others.", "defEs": "desconsiderado/a", "syn": ["inconsiderate", "careless"]},
+      {"word": "embarrassing", "defEn": "Making you feel awkward or ashamed.", "defEs": "vergonzoso/a", "syn": ["awkward", "humiliating"]},
+      {"word": "suspicious", "defEn": "Not trusting someone or something.", "defEs": "receloso/a", "syn": ["wary", "distrustful"]},
+      {"word": "nervous", "defEn": "Worried or anxious about something.", "defEs": "nervioso/a", "syn": ["anxious", "tense"]},
+      {"word": "awkward", "defEn": "Embarrassed or uncomfortable in a situation.", "defEs": "torpe, incómodo/a", "syn": ["clumsy", "uncomfortable"]},
+      {"word": "forgetful", "defEn": "Often forgetting things.", "defEs": "olvidadizo/a", "syn": ["absent-minded", "careless"]},
+      {"word": "dishonest", "defEn": "Not telling the truth; likely to cheat.", "defEs": "deshonesto/a", "syn": ["untruthful", "deceitful"]},
+      {"word": "disobedient", "defEn": "Refusing to follow rules or orders.", "defEs": "desobediente", "syn": ["rebellious", "defiant"]},
+      {"word": "enormous", "defEn": "Very large (used also for feelings).", "defEs": "enorme", "syn": ["huge", "vast"]},
+      {"word": "cautious", "defEn": "Careful to avoid danger or mistakes.", "defEs": "cauteloso/a", "syn": ["careful", "wary"]},
+      {"word": "curious", "defEn": "Eager to know or learn something.", "defEs": "curioso/a", "syn": ["inquisitive", "nosy"]},
+      {"word": "grateful", "defEn": "Feeling or showing thanks.", "defEs": "agradecido/a", "syn": ["thankful", "appreciative"]},
+      {"word": "hesitant", "defEn": "Slow to act because you are unsure.", "defEs": "indeciso/a", "syn": ["uncertain", "doubtful"]},
+      {"word": "immature", "defEn": "Behaving in a childish way.", "defEs": "inmaduro/a", "syn": ["childish", "juvenile"]},
+      {"word": "ruthless", "defEn": "Having no pity or mercy.", "defEs": "despiadado/a", "syn": ["merciless", "cruel"]},
+      {"word": "sociable", "defEn": "Enjoying the company of other people.", "defEs": "sociable", "syn": ["outgoing", "friendly"]},
+      {"word": "stubborn", "defEn": "Refusing to change your opinion.", "defEs": "terco/a", "syn": ["obstinate", "headstrong"]},
+      {"word": "self-confident", "defEn": "Sure of your own abilities.", "defEs": "seguro/a de sí mismo", "syn": ["assured", "poised"]},
+      {"word": "polite", "defEn": "Showing good manners.", "defEs": "educado/a", "syn": ["courteous", "respectful"]},
+      {"word": "impatient", "defEn": "Unable to wait calmly.", "defEs": "impaciente", "syn": ["restless", "eager"]},
+      {"word": "anxious", "defEn": "Worried and nervous.", "defEs": "ansioso/a", "syn": ["worried", "uneasy"]},
+      {"word": "confused", "defEn": "Not able to think clearly.", "defEs": "confuso/a", "syn": ["puzzled", "bewildered"]},
+      {"word": "cheerful", "defEn": "Noticeably happy and positive.", "defEs": "alegre", "syn": ["upbeat", "jolly"]},
+      {"word": "miserable", "defEn": "Very unhappy.", "defEs": "desdichado/a", "syn": ["wretched", "gloomy"]},
+      {"word": "jolly", "defEn": "Happy and cheerful.", "defEs": "jovial", "syn": ["merry", "jovial"]},
+      {"word": "gorgeous", "defEn": "Very beautiful or attractive.", "defEs": "precioso/a", "syn": ["stunning", "lovely"]},
+      {"word": "generous", "defEn": "Willing to give more than is necessary.", "defEs": "generoso/a", "syn": ["giving", "unselfish"]},
+      {"word": "greedy", "defEn": "Wanting more than you need.", "defEs": "codicioso/a", "syn": ["avaricious", "selfish"]},
+      {"word": "rebellious", "defEn": "Resisting authority or control.", "defEs": "rebelde", "syn": ["defiant", "unruly"]},
+      {"word": "shy", "defEn": "Nervous about meeting people.", "defEs": "tímido/a", "syn": ["timid", "bashful"]},
+      {"word": "tolerant", "defEn": "Accepting different opinions and behaviour.", "defEs": "tolerante", "syn": ["broad-minded", "open-minded"]},
+      {"word": "vulnerable", "defEn": "Easily hurt or harmed.", "defEs": "vulnerable", "syn": ["exposed", "defenceless"]},
+      {"word": "wise", "defEn": "Having experience and good judgement.", "defEs": "sabio/a", "syn": ["sage", "prudent"]},
+      {"word": "witty", "defEn": "Clever and funny in speech.", "defEs": "ingenioso/a", "syn": ["clever", "amusing"]},
+      {"word": "arrogant", "defEn": "Having too high an opinion of yourself.", "defEs": "arrogante", "syn": ["conceited", "haughty"]},
+      {"word": "loyal", "defEn": "Giving firm support to a person or cause.", "defEs": "leal", "syn": ["faithful", "devoted"]},
+      {"word": "sincere", "defEn": "Honest and not pretending.", "defEs": "sincero/a", "syn": ["genuine", "honest"]},
+      {"word": "reliable", "defEn": "Able to be trusted.", "defEs": "fiable", "syn": ["dependable", "trustworthy"]}
     ],
     "Adjectives — describing things": [
-      {word:"expensive", defEn:"Costing a lot of money.", defEs:"caro/a", syn:["costly","pricey"]},
-      {word:"cheap", defEn:"Costing little money.", defEs:"barato/a", syn:["inexpensive","affordable"]},
-      {word:"difficult", defEn:"Not easy; needing effort or skill.", defEs:"difícil", syn:["hard","tough"]},
-      {word:"dangerous", defEn:"Likely to cause harm or injury.", defEs:"peligroso/a", syn:["risky","hazardous"]},
-      {word:"boring", defEn:"Not interesting; making you feel tired or uninterested.", defEs:"aburrido/a", syn:["dull","tedious"]},
-      {word:"exciting", defEn:"Causing great enthusiasm and interest.", defEs:"emocionante", syn:["thrilling","stimulating"]},
-      {word:"comfortable", defEn:"Giving a feeling of physical ease or relaxation.", defEs:"cómodo/a", syn:["cosy","relaxing"]},
-      {word:"crowded", defEn:"Full of people.", defEs:"abarrotado/a, lleno de gente", syn:["packed","busy"]},
-      {word:"useful", defEn:"Able to be used for a practical purpose.", defEs:"útil", syn:["helpful","practical"]},
-      {word:"useless", defEn:"Not fulfilling or not able to fulfil the intended purpose.", defEs:"inútil", syn:["worthless","ineffective"]},
-      {word:"modern", defEn:"Relating to the present time, not the past.", defEs:"moderno/a", syn:["contemporary","up-to-date"]},
-      {word:"ancient", defEn:"Belonging to a time very far in the past.", defEs:"antiguo/a", syn:["old","historic"]},
-      {word:"huge", defEn:"Extremely large in size or amount.", defEs:"enorme", syn:["enormous","massive"]},
-      {word:"tiny", defEn:"Very small.", defEs:"diminuto/a", syn:["minuscule","small"]},
-      {word:"narrow", defEn:"Small in width.", defEs:"estrecho/a", syn:["thin","tight"]},
-      {word:"wide", defEn:"Large in width.", defEs:"ancho/a", syn:["broad","spacious"]},
-      {word:"fragile", defEn:"Easily broken or damaged.", defEs:"frágil", syn:["delicate","breakable"]},
-      {word:"sturdy", defEn:"Strongly and solidly built.", defEs:"resistente, robusto/a", syn:["solid","robust"]},
-      {word:"flexible", defEn:"Able to bend or change easily.", defEs:"flexible", syn:["adaptable","bendable"]},
-      {word:"reliable", defEn:"Able to be trusted to do what is expected.", defEs:"fiable", syn:["dependable","trustworthy"]},
-      {word:"convenient", defEn:"Fitting in well with your needs and plans.", defEs:"conveniente, práctico/a", syn:["handy","practical"]},
-      {word:"messy", defEn:"Untidy or dirty.", defEs:"desordenado/a", syn:["untidy","disorganised"]},
-      {word:"spotless", defEn:"Perfectly clean.", defEs:"impecable", syn:["immaculate","pristine"]},
-      {word:"noisy", defEn:"Making a lot of noise.", defEs:"ruidoso/a", syn:["loud","deafening"]},
-      {word:"quiet", defEn:"Making little or no noise.", defEs:"silencioso/a, tranquilo/a", syn:["silent","calm"]},
-      {word:"delicious", defEn:"Highly pleasant to the taste.", defEs:"delicioso/a", syn:["tasty","scrumptious"]},
-      {word:"disgusting", defEn:"Causing a feeling of dislike or repulsion.", defEs:"asqueroso/a", syn:["revolting","repulsive"]},
-      {word:"reasonable", defEn:"Fair and sensible.", defEs:"razonable", syn:["sensible","fair"]},
-      {word:"surprising", defEn:"Causing surprise; unexpected.", defEs:"sorprendente", syn:["unexpected","astonishing"]},
-      {word:"complicated", defEn:"Consisting of many interconnecting parts; hard to understand.", defEs:"complicado/a", syn:["complex","intricate"]},
-      {word:"essential", defEn:"Absolutely necessary.", defEs:"esencial", syn:["vital","crucial"]},
-      {word:"impressive", defEn:"Making a strong positive impression.", defEs:"impresionante", syn:["remarkable","striking"]}
+      {"word": "necessary", "defEn": "Needed in order to achieve something.", "defEs": "necesario/a", "syn": ["essential", "required"]},
+      {"word": "comfortable", "defEn": "Giving physical ease and relaxation.", "defEs": "cómodo/a", "syn": ["cosy", "snug"]},
+      {"word": "different", "defEn": "Not the same as another.", "defEs": "diferente", "syn": ["distinct", "unlike"]},
+      {"word": "dangerous", "defEn": "Likely to cause harm.", "defEs": "peligroso/a", "syn": ["risky", "hazardous"]},
+      {"word": "difficult", "defEn": "Not easy; needing effort.", "defEs": "difícil", "syn": ["hard", "tough"]},
+      {"word": "delicious", "defEn": "Having a very pleasant taste.", "defEs": "delicioso/a", "syn": ["tasty", "scrumptious"]},
+      {"word": "disgusting", "defEn": "Extremely unpleasant.", "defEs": "asqueroso/a", "syn": ["revolting", "repulsive"]},
+      {"word": "fascinating", "defEn": "Extremely interesting.", "defEs": "fascinante", "syn": ["captivating", "absorbing"]},
+      {"word": "fragile", "defEn": "Easily broken or damaged.", "defEs": "frágil", "syn": ["delicate", "breakable"]},
+      {"word": "identical", "defEn": "Exactly the same.", "defEs": "idéntico/a", "syn": ["alike", "matching"]},
+      {"word": "impressive", "defEn": "Making people admire you.", "defEs": "impresionante", "syn": ["striking", "remarkable"]},
+      {"word": "incredible", "defEn": "Difficult or impossible to believe.", "defEs": "increíble", "syn": ["unbelievable", "amazing"]},
+      {"word": "convenient", "defEn": "Easy to use or suitable for your needs.", "defEs": "conveniente", "syn": ["handy", "practical"]},
+      {"word": "crowded", "defEn": "Full of people.", "defEs": "abarrotado/a", "syn": ["packed", "busy"]},
+      {"word": "luxurious", "defEn": "Very comfortable and expensive.", "defEs": "lujoso/a", "syn": ["opulent", "plush"]},
+      {"word": "mysterious", "defEn": "Difficult to understand or explain.", "defEs": "misterioso/a", "syn": ["puzzling", "enigmatic"]},
+      {"word": "neighbouring", "defEn": "Next to or near.", "defEs": "vecino/a", "syn": ["adjacent", "nearby"]},
+      {"word": "ordinary", "defEn": "Not special or unusual.", "defEs": "corriente", "syn": ["normal", "everyday"]},
+      {"word": "peculiar", "defEn": "Strange or unusual.", "defEs": "peculiar", "syn": ["odd", "curious"]},
+      {"word": "precious", "defEn": "Of great value.", "defEs": "precioso/a", "syn": ["valuable", "priceless"]},
+      {"word": "mountainous", "defEn": "Having many mountains.", "defEs": "montañoso/a", "syn": ["hilly", "rugged"]},
+      {"word": "ridiculous", "defEn": "Very silly.", "defEs": "ridículo/a", "syn": ["absurd", "laughable"]},
+      {"word": "scientific", "defEn": "Connected with science.", "defEs": "científico/a", "syn": ["technical", "systematic"]},
+      {"word": "separate", "defEn": "Not joined or connected.", "defEs": "separado/a", "syn": ["distinct", "apart"]},
+      {"word": "spacious", "defEn": "Having a lot of room.", "defEs": "espacioso/a", "syn": ["roomy", "large"]},
+      {"word": "suitable", "defEn": "Right for a purpose.", "defEs": "adecuado/a", "syn": ["appropriate", "fitting"]},
+      {"word": "terrible", "defEn": "Very bad.", "defEs": "terrible", "syn": ["awful", "dreadful"]},
+      {"word": "thorough", "defEn": "Complete and careful.", "defEs": "minucioso/a", "syn": ["complete", "meticulous"]},
+      {"word": "tremendous", "defEn": "Very great in amount or degree.", "defEs": "tremendo/a", "syn": ["huge", "immense"]},
+      {"word": "unusual", "defEn": "Not common.", "defEs": "inusual", "syn": ["rare", "uncommon"]},
+      {"word": "valuable", "defEn": "Worth a lot of money.", "defEs": "valioso/a", "syn": ["costly", "precious"]},
+      {"word": "vegetarian", "defEn": "Not containing meat.", "defEs": "vegetariano/a", "syn": ["meatless", "plant-based"]},
+      {"word": "wonderful", "defEn": "Extremely good.", "defEs": "maravilloso/a", "syn": ["marvellous", "fantastic"]},
+      {"word": "beautiful", "defEn": "Pleasing to the senses.", "defEs": "hermoso/a", "syn": ["lovely", "attractive"]},
+      {"word": "colourful", "defEn": "Having bright colours.", "defEs": "colorido/a", "syn": ["vivid", "bright"]},
+      {"word": "familiar", "defEn": "Well known to you.", "defEs": "familiar", "syn": ["well-known", "recognisable"]},
+      {"word": "foreign", "defEn": "From another country.", "defEs": "extranjero/a", "syn": ["alien", "overseas"]},
+      {"word": "dreadful", "defEn": "Very bad or unpleasant.", "defEs": "espantoso/a", "syn": ["terrible", "awful"]},
+      {"word": "fashionable", "defEn": "Popular at a particular time.", "defEs": "de moda", "syn": ["trendy", "stylish"]},
+      {"word": "accurate", "defEn": "Correct in every detail.", "defEs": "exacto/a", "syn": ["precise", "exact"]},
+      {"word": "available", "defEn": "Able to be used or obtained.", "defEs": "disponible", "syn": ["obtainable", "accessible"]},
+      {"word": "elegant", "defEn": "Graceful and stylish.", "defEs": "elegante", "syn": ["stylish", "refined"]},
+      {"word": "enjoyable", "defEn": "Giving pleasure.", "defEs": "agradable", "syn": ["pleasant", "entertaining"]},
+      {"word": "exceptional", "defEn": "Unusually good.", "defEs": "excepcional", "syn": ["outstanding", "remarkable"]},
+      {"word": "exhausting", "defEn": "Making you very tired.", "defEs": "agotador/a", "syn": ["tiring", "draining"]},
+      {"word": "extraordinary", "defEn": "Very unusual or remarkable.", "defEs": "extraordinario/a", "syn": ["remarkable", "amazing"]},
+      {"word": "fabulous", "defEn": "Wonderful.", "defEs": "fabuloso/a", "syn": ["marvellous", "superb"]},
+      {"word": "dazzling", "defEn": "Extremely bright or impressive.", "defEs": "deslumbrante", "syn": ["blinding", "brilliant"]},
+      {"word": "disastrous", "defEn": "Causing great damage.", "defEs": "desastroso/a", "syn": ["catastrophic", "ruinous"]},
+      {"word": "efficient", "defEn": "Working well without waste.", "defEs": "eficiente", "syn": ["productive", "effective"]},
+      {"word": "essential", "defEn": "Absolutely necessary.", "defEs": "esencial", "syn": ["vital", "fundamental"]},
+      {"word": "flexible", "defEn": "Able to change easily.", "defEs": "flexible", "syn": ["adaptable", "bendy"]},
+      {"word": "immense", "defEn": "Extremely large.", "defEs": "inmenso/a", "syn": ["vast", "enormous"]},
+      {"word": "adequate", "defEn": "Enough or good enough.", "defEs": "adecuado/a", "syn": ["sufficient", "satisfactory"]},
+      {"word": "ancient", "defEn": "Very old; from long ago.", "defEs": "antiguo/a", "syn": ["archaic", "age-old"]},
+      {"word": "genuine", "defEn": "Real and not fake.", "defEs": "auténtico/a", "syn": ["authentic", "real"]},
+      {"word": "hideous", "defEn": "Extremely ugly.", "defEs": "horrible", "syn": ["grotesque", "repulsive"]},
+      {"word": "hilarious", "defEn": "Extremely funny.", "defEs": "hilarante", "syn": ["hysterical", "comical"]},
+      {"word": "immediate", "defEn": "Happening at once.", "defEs": "inmediato/a", "syn": ["instant", "prompt"]},
+      {"word": "miraculous", "defEn": "Like a miracle.", "defEs": "milagroso/a", "syn": ["wondrous", "amazing"]},
+      {"word": "obvious", "defEn": "Easy to see or understand.", "defEs": "obvio/a", "syn": ["clear", "evident"]},
+      {"word": "tedious", "defEn": "Boring and lasting too long.", "defEs": "tedioso/a", "syn": ["dull", "monotonous"]}
     ],
     "Common verbs": [
-      {word:"begin", defEn:"To start doing something.", defEs:"empezar", syn:["start","commence"]},
-      {word:"finish", defEn:"To complete or come to the end of something.", defEs:"terminar", syn:["complete","end"]},
-      {word:"discover", defEn:"To find something for the first time.", defEs:"descubrir", syn:["find","uncover"]},
-      {word:"choose", defEn:"To pick one thing among two or more.", defEs:"elegir", syn:["select","pick"]},
-      {word:"remember", defEn:"To keep something in your memory.", defEs:"recordar", syn:["recall","memorize"]},
-      {word:"allow", defEn:"To let someone do something.", defEs:"permitir", syn:["permit","let"]},
-      {word:"improve", defEn:"To make or become better.", defEs:"mejorar", syn:["enhance","develop"]},
-      {word:"borrow", defEn:"To take something and use it, planning to give it back later.", defEs:"pedir prestado", syn:["take on loan","use temporarily"]},
-      {word:"lend", defEn:"To give something to someone for a period of time, expecting it back.", defEs:"prestar", syn:["loan","provide temporarily"]},
-      {word:"achieve", defEn:"To successfully complete or reach a goal.", defEs:"lograr, conseguir", syn:["accomplish","attain"]},
-      {word:"avoid", defEn:"To keep away from or prevent something happening.", defEs:"evitar", syn:["prevent","steer clear of"]},
-      {word:"suggest", defEn:"To put forward an idea for consideration.", defEs:"sugerir", syn:["propose","recommend"]},
-      {word:"explain", defEn:"To make something clear by describing it in detail.", defEs:"explicar", syn:["clarify","describe"]},
-      {word:"complain", defEn:"To express dissatisfaction about something.", defEs:"quejarse", syn:["protest","grumble"]},
-      {word:"apologise", defEn:"To say sorry for something you have done.", defEs:"disculparse", syn:["say sorry","express regret"]},
-      {word:"admit", defEn:"To confess that something is true.", defEs:"admitir, reconocer", syn:["acknowledge","confess"]},
-      {word:"deny", defEn:"To state that something is not true.", defEs:"negar", syn:["reject","refute"]},
-      {word:"include", defEn:"To make something part of a whole.", defEs:"incluir", syn:["contain","incorporate"]},
-      {word:"exclude", defEn:"To leave something or someone out.", defEs:"excluir", syn:["leave out","omit"]},
-      {word:"persuade", defEn:"To make someone do or believe something by giving good reasons.", defEs:"persuadir, convencer", syn:["convince","win over"]},
-      {word:"refuse", defEn:"To say that you will not do or accept something.", defEs:"negarse a, rechazar", syn:["decline","reject"]},
-      {word:"promise", defEn:"To tell someone that you will definitely do something.", defEs:"prometer", syn:["vow","pledge"]},
-      {word:"warn", defEn:"To tell someone about a possible danger or problem.", defEs:"advertir", syn:["alert","caution"]},
-      {word:"protect", defEn:"To keep someone or something safe from harm.", defEs:"proteger", syn:["defend","shield"]},
-      {word:"escape", defEn:"To get free from a place or a dangerous situation.", defEs:"escapar", syn:["flee","get away"]},
-      {word:"disappear", defEn:"To stop being visible.", defEs:"desaparecer", syn:["vanish","fade away"]},
-      {word:"arrange", defEn:"To plan or organise something in advance.", defEs:"organizar, quedar en", syn:["organise","plan"]},
-      {word:"cancel", defEn:"To decide that a planned event will not happen.", defEs:"cancelar", syn:["call off","abandon"]},
-      {word:"delay", defEn:"To make something happen later than planned.", defEs:"retrasar", syn:["postpone","put off"]},
-      {word:"rely on", defEn:"To depend on someone or something with confidence.", defEs:"depender de, confiar en", syn:["depend on","count on"]},
-      {word:"succeed", defEn:"To achieve the result that you wanted.", defEs:"tener éxito, lograr", syn:["achieve","prevail"]},
-      {word:"fail", defEn:"To be unsuccessful in achieving a goal.", defEs:"fracasar, suspender", syn:["not succeed","flunk"]}
+      {"word": "achieve", "defEn": "Succeed in doing or reaching something.", "defEs": "lograr", "syn": ["accomplish", "attain"]},
+      {"word": "apologise", "defEn": "Say sorry for something.", "defEs": "disculparse", "syn": ["say sorry", "express regret"]},
+      {"word": "appreciate", "defEn": "Recognise the value of something.", "defEs": "apreciar", "syn": ["value", "welcome"]},
+      {"word": "argue", "defEn": "Speak angrily with someone who disagrees.", "defEs": "discutir", "syn": ["quarrel", "disagree"]},
+      {"word": "arrange", "defEn": "Organise or plan something.", "defEs": "organizar", "syn": ["organise", "plan"]},
+      {"word": "beginning", "defEn": "Starting point.", "defEs": "comienzo", "syn": ["start", "opening"]},
+      {"word": "believe", "defEn": "Accept that something is true.", "defEs": "creer", "syn": ["trust", "accept"]},
+      {"word": "borrow", "defEn": "Take something and give it back later.", "defEs": "pedir prestado", "syn": ["take", "use"]},
+      {"word": "choose", "defEn": "Select from several options.", "defEs": "elegir", "syn": ["pick", "select"]},
+      {"word": "committed", "defEn": "Promised or pledged to do something.", "defEs": "comprometido/a", "syn": ["pledged", "dedicated"]},
+      {"word": "complain", "defEn": "Say that something is wrong.", "defEs": "quejarse", "syn": ["grumble", "protest"]},
+      {"word": "concentrate", "defEn": "Focus your attention.", "defEs": "concentrarse", "syn": ["focus", "attend"]},
+      {"word": "deceive", "defEn": "Make someone believe something false.", "defEs": "engañar", "syn": ["trick", "mislead"]},
+      {"word": "decide", "defEn": "Make a choice.", "defEs": "decidir", "syn": ["choose", "resolve"]},
+      {"word": "describe", "defEn": "Say what something is like.", "defEs": "describir", "syn": ["portray", "depict"]},
+      {"word": "develop", "defEn": "Grow or make something grow.", "defEs": "desarrollar", "syn": ["grow", "expand"]},
+      {"word": "disappear", "defEn": "Stop being visible.", "defEs": "desaparecer", "syn": ["vanish", "fade"]},
+      {"word": "disappoint", "defEn": "Fail to satisfy hopes.", "defEs": "decepcionar", "syn": ["let down", "dishearten"]},
+      {"word": "discover", "defEn": "Find something for the first time.", "defEs": "descubrir", "syn": ["find", "uncover"]},
+      {"word": "embarrass", "defEn": "Make someone feel awkward.", "defEs": "avergonzar", "syn": ["humiliate", "shame"]},
+      {"word": "encourage", "defEn": "Give someone support or confidence.", "defEs": "animar", "syn": ["inspire", "motivate"]},
+      {"word": "environment", "defEn": "The natural world around us.", "defEs": "medio ambiente", "syn": ["surroundings", "habitat"]},
+      {"word": "exaggerate", "defEn": "Make something seem bigger than it is.", "defEs": "exagerar", "syn": ["overstate", "inflate"]},
+      {"word": "exercise", "defEn": "Do physical activity.", "defEs": "hacer ejercicio", "syn": ["train", "work out"]},
+      {"word": "explain", "defEn": "Make something clear.", "defEs": "explicar", "syn": ["clarify", "describe"]},
+      {"word": "forbid", "defEn": "Order someone not to do something.", "defEs": "prohibir", "syn": ["ban", "prohibit"]},
+      {"word": "forgive", "defEn": "Stop being angry with someone.", "defEs": "perdonar", "syn": ["pardon", "excuse"]},
+      {"word": "guarantee", "defEn": "Promise that something will happen.", "defEs": "garantizar", "syn": ["promise", "assure"]},
+      {"word": "happen", "defEn": "Take place.", "defEs": "ocurrir", "syn": ["occur", "take place"]},
+      {"word": "immediately", "defEn": "Without delay.", "defEs": "inmediatamente", "syn": ["at once", "instantly"]},
+      {"word": "imagine", "defEn": "Form a picture in your mind.", "defEs": "imaginar", "syn": ["picture", "envisage"]},
+      {"word": "interrupt", "defEn": "Stop someone while they are speaking.", "defEs": "interrumpir", "syn": ["cut in", "disturb"]},
+      {"word": "knowledge", "defEn": "What you know.", "defEs": "conocimiento", "syn": ["understanding", "learning"]},
+      {"word": "manage", "defEn": "Succeed in doing something difficult.", "defEs": "conseguir", "syn": ["cope", "succeed"]},
+      {"word": "occur", "defEn": "Happen.", "defEs": "ocurrir", "syn": ["happen", "take place"]},
+      {"word": "persuade", "defEn": "Make someone do something by arguing.", "defEs": "persuadir", "syn": ["convince", "urge"]},
+      {"word": "prefer", "defEn": "Like one thing more than another.", "defEs": "preferir", "syn": ["favour", "choose"]},
+      {"word": "promise", "defEn": "Say you will certainly do something.", "defEs": "prometer", "syn": ["vow", "pledge"]},
+      {"word": "receive", "defEn": "Get something that is given.", "defEs": "recibir", "syn": ["get", "obtain"]},
+      {"word": "recognise", "defEn": "Know someone or something from before.", "defEs": "reconocer", "syn": ["identify", "spot"]},
+      {"word": "recommend", "defEn": "Suggest that something is good.", "defEs": "recomendar", "syn": ["suggest", "advise"]},
+      {"word": "refuse", "defEn": "Say you will not do something.", "defEs": "rechazar", "syn": ["decline", "reject"]},
+      {"word": "remember", "defEn": "Keep something in your memory.", "defEs": "recordar", "syn": ["recall", "recollect"]},
+      {"word": "rhyme", "defEn": "Have the same end sound.", "defEs": "rimar", "syn": ["match", "chime"]},
+      {"word": "succeed", "defEn": "Achieve what you wanted.", "defEs": "tener éxito", "syn": ["triumph", "prosper"]},
+      {"word": "suggest", "defEn": "Put forward an idea.", "defEs": "sugerir", "syn": ["propose", "recommend"]},
+      {"word": "surprise", "defEn": "Cause wonder by being unexpected.", "defEs": "sorprender", "syn": ["astonish", "amaze"]},
+      {"word": "suppose", "defEn": "Think that something is probably true.", "defEs": "suponer", "syn": ["assume", "guess"]},
+      {"word": "threaten", "defEn": "Say you will cause harm.", "defEs": "amenazar", "syn": ["menace", "intimidate"]},
+      {"word": "translate", "defEn": "Change words into another language.", "defEs": "traducir", "syn": ["interpret", "convert"]},
+      {"word": "unfortunately", "defEn": "Sadly; as bad luck would have it.", "defEs": "desafortunadamente", "syn": ["sadly", "regrettably"]},
+      {"word": "whisper", "defEn": "Speak very quietly.", "defEs": "susurrar", "syn": ["murmur", "mutter"]},
+      {"word": "accommodate", "defEn": "Provide a place for someone to stay.", "defEs": "alojar", "syn": ["house", "lodge"]},
+      {"word": "acknowledge", "defEn": "Accept or admit that something is true.", "defEs": "reconocer", "syn": ["admit", "accept"]},
+      {"word": "acquire", "defEn": "Get or obtain something.", "defEs": "adquirir", "syn": ["obtain", "gain"]},
+      {"word": "anticipate", "defEn": "Expect something to happen.", "defEs": "anticipar", "syn": ["expect", "foresee"]},
+      {"word": "correspond", "defEn": "Match or agree with something.", "defEs": "corresponder", "syn": ["match", "agree"]},
+      {"word": "rehearse", "defEn": "Practise before performing.", "defEs": "ensayar", "syn": ["practise", "prepare"]}
     ],
     "Free time & hobbies": [
-      {word:"hobby", defEn:"An activity that you do for pleasure in your free time.", defEs:"afición, hobby", syn:["pastime","interest"]},
-      {word:"journey", defEn:"An act of travelling from one place to another.", defEs:"viaje", syn:["trip","voyage"]},
-      {word:"adventure", defEn:"An exciting or unusual experience.", defEs:"aventura", syn:["expedition","escapade"]},
-      {word:"competition", defEn:"An event in which people try to win against each other.", defEs:"competición", syn:["contest","tournament"]},
-      {word:"opponent", defEn:"A person who competes against you in a game or contest.", defEs:"oponente, rival", syn:["rival","competitor"]},
-      {word:"achievement", defEn:"Something that has been done successfully.", defEs:"logro", syn:["accomplishment","success"]},
-      {word:"challenge", defEn:"A difficult task that tests someone's ability.", defEs:"desafío, reto", syn:["difficulty","test"]},
-      {word:"rehearsal", defEn:"A practice of a performance before the real one.", defEs:"ensayo (de teatro, música...)", syn:["practice run","run-through"]},
-      {word:"teammate", defEn:"A person who is on the same team as you.", defEs:"compañero/a de equipo", syn:["fellow player","colleague"]},
-      {word:"audience", defEn:"The group of people watching or listening to a performance.", defEs:"público, audiencia", syn:["spectators","viewers"]},
-      {word:"performance", defEn:"An act of presenting a play, concert or other form of entertainment.", defEs:"actuación", syn:["show","presentation"]},
-      {word:"exhibition", defEn:"A public display of art or interesting items.", defEs:"exposición", syn:["display","show"]},
-      {word:"tournament", defEn:"A series of contests between a number of competitors.", defEs:"torneo", syn:["competition","championship"]},
-      {word:"championship", defEn:"A competition to decide who is the best in a sport.", defEs:"campeonato", syn:["title contest","tournament"]},
-      {word:"leisure", defEn:"Free time not occupied by work.", defEs:"tiempo libre, ocio", syn:["free time","spare time"]},
-      {word:"entertainment", defEn:"Activities that give people pleasure or amusement.", defEs:"entretenimiento", syn:["amusement","fun"]},
-      {word:"gathering", defEn:"A meeting of people, especially for a social reason.", defEs:"reunión", syn:["meeting","get-together"]},
-      {word:"excursion", defEn:"A short trip made for pleasure.", defEs:"excursión", syn:["trip","outing"]},
-      {word:"campsite", defEn:"A place where people can camp.", defEs:"camping", syn:["camping ground","campground"]},
-      {word:"equipment", defEn:"The items needed for a particular activity.", defEs:"equipo, material", syn:["gear","kit"]},
-      {word:"skill", defEn:"The ability to do something well.", defEs:"habilidad, destreza", syn:["ability","expertise"]},
-      {word:"talent", defEn:"A natural ability to do something well.", defEs:"talento", syn:["gift","aptitude"]},
-      {word:"effort", defEn:"A vigorous or determined attempt.", defEs:"esfuerzo", syn:["attempt","endeavour"]},
-      {word:"victory", defEn:"An act of winning a battle, contest or game.", defEs:"victoria", syn:["win","triumph"]},
-      {word:"defeat", defEn:"The failure to win a game or contest.", defEs:"derrota", syn:["loss","failure"]},
-      {word:"referee", defEn:"An official who watches a game to make sure the rules are followed.", defEs:"árbitro/a", syn:["umpire","official"]},
-      {word:"spectator", defEn:"A person who watches an event.", defEs:"espectador/a", syn:["onlooker","viewer"]},
-      {word:"membership", defEn:"The state of being a member of a group or club.", defEs:"afiliación, condición de socio", syn:["affiliation","enrolment"]},
-      {word:"instructor", defEn:"A person who teaches a practical skill.", defEs:"instructor/a, monitor/a", syn:["teacher","coach"]},
-      {word:"costume", defEn:"A set of clothes worn to look like a particular character.", defEs:"disfraz", syn:["outfit","disguise"]},
-      {word:"rehearse", defEn:"To practise a performance before it is given publicly.", defEs:"ensayar", syn:["practise","run through"]},
-      {word:"souvenir", defEn:"An object that you keep to remember a place or event.", defEs:"recuerdo (objeto)", syn:["keepsake","memento"]}
+      {"word": "acquaintance", "defEn": "A person you know slightly.", "defEs": "conocido/a", "syn": ["contact", "associate"]},
+      {"word": "achievement", "defEn": "Something done successfully.", "defEs": "logro", "syn": ["accomplishment", "feat"]},
+      {"word": "adventure", "defEn": "An exciting and unusual experience.", "defEs": "aventura", "syn": ["escapade", "exploit"]},
+      {"word": "audience", "defEn": "People watching a performance.", "defEs": "público", "syn": ["spectators", "viewers"]},
+      {"word": "camouflage", "defEn": "Colours or shapes that hide something.", "defEs": "camuflaje", "syn": ["disguise", "cover"]},
+      {"word": "challenge", "defEn": "Something difficult that tests you.", "defEs": "desafío", "syn": ["test", "dare"]},
+      {"word": "championship", "defEn": "A competition to find the best.", "defEs": "campeonato", "syn": ["title", "contest"]},
+      {"word": "choir", "defEn": "A group of singers.", "defEs": "coro", "syn": ["chorus", "singers"]},
+      {"word": "competition", "defEn": "An event where people try to win.", "defEs": "competición", "syn": ["contest", "tournament"]},
+      {"word": "conductor", "defEn": "Person who directs an orchestra.", "defEs": "director/a de orquesta", "syn": ["maestro", "leader"]},
+      {"word": "costume", "defEn": "Clothes worn for a particular role.", "defEs": "disfraz", "syn": ["outfit", "dress"]},
+      {"word": "cuisine", "defEn": "Style of cooking.", "defEs": "cocina", "syn": ["cooking", "food"]},
+      {"word": "entertainment", "defEn": "Things that amuse people.", "defEs": "entretenimiento", "syn": ["amusement", "fun"]},
+      {"word": "equipment", "defEn": "Things needed for an activity.", "defEs": "equipo", "syn": ["gear", "kit"]},
+      {"word": "excursion", "defEn": "A short trip for pleasure.", "defEs": "excursión", "syn": ["outing", "trip"]},
+      {"word": "exhibition", "defEn": "A public display of art or objects.", "defEs": "exposición", "syn": ["display", "show"]},
+      {"word": "favourite", "defEn": "Liked more than others.", "defEs": "favorito/a", "syn": ["preferred", "best-loved"]},
+      {"word": "festival", "defEn": "A series of cultural events.", "defEs": "festival", "syn": ["fair", "celebration"]},
+      {"word": "gymnasium", "defEn": "A room for exercise.", "defEs": "gimnasio", "syn": ["gym", "sports hall"]},
+      {"word": "hobby", "defEn": "Something you do for pleasure.", "defEs": "afición", "syn": ["pastime", "pursuit"]},
+      {"word": "jewellery", "defEn": "Decorative items worn on the body.", "defEs": "joyería", "syn": ["jewels", "gems"]},
+      {"word": "journey", "defEn": "Travelling from one place to another.", "defEs": "viaje", "syn": ["trip", "voyage"]},
+      {"word": "leisure", "defEn": "Free time.", "defEs": "ocio", "syn": ["spare time", "rest"]},
+      {"word": "marathon", "defEn": "A very long running race.", "defEs": "maratón", "syn": ["race", "endurance"]},
+      {"word": "membership", "defEn": "The state of belonging to a group.", "defEs": "afiliación", "syn": ["subscription", "enrolment"]},
+      {"word": "musician", "defEn": "Person who plays music.", "defEs": "músico/a", "syn": ["player", "performer"]},
+      {"word": "opponent", "defEn": "Person you play against.", "defEs": "oponente", "syn": ["rival", "adversary"]},
+      {"word": "orchestra", "defEn": "Large group of musicians.", "defEs": "orquesta", "syn": ["ensemble", "band"]},
+      {"word": "performance", "defEn": "Act of presenting a show.", "defEs": "actuación", "syn": ["show", "display"]},
+      {"word": "photograph", "defEn": "A picture taken with a camera.", "defEs": "fotografía", "syn": ["picture", "snap"]},
+      {"word": "programme", "defEn": "A planned series of events.", "defEs": "programa", "syn": ["schedule", "plan"]},
+      {"word": "rehearsal", "defEn": "Practice before a performance.", "defEs": "ensayo", "syn": ["practice", "run-through"]},
+      {"word": "referee", "defEn": "Official who controls a match.", "defEs": "árbitro", "syn": ["umpire", "judge"]},
+      {"word": "restaurant", "defEn": "A place where you buy meals.", "defEs": "restaurante", "syn": ["café", "diner"]},
+      {"word": "schedule", "defEn": "A plan of times for events.", "defEs": "horario", "syn": ["timetable", "agenda"]},
+      {"word": "souvenir", "defEn": "Something kept as a reminder of a place.", "defEs": "recuerdo", "syn": ["keepsake", "memento"]},
+      {"word": "spectator", "defEn": "Person who watches an event.", "defEs": "espectador/a", "syn": ["onlooker", "viewer"]},
+      {"word": "sportsman", "defEn": "A man who plays sports.", "defEs": "deportista", "syn": ["athlete", "player"]},
+      {"word": "stadium", "defEn": "A large sports ground with seats.", "defEs": "estadio", "syn": ["arena", "ground"]},
+      {"word": "tournament", "defEn": "A series of games to find a winner.", "defEs": "torneo", "syn": ["competition", "contest"]},
+      {"word": "trophy", "defEn": "A prize for winning.", "defEs": "trofeo", "syn": ["cup", "award"]},
+      {"word": "volunteer", "defEn": "Person who works without payment.", "defEs": "voluntario/a", "syn": ["helper", "unpaid worker"]},
+      {"word": "embroidery", "defEn": "Decorative sewing.", "defEs": "bordado", "syn": ["needlework", "stitching"]},
+      {"word": "pottery", "defEn": "Objects made from baked clay.", "defEs": "cerámica", "syn": ["ceramics", "earthenware"]},
+      {"word": "gardening", "defEn": "Growing plants for pleasure.", "defEs": "jardinería", "syn": ["horticulture", "planting"]},
+      {"word": "sculpture", "defEn": "Art made from stone or metal.", "defEs": "escultura", "syn": ["statue", "carving"]},
+      {"word": "acrobat", "defEn": "A performer of difficult physical acts.", "defEs": "acróbata", "syn": ["gymnast", "tumbler"]},
+      {"word": "amateur", "defEn": "Someone who does an activity for pleasure.", "defEs": "aficionado/a", "syn": ["non-professional", "hobbyist"]},
+      {"word": "bicycle", "defEn": "A two-wheeled vehicle you pedal.", "defEs": "bicicleta", "syn": ["bike", "cycle"]},
+      {"word": "campsite", "defEn": "A place for camping.", "defEs": "camping", "syn": ["campground", "site"]},
+      {"word": "carnival", "defEn": "A public festival with parades.", "defEs": "carnaval", "syn": ["festival", "fiesta"]},
+      {"word": "choreography", "defEn": "The arrangement of dance movements.", "defEs": "coreografía", "syn": ["dance routine", "steps"]},
+      {"word": "crossword", "defEn": "A word puzzle with clues.", "defEs": "crucigrama", "syn": ["puzzle", "word game"]},
+      {"word": "exhibit", "defEn": "To show something in public.", "defEs": "exhibir", "syn": ["display", "present"]},
+      {"word": "gallery", "defEn": "A place where art is shown.", "defEs": "galería", "syn": ["museum", "exhibition hall"]},
+      {"word": "jigsaw", "defEn": "A puzzle of interlocking pieces.", "defEs": "rompecabezas", "syn": ["puzzle", "picture puzzle"]},
+      {"word": "mosaic", "defEn": "A picture made from small pieces.", "defEs": "mosaico", "syn": ["tiling", "inlay"]},
+      {"word": "picnic", "defEn": "A meal eaten outdoors.", "defEs": "picnic", "syn": ["outdoor meal", "outing"]},
+      {"word": "spectacular", "defEn": "Very impressive to watch.", "defEs": "espectacular", "syn": ["breathtaking", "dramatic"]}
     ],
     "Weather & nature": [
-      {word:"storm", defEn:"A period of very bad weather with strong wind and rain.", defEs:"tormenta", syn:["tempest","gale"]},
-      {word:"drought", defEn:"A long period of time without rain.", defEs:"sequía", syn:["dry spell","water shortage"]},
-      {word:"breeze", defEn:"A gentle wind.", defEs:"brisa", syn:["light wind","gust"]},
-      {word:"thunder", defEn:"The loud noise that you hear after lightning.", defEs:"trueno", syn:["rumble","boom"]},
-      {word:"flood", defEn:"A large amount of water covering an area that is usually dry.", defEs:"inundación", syn:["deluge","overflow"]},
-      {word:"forecast", defEn:"A statement about what the weather will be like.", defEs:"pronóstico", syn:["prediction","outlook"]},
-      {word:"climate", defEn:"The general weather conditions of a place over time.", defEs:"clima", syn:["weather pattern","conditions"]},
-      {word:"wildlife", defEn:"Animals and plants that live in nature.", defEs:"fauna y flora", syn:["fauna","natural life"]},
-      {word:"lightning", defEn:"A flash of light in the sky caused by electricity during a storm.", defEs:"relámpago", syn:["flash","bolt"]},
-      {word:"rainfall", defEn:"The amount of rain that falls in a place.", defEs:"precipitación, lluvia caída", syn:["precipitation","rain"]},
-      {word:"temperature", defEn:"A measure of how hot or cold something is.", defEs:"temperatura", syn:["heat level","warmth"]},
-      {word:"humidity", defEn:"The amount of water vapour in the air.", defEs:"humedad", syn:["dampness","moisture"]},
-      {word:"fog", defEn:"A thick cloud of tiny water droplets near the ground.", defEs:"niebla", syn:["mist","haze"]},
-      {word:"hail", defEn:"Small balls of ice that fall like rain.", defEs:"granizo", syn:["ice pellets","sleet"]},
-      {word:"blizzard", defEn:"A severe snowstorm with strong winds.", defEs:"ventisca", syn:["snowstorm","whiteout"]},
-      {word:"tide", defEn:"The regular rise and fall of the sea.", defEs:"marea", syn:["sea level change","ebb and flow"]},
-      {word:"earthquake", defEn:"A sudden violent shaking of the ground.", defEs:"terremoto", syn:["tremor","quake"]},
-      {word:"eruption", defEn:"A sudden release of material from a volcano.", defEs:"erupción", syn:["outburst","explosion"]},
-      {word:"pollution", defEn:"The presence of harmful substances in the environment.", defEs:"contaminación", syn:["contamination","environmental damage"]},
-      {word:"environment", defEn:"The natural world in which people, animals and plants live.", defEs:"medio ambiente", syn:["surroundings","ecosystem"]},
-      {word:"species", defEn:"A group of animals or plants that are similar.", defEs:"especie", syn:["kind","type"]},
-      {word:"extinction", defEn:"The state of no longer existing.", defEs:"extinción", syn:["dying out","disappearance"]},
-      {word:"habitat", defEn:"The natural home of an animal or plant.", defEs:"hábitat", syn:["natural environment","home"]},
-      {word:"rainforest", defEn:"A dense forest found in tropical areas with heavy rainfall.", defEs:"selva tropical", syn:["jungle","tropical forest"]},
-      {word:"shower", defEn:"A short period of rain.", defEs:"chubasco, chaparrón", syn:["rain shower","downpour"]},
-      {word:"gale", defEn:"A very strong wind.", defEs:"vendaval", syn:["strong wind","storm"]},
-      {word:"frost", defEn:"A thin layer of ice that forms outdoors when it is very cold.", defEs:"escarcha", syn:["ice layer","rime"]},
-      {word:"drizzle", defEn:"Light rain falling in fine drops.", defEs:"llovizna", syn:["light rain","fine rain"]},
-      {word:"glacier", defEn:"A large mass of ice that moves slowly.", defEs:"glaciar", syn:["ice mass","ice field"]},
-      {word:"current", defEn:"A continuous flow of water or air in one direction.", defEs:"corriente", syn:["flow","stream"]},
-      {word:"sunrise", defEn:"The time when the sun appears in the morning.", defEs:"amanecer", syn:["dawn","daybreak"]},
-      {word:"sunset", defEn:"The time when the sun disappears in the evening.", defEs:"atardecer, puesta de sol", syn:["dusk","nightfall"]}
+      {"word": "atmosphere", "defEn": "The gases around the Earth.", "defEs": "atmósfera", "syn": ["air", "sky"]},
+      {"word": "avalanche", "defEn": "A mass of snow falling down a mountain.", "defEs": "avalancha", "syn": ["snowslide", "landslide"]},
+      {"word": "blizzard", "defEn": "A severe snowstorm.", "defEs": "ventisca", "syn": ["snowstorm", "whiteout"]},
+      {"word": "breeze", "defEn": "A gentle wind.", "defEs": "brisa", "syn": ["gust", "draught"]},
+      {"word": "climate", "defEn": "Typical weather in a region.", "defEs": "clima", "syn": ["weather", "conditions"]},
+      {"word": "condensation", "defEn": "Water drops formed from vapour.", "defEs": "condensación", "syn": ["moisture", "vapour"]},
+      {"word": "current", "defEn": "Flow of water or air.", "defEs": "corriente", "syn": ["stream", "flow"]},
+      {"word": "desert", "defEn": "A dry land with little rain.", "defEs": "desierto", "syn": ["wasteland", "wilderness"]},
+      {"word": "disaster", "defEn": "A sudden event causing great damage.", "defEs": "desastre", "syn": ["catastrophe", "calamity"]},
+      {"word": "drizzle", "defEn": "Light, fine rain.", "defEs": "llovizna", "syn": ["mist", "light rain"]},
+      {"word": "drought", "defEn": "A long period without rain.", "defEs": "sequía", "syn": ["dry spell", "shortage"]},
+      {"word": "earthquake", "defEn": "A sudden shaking of the ground.", "defEs": "terremoto", "syn": ["tremor", "quake"]},
+      {"word": "erosion", "defEn": "Gradual wearing away of land.", "defEs": "erosión", "syn": ["wearing", "weathering"]},
+      {"word": "eruption", "defEn": "A volcano throwing out lava.", "defEs": "erupción", "syn": ["explosion", "outburst"]},
+      {"word": "evaporate", "defEn": "Change from liquid to vapour.", "defEs": "evaporarse", "syn": ["vaporise", "dry up"]},
+      {"word": "extinction", "defEn": "The dying out of a species.", "defEs": "extinción", "syn": ["dying out", "disappearance"]},
+      {"word": "flood", "defEn": "Water covering dry land.", "defEs": "inundación", "syn": ["deluge", "overflow"]},
+      {"word": "forecast", "defEn": "A prediction of weather.", "defEs": "pronóstico", "syn": ["prediction", "outlook"]},
+      {"word": "foggy", "defEn": "Covered by thick mist.", "defEs": "con niebla", "syn": ["misty", "hazy"]},
+      {"word": "freezing", "defEn": "Extremely cold.", "defEs": "helado/a", "syn": ["icy", "frosty"]},
+      {"word": "gradually", "defEn": "Slowly over time.", "defEs": "gradualmente", "syn": ["slowly", "steadily"]},
+      {"word": "humidity", "defEn": "Amount of water in the air.", "defEs": "humedad", "syn": ["dampness", "moisture"]},
+      {"word": "hurricane", "defEn": "A violent tropical storm.", "defEs": "huracán", "syn": ["cyclone", "typhoon"]},
+      {"word": "landscape", "defEn": "The scenery of an area.", "defEs": "paisaje", "syn": ["scenery", "view"]},
+      {"word": "lightning", "defEn": "A flash of light in a storm.", "defEs": "relámpago", "syn": ["flash", "bolt"]},
+      {"word": "nuisance", "defEn": "Something annoying.", "defEs": "molestia", "syn": ["pest", "bother"]},
+      {"word": "precipitation", "defEn": "Rain, snow or hail.", "defEs": "precipitación", "syn": ["rainfall", "downfall"]},
+      {"word": "scenery", "defEn": "Natural views of a place.", "defEs": "paisaje", "syn": ["landscape", "view"]},
+      {"word": "temperature", "defEn": "How hot or cold something is.", "defEs": "temperatura", "syn": ["heat", "warmth"]},
+      {"word": "thunderstorm", "defEn": "A storm with thunder and lightning.", "defEs": "tormenta", "syn": ["storm", "tempest"]},
+      {"word": "tornado", "defEn": "A violently spinning column of air.", "defEs": "tornado", "syn": ["whirlwind", "twister"]},
+      {"word": "tropical", "defEn": "Of the hottest parts of the Earth.", "defEs": "tropical", "syn": ["hot", "humid"]},
+      {"word": "whirlwind", "defEn": "A fast-spinning column of air.", "defEs": "torbellino", "syn": ["tornado", "cyclone"]},
+      {"word": "wilderness", "defEn": "A wild uncultivated area.", "defEs": "naturaleza salvaje", "syn": ["wilds", "wasteland"]},
+      {"word": "sunshine", "defEn": "Light and warmth from the sun.", "defEs": "luz del sol", "syn": ["daylight", "sunlight"]},
+      {"word": "overcast", "defEn": "Covered by clouds.", "defEs": "nublado", "syn": ["cloudy", "grey"]},
+      {"word": "scorching", "defEn": "Extremely hot.", "defEs": "abrasador/a", "syn": ["boiling", "roasting"]},
+      {"word": "drought-stricken", "defEn": "Suffering from a lack of rain.", "defEs": "afectado por la sequía", "syn": ["parched", "arid"]},
+      {"word": "environmental", "defEn": "Related to the natural world.", "defEs": "medioambiental", "syn": ["ecological", "green"]},
+      {"word": "vegetation", "defEn": "Plants in general.", "defEs": "vegetación", "syn": ["plants", "greenery"]},
+      {"word": "swamp", "defEn": "Wet, soft land.", "defEs": "pantano", "syn": ["marsh", "bog"]},
+      {"word": "altitude", "defEn": "Height above sea level.", "defEs": "altitud", "syn": ["elevation", "height"]},
+      {"word": "canyon", "defEn": "A deep valley with steep sides.", "defEs": "cañón", "syn": ["gorge", "ravine"]},
+      {"word": "climate change", "defEn": "Long-term change in global weather.", "defEs": "cambio climático", "syn": ["global warming", "warming"]},
+      {"word": "coastline", "defEn": "The edge of land by the sea.", "defEs": "litoral", "syn": ["shore", "seaboard"]},
+      {"word": "cyclone", "defEn": "A violent rotating storm.", "defEs": "ciclón", "syn": ["hurricane", "typhoon"]},
+      {"word": "dew", "defEn": "Small drops of water on grass at dawn.", "defEs": "rocío", "syn": ["moisture", "droplets"]},
+      {"word": "endangered", "defEn": "At risk of dying out.", "defEs": "en peligro", "syn": ["threatened", "at risk"]},
+      {"word": "fertile", "defEn": "Able to produce crops easily.", "defEs": "fértil", "syn": ["fruitful", "productive"]},
+      {"word": "fossil", "defEn": "Remains of ancient life in rock.", "defEs": "fósil", "syn": ["remains", "relic"]},
+      {"word": "frost", "defEn": "Thin ice on surfaces.", "defEs": "escarcha", "syn": ["rime", "hoarfrost"]},
+      {"word": "gale", "defEn": "A very strong wind.", "defEs": "vendaval", "syn": ["strong wind", "storm"]},
+      {"word": "harvest", "defEn": "The gathering of crops.", "defEs": "cosecha", "syn": ["crop", "yield"]},
+      {"word": "horizon", "defEn": "The line where earth meets sky.", "defEs": "horizonte", "syn": ["skyline", "view"]},
+      {"word": "iceberg", "defEn": "A large floating mass of ice.", "defEs": "iceberg", "syn": ["ice floe", "floe"]},
+      {"word": "island", "defEn": "Land surrounded by water.", "defEs": "isla", "syn": ["isle", "islet"]},
+      {"word": "jungle", "defEn": "A thick tropical forest.", "defEs": "selva", "syn": ["rainforest", "wilds"]},
+      {"word": "mist", "defEn": "Thin fog.", "defEs": "neblina", "syn": ["haze", "fog"]},
+      {"word": "moisture", "defEn": "Small amounts of water.", "defEs": "humedad", "syn": ["dampness", "wetness"]},
+      {"word": "nocturnal", "defEn": "Active at night.", "defEs": "nocturno/a", "syn": ["night-time", "after dark"]},
+      {"word": "peninsula", "defEn": "Land almost surrounded by water.", "defEs": "península", "syn": ["headland", "cape"]},
+      {"word": "rainfall", "defEn": "Amount of rain.", "defEs": "precipitaciones", "syn": ["precipitation", "downpour"]},
+      {"word": "shower", "defEn": "Short period of rain.", "defEs": "chubasco", "syn": ["downpour", "cloudburst"]},
+      {"word": "species", "defEn": "A group of similar living things.", "defEs": "especie", "syn": ["kind", "breed"]},
+      {"word": "thaw", "defEn": "To melt after being frozen.", "defEs": "derretirse", "syn": ["melt", "defrost"]}
     ],
     "Health & body": [
-      {word:"illness", defEn:"A disease or period of poor health.", defEs:"enfermedad", syn:["sickness","disease"]},
-      {word:"injury", defEn:"Physical harm or damage done to the body.", defEs:"lesión", syn:["wound","harm"]},
-      {word:"treatment", defEn:"Medical care given to a patient.", defEs:"tratamiento", syn:["therapy","care"]},
-      {word:"symptom", defEn:"A sign that shows you have an illness.", defEs:"síntoma", syn:["sign","indication"]},
-      {word:"exercise", defEn:"Physical activity done to stay healthy and fit.", defEs:"ejercicio", syn:["workout","training"]},
-      {word:"diet", defEn:"The food and drink that a person usually has.", defEs:"dieta, alimentación", syn:["nutrition","eating habits"]},
-      {word:"recovery", defEn:"The process of becoming healthy again after an illness.", defEs:"recuperación", syn:["healing","improvement"]},
-      {word:"tiredness", defEn:"The state of needing rest or sleep.", defEs:"cansancio", syn:["fatigue","exhaustion"]},
-      {word:"wound", defEn:"An injury in which the skin is cut or broken.", defEs:"herida", syn:["injury","cut"]},
-      {word:"bruise", defEn:"A dark mark on the skin caused by a blow.", defEs:"moretón, cardenal", syn:["contusion","mark"]},
-      {word:"swelling", defEn:"An area of the body that becomes larger than normal.", defEs:"hinchazón", syn:["inflammation","puffiness"]},
-      {word:"fever", defEn:"An abnormally high body temperature.", defEs:"fiebre", syn:["high temperature","pyrexia"]},
-      {word:"cough", defEn:"A sudden noisy release of air from the lungs.", defEs:"tos", syn:["hacking","throat clearing"]},
-      {word:"sneeze", defEn:"A sudden involuntary expulsion of air through the nose.", defEs:"estornudo", syn:["achoo","nasal burst"]},
-      {word:"allergy", defEn:"A condition causing sensitivity to certain substances.", defEs:"alergia", syn:["sensitivity","intolerance"]},
-      {word:"infection", defEn:"The invasion of the body by harmful microorganisms.", defEs:"infección", syn:["contamination","disease"]},
-      {word:"vaccine", defEn:"A substance used to protect against a disease.", defEs:"vacuna", syn:["immunisation","jab"]},
-      {word:"surgery", defEn:"Medical treatment involving cutting the body.", defEs:"cirugía", syn:["operation","procedure"]},
-      {word:"bandage", defEn:"A strip of material used to bind a wound.", defEs:"venda", syn:["dressing","wrap"]},
-      {word:"crutch", defEn:"A support used to help someone walk when injured.", defEs:"muleta", syn:["walking support","cane"]},
-      {word:"wheelchair", defEn:"A chair with wheels used by people who cannot walk.", defEs:"silla de ruedas", syn:["mobility chair","invalid chair"]},
-      {word:"appointment", defEn:"An arrangement to meet someone, such as a doctor.", defEs:"cita (médica)", syn:["booking","consultation"]},
-      {word:"prescription", defEn:"A written instruction from a doctor for medicine.", defEs:"receta médica", syn:["medical order","script"]},
-      {word:"dose", defEn:"A measured quantity of medicine.", defEs:"dosis", syn:["measured amount","portion"]},
-      {word:"nutrition", defEn:"The process of providing food necessary for health.", defEs:"nutrición", syn:["nourishment","diet"]},
-      {word:"strength", defEn:"The quality of being physically strong.", defEs:"fuerza", syn:["power","muscle"]},
-      {word:"flexibility", defEn:"The ability to bend or move easily.", defEs:"flexibilidad", syn:["suppleness","agility"]},
-      {word:"stamina", defEn:"The ability to sustain prolonged physical effort.", defEs:"resistencia (física)", syn:["endurance","staying power"]},
-      {word:"posture", defEn:"The position in which someone holds their body.", defEs:"postura", syn:["stance","position"]},
-      {word:"balanced", defEn:"Containing the right amount of different food groups.", defEs:"equilibrado/a", syn:["well-proportioned","varied"]},
-      {word:"hygiene", defEn:"Practices that keep you and your surroundings clean.", defEs:"higiene", syn:["cleanliness","sanitation"]},
-      {word:"wellbeing", defEn:"The state of being comfortable, healthy and happy.", defEs:"bienestar", syn:["welfare","health"]}
+      {"word": "ache", "defEn": "A continuous dull pain.", "defEs": "dolor", "syn": ["pain", "soreness"]},
+      {"word": "appetite", "defEn": "Desire for food.", "defEs": "apetito", "syn": ["hunger", "craving"]},
+      {"word": "appointment", "defEn": "An arranged meeting.", "defEs": "cita", "syn": ["meeting", "booking"]},
+      {"word": "dizzy", "defEn": "Feeling that everything is spinning.", "defEs": "mareado/a", "syn": ["giddy", "faint"]},
+      {"word": "height", "defEn": "How tall someone is.", "defEs": "altura", "syn": ["stature", "tallness"]},
+      {"word": "hygiene", "defEn": "Keeping clean to stay healthy.", "defEs": "higiene", "syn": ["cleanliness", "sanitation"]},
+      {"word": "immune", "defEn": "Protected against a disease.", "defEs": "inmune", "syn": ["resistant", "protected"]},
+      {"word": "injury", "defEn": "Harm to the body.", "defEs": "lesión", "syn": ["wound", "damage"]},
+      {"word": "nausea", "defEn": "A feeling of wanting to be sick.", "defEs": "náuseas", "syn": ["sickness", "queasiness"]},
+      {"word": "pharmacy", "defEn": "A place that sells medicines.", "defEs": "farmacia", "syn": ["chemist", "drugstore"]},
+      {"word": "physical", "defEn": "Relating to the body.", "defEs": "físico/a", "syn": ["bodily", "corporeal"]},
+      {"word": "posture", "defEn": "The way you hold your body.", "defEs": "postura", "syn": ["stance", "bearing"]},
+      {"word": "recovery", "defEn": "Return to good health.", "defEs": "recuperación", "syn": ["healing", "comeback"]},
+      {"word": "stomach", "defEn": "Organ where food is digested.", "defEs": "estómago", "syn": ["tummy", "belly"]},
+      {"word": "stamina", "defEn": "Ability to keep going.", "defEs": "resistencia", "syn": ["endurance", "energy"]},
+      {"word": "swollen", "defEn": "Larger than normal because of injury.", "defEs": "hinchado/a", "syn": ["puffy", "bloated"]},
+      {"word": "symptom", "defEn": "A sign of illness.", "defEs": "síntoma", "syn": ["sign", "indication"]},
+      {"word": "treatment", "defEn": "Medical care.", "defEs": "tratamiento", "syn": ["therapy", "care"]},
+      {"word": "unconscious", "defEn": "Not awake or aware.", "defEs": "inconsciente", "syn": ["senseless", "out cold"]},
+      {"word": "vaccine", "defEn": "A substance that protects from disease.", "defEs": "vacuna", "syn": ["jab", "immunisation"]},
+      {"word": "wellbeing", "defEn": "Being healthy and happy.", "defEs": "bienestar", "syn": ["welfare", "health"]},
+      {"word": "wound", "defEn": "An injury to the skin.", "defEs": "herida", "syn": ["cut", "injury"]},
+      {"word": "muscular", "defEn": "Having strong muscles.", "defEs": "musculoso/a", "syn": ["brawny", "strong"]},
+      {"word": "sore", "defEn": "Painful.", "defEs": "dolorido/a", "syn": ["aching", "tender"]},
+      {"word": "stress", "defEn": "Mental pressure.", "defEs": "estrés", "syn": ["strain", "tension"]},
+      {"word": "abdomen", "defEn": "The part of the body with the stomach.", "defEs": "abdomen", "syn": ["belly", "stomach"]},
+      {"word": "accident", "defEn": "An unexpected event causing harm.", "defEs": "accidente", "syn": ["crash", "mishap"]},
+      {"word": "addiction", "defEn": "Inability to stop a harmful habit.", "defEs": "adicción", "syn": ["dependence", "craving"]},
+      {"word": "ambulance", "defEn": "A vehicle that carries sick people.", "defEs": "ambulancia", "syn": ["emergency vehicle", "paramedics"]},
+      {"word": "anaemia", "defEn": "Lack of healthy red blood cells.", "defEs": "anemia", "syn": ["low iron", "blood deficiency"]},
+      {"word": "arthritis", "defEn": "Painful swelling of the joints.", "defEs": "artritis", "syn": ["joint pain", "rheumatism"]},
+      {"word": "bacteria", "defEn": "Tiny organisms that can cause disease.", "defEs": "bacterias", "syn": ["germs", "microbes"]},
+      {"word": "calories", "defEn": "Units of energy in food.", "defEs": "calorías", "syn": ["energy", "kilojoules"]},
+      {"word": "chemist", "defEn": "A person who sells medicines.", "defEs": "farmacéutico/a", "syn": ["pharmacist", "druggist"]},
+      {"word": "chest", "defEn": "The upper front of the body.", "defEs": "pecho", "syn": ["breast", "torso"]},
+      {"word": "cholesterol", "defEn": "A fatty substance in blood.", "defEs": "colesterol", "syn": ["blood fat", "lipid"]},
+      {"word": "condition", "defEn": "A state of health.", "defEs": "estado", "syn": ["illness", "state"]},
+      {"word": "disease", "defEn": "An illness of the body.", "defEs": "enfermedad", "syn": ["illness", "sickness"]},
+      {"word": "disability", "defEn": "A physical or mental impairment.", "defEs": "discapacidad", "syn": ["handicap", "impairment"]},
+      {"word": "dehydrated", "defEn": "Lacking enough water.", "defEs": "deshidratado/a", "syn": ["parched", "dried out"]},
+      {"word": "diabetes", "defEn": "A disease with too much sugar in the blood.", "defEs": "diabetes", "syn": ["blood sugar disease", "sugar illness"]},
+      {"word": "diagnosis", "defEn": "Identifying an illness.", "defEs": "diagnóstico", "syn": ["identification", "opinion"]},
+      {"word": "dentist", "defEn": "Doctor for teeth.", "defEs": "dentista", "syn": ["tooth doctor", "orthodontist"]},
+      {"word": "eyesight", "defEn": "The ability to see.", "defEs": "vista", "syn": ["vision", "sight"]},
+      {"word": "fatigue", "defEn": "Extreme tiredness.", "defEs": "fatiga", "syn": ["exhaustion", "weariness"]},
+      {"word": "headache", "defEn": "Pain in the head.", "defEs": "dolor de cabeza", "syn": ["migraine", "head pain"]},
+      {"word": "healthy", "defEn": "In good health.", "defEs": "sano/a", "syn": ["fit", "well"]},
+      {"word": "heartbeat", "defEn": "The pulse of the heart.", "defEs": "latido", "syn": ["pulse", "rhythm"]},
+      {"word": "injection", "defEn": "Medicine put in with a needle.", "defEs": "inyección", "syn": ["jab", "shot"]},
+      {"word": "knuckle", "defEn": "A joint of the finger.", "defEs": "nudillo", "syn": ["finger joint", "joint"]},
+      {"word": "muscle", "defEn": "Tissue that moves the body.", "defEs": "músculo", "syn": ["tissue", "sinew"]},
+      {"word": "nurse", "defEn": "Person who cares for the sick.", "defEs": "enfermero/a", "syn": ["carer", "health worker"]},
+      {"word": "obesity", "defEn": "Being very overweight.", "defEs": "obesidad", "syn": ["overweight", "fatness"]},
+      {"word": "paracetamol", "defEn": "A drug for pain and fever.", "defEs": "paracetamol", "syn": ["painkiller", "analgesic"]},
+      {"word": "patient", "defEn": "A person receiving medical care.", "defEs": "paciente", "syn": ["sufferer", "case"]},
+      {"word": "pulse", "defEn": "Beat of blood in arteries.", "defEs": "pulso", "syn": ["heartbeat", "beat"]},
+      {"word": "rash", "defEn": "Red spots on the skin.", "defEs": "sarpullido", "syn": ["eruption", "spots"]},
+      {"word": "shoulder", "defEn": "Joint between arm and body.", "defEs": "hombro", "syn": ["joint", "upper arm"]},
+      {"word": "spine", "defEn": "The backbone.", "defEs": "columna vertebral", "syn": ["backbone", "vertebrae"]},
+      {"word": "sprain", "defEn": "To injure a joint by twisting it.", "defEs": "torcerse", "syn": ["twist", "wrench"]},
+      {"word": "stethoscope", "defEn": "Tool for listening to the heart.", "defEs": "estetoscopio", "syn": ["medical instrument", "listener"]},
+      {"word": "suffer", "defEn": "Experience pain or illness.", "defEs": "sufrir", "syn": ["endure", "ache"]},
+      {"word": "thigh", "defEn": "Upper part of the leg.", "defEs": "muslo", "syn": ["upper leg", "leg"]},
+      {"word": "thumb", "defEn": "The short, thick finger.", "defEs": "pulgar", "syn": ["digit", "finger"]},
+      {"word": "tumour", "defEn": "An abnormal growth.", "defEs": "tumor", "syn": ["growth", "lump"]},
+      {"word": "wrist", "defEn": "Joint between hand and arm.", "defEs": "muñeca", "syn": ["joint", "carpus"]},
+      {"word": "yawn", "defEn": "Open the mouth wide when tired.", "defEs": "bostezar", "syn": ["gape", "stretch"]}
     ]
   };
 
@@ -848,14 +1034,34 @@
     return null;
   }
 
+  // ---------------- diccionario personal (se guarda en este navegador) ----------------
+  const CUSTOM_KEY = 'bingoPersonalDictEn_v1';
+  function loadCustom(){
+    try{ const r = localStorage.getItem(CUSTOM_KEY); if(r){ const o = JSON.parse(r); if(o && typeof o==='object') return o; } }catch(e){}
+    return {};
+  }
+  function saveCustom(o){ try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(o)); }catch(e){} }
+  function lookupMeaning(word){
+    const k = String(word).trim().toLowerCase();
+    const c = loadCustom();
+    if(c[k]) return { defEn:c[k].defEn||'', defEs:c[k].defEs||'', syn:(c[k].syn||[]).slice() };
+    const m = findWordInBank(k);
+    return m ? { defEn:m.defEn, defEs:m.defEs, syn:m.syn.slice() } : null;
+  }
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
   function setWords(list){
-    words = list.map((w,i)=>({
-      n:i+1,
-      word: (typeof w === 'string' ? w : w.word),
-      defEn: (typeof w === 'string' ? '' : (w.defEn || '')),
-      defEs: (typeof w === 'string' ? '' : (w.defEs || '')),
-      syn: (typeof w === 'string' ? [] : (w.syn || []))
-    }));
+    words = list.map((w,i)=>{
+      const word = (typeof w === 'string' ? w : w.word);
+      const own = lookupMeaning(word);
+      return {
+        n:i+1,
+        word: word,
+        defEn: own ? own.defEn : (typeof w === 'string' ? '' : (w.defEn || '')),
+        defEs: own ? own.defEs : (typeof w === 'string' ? '' : (w.defEs || '')),
+        syn: own ? own.syn : (typeof w === 'string' ? [] : (w.syn || []))
+      };
+    });
     showStatus(words.length+' palabras numeradas del 1 al '+words.length+'. Las tarjetas están listas y el sorteo ya puede girar. Se han guardado en este navegador: al volver a abrir el archivo aquí mismo, seguirán cargadas.', 'ok');
     renderWordBank();
     renderCards();
@@ -903,13 +1109,46 @@
     return item.defEn + esHtml + synHtml;
   }
 
+  function editFormHtml(item){
+    return '<div class="wb-edit">'+
+      '<textarea class="we-def" rows="2" placeholder="Definition in English of «'+escHtml(item.word)+'»">'+escHtml(item.defEn||'')+'</textarea>'+
+      '<input class="we-es" placeholder="Significado en español" value="'+escHtml(item.defEs||'')+'">'+
+      '<div class="we-row"><input class="we-s1" placeholder="Synonym 1" value="'+escHtml((item.syn||[])[0]||'')+'">'+
+      '<input class="we-s2" placeholder="Synonym 2" value="'+escHtml((item.syn||[])[1]||'')+'">'+
+      '<button type="button" class="we-save">Guardar</button><button type="button" class="we-cancel">Cancelar</button></div></div>';
+  }
+
   function renderWordBank(){
     wordBankPreview.innerHTML = words.map(item=>
       '<div class="wb-row">'+
         '<div class="wb-row-top"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span></div>'+
-        '<div class="wb-meaning" data-meaning-n="'+item.n+'">'+meaningHtml(item)+'</div>'+
+        '<div class="wb-meaning" data-meaning-n="'+item.n+'">'+meaningHtml(item)+
+          ' <button type="button" class="wb-editbtn" data-editbtn="'+item.n+'">'+(item.defEn?'✎ Editar':'＋ Añadir significado')+'</button></div>'+
       '</div>'
     ).join('');
+    wordBankPreview.querySelectorAll('.wb-editbtn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const n = parseInt(b.dataset.editbtn);
+        const entry = words.find(w=>w.n===n);
+        const box = wordBankPreview.querySelector('[data-meaning-n="'+n+'"]');
+        if(!entry || !box) return;
+        box.innerHTML = editFormHtml(entry);
+        box.querySelector('.we-def').focus();
+        box.querySelector('.we-cancel').addEventListener('click', renderWordBank);
+        box.querySelector('.we-save').addEventListener('click', ()=>{
+          const defEn = box.querySelector('.we-def').value.trim();
+          const defEs = box.querySelector('.we-es').value.trim();
+          const syn = [box.querySelector('.we-s1').value.trim(), box.querySelector('.we-s2').value.trim()].filter(Boolean);
+          if(!defEn){ box.querySelector('.we-def').focus(); return; }
+          const c = loadCustom();
+          c[entry.word.trim().toLowerCase()] = { defEn:defEn, defEs:defEs, syn:syn };
+          saveCustom(c);
+          entry.defEn = defEn; entry.defEs = defEs; entry.syn = syn;
+          renderWordBank(); renderCards(); saveWordsToStorage();
+          showStatus('Significado de «'+entry.word+'» guardado en tu diccionario personal: saldrá siempre que escribas esa palabra.', 'ok');
+        });
+      });
+    });
     wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
       el.addEventListener('blur', ()=>{
         const n = parseInt(el.dataset.n);
@@ -917,7 +1156,7 @@
         const entry = words.find(w=>w.n===n);
         if(entry && newVal){
           if(newVal.toLowerCase() !== entry.word.toLowerCase()){
-            const match = findWordInBank(newVal);
+            const match = lookupMeaning(newVal);
             if(match){
               entry.defEn = match.defEn;
               entry.defEs = match.defEs;
@@ -929,8 +1168,7 @@
             }
           }
           entry.word = newVal;
-          const meaningEl = wordBankPreview.querySelector('[data-meaning-n="'+n+'"]');
-          if(meaningEl) meaningEl.innerHTML = meaningHtml(entry);
+          renderWordBank();
           renderCards();
           saveWordsToStorage();
         } else if(entry){
