@@ -287,7 +287,7 @@ window.RECURSOS=[
     ]
    },
    {
-    "t": "Repartición Ámbito Lingüístico e Social",
+    "t": "Horario ámbito lingüístico y social",
     "h": "04_PDC/reparticion_ambito_linguistico_social_3eso_pdc.html"
    }
   ]
@@ -440,4 +440,6 @@ window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"];
 window.OCULTOS=[
  '01_ESO/1_Y_2/ACTIVIDADES/',
  '01_ESO/1_Y_2/PRESENTACIONES/presentacion_genero_lirico.html',
+ '04_PDC/PRESENTACIONES/presentacion_pdc.html',
+ '04_PDC/PRESENTACIONES/presentacion_tutoria_3eso_pdc.html',
 ];

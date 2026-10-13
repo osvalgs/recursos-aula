@@ -76,3 +76,25 @@ header.coursehead{background:linear-gradient(135deg,var(--cc) 0%,color-mix(in sr
 .bigicon .disc2{position:absolute;inset:22%;border-radius:50%;background:rgba(255,255,255,.18)}
 .bigicon .emo{position:relative;font-size:min(130px,30vw);filter:drop-shadow(0 14px 22px rgba(0,0,0,.25))}
 .bigicon .orb{position:absolute;border-radius:50%;background:#ffd75e}
+
+/* destacados (horario y tutoría) */
+.feature{display:block;border-radius:24px;margin:22px 0;text-decoration:none;scroll-margin-top:130px}
+.feature>.fic,.fhead .fic{flex:none;width:68px;height:68px;border-radius:20px;display:grid;place-items:center;font-size:38px}
+.feature>span>b,.fhead b{display:block;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:clamp(22px,2.8vw,34px);line-height:1.1;text-transform:uppercase;letter-spacing:.01em}
+.feature>span>small,.fhead small{display:block;font-weight:700;opacity:.85;margin-top:.3em}
+a.feature.f-horario{display:flex;align-items:center;gap:20px;padding:26px 28px;color:#fff;background:linear-gradient(135deg,var(--cc),color-mix(in srgb,var(--cc) 55%,#1f2a52));box-shadow:0 14px 28px color-mix(in srgb,var(--cc) 30%,transparent);transition:transform .2s}
+a.feature.f-horario:hover{transform:translateY(-4px)}
+.f-horario .fic{background:rgba(255,255,255,.18)}
+.f-horario .fgo{margin-left:auto;flex:none;background:#ffd75e;color:#5a4300;font-weight:700;border-radius:30px;padding:.5em 1.2em}
+div.feature.f-tutoria{--tc:#d4a017;background:var(--paper);border:3px dashed var(--tc);padding:22px 24px}
+.f-tutoria .fhead{display:flex;align-items:center;gap:18px;margin-bottom:16px}
+.f-tutoria .fhead .fic{background:color-mix(in srgb,var(--tc) 22%,#fff)}
+.f-tutoria .fhead b{color:#8a6608}
+.f-tutoria .fhead small{color:var(--soft)}
+.f-tutoria .card::before{background:var(--tc)}
+/* apartados de materia más visibles */
+.group.materia{margin:34px 0 10px;scroll-margin-top:130px}
+.group.materia h3{font-size:clamp(20px,2.2vw,26px);font-weight:800;color:var(--ink);gap:.6em;margin-bottom:14px}
+.group.materia h3 .mic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:24px;background:var(--cc)}
+.group.materia h3::after{height:3px;background:linear-gradient(90deg,var(--cc),transparent)}
+@media (max-width:600px){a.feature.f-horario{flex-wrap:wrap}.f-horario .fgo{margin-left:0}}

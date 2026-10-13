@@ -5,11 +5,19 @@ const isHidden=h=>!SHOWALL&&HID.some(x=>h===x||(x.endsWith('/')&&h.startsWith(x)
 function prune(n){if(n.h)return isHidden(n.h)?null:n;const c=n.c.map(prune).filter(Boolean);return c.length?{n:n.n,c}:null}
 const DATA=(window.RECURSOS||[]).map(prune).filter(Boolean), NEW=window.NUEVOS||[], PAGE=window.PAGE||{mode:'home',root:''};
 const ROOT=PAGE.root||'';
+/* Modo alumnado: con ?alumnado en la dirección no aparece el enlace a «Todos los recursos» */
+const ALUM=/[?&]alumnado\b/.test(location.search);
 const CATS={
  '01. ESO':{name:'ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º y 2.º de ESO.'},
  '02. BACH':{name:'Bachillerato',icon:'🎓',col:'--c2',desc:'Unidades didácticas, actividades y presentaciones de Lengua y Literatura para Bachillerato.'},
  '03. FPB':{name:'FP Básica',icon:'🔧',col:'--c3',desc:'Actividades y talleres para FP Básica.'},
- '04. PDC':{name:'PDC · Diversificación',icon:'🧭',col:'--c4',desc:'Materiales del Ámbito Lingüístico y Social de 3.º ESO PDC: presentaciones, actividades y tutorías.'},
+ '04. PDC':{name:'PDC · Diversificación',icon:'🧭',col:'--c4',desc:'Materiales del Ámbito Lingüístico y Social de 3.º ESO PDC: presentaciones, actividades y tutorías.',
+   layout:{
+    destacados:[
+     {h:'04_PDC/reparticion_ambito_linguistico_social_3eso_pdc.html',titulo:'Horario ámbito lingüístico y social',sub:'Materias por días y horas · 3.º ESO PDC',icon:'🗓️',tipo:'horario'},
+     {carpeta:'Tutorías',titulo:'Tutoría',sub:'Vídeos, charlas, técnicas de estudio y juegos',icon:'💬',tipo:'tutoria'}],
+    quitar:['Presentaciones'],
+    materias:{'Comunicación':'🎙️','Lengua y literatura castellanas':'📖','Lingua e literatura galegas':'📗','Xeografía':'🌍','Historia':'🏛️','Actividades':'✏️'}}},
  'ACTIVIDADES LÚDICAS':{name:'Actividades lúdicas',icon:'🎲',col:'--c5',desc:'Bingos, banderas, pasatiempos, ruletas y juegos de vocabulario para aprender jugando.'},
  'ACTIVIDADES PERSONAJES HISTÓRICOS':{name:'Personajes históricos',icon:'🕵️',col:'--c6',desc:'Expedientes interactivos para investigar la vida de grandes personajes de la historia.'},
  'PROYECTOS COMPETENCIALES':{name:'Proyectos competenciales',icon:'📻',col:'--c7',desc:'Proyectos para aprender haciendo: radio, entrevistas y mucho más.'},
@@ -60,24 +68,36 @@ const HERO=`<svg viewBox="0 0 420 320" aria-hidden="true">
     </svg>`;
 const WAVE='<svg class="wave" viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0 40 C240 80 480 0 720 30 C960 60 1200 10 1440 40 L1440 70 L0 70 Z" fill="#f6f2ea"/></svg>';
 function card(f,lab0,ctx){const [ic,lab]=kind(f.h);return `<a class="card" href="${ROOT+f.h}" target="_blank" data-t="${(f.t+' '+lab+' '+ctx).toLowerCase().replace(/"/g,'')}">${NEW.includes(f.h)?'<span class="new">NUEVO</span>':''}<div class="ticon">${ic}</div><div><small>${lab}</small><b>${f.t}</b></div><span class="go">→</span></a>`}
-function groupHTML(g,ctx){return `<div class="group"><h3>${g.path.length?g.path.join(' › '):'General'}</h3><div class="grid">${g.files.map(f=>card(f,'',ctx+' '+g.path.join(' '))).join('')}</div></div>`}
+function groupHTML(g,ctx,ic){return `<div class="group${ic?' materia':''}"><h3>${ic?`<span class="mic">${ic}</span>`:''}${g.path.length?g.path.join(' › '):'General'}</h3><div class="grid">${g.files.map(f=>card(f,'',ctx+' '+g.path.join(' '))).join('')}</div></div>`}
 function stat(b,s){return `<div class="stat"><b>${b}</b><small>${s}</small></div>`}
 const app=document.getElementById('app');let html='';
 if(PAGE.mode==='course'){
  const cat=DATA.find(c=>c.n===PAGE.key)||{n:PAGE.key,c:[]};const I=info(cat);let gs=groups(cat,[],[]);
+ const L=I.layout||{};let top='',topChips=[];
+ // destacados: horario (un recurso) y tutoría (una carpeta) arriba del todo
+ (L.destacados||[]).forEach((d,k)=>{
+  if(d.h){let f=null;gs.forEach(g=>{const i=g.files.findIndex(x=>x.h===d.h);if(i>-1){f=g.files.splice(i,1)[0]}});gs=gs.filter(g=>g.files.length);
+   if(!f)return;top+=`<a class="feature f-${d.tipo}" id="d${k}" href="${ROOT+f.h}" target="_blank"><span class="fic">${d.icon}</span><span><b>${d.titulo}</b><small>${d.sub||''}</small></span><span class="fgo">Abrir →</span></a>`}
+  else{const sel=gs.filter(g=>g.path[0]===d.carpeta);gs=gs.filter(g=>g.path[0]!==d.carpeta);const fs=[].concat(...sel.map(g=>g.files));if(!fs.length)return;
+   top+=`<div class="feature f-${d.tipo}" id="d${k}"><div class="fhead"><span class="fic">${d.icon}</span><span><b>${d.titulo}</b><small>${d.sub||''}</small></span></div><div class="grid">${fs.map(f=>card(f,'',I.name+' '+d.titulo)).join('')}</div></div>`}
+  topChips.push(`<a class="chip" style="--cc:var(${I.col})" href="#d${k}">${d.titulo.split(' ')[0]}</a>`)});
+ // quitar niveles intermedios (p. ej. «Presentaciones») y juntar apartados iguales
+ if(L.quitar){const m=new Map();gs.forEach(g=>{const p=g.path.filter(x=>!L.quitar.includes(x));const k=p.join(' › ');if(m.has(k))m.get(k).files.push(...g.files);else m.set(k,{path:p,files:g.files.slice()})});gs=[...m.values()]}
+ // materias en el orden indicado
+ const MAT=L.materias||null;if(MAT){const o=Object.keys(MAT);const r=g=>{const i=o.indexOf(g.path[g.path.length-1]);return i<0?99:i};gs.sort((a,b)=>r(a)-r(b))}
  // quitar el primer nivel si todos los grupos lo comparten (p. ej. «1º y 2º»)
  document.documentElement.style.setProperty('--cc',`var(${I.col})`);document.title=I.name+' · Recursos de aula';
- html+=`<header class="coursehead"><div class="hero"><div><a class="back" href="${ROOT}index.html">← Todos los recursos</a><br><span class="kicker">Recursos de aula · Lengua y Literatura</span><h1>${I.name}</h1><p class="lead">${I.desc}</p><div class="stats">${stat(count(cat),'recursos')}${stat(gs.length,gs.length===1?'apartado':'apartados')}</div></div>
+ html+=`<header class="coursehead"><div class="hero"><div>${ALUM?'':`<a class="back" href="${ROOT}index.html">← Todos los recursos</a><br>`}<span class="kicker">Recursos de aula · Lengua y Literatura</span><h1>${I.name}</h1><p class="lead">${I.desc}</p><div class="stats">${stat(count(cat),'recursos')}${stat(gs.length,gs.length===1?'apartado':'apartados')}</div></div>
  <div class="bigicon"><div class="disc"></div><div class="disc2"></div><span class="orb float" style="width:22px;height:22px;top:10%;right:16%"></span><span class="orb float2" style="width:14px;height:14px;bottom:14%;left:12%"></span><span class="orb float" style="width:10px;height:10px;top:30%;left:6%;background:#fff"></span><span class="emo float">${I.icon}</span></div></div>${WAVE}</header>`;
- html+=`<div class="toolbar"><div class="searchrow"><label class="search">🔎<input id="q" type="search" placeholder="Buscar en ${I.name}…" autocomplete="off"></label><span id="count"></span></div><nav class="chips">${gs.map((g,i)=>`<a class="chip" style="--cc:var(${I.col})" href="#g${i}">${g.path.length?g.path[g.path.length-1]:'General'}</a>`).join('')}</nav></div>`;
- html+=`<main><section class="cat" style="--cc:var(${I.col})">${gs.map((g,i)=>groupHTML(g,I.name).replace('<div class="group">',`<div class="group" id="g${i}" style="scroll-margin-top:130px">`)).join('')}</section></main>`;
+ html+=`<div class="toolbar"><div class="searchrow"><label class="search">🔎<input id="q" type="search" placeholder="Buscar en ${I.name}…" autocomplete="off"></label><span id="count"></span></div><nav class="chips">${topChips.join('')}${gs.map((g,i)=>`<a class="chip" style="--cc:var(${I.col})" href="#g${i}">${g.path.length?g.path[g.path.length-1]:'General'}</a>`).join('')}</nav></div>`;
+ html+=`<main><section class="cat" style="--cc:var(${I.col})">${top}${gs.map((g,i)=>groupHTML(g,I.name,MAT&&(MAT[g.path[g.path.length-1]]||'📁')).replace('<div class="group">',`<div class="group" id="g${i}" style="scroll-margin-top:130px">`)).join('')}</section></main>`;
 }else{
  let total=DATA.reduce((a,c)=>a+count(c),0);
  html+=`<header><div class="hero"><div><span class="kicker">Lengua y Literatura · Materiales interactivos</span><h1>Recursos <span>de aula</span></h1><p class="lead">Presentaciones, actividades, unidades didácticas, talleres y juegos para trabajar en clase y repasar en casa. Elige tu curso o busca directamente lo que necesitas.</p><div class="stats">${stat(total,'recursos')}${stat(DATA.length,'apartados')}${stat('100&nbsp;%','interactivos')}</div></div>${HERO}</div>${WAVE}</header>`;
  html+=`<div class="toolbar"><div class="searchrow"><label class="search">🔎<input id="q" type="search" placeholder="Buscar un recurso: «sintaxis», «Turing», «bingo»…" autocomplete="off"></label><span id="count"></span></div></div>`;
  html+=`<main><div id="coursesBlock"><h2 class="sectiontitle">Elige tu curso o apartado</h2><div class="courses">${DATA.map(c=>{const I=info(c);const n=count(c);return `<a class="course" style="--cc:var(${I.col})" href="${folderOf(c)}/index.html"><span class="arrow">↗</span><span class="ci">${I.icon}</span><h3>${I.name}</h3><span>${n} recurso${n>1?'s':''}</span></a>`}).join('')}</div></div>
  <h2 class="sectiontitle" id="allTitle">Todos los recursos</h2>`;
- DATA.forEach(c=>{const I=info(c);const gs=groups(c,[],[]);html+=`<section class="cat" style="--cc:var(${I.col})"><div class="cathead"><a class="caticon" href="${folderOf(c)}/index.html" style="text-decoration:none">${I.icon}</a><div><h2>${I.name}</h2><span class="n">${count(c)} recursos · <a href="${folderOf(c)}/index.html" style="color:var(--cc)">abrir página del apartado ↗</a></span></div></div>${gs.map(g=>groupHTML(g,I.name)).join('')}</section>`});
+ DATA.forEach(c=>{const I=info(c);const Q=(I.layout||{}).quitar||[];const gs=groups(c,[],[]).map(g=>({path:g.path.filter(x=>!Q.includes(x)),files:g.files}));html+=`<section class="cat" style="--cc:var(${I.col})"><div class="cathead"><a class="caticon" href="${folderOf(c)}/index.html" style="text-decoration:none">${I.icon}</a><div><h2>${I.name}</h2><span class="n">${count(c)} recursos · <a href="${folderOf(c)}/index.html" style="color:var(--cc)">abrir página del apartado ↗</a></span></div></div>${gs.map(g=>groupHTML(g,I.name)).join('')}</section>`});
  html+='</main>';
 }
 html+='<div class="empty" id="empty">No hay ningún recurso con esa búsqueda. 🙈</div><footer>Recursos de aula · Lengua Castellana y Literatura</footer>';
@@ -86,7 +106,7 @@ const q=document.getElementById('q'),cnt=document.getElementById('count');const 
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
 function filter(){const v=norm(q.value.trim());let shown=0;
  document.querySelectorAll('.card').forEach(c=>{const ok=!v||norm(c.dataset.t).includes(v);c.classList.toggle('hide',!ok);if(ok)shown++});
- document.querySelectorAll('.group').forEach(g=>g.classList.toggle('hide',!g.querySelector('.card:not(.hide)')));
+ document.querySelectorAll('.group,div.feature').forEach(g=>g.classList.toggle('hide',!g.querySelector('.card:not(.hide)')));
  document.querySelectorAll('section.cat').forEach(s=>s.classList.toggle('hide',!s.querySelector('.card:not(.hide)')));
  const cb=document.getElementById('coursesBlock');if(cb)cb.classList.toggle('hide',!!v);
  document.getElementById('empty').style.display=shown?'none':'block';cnt.textContent=v?`${shown} resultado${shown===1?'':'s'}`:`${all} recursos`}
