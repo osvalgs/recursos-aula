@@ -267,6 +267,14 @@ textarea.pizarra::placeholder{color:#6f7a93}
 @media print{.lateral{display:none!important}}
 h1,h2,h3,h4{text-align:left}
 .marcas{padding:0 6px 8px}.marca{font-size:11px;white-space:nowrap;min-width:0}
+
+/* esquema ampliado */
+.esquema{cursor:zoom-in}
+.capa-esq{position:fixed;inset:0;z-index:30;background:rgba(8,13,26,.92);display:none;place-items:center;cursor:zoom-out}
+.capa-esq.on{display:grid}
+.capa-esq .esquema{width:min(96vw,calc(94vh*1.414));max-width:none;margin:0;cursor:zoom-out}
+.cerrar-esq{position:fixed;top:14px;right:18px;z-index:31;width:48px;height:48px;border-radius:50%;border:2px solid var(--ambar);background:var(--noche3);color:var(--texto);font-size:1.3em}
+@media print{.capa-esq{display:none!important}}
 </style>
 </head>
 <body>
@@ -365,26 +373,6 @@ h1,h2,h3,h4{text-align:left}
       <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
       <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
       <div class="respuesta oculto">Identifícase <strong>co propio autor cando era neno</strong>: o Llamazares adulto lembra e conta o que viviu de pequeno, escoitando a radio xunto á súa familia.</div>
-    </div>
-  </div>
-</section>
-
-<!-- 5 ACT 3-4 -->
-<section class="slide" data-titulo="Act.3-4" data-tipo="ex">
-  <div class="slide-inner">
-    <div class="ex-tag">🎙️ Comprensión</div>
-    <h2>«Extraños en la noche»</h2>
-    <div class="act">
-      <div class="act-enun"><span class="n">3</span>Resume brevemente no teu caderno a historia relatada.</div>
-      <textarea class="pizarra" placeholder="O noso resumo…" style="min-height:4.5em"></textarea>
-      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
-      <div class="respuesta oculto">Na casa do narrador, cada hora soaba na radio un sinal e o pai escoitaba as noticias en silencio. O neno, mentres ceaba ou desde a cama, escoitaba emisoras de lugares afastados e imaxinaba como serían. Unha noite, mentres ceaban, a música interrompeuse para anunciar que asasinaran en Dallas o presidente dos Estados Unidos, Kennedy. A familia quedou calada, o pai buscou máis noticias noutras emisoras e, despois de soar unha balada, mandaron os nenos á cama sen que o narrador entendese ben o que pasaba.</div>
-    </div>
-    <div class="act">
-      <div class="act-enun"><span class="n">4</span>A radio é o tema central do texto. Que supón para a imaxinación do narrador a existencia da radio?</div>
-      <textarea class="pizarra" placeholder="Anota aquí o que digan…"></textarea>
-      <p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p>
-      <div class="respuesta oculto">A radio é unha <strong>xanela ao mundo</strong>. Como só oe voces, sen imaxes, o neno imaxina como son os países e as cidades de onde chegan (París, o Vaticano, Andorra…). Algúns lugares, como Andorra, parécenlle tan irreais como un país de conto. A radio <strong>estimula a súa imaxinación</strong> e acompáñao cada noite.</div>
     </div>
   </div>
 </section>
@@ -558,105 +546,6 @@ h1,h2,h3,h4{text-align:left}
   </div>
 </section>
 
-<!-- 13 A RADIO -->
-<section class="slide" data-titulo="A radio" data-tipo="teo">
-  <div class="slide-inner">
-    <div class="teo-tag">💡 Teoría</div>
-    <h2>Para que serve a radio?</h2>
-    <div class="objetivos">
-      <div class="obj"><div class="ic">📰</div><b>Informar</b>Noticias, tempo, tráfico.</div>
-      <div class="obj"><div class="ic">🎶</div><b>Entreter</b>Música, humor, deportes.</div>
-      <div class="obj"><div class="ic">🎓</div><b>Educar</b>Divulgación, cultura, idiomas.</div>
-      <div class="obj"><div class="ic">📞</div><b>Fomentar a participación</b>Chamadas e mensaxes dos ouvintes.</div>
-    </div>
-    <div class="grid2">
-      <div class="sabias"><h3>Sabías que…?</h3>Aínda que se emiten oralmente, moitos programas <strong>prepáranse antes por escrito</strong> (o guión). Aínda así, os locutores e locutoras mostran espontaneidade e expresividade.</div>
-      <div class="sabias"><h3>Sabías que…?</h3>Un <strong>podcast</strong> é un arquivo de audio dixital para escoitar ou descargar cando queiras. Por exemplo, os programas da Radio Galega: <a href="https://www.crtvg.es/rg/podcast" target="_blank" rel="noopener" style="color:var(--azul)">www.crtvg.es/rg/podcast</a></div>
-    </div>
-  </div>
-</section>
-
-<!-- 14 XORNALISMO -->
-<section class="slide" data-titulo="Xornal." data-tipo="teo">
-  <div class="slide-inner">
-    <div class="teo-tag">💡 Teoría</div>
-    <h2>Os textos xornalísticos na radio</h2>
-    <div class="grid2">
-      <div>
-        <h3>En que se diferencian</h3>
-        <ul class="lista-ic">
-          <li><span class="ic">🔊</span><span>Difúndense de forma <strong>oral</strong>: non hai imaxe que axude (como na televisión).</span></li>
-          <li><span class="ic">⏳</span><span>Teñen <strong>menos permanencia no tempo</strong> ca os textos escritos da prensa.</span></li>
-          <li><span class="ic">⚡</span><span>Son moi <strong>expresivos, espontáneos e inmediatos</strong>: contan a noticia no momento.</span></li>
-        </ul>
-      </div>
-      <div>
-        <h3>Como é a súa linguaxe</h3>
-        <ul class="lista-ic">
-          <li><span class="ic">📚</span><span><strong>Vocabulario</strong> rico e variado, con palabras de doada comprensión.</span></li>
-          <li><span class="ic">✂️</span><span><strong>Enunciados</strong> breves e claros, sen excesos que despisten.</span></li>
-          <li><span class="ic">😄</span><span><strong>Linguaxe</strong> expresiva, natural e nada monótona.</span></li>
-          <li><span class="ic">👄</span><span><strong>Pronuncia</strong> clara, con boa vocalización e entoación.</span></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 15 COM 1 -->
-<section class="slide" data-titulo="Com. 1" data-tipo="ex">
-  <div class="slide-inner">
-    <div class="ex-tag">🎙️ Comunicación · Actividade 1</div>
-    <h2>A radio e a xuventude</h2>
-    <div class="act">
-      <div class="act-enun"><span class="n">1</span>Elaborade, por grupos, unha breve enquisa para obter información sobre «A radio e a xuventude». Tras a recollida de datos, escribide unha redacción valorando os resultados e acompañádea dun gráfico.</div>
-      <div class="sabias" style="margin-bottom:.8em"><h3>➕ Axuda</h3>Para levar a cabo unha enquisa, utiliza un ton cortés e educado. Prepara preguntas pechadas, é dicir, cuxas respostas sexan NON / SI ou un dato moi concreto. É interesante elaborar despois un gráfico que reflicta os resultados.</div>
-      <textarea class="pizarra" placeholder="As nosas preguntas…" style="min-height:4.5em"></textarea>
-      <p><button class="btn sec" data-mostrar>Ver exemplo de preguntas</button></p>
-      <div class="respuesta oculto">
-        1. Escoitas a radio habitualmente? SI / NON<br>
-        2. Cantas horas á semana a escoitas? (0 · 1-2 · 3-5 · máis de 5)<br>
-        3. Onde a escoitas máis? (casa · coche · móbil · outros)<br>
-        4. Que tipo de programas prefires? (música · deportes · noticias · humor)<br>
-        5. Escoitas podcasts? SI / NON
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 16 COM 2 -->
-<section class="slide" data-titulo="Com. 2" data-tipo="ex">
-  <div class="slide-inner">
-    <div class="ex-tag">🎙️ Comunicación · Actividade 2</div>
-    <h2>Un pequeno discurso</h2>
-    <div class="act">
-      <div class="act-enun"><span class="n">2</span>Imaxina que vas dar un pequeno discurso agradecendo o regalo que uns amigos che fixeron polo teu aniversario. Como o empezarías? Que expresións elixirías para agradecerlles que se acordasen de ti? Como rematarías o teu discurso?</div>
-      <div class="grid3">
-        <div class="panel"><h3>Como o empezarías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Bo, non sei nin por onde empezar…</span><span class="chip">Que sorpresa!</span><span class="chip">Antes de nada, quero dicirvos…</span></div></div></div>
-        <div class="panel"><h3>Que expresións elixirías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Moitísimas grazas por…</span><span class="chip">Agradézovolo de corazón</span><span class="chip">Fíxome moita ilusión que…</span><span class="chip">Sodes os mellores</span></div></div></div>
-        <div class="panel"><h3>Como o rematarías?</h3><textarea class="pizarra" placeholder="…"></textarea><p><button class="btn sec" data-mostrar>Ver resposta modelo</button></p><div class="respuesta oculto"><div class="chips"><span class="chip">Espero celebrar moitos máis convosco</span><span class="chip">E agora, á torta!</span><span class="chip">Grazas, de verdade</span></div></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 17 COM 3 -->
-<section class="slide" data-titulo="Com. 3" data-tipo="ex">
-  <div class="slide-inner">
-    <div class="ex-tag">🎙️ Comunicación · Actividade 3</div>
-    <h2>Analizamos un programa da Radio Galega</h2>
-    <div class="act">
-      <div class="act-enun"><span class="n">3</span>Por grupos, escoitade un programa da Radio Galega e analizádeo nunha ficha que recolla estes datos. Escribide despois un informe para presentalo oralmente á clase.</div>
-      <table class="ficha">
-        <tr><td><b>Nome do programa; día e hora de emisión</b><textarea></textarea></td><td><b>Contidos / Seccións (noticias, deportes, sociedade, música…)</b><textarea></textarea></td></tr>
-        <tr><td><b>Nome da emisora / Dial / FM-AM</b><textarea></textarea></td><td><b>Público (xuvenil, adulto, interesado en…)</b><textarea></textarea></td></tr>
-        <tr><td><b>Dirección do programa / Outros colaboradores/as</b><textarea></textarea></td><td><b>Valoración persoal</b><textarea></textarea></td></tr>
-      </table>
-      <p class="nota">Podcast da Radio Galega: <a href="https://www.crtvg.es/rg/podcast" target="_blank" rel="noopener" style="color:var(--azul)">www.crtvg.es/rg/podcast</a></p>
-    </div>
-  </div>
-</section>
-
 <!-- 18 COM 4 a -->
 <section class="slide" data-titulo="Com.4a" data-tipo="ex">
   <div class="slide-inner">
@@ -718,7 +607,7 @@ h1,h2,h3,h4{text-align:left}
   <div class="slide-inner">
     <div class="esq-cab">
       <div><div class="teo-tag">📝 Copia nun folio A4 apaisado</div></div>
-      <button class="btn sec" id="btnImprimir">Imprimir esquema</button>
+      <div class="fila-btn" style="margin:0"><button class="btn" id="btnAmpliar">🔍 Ampliar esquema</button><button class="btn sec" id="btnImprimir">Imprimir esquema</button></div>
     </div>
     <div class="esquema" id="esquema">
       <div class="esq-tronco"><div class="esq-titulo">O TEXTO ORAL<br>E A RADIO</div></div>
@@ -761,6 +650,8 @@ h1,h2,h3,h4{text-align:left}
     <button id="btnFull" aria-label="Pantalla completa">⛶</button>
   </div>
 </nav>
+
+<div class="capa-esq" id="capaEsq" role="dialog" aria-modal="true" aria-label="Esquema ampliado"><button class="cerrar-esq" id="cerrarEsq" aria-label="Pechar">✕</button></div>
 
 <!-- RULETA -->
 <div class="capa" id="capaQuien" role="dialog" aria-modal="true" aria-label="Escoller alumno">
@@ -891,6 +782,17 @@ h1,h2,h3,h4{text-align:left}
   };
 
   document.getElementById('btnImprimir').onclick=()=>window.print();
+  const capaEsq=document.getElementById('capaEsq');
+  function abrirEsq(){
+    capaEsq.querySelectorAll('.esquema').forEach(e=>e.remove());
+    const c=document.getElementById('esquema').cloneNode(true);c.removeAttribute('id');
+    capaEsq.appendChild(c);capaEsq.classList.add('on');
+  }
+  function pecharEsq(){capaEsq.classList.remove('on');}
+  document.getElementById('esquema').addEventListener('click',abrirEsq);
+  document.getElementById('btnAmpliar').onclick=abrirEsq;
+  capaEsq.addEventListener('click',pecharEsq);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&capaEsq.classList.contains('on'))pecharEsq();});
 
   ir(0);
 })();
