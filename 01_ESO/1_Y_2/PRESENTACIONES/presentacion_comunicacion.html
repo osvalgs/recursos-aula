@@ -354,7 +354,8 @@ h3{font-size:1.3em;font-weight:700}
 .glitch{position:absolute;inset:0;pointer-events:none;z-index:2;background:repeating-linear-gradient(0deg,rgba(255,0,0,.06) 0 2px,transparent 2px 5px);opacity:0}
 .scream-slide.screaming .glitch{animation:glitchA 5s steps(1)}
 @keyframes glitchA{0%,3%{opacity:1;transform:translateX(0)}18%{opacity:1;transform:translateX(-12px)}20%{opacity:0}50%{opacity:1;transform:translateX(14px)}52%{opacity:0}82%{opacity:1}84%{opacity:0}}
-body.blackout .nav,body.blackout #fs,body.blackout #mute,body.blackout #count,body.blackout #bar,body.blackout .again,body.blackout .ctxbtn{opacity:0;pointer-events:none}
+body.blackout .nav{opacity:.06}
+body.blackout #fs,body.blackout #mute,body.blackout #count,body.blackout #bar,body.blackout .again,body.blackout .ctxbtn{opacity:0;pointer-events:none}
 .scream-slide.pre .scream-txt{opacity:1;top:50%;font-size:min(2.3em,4.2vw);line-height:1.25;padding:0 14vw!important;font-family:'Orbitron','Space Mono',monospace;font-weight:900;letter-spacing:.06em;text-transform:uppercase;bottom:auto;padding:0;background:none;transition:none;animation:approach 6s ease-in forwards,flicker3 .5s steps(1) infinite}
 @keyframes approach{from{transform:translateY(-50%) scale(.35)}to{transform:translateY(-50%) scale(1.3)}}
 @keyframes flicker3{0%{opacity:1}20%{opacity:.15}30%{opacity:1}55%{opacity:.4}60%{opacity:1}85%{opacity:0}90%{opacity:1}}
@@ -1117,17 +1118,19 @@ async function revealMsg(){if(revDone)return;revDone=true;audio();document.getEl
  await sleep(500);ominousChord();document.getElementById('ominous').classList.add('show')}
 function ominousChord(){[110,116.5,164.8].forEach(f=>{const a=audio(),t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type='sawtooth';o.frequency.value=f;const fl=a.createBiquadFilter();fl.type='lowpass';fl.frequency.value=500;
  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+.8);g.gain.exponentialRampToValueAtTime(.0001,t+5);o.connect(fl);fl.connect(g);g.connect(master);o.start(t);o.stop(t+5.1)})}
+function showAlienStill(){const s=document.getElementById('scream');[window._scT0,window._scT1,window._scT2].forEach(clearTimeout);s.classList.remove('pre','screaming');s.classList.add('idle');document.body.classList.remove('blackout')}
 function doScream(){const s=document.getElementById('scream'),txt=document.getElementById('screamTxt');[window._scT0,window._scT1,window._scT2].forEach(clearTimeout);txt.classList.remove('show');s.classList.remove('screaming','idle','pre');void s.offsetWidth;s.classList.add('pre');riser(6);document.body.classList.add('blackout');
  window._scT0=setTimeout(()=>{document.body.classList.remove('blackout');s.classList.remove('pre');void s.offsetWidth;s.classList.add('screaming');scream();
 window._scT2=setTimeout(()=>{s.classList.remove('screaming');s.classList.add('idle')},5000)},6000)}
-function riser(sec){const a=audio(),t=a.currentTime+.02,end=t+sec;const out=a.createGain();out.gain.setValueAtTime(.16,t);out.gain.linearRampToValueAtTime(.6,end-.05);out.gain.linearRampToValueAtTime(0,end+.05);
- const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(900,t);lp.frequency.exponentialRampToValueAtTime(5000,end);lp.connect(out);out.connect(master);
+function stopRiser(){const b=window._riserBus;if(b){try{b.gain.setValueAtTime(0,AC.currentTime);b.disconnect()}catch(e){}window._riserBus=null}}
+function riser(sec){const a=audio(),bus=a.createGain();bus.connect(master);window._riserBus=bus;const t=a.currentTime+.02,end=t+sec;const out=a.createGain();out.gain.setValueAtTime(.16,t);out.gain.linearRampToValueAtTime(.6,end-.05);out.gain.linearRampToValueAtTime(0,end+.05);
+ const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(900,t);lp.frequency.exponentialRampToValueAtTime(5000,end);lp.connect(out);out.connect(bus);
  const trem=a.createOscillator(),tg=a.createGain();trem.frequency.setValueAtTime(4,t);trem.frequency.exponentialRampToValueAtTime(18,end);tg.gain.value=.5;trem.connect(tg);
  const vca=a.createGain();vca.gain.value=.6;tg.connect(vca.gain);vca.connect(lp);trem.start(t);trem.stop(end+.1);
  [[55,1],[58,1],[82,.8],[110,.6],[116.5,.5],[164.8,.4]].forEach(([f,v])=>{const o=a.createOscillator();o.type='sawtooth';o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(f*4.2,end);const g=a.createGain();g.gain.value=.12*v;o.connect(g);g.connect(vca);o.start(t);o.stop(end+.1)});
  const n=a.createBufferSource();n.buffer=noiseBuf(a);n.loop=true;const nf=a.createBiquadFilter();nf.type='bandpass';nf.Q.value=3;nf.frequency.setValueAtTime(400,t);nf.frequency.exponentialRampToValueAtTime(6000,end);const ng=a.createGain();ng.gain.value=.18;n.connect(nf);nf.connect(ng);ng.connect(out);n.start(t);n.stop(end+.1);
- let bt=t,gap=.9,i=0;while(bt<end-.15){const o=a.createOscillator(),g=a.createGain(),lv=.3+.4*((bt-t)/sec);o.frequency.setValueAtTime(62,bt);o.frequency.exponentialRampToValueAtTime(34,bt+.22);g.gain.setValueAtTime(lv,bt);g.gain.exponentialRampToValueAtTime(.0001,bt+.28);o.connect(g);g.connect(master);o.start(bt);o.stop(bt+.3);bt+=gap;gap=Math.max(.22,gap*.78);i++}
- const sg=a.createGain();sg.gain.setValueAtTime(.06,t);sg.gain.linearRampToValueAtTime(.26,end-.05);sg.gain.linearRampToValueAtTime(0,end+.05);sg.connect(master);
+ let bt=t,gap=.9,i=0;while(bt<end-.15){const o=a.createOscillator(),g=a.createGain(),lv=.3+.4*((bt-t)/sec);o.frequency.setValueAtTime(62,bt);o.frequency.exponentialRampToValueAtTime(34,bt+.22);g.gain.setValueAtTime(lv,bt);g.gain.exponentialRampToValueAtTime(.0001,bt+.28);o.connect(g);g.connect(bus);o.start(bt);o.stop(bt+.3);bt+=gap;gap=Math.max(.22,gap*.78);i++}
+ const sg=a.createGain();sg.gain.setValueAtTime(.06,t);sg.gain.linearRampToValueAtTime(.26,end-.05);sg.gain.linearRampToValueAtTime(0,end+.05);sg.connect(bus);
  const vib=a.createOscillator(),vg=a.createGain();vib.frequency.setValueAtTime(5,t);vib.frequency.linearRampToValueAtTime(11,end);vg.gain.value=9;vib.connect(vg);vib.start(t);vib.stop(end+.1);
  [740,784,831,880,932].forEach((f,j)=>{const o=a.createOscillator();o.type=j%2?'sawtooth':'triangle';o.frequency.setValueAtTime(f*.75,t);o.frequency.exponentialRampToValueAtTime(f*1.6,end);vg.connect(o.frequency);const bp=a.createBiquadFilter();bp.type='bandpass';bp.frequency.value=f*1.2;bp.Q.value=2;const g=a.createGain();g.gain.value=.25;o.connect(bp);bp.connect(g);g.connect(sg);o.start(t);o.stop(end+.1)})}
 function scream(){const a=audio(),t=a.currentTime+.02;const out=a.createGain();out.gain.setValueAtTime(0,t);out.gain.linearRampToValueAtTime(.55,t+.06);out.gain.setValueAtTime(.55,t+1.9);out.gain.exponentialRampToValueAtTime(.0001,t+2.7);
@@ -1175,8 +1178,8 @@ const DEFS={emi:['Emisor','Persona que emite el mensaje.','Marisa, que llama a s
 document.querySelectorAll('#elem .el').forEach(el=>el.addEventListener('click',e=>{e.stopPropagation();const k=el.dataset.d;document.querySelectorAll('#elem .el').forEach(x=>x.classList.toggle('sel',x.dataset.d===k));
  const box=document.getElementById('defbox');box.style.animation='none';void box.offsetWidth;box.style.animation='';box.innerHTML='<b>'+DEFS[k][0]+':</b> '+DEFS[k][1]+'<div class="defex">💡 <b>Ejemplos:</b> '+DEFS[k][2]+'</div>'}));
 function onSlide(n){const s=slides[n];document.getElementById('ctxBtn').classList.toggle('vis',!!s.dataset.drone);
- if(s.id!=='scream'){document.body.classList.remove('blackout');clearTimeout(window._scT0)}
- if(s.id==='scream'){stopDrone();doScream();return}
+ if(s.id!=='scream'){document.body.classList.remove('blackout');clearTimeout(window._scT0);stopRiser()}
+ if(s.id==='scream'){stopDrone();if(window._screamDone){showAlienStill()}else{window._screamDone=true;doScream()}return}
  if(!AC)return;if(s.dataset.drone)startDrone();else stopDrone()}
 
 go(0);
