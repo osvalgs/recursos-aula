@@ -329,29 +329,31 @@
     body{ background:#fff; }
     #cardsPreview{ margin:0; }
 
-    /* Tarjetas: 2 tarjetas apaisadas por hoja, más grandes */
+    /* Tarjetas: 3 tarjetas por hoja A4 vertical */
     .cards-page{
       display:block;
-      page: cards-landscape;
+      page: cards-portrait;
     }
     .bingo-card{
       border-color:#000;
       box-sizing:border-box;
       width:100%;
-      min-height:88mm;
-      padding:7mm 10mm;
-      margin-bottom:8mm;
+      height:86mm;
+      overflow:hidden;
+      padding:4mm 8mm;
+      margin-bottom:4mm;
       page-break-inside:avoid;
     }
-    .bingo-card:nth-child(2n){ page-break-after:always; }
-    .bingo-card h3{ font-size:18px; margin:0 0 5mm; }
-    .bingo-card .card-name{ font-size:11px; margin-bottom:5mm; }
+    .bingo-card:nth-child(3n):not(:last-child){ page-break-after:always; margin-bottom:0; }
+    .setup-wrap{ padding:0 !important; margin:0 !important; page: cards-portrait; }
+    .bingo-card h3{ font-size:15px; margin:0 0 2mm; }
+    .bingo-card .card-name{ font-size:10px; margin-bottom:2.5mm; }
     .bingo-card .card-name .line{ height:12px; }
-    .bingo-card .card-cols{ gap:16mm; }
+    .bingo-card .card-cols{ gap:10mm; }
     .bingo-card .word-list{ padding-left:10px; }
     .bingo-card .word-list .col-title,
     .bingo-card .pick-title{ font-size:9.5px; margin-bottom:3mm; }
-    .bingo-card .ruled-line{ font-size:12px; padding:2.5px 0; }
+    .bingo-card .ruled-line{ font-size:11px; padding:1.5px 0; }
     .bingo-card .ruled-line .n{ width:16px; }
     .bingo-card .pick-row{ padding-bottom:3px; gap:8px; }
     .bingo-card .pick-num{ font-size:10px; padding:2px 4px; }
@@ -359,7 +361,7 @@
 
     .winners-print-title{ display:block; font-size:22px; margin:0 0 18px; }
     @page{ margin:14mm; }
-    @page cards-landscape{ size: landscape; margin:10mm; }
+    @page cards-portrait{ size: A4 portrait; margin:9mm 10mm; }
   }
 </style>
 </head>
