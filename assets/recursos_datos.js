@@ -168,12 +168,20 @@ window.RECURSOS=[
     "n": "ACTIVIDADES",
     "c": [
      {
-      "t": "Taller semana1",
+      "t": "Ficha taller semana 1",
       "h": "03_FPB/ACTIVIDADES/taller-semana1.html"
      },
      {
-      "t": "Actividad rock y coches",
+      "t": "Ficha rock y coches",
       "h": "03_FPB/ACTIVIDADES/rock_and_road_dream_cars.html"
+     },
+     {
+      "t": "Ficha búsqueda piezas",
+      "h": "03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html"
+     },
+     {
+      "t": "Ficha búsqueda piezas · versión para imprimir",
+      "h": "03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"
      }
     ]
    }
@@ -431,7 +439,7 @@ window.RECURSOS=[
   ]
  }
 ];
-window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html"];
+window.NUEVOS=["01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html","03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html","03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"];
 
 /* Recursos OCULTOS: no aparecen ni en la portada ni en la página del curso.
    Se puede ocultar un archivo concreto o una carpeta entera (terminada en «/»).
