@@ -4,7 +4,7 @@ window.RECURSOS=[
   "n": "01. ESO",
   "c": [
    {
-    "n": "1º Y 2º",
+    "n": "1º",
     "c": [
      {
       "n": "ACTIVIDADES",
