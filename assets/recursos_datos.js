@@ -289,6 +289,10 @@ window.RECURSOS=[
        {
         "t": "Presentación evolución poboación",
         "h": "04_PDC/PRESENTACIONES/XEOGRAFÍA/presentacion_evolucion_poboacion.html"
+       },
+       {
+        "t": "Presentación migracións na actualidade",
+        "h": "04_PDC/PRESENTACIONES/XEOGRAFÍA/presentacion_migracions_actualidade.html"
        }
       ]
      },
