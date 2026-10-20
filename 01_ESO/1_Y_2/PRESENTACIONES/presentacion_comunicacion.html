@@ -452,6 +452,46 @@ body.blackout #fs,body.blackout #mute,body.blackout #count,body.blackout #bar,bo
 .tree2 .leafs li.logoleaf{padding-top:1.2vh}
 .tree2 .leafs li.logoleaf::after{display:none}
 .logoleaf img{height:clamp(44px,8vh,80px);width:auto;display:block}
+
+/* varita */
+.slide.magic{background:radial-gradient(circle at 75% 15%,#3b2a5e 0,#1a1330 45%,#0d0a1a 100%);color:#efe6ff}
+.slide.magic::before{content:'';position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(1.5px 1.5px at 10% 20%,#ffd75e 50%,transparent),radial-gradient(1px 1px at 30% 70%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 60% 30%,#ffd75e 50%,transparent),radial-gradient(1px 1px at 85% 80%,#fff 50%,transparent),radial-gradient(1px 1px at 45% 10%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 92% 45%,#ffd75e 50%,transparent);opacity:.7;animation:twinkle 3s ease-in-out infinite alternate}
+.slide.magic .inner{position:relative}
+.wandhead{display:grid;grid-template-columns:auto 1fr;gap:2vw;align-items:center}
+.wand{width:clamp(130px,16vw,230px);filter:drop-shadow(0 0 14px rgba(255,215,94,.45))}
+.wand .spark{transform-origin:190px 16px;animation:sparkle 1.6s ease-in-out infinite}
+@keyframes sparkle{50%{transform:scale(1.25) rotate(20deg);opacity:.75}}
+.wlead{color:#d9cdf5;font-size:1.05em;line-height:1.45;margin-top:.3em}
+.wlead b{color:#ffd75e}
+.spells{display:grid;grid-template-columns:repeat(3,1fr);gap:1vw}
+@media (max-width:900px){.spells{grid-template-columns:1fr}}
+.spell{perspective:1000px;cursor:pointer;min-height:clamp(150px,24vh,220px)}
+.spin{position:relative;width:100%;height:100%;min-height:inherit;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,1.3,.5,1)}
+.spell.flip .spin{transform:rotateY(180deg)}
+.sf,.sb{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;padding:.8em 1em;display:flex;flex-direction:column;gap:.35em}
+.sf{background:linear-gradient(160deg,#2c2150,#1e1638);border:1.5px solid rgba(255,215,94,.45);box-shadow:0 0 0 1px rgba(255,215,94,.08) inset}
+.sname{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.1em;color:#ffd75e;font-style:italic;line-height:1.15}
+.sf p{font-size:.86em;line-height:1.35;color:#e6dcff}
+.sf p b{color:#fff4d6}
+.hint2{margin-top:auto;font-size:.72em;color:#b9a8e6}
+.sb{transform:rotateY(180deg);background:#fffaf0;color:#1d2433;border:3px solid #ffd75e;justify-content:center}
+.sb h3{font-size:1.4em;font-family:'Bricolage Grotesque';font-weight:800}
+.sb p{font-size:.88em;line-height:1.35}
+.sb .ex{font-style:italic;background:#fff1c9;border-radius:10px;padding:.35em .6em}
+.wfoot{text-align:justify;color:#e6dcff;background:rgba(255,215,94,.1);border:1px dashed rgba(255,215,94,.5);border-radius:14px;padding:.6em 1em}
+.wfoot .mapf{white-space:nowrap;color:#e3000f;background:#fff;border-radius:6px;padding:0 .4em;letter-spacing:.06em}
+.vid{align-self:flex-start;margin-top:.2em;font-weight:700;font-size:.8em;text-decoration:none;color:#fff;background:#c4302b;border-radius:20px;padding:.3em .9em}
+.vid:hover{background:#e0403a}
+.vid{border:none;cursor:pointer;font-family:inherit}
+.vidmodal{position:fixed;inset:0;z-index:70;background:rgba(5,4,15,.88);display:none;place-items:center;padding:6vh 6vw}
+.vidmodal.open{display:grid}
+.vidbox{position:relative;width:min(1100px,100%);display:flex;flex-direction:column;gap:.6em;animation:pop .35s ease}
+.vidframe{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.vidframe iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vidopen{align-self:center;color:#ffd75e;font-size:.85em}
+.sfoot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:.5em;flex-wrap:nowrap;white-space:nowrap}
+.sfoot .vid{margin-top:0}
+.sfoot .hint2{margin-top:0}
 </style>
 </head>
 <body>
@@ -510,6 +550,11 @@ body.blackout #fs,body.blackout #mute,body.blackout #count,body.blackout #bar,bo
   <div class="coinstage"><div class="coin big" id="bigCoin" onclick="flipBig()"></div></div>
   <p class="zoomhint">Pulsa la moneda para darle la vuelta</p>
 </div>
+<div class="vidmodal" id="vidModal" onclick="if(event.target===this)closeVid()"><div class="vidbox">
+  <button class="ctxclose" style="color:#fff;right:-6px;top:-44px;font-size:1.6em" onclick="closeVid()">✕</button>
+  <div class="vidframe" id="vidFrame"></div>
+  <a id="vidOpen" class="vidopen" target="_blank" rel="noopener">Si no se ve, ábrelo en YouTube ↗</a>
+</div></div>
 <button class="ctxbtn" id="ctxBtn" onclick="openCtx()">📖 Contexto</button>
 <div class="ctxmodal" id="ctxModal" onclick="if(event.target===this)closeCtx()"><div class="ctxcard">
   <button class="ctxclose" onclick="closeCtx()">✕</button>
@@ -852,6 +897,45 @@ body.blackout #fs,body.blackout #mute,body.blackout #count,body.blackout #bar,bo
   <div class="fnote"><b>📌 Ojo:</b> en un mismo enunciado puede darse más de una función, aunque siempre predomina una. Por ejemplo, en <i>«¡Ay, qué dolor de cabeza tengo!»</i> predomina la <b>expresiva</b>, porque se expresa una emoción o sufrimiento personal; pero también aparece la <b>representativa</b> (o referencial), porque a la vez informa de un hecho objetivo: un estado físico.</div>
 </div></section>
 
+<!-- 12a VARITA -->
+<section class="slide magic" id="varita"><div class="inner" style="gap:1.4vh">
+  <span class="tag" style="background:rgba(255,215,94,.18);color:#ffd75e">03 · Funciones del lenguaje</span>
+  <div class="wandhead">
+    <svg class="wand" viewBox="0 0 220 60" aria-hidden="true">
+      <defs><linearGradient id="wg" x1="0" x2="1"><stop offset="0" stop-color="#3b2414"/><stop offset=".6" stop-color="#6b4426"/><stop offset="1" stop-color="#a77a4a"/></linearGradient></defs>
+      <path d="M10 44 L176 18 L180 24 L14 52 Z" fill="url(#wg)"/>
+      <path d="M10 44 L44 39 L47 47 L14 52 Z" fill="#26170c"/>
+      <g class="spark"><circle cx="190" cy="16" r="5" fill="#fff6c2"/><path d="M190 2 L193 13 L204 16 L193 19 L190 30 L187 19 L176 16 L187 13 Z" fill="#ffd75e"/>
+      <circle cx="208" cy="6" r="2.5" fill="#ffd75e"/><circle cx="206" cy="30" r="2" fill="#fff"/><circle cx="214" cy="18" r="1.6" fill="#ffd75e"/></g>
+    </svg>
+    <div>
+      <h2 style="color:#fff4d6">Una varita, seis hechizos</h2>
+      <p class="wlead">En Harry Potter, la varita es siempre la misma, pero sirve para cosas muy distintas según el hechizo que se pronuncia. Con el lenguaje pasa igual: usamos las mismas palabras con <b>intenciones diferentes</b>. Cada intención es una <b>función del lenguaje</b>.</p>
+    </div>
+  </div>
+  <div class="spells">
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Wingardium Leviosa»</span><p>Hermione corrige a Ron: «No es Leviosá, es Levi<b>ó</b>sa». No hace magia: habla de <b>cómo se dicen</b> las palabras del hechizo.</p><div class="sfoot"><button class="vid" onclick="event.stopPropagation();openVid('z4p-jknhQeg')">▶ Ver la escena</button><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">M</span>etalingüística</h3><p>Usamos la lengua para hablar de la propia lengua.</p><p class="ex">«“Leviosa” es una palabra llana.»</p></div></div></div>
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Accio»</span><p>Es una orden: «¡Ven aquí!». El objeto obedece y vuela hacia quien lanza el hechizo. Sirve para que <b>otro haga algo</b>.</p><div class="sfoot"><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">A</span>pelativa</h3><p>Queremos influir en el receptor con órdenes, peticiones o preguntas.</p><p class="ex">«¡Tráeme el libro ahora mismo!»</p></div></div></div>
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Orchideous»</span><p>De la punta de la varita brota un ramo de flores. No sirve para nada práctico: solo busca que el resultado sea <b>bonito</b>.</p><div class="sfoot"><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">P</span>oética</h3><p>Cuidamos la forma del mensaje para que sea bello: rimas, metáforas, ritmo…</p><p class="ex">«Tus ojos son dos luceros.»</p></div></div></div>
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Juro solemnemente que mis intenciones no son buenas»</span><p>Abre el Mapa del Merodeador; «Travesura realizada» lo cierra. Sirve para <b>abrir y cerrar</b> la comunicación.</p><div class="sfoot"><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">F</span>ática</h3><p>Abrimos, mantenemos o cerramos la comunicación.</p><p class="ex">«¿Hola? ¿Me oyes?» · «Hasta luego.»</p></div></div></div>
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Lumos»</span><p>La varita se enciende y muestra lo que hay a su alrededor <b>tal como es</b>, sin opinar si es bonito o feo.</p><div class="sfoot"><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">R</span>epresentativa</h3><p>Informamos de hechos de forma objetiva, sin dar nuestra opinión.</p><p class="ex">«El tren sale a las once.»</p></div></div></div>
+    <div class="spell" onclick="this.classList.toggle('flip')"><div class="spin">
+      <div class="sf"><span class="sname">«Expecto Patronum»</span><p>Solo funciona si piensas en un <b>recuerdo feliz</b>: el patronus nace de los sentimientos de quien lo lanza y muestra cómo es por dentro.</p><div class="sfoot"><span class="hint2">✨ Gira la tarjeta</span></div></div>
+      <div class="sb"><h3><span class="ini">E</span>xpresiva</h3><p>Expresamos nuestros sentimientos, emociones y opiniones.</p><p class="ex">«¡Qué feliz estoy hoy!»</p></div></div></div>
+  </div>
+  <p class="wfoot">🪄 La varita (el lenguaje) es la misma; lo que cambia es el hechizo (la <b>intención</b>). Y fíjate en las iniciales: <b class="mapf">M · A · P · F · R · E</b>.</p>
+</div></section>
+
 <!-- 12b TRUCO MAPFRE -->
 <section class="slide"><div class="inner" style="gap:1.2vh">
   <span class="tag" style="background:#fde3e1;color:#d81e05">El truco para recordarlas</span>
@@ -1161,13 +1245,15 @@ function zoomCoin(){const src=document.getElementById('coin'),big=document.getEl
 function flipBig(){document.getElementById('bigCoin').classList.toggle('flip')}
 function unzoomCoin(){document.getElementById('coinZoom').classList.remove('open')}
 buildRim(document.getElementById('coin'));
+function openVid(id){document.getElementById('vidFrame').innerHTML='<iframe src="https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&cc_load_policy=1&cc_lang_pref=es" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>';document.getElementById('vidOpen').href='https://www.youtube.com/watch?v='+id;document.getElementById('vidModal').classList.add('open')}
+function closeVid(){document.getElementById('vidFrame').innerHTML='';document.getElementById('vidModal').classList.remove('open')}
 function openSign(){const c=document.getElementById('coin');c.classList.remove('flip');document.getElementById('signModal').classList.add('open')}
 function openNSign(){document.querySelectorAll('.nscard').forEach(c=>c.classList.remove('flip'));document.getElementById('nsignModal').classList.add('open')}
 function closeNSign(){document.getElementById('nsignModal').classList.remove('open')}
 function closeSign(){document.getElementById('signModal').classList.remove('open')}
 function openCtx(){document.getElementById('ctxModal').classList.add('open')}
 function closeCtx(){document.getElementById('ctxModal').classList.remove('open')}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('coinZoom').classList.contains('open')){unzoomCoin();return}closeCtx();closeSign();closeNSign()}},true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(document.getElementById('vidModal').classList.contains('open')){closeVid();return}if(document.getElementById('coinZoom').classList.contains('open')){unzoomCoin();return}closeCtx();closeSign();closeNSign()}},true);
 /* elementos */
 const DEFS={emi:['Emisor','Persona que emite el mensaje.','Marisa, que llama a su nieto; el profesor que explica la lección; tú, cuando mandas un wasap.'],
  rec:['Receptor','Persona que recibe el mensaje.','Diego, que contesta al teléfono; los alumnos que escuchan; el amigo que lee tu wasap.'],
