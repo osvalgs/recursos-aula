@@ -1,0 +1,669 @@
+<title>Apuntes primer examen</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@400;700&family=Permanent+Marker&display=swap">
+<style>
+/* Concepto: cuaderno cuadriculado de un alumno aplicado, una hoja por tema sobre la mesa; bolígrafo azul, boli rojo para notas y fosforitos. Un solo aspecto (papel), sin modo oscuro. */
+:root{
+  --desk:#cfd6df; --paper:#fffefa; --grid:#dbe5f0; --margin:#ef9c9c;
+  --ink:#1c3b8c; --text:#24262b; --red:#cf2a2a; --green:#17744a; --purple:#6a3d9e;
+  --hy:#fff176; --hg:#b9f3c6; --hp:#ffc4e2; --hb:#bde4ff; --ho:#ffd29e;
+  --post:#fff59a; --post2:#ffd3dd; --post3:#cdeffd;
+  --f-hand:'Kalam','Comic Sans MS','Segoe Print',cursive;
+  --f-note:'Caveat','Segoe Print','Bradley Hand',cursive;
+  --f-mark:'Permanent Marker','Caveat','Segoe Print',cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--desk);color:var(--text);font-family:var(--f-hand);font-size:19px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
+.stack{display:flex;flex-direction:column;gap:34px;width:100%}
+.sheet{position:relative;background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:26px 26px;padding:44px 44px 56px 96px;border-radius:3px;
+  box-shadow:0 1px 2px rgba(30,40,60,.15),0 10px 28px rgba(30,40,60,.18)}
+.sheet::before{content:"";position:absolute;top:0;bottom:0;left:74px;width:2px;background:var(--margin)}
+.sheet::after{content:"";position:absolute;top:10px;bottom:10px;left:16px;width:26px;
+  background:radial-gradient(circle at 13px 13px,var(--desk) 7px,rgba(0,0,0,.18) 8px,transparent 9px) 0 0/26px 46px repeat-y}
+.pg{position:absolute;right:26px;bottom:14px;font-family:var(--f-note);font-size:1.3rem;color:var(--ink)}
+.fecha{position:absolute;right:28px;top:14px;font-family:var(--f-note);font-size:1.3rem;color:var(--ink)}
+p,li{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+p{margin:.35em 0}
+ul,ol{margin:.3em 0;padding-left:1.4em}
+li{margin:.2em 0}
+ul.dash{list-style:none;padding-left:1.2em}
+ul.dash>li::before{content:"–";color:var(--ink);display:inline-block;width:1em;margin-left:-1em;font-weight:700}
+b,strong{color:var(--ink)}
+h2.tema{font-family:var(--f-mark);font-weight:400;font-size:2.3rem;line-height:1.15;color:var(--red);margin:.1em 0 .5em;text-wrap:balance}
+h2.tema small{display:block;font-family:var(--f-note);font-size:1.45rem;color:var(--ink);font-weight:700;letter-spacing:.02em}
+h3{font-family:var(--f-note);font-weight:700;font-size:2rem;line-height:1.1;color:var(--ink);margin:1.1em 0 .35em;
+  text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:6px;text-wrap:balance}
+h4{font-family:var(--f-hand);font-weight:700;font-size:1.15rem;color:var(--green);margin:.8em 0 .2em}
+/* fosforitos y subrayados */
+.hy,.hg,.hp,.hb,.ho{padding:0 .15em;-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:2px}
+.hy{background:linear-gradient(176deg,transparent 18%,var(--hy) 22%,var(--hy) 88%,transparent 92%)}
+.hg{background:linear-gradient(176deg,transparent 18%,var(--hg) 22%,var(--hg) 88%,transparent 92%)}
+.hp{background:linear-gradient(176deg,transparent 18%,var(--hp) 22%,var(--hp) 88%,transparent 92%)}
+.hb{background:linear-gradient(176deg,transparent 18%,var(--hb) 22%,var(--hb) 88%,transparent 92%)}
+.ho{background:linear-gradient(176deg,transparent 18%,var(--ho) 22%,var(--ho) 88%,transparent 92%)}
+.ur{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2.5px;text-underline-offset:4px}
+.ub{text-decoration:underline;text-decoration-color:var(--ink);text-decoration-thickness:2px;text-underline-offset:4px}
+.uw{text-decoration:underline wavy var(--red);text-decoration-thickness:1.5px;text-underline-offset:5px}
+.ud{text-decoration:underline double var(--red);text-underline-offset:4px}
+.circ{border:2.5px solid var(--red);border-radius:52% 46% 55% 44%/58% 50% 48% 44%;padding:0 .35em}
+.tach{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px;color:#777}
+.red{color:var(--red)} .green{color:var(--green)} .blue{color:var(--ink)} .purple{color:var(--purple)}
+/* notas y cajas */
+.note{font-family:var(--f-note);font-size:1.45rem;line-height:1.15;color:var(--red);font-weight:700}
+.note.blue{color:var(--ink)} .note.green{color:var(--green)}
+.tilt{display:inline-block;transform:rotate(-2deg)}
+.box{border:2.5px solid var(--ink);border-radius:255px 18px 225px 18px/18px 225px 18px 255px;padding:14px 20px;margin:.6em 0;background:rgba(255,255,255,.55)}
+.box.red{border-color:var(--red)} .box.green{border-color:var(--green)}
+.def{position:relative;border-left:5px solid var(--ink);padding:6px 14px;margin:.6em 0;background:rgba(189,228,255,.25)}
+.def::before{content:"DEF.";font-family:var(--f-mark);color:var(--ink);font-size:.9rem;margin-right:.5em}
+.post{position:relative;background:var(--post);padding:22px 20px 16px;box-shadow:0 6px 14px rgba(0,0,0,.18);transform:rotate(1.3deg);margin:1em .4em}
+.post.pink{background:var(--post2);transform:rotate(-1.2deg)} .post.blue{background:var(--post3);transform:rotate(-.8deg)}
+.post::before{content:"";position:absolute;top:-12px;left:50%;width:96px;height:24px;margin-left:-48px;background:rgba(255,255,255,.55);border:1px solid rgba(0,0,0,.06);transform:rotate(-3deg)}
+.post h4{margin-top:0;color:var(--text);font-family:var(--f-note);font-size:1.6rem}
+.stamp{display:inline-block;font-family:var(--f-mark);color:var(--red);border:3px solid var(--red);border-radius:6px;padding:2px 10px;transform:rotate(-5deg);font-size:1rem;letter-spacing:.04em;line-height:1.3;background:rgba(255,255,255,.6)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:22px;align-items:start}
+.cols>*{min-width:0}
+.cols3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:18px}
+.cols3>*{min-width:0}
+.arr{width:2.2em;height:1.1em;vertical-align:-.2em;color:var(--red);overflow:visible}
+.arr.blue{color:var(--ink)} .arrdown{width:1.4em;height:2em;color:var(--red);display:block;margin:2px auto}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+/* tablas a mano */
+.tw{overflow-x:auto;margin:.6em 0}
+table{border-collapse:collapse;width:100%;background:rgba(255,255,255,.6)}
+th,td{border:1.6px solid var(--ink);padding:6px 10px;vertical-align:top;text-align:left}
+td{text-align:justify}
+th{font-family:var(--f-note);font-size:1.4rem;color:var(--red);font-weight:700;background:rgba(255,241,118,.35)}
+/* esquema flechas */
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:.6em 0}
+.flow .n{flex:1 1 140px;min-width:0;border:2.5px solid var(--ink);border-radius:20px 8px 22px 9px/9px 22px 8px 20px;padding:8px 12px;text-align:center;background:rgba(255,255,255,.7)}
+.flow .n b{display:block;font-family:var(--f-note);font-size:1.5rem}
+.flow .op{font-family:var(--f-mark);color:var(--red);font-size:2rem;line-height:1}
+/* barras */
+.bar{display:grid;grid-template-columns:8.5em 1fr;gap:10px;align-items:center;margin:.25em 0}
+.bar span.l{text-align:right}
+.bar span.v{display:block;height:1.35em;background:var(--hy);border-radius:3px 9px 4px 10px;font-family:var(--f-note);font-size:1.2rem;padding-left:8px;line-height:1.35em;white-space:nowrap}
+/* checklist */
+.plan tr.r0 td{background:var(--hb)} .plan tr.r1 td{background:var(--hg)} .plan tr.r2 td{background:var(--hp)}
+.printbar{display:flex;justify-content:center;margin:0 0 .6em}
+.check{list-style:none;padding-left:0}
+.check li{display:flex;gap:10px;align-items:flex-start;text-align:left}
+.check input{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:22px;height:22px;margin-top:5px;border:2.2px solid var(--ink);border-radius:3px 6px 4px 5px;background:#fff;cursor:pointer;position:relative}
+.check input:checked::after{content:"✓";position:absolute;left:1px;top:-12px;font-family:var(--f-mark);font-size:26px;color:var(--green)}
+.check input:focus-visible{outline:3px solid var(--hb);outline-offset:2px}
+.check input:checked+label{color:#6b6f77}
+.check label{cursor:pointer;flex:1;text-align:justify}
+/* portada */
+.cover-title{font-family:var(--f-mark);font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.05;color:var(--ink);margin:.1em 0}
+.cover-title span{color:var(--red)}
+.index a{color:var(--ink);text-decoration:none;border-bottom:2px dashed var(--red)}
+.index a:hover,.index a:focus-visible{background:var(--hy);outline:none}
+/* vocabulario */
+.tools{display:flex;flex-wrap:wrap;gap:12px;margin:.6em 0 1em}
+.btn{font-family:var(--f-note);font-weight:700;font-size:1.35rem;color:var(--ink);background:var(--post);border:2px solid var(--ink);border-radius:14px 5px 16px 6px/6px 16px 5px 14px;padding:4px 16px;cursor:pointer;box-shadow:2px 3px 0 rgba(28,59,140,.25)}
+.btn[aria-pressed="true"]{background:var(--hg)}
+.btn:focus-visible{outline:3px solid var(--hb);outline-offset:2px}
+.voc{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:20px}
+.vcard{position:relative;min-width:0;background:#fff;border:1px solid #c9d3df;border-top:3px solid var(--margin);padding:12px 16px 12px;box-shadow:0 2px 6px rgba(0,0,0,.08);
+  background-image:repeating-linear-gradient(transparent 0 29px,#e3ebf5 29px 30px);background-position:0 40px;cursor:pointer}
+.vcard:nth-child(3n){transform:rotate(.5deg)} .vcard:nth-child(3n+1){transform:rotate(-.4deg)}
+.vnum{position:absolute;top:8px;right:12px;font-family:var(--f-note);font-size:1.25rem;color:var(--red);border:2px solid var(--red);border-radius:50%;width:1.8em;height:1.8em;display:grid;place-items:center;line-height:1}
+.vword{font-family:var(--f-hand);font-weight:700;font-size:1.6rem;color:var(--text);line-height:1.2;padding-right:2.2em}
+.vword em{font-style:normal;color:var(--red);text-decoration:underline;text-decoration-thickness:2.5px;text-underline-offset:3px}
+.vsig{margin:.25em 0;text-align:justify}
+.vsyn{color:var(--green);font-weight:700}
+.vtip{font-family:var(--f-note);font-size:1.3rem;line-height:1.15;color:var(--red);font-weight:700;margin-top:.35em;text-align:justify}
+.vorig{font-family:var(--f-note);font-size:1.05rem;color:var(--ink)}
+.hide-sig .vcard:not(.ver) .vsig,.hide-sig .vcard:not(.ver) .vsyn,.hide-sig .vcard:not(.ver) .vtip{filter:blur(7px);user-select:none}
+.hide-word .vcard:not(.ver) .vword{filter:blur(9px);user-select:none}
+/* ejemplo resumen */
+.texto{background:#fff;border:1px solid #c9d3df;padding:16px 22px;box-shadow:0 2px 6px rgba(0,0,0,.08);font-family:Georgia,'Times New Roman',serif;font-size:1.02rem;line-height:1.6}
+.texto h5{font-family:Georgia,serif;font-size:1.15rem;margin:.2em 0 .5em;text-align:center}
+.texto p{position:relative}
+.mnote{font-family:var(--f-note);font-size:1.25rem;font-weight:700;color:var(--red);display:block;line-height:1.1;margin:.15em 0 .5em}
+details{border-bottom:1.5px dashed var(--ink);padding:6px 0}
+summary{cursor:pointer;font-weight:700;color:var(--text);text-align:justify}
+summary::marker{color:var(--red)}
+details .ans{font-family:var(--f-note);font-size:1.4rem;line-height:1.2;color:var(--green);font-weight:700;padding:6px 0 4px 1.2em;text-align:justify}
+.mapfre{font-family:var(--f-mark);font-size:2.2rem;letter-spacing:.12em;color:var(--ink)}
+.mapfre i{font-style:normal;color:var(--red)}
+.firma{font-family:var(--f-note);font-size:1.7rem;color:var(--ink);text-align:right;font-weight:700}
+@media (max-width:640px){
+  body{font-size:17.5px}
+  .sheet{padding:40px 18px 50px 50px}
+  .sheet::before{left:38px}
+  .sheet::after{left:6px;width:22px;background-size:22px 40px;background-image:radial-gradient(circle at 11px 11px,var(--desk) 5px,rgba(0,0,0,.18) 6px,transparent 7px)}
+  h2.tema{font-size:1.85rem}
+  h3{font-size:1.7rem}
+  .bar{grid-template-columns:6.5em 1fr}
+  .fecha{right:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@page{size:A4;margin:9mm 9mm 10mm}
+@media print{
+  html,body{background:#fff}
+  body{padding:0!important;font-size:8.8pt;line-height:1.24}
+  .stack{gap:2.5mm}
+  p{margin:.2em 0} li{margin:.05em 0} ul,ol{margin:.15em 0}
+  .sheet{box-shadow:none;padding:4mm 5mm 4mm 14mm;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sheet::before{left:11mm}
+  .sheet::after{left:2mm;width:6mm;background:radial-gradient(circle at 3mm 3mm,#fff 1.6mm,rgba(0,0,0,.25) 1.9mm,transparent 2.1mm) 0 0/6mm 12mm repeat-y}
+  .brk{break-before:page}
+  .pg,.fecha,.tools,.printbar,.check input{display:none}
+  .check li{display:list-item;list-style:"☐  "}
+  h2.tema{font-size:16pt;margin:0 0 .2em}
+  h2.tema small{font-size:11pt}
+  h3{font-size:12.5pt;margin:.35em 0 .1em;text-underline-offset:3px}
+  h4{font-size:10pt;margin:.25em 0 .05em}
+  .note,.vtip{font-size:10.4pt!important;line-height:1.08}
+  .cover-title{font-size:22pt}
+  .box{padding:2.2mm 3.5mm;margin:.3em 0}
+  .post{padding:3mm 3.5mm 2mm;margin:.4em .2em;box-shadow:none;border:1px solid rgba(0,0,0,.08)}
+  .post::before{height:4mm;top:-2mm}
+  .def{padding:1mm 3mm;margin:.3em 0}
+  th,td{padding:.8mm 2mm}
+  th{font-size:11pt}
+  .cols{gap:4mm;grid-template-columns:1fr 1fr!important}
+  .cols3{gap:3mm;grid-template-columns:repeat(3,1fr)}
+  .flow .n{padding:1mm 2mm}
+  .flow .n b{font-size:11pt}
+  .voc{grid-template-columns:repeat(4,1fr);gap:2mm}
+  .vcard{padding:1.6mm 2.5mm;transform:none!important;box-shadow:none;background-image:none}
+  .vword{font-size:11.5pt}
+  .vnum{width:1.6em;height:1.6em;font-size:10pt;top:1.2mm;right:2mm}
+  .vsig{margin:.1em 0;line-height:1.25}
+  .vtip{font-size:10pt!important;line-height:1.02}
+  .vorig{display:none}
+  .hide-sig .vcard .vsig,.hide-sig .vcard .vsyn,.hide-sig .vcard .vtip,.hide-word .vcard .vword{filter:none!important}
+  .texto{font-size:9pt;line-height:1.4;padding:2.5mm 4mm;box-shadow:none}
+  .mnote{font-size:11pt;margin:0 0 .2em}
+  details{padding:1mm 0;break-inside:avoid}
+  .ans{font-size:10pt!important;padding:.5mm 0 0 1em!important}
+  .box,.post,.vcard,.def,tr,.flow{break-inside:avoid}
+  .bar span.v{height:1.15em;line-height:1.15em;font-size:10.5pt}
+  .firma{font-size:11.5pt;margin:.2em 0 0!important}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ar" viewBox="0 0 60 30"><path d="M3 18 C 18 9, 34 9, 52 15" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M42 6 L54 15 L41 23" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ad" viewBox="0 0 30 60"><path d="M14 3 C 9 18, 19 32, 15 52" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M6 42 L15 54 L23 41" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<main class="stack">
+
+<!-- ===================== PORTADA ===================== -->
+<section class="sheet" id="portada">
+  <span class="fecha">martes, 20 de octubre</span>
+  <div class="printbar"><button class="btn printbtn" type="button" id="btnPrint">Imprimir los apuntes</button></div>
+  <p class="note blue" style="margin:0">Lengua Castellana y Literatura · 1.º ESO</p>
+  <h1 class="cover-title">Apuntes de repaso <span>· 1.<sup>er</sup> examen</span></h1>
+  <div class="row" style="margin:.4em 0 1em">
+    <span class="stamp" style="font-size:1.25rem">EXAMEN: viernes 30 de octubre</span>
+    <span class="note tilt">¡quedan 10 días! <svg class="arr"><use href="#ar"/></svg> sin agobios, un poco cada día</span>
+  </div>
+
+  <div class="cols">
+    <div>
+      <h3 style="margin-top:.2em">¿Qué entra?</h3>
+      <p class="note green" style="margin:0 0 .3em">(voy tachando cuando me lo sé)</p>
+      <ul class="check index" id="entra">
+        <li><input type="checkbox" id="c1"><label for="c1"><a href="#t1">Lengua y lenguaje</a></label></li>
+        <li><input type="checkbox" id="c2"><label for="c2"><a href="#t2">Las lenguas del mundo</a> (+ la escritura)</label></li>
+        <li><input type="checkbox" id="c3"><label for="c3"><a href="#t3">Lenguas y variedades lingüísticas de España</a></label></li>
+        <li><input type="checkbox" id="c4"><label for="c4"><a href="#t4">La comunicación: elementos, clases y funciones</a></label></li>
+        <li><input type="checkbox" id="c5"><label for="c5"><a href="#t5">Ortografía y vocabulario: 24 palabras con significado y sinónimos</a></label></li>
+        <li><input type="checkbox" id="c6"><label for="c6"><a href="#t6">El resumen de un texto</a></label></li>
+        <li><input type="checkbox" id="c7"><label for="c7"><a href="#t7">Autoexamen final</a></label></li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:.2em">Mi plan: ciclo de repaso</h3>
+      <p class="note blue" style="margin:0 0 .2em;font-size:1.2rem">Estudio todo una vez y luego lo repaso <u>dos veces</u>, dejando días entre medias, para que la curva del olvido no me gane.</p>
+      <div class="tw"><table class="plan">
+        <tr><th>Día</th><th>Qué hago</th></tr>
+        <tr class="r0"><td colspan="2"><b>Estudio</b> (entender, subrayar, esquemas)</td></tr>
+        <tr><td>Mié 21</td><td>Lengua y lenguaje + lenguas del mundo</td></tr>
+        <tr><td>Jue 22</td><td>Lenguas y variedades de España</td></tr>
+        <tr><td>Vie 23</td><td>La comunicación</td></tr>
+        <tr><td>Sáb 24</td><td>Vocabulario (24 palabras) + el resumen</td></tr>
+        <tr class="r1"><td colspan="2"><b>1.<sup>er</sup> repaso de todo</b> (a los 2-3 días)</td></tr>
+        <tr><td>Dom 25</td><td>Toda la teoría, con los esquemas</td></tr>
+        <tr><td>Lun 26</td><td>Dictado de las 24 palabras + hacer un resumen</td></tr>
+        <tr><td>Mar 27</td><td>Autoexamen sin mirar y marcar los fallos</td></tr>
+        <tr class="r2"><td colspan="2"><b>2.º repaso de todo</b> (justo antes)</td></tr>
+        <tr><td>Mié 28</td><td>Toda la teoría + mis fallos del autoexamen</td></tr>
+        <tr><td>Jue 29</td><td>Vocabulario rápido, repaso ligero y dormir bien</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="post" style="max-width:none">
+    <h4>Cómo uso estos apuntes</h4>
+    <p><span class="hy">Amarillo</span> = idea clave · <span class="hg">verde</span> = ejemplo · <span class="hp">rosa</span> = palabra técnica que tengo que usar en el examen · <span class="red note" style="font-size:1.25rem">boli rojo</span> = trucos y avisos del profe. Lo que está en <span class="stamp" style="font-size:.75rem">¡OJO!</span> es lo que más se confunde.</p>
+  </div>
+  <span class="pg">pág. 0</span>
+</section>
+
+<!-- ===================== TEMA 1 ===================== -->
+<section class="sheet" id="t1">
+  <h2 class="tema">Lengua y lenguaje <small>no son lo mismo (¡pregunta segura!)</small></h2>
+
+  <div class="cols">
+    <div class="box">
+      <h4 style="margin-top:0">LENGUAJE</h4>
+      <p>Es la <span class="hy">capacidad que tenemos todos los seres humanos para comunicarnos</span> mediante una lengua.</p>
+    </div>
+    <div class="box red">
+      <h4 style="margin-top:0;color:var(--red)">LENGUA</h4>
+      <p>Es un <span class="hy">sistema concreto que usa una comunidad para comunicarse</span>.</p>
+      <p><span class="hg">Ej.: gallego, castellano, japonés, lengua de signos española…</span></p>
+    </div>
+  </div>
+  <p class="note tilt">Truco: lenguaje = <u>1</u> capacidad que tenemos todos · lenguas = <u>muchas</u> (más de 7.000)</p>
+
+  <h3>Lenguas orales y lenguas de signos</h3>
+  <div class="tw"><table>
+    <tr><th></th><th>Lenguas orales</th><th>Lenguas de signos</th></tr>
+    <tr><td><b>Canal</b></td><td><span class="hy">vocal-auditivo</span></td><td><span class="hy">gestual-visual</span></td></tr>
+    <tr><td><b>Cómo</b></td><td>Sonidos que emitimos con la boca y oímos con el oído.</td><td>Manos y expresiones del rostro, que percibimos con la vista.</td></tr>
+  </table></div>
+  <p>Las dos son <span class="ur">sistemas completos</span>: con ellas se puede expresar cualquier cosa.</p>
+
+  <div class="cols">
+    <div class="post blue">
+      <h4>Datos de las lenguas de signos</h4>
+      <ul class="dash">
+        <li>Hay al menos <b>121</b> lenguas de signos distintas.</li>
+        <li>En España hay <b>dos</b>: la española (<b>LSE</b>) y la catalana (<b>LSC</b>). Vienen de la antigua lengua de señas francesa.</li>
+      </ul>
+    </div>
+    <div>
+      <p><span class="stamp">¡OJO!</span></p>
+      <p class="note">NO hay una lengua de signos universal. Cada una tiene su vocabulario y su gramática. No son una "traducción" de las lenguas orales.</p>
+      <p class="note blue" style="font-size:1.25rem">Ej.: en EE. UU. y Reino Unido hablan inglés, pero sus lenguas de signos son de familias distintas.</p>
+    </div>
+  </div>
+  <span class="pg">pág. 1</span>
+</section>
+
+<!-- ===================== TEMA 2 ===================== -->
+<section class="sheet" id="t2">
+  <h2 class="tema">Las lenguas del mundo</h2>
+
+  <div class="cols">
+    <div>
+      <p>En el mundo se hablan <span class="hy circ" style="font-weight:700">más de 7.000 lenguas</span> vivas (oficiales o no, orales o de signos).</p>
+      <p><span class="ur">No contamos los dialectos</span>, que son <span class="hp">variedades de una misma lengua</span> <span class="hg">(ej.: andaluz o canario, del español)</span>.</p>
+      <p class="note">Unas pocas lenguas tienen cientos de millones de hablantes; muchas otras solo unos cientos y están en peligro de desaparecer.</p>
+    </div>
+    <div class="box">
+      <h4 style="margin-top:0">Las más habladas <span class="note blue" style="font-size:1.1rem">(millones, aprox.)</span></h4>
+      <p class="note blue" style="margin:0;font-size:1.2rem">Total de hablantes (nativos + los que la aprenden):</p>
+      <div class="bar"><span class="l">1.º inglés</span><span class="v" style="width:100%">1.493</span></div>
+      <div class="bar"><span class="l">2.º chino mand.</span><span class="v" style="width:79%">1.183</span></div>
+      <div class="bar"><span class="l"><b>3.º español</b></span><span class="v" style="width:43%;background:var(--hp)">636</span></div>
+      <div class="bar"><span class="l">4.º hindi</span><span class="v" style="width:41%">611</span></div>
+      <div class="bar"><span class="l">5.º francés</span><span class="v" style="width:31%">461</span></div>
+      <p class="note blue" style="margin:.4em 0 0;font-size:1.2rem">Solo nativos (lengua materna): 1.º chino mandarín (988) · <span class="hp">2.º español (519)</span> · 3.º inglés (372)</p>
+    </div>
+  </div>
+  <p class="note tilt">→ Conclusión: gana el <u>inglés</u> si contamos a quien lo aprende; el <u>chino</u> si contamos solo nativos. ¡El español es 2.º en nativos!</p>
+
+  <h3>Lengua oficial y lengua cooficial</h3>
+  <div class="cols">
+    <div class="def"><b>Lengua oficial:</b> la que usan las instituciones de un Estado (leyes, administración, enseñanza).</div>
+    <div class="def"><b>Lengua cooficial:</b> la que comparte la oficialidad con otra lengua en un territorio. <span class="hg">Ej.: en Galicia, gallego y castellano.</span></div>
+  </div>
+  <p>¿Cuántas lenguas oficiales tiene un país? <span class="note blue">Suiza <b>4</b> (alemán, francés, italiano, romanche) · Sudáfrica <b>12</b> · Bolivia <b>37</b> (español + 36 indígenas) · Andorra solo <b>1</b> (catalán)</span></p>
+
+  <h3>Las familias de lenguas</h3>
+  <p>Las lenguas con un <span class="hy">origen común</span> forman una <span class="hp">familia</span>. La más importante para nosotros es la <span class="ur" style="font-weight:700">familia indoeuropea</span>, con varias ramas:</p>
+  <div class="tw"><table>
+    <tr><th>Rama</th><th>Lenguas</th><th>«noche»</th></tr>
+    <tr><td><b>Románicas</b> <span class="note" style="font-size:1.1rem">(vienen del latín)</span></td><td>castellano, gallego, italiano, francés…</td><td>noche, noite, notte, nuit</td></tr>
+    <tr><td><b>Germánicas</b></td><td>inglés, alemán…</td><td>night, Nacht</td></tr>
+    <tr><td><b>Eslavas</b></td><td>ruso…</td><td>noch'</td></tr>
+    <tr><td><b>Helénica</b></td><td>griego</td><td>nýchta</td></tr>
+  </table></div>
+  <p><span class="stamp">¡OJO!</span> <span class="note">El <u>euskera</u> NO es indoeuropeo: es una lengua aislada.</span></p>
+
+  <h3>La escritura</h3>
+  <div class="def">Un <b>sistema de escritura</b> es la <span class="hy">representación gráfica de una lengua</span>. <span class="note" style="font-size:1.2rem">No todas las lenguas tienen escritura.</span></div>
+  <p>La escritura marca el paso de la <b>Prehistoria</b> a la <b>Historia</b> <svg class="arr"><use href="#ar"/></svg> hacia el <span class="hy">3500 a. C.</span>, en <b>Mesopotamia</b> (tablillas de arcilla, escritura cuneiforme).</p>
+  <div class="cols">
+    <div class="box"><h4 style="margin-top:0">1 signo = 1 palabra</h4><p>Jeroglíficos egipcios y escritura china. <span class="hg">山 = «montaña»</span></p></div>
+    <div class="box red"><h4 style="margin-top:0;color:var(--red)">1 signo = 1 sonido <span class="note" style="font-size:1.2rem">(alfabetos)</span></h4><p>Latino, griego, cirílico, alefato (hebreo) y alifato (árabe).</p></div>
+  </div>
+  <p><b>¿De dónde viene nuestro alfabeto?</b></p>
+  <div class="flow">
+    <div class="n"><b>fenicio</b>comerciantes; solo consonantes</div>
+    <svg class="arr" style="width:3em;height:1.5em"><use href="#ar"/></svg>
+    <div class="n"><b>griego</b>añade las vocales</div>
+    <svg class="arr" style="width:3em;height:1.5em"><use href="#ar"/></svg>
+    <div class="n" style="border-color:var(--red)"><b class="red">latino</b>el que usamos hoy</div>
+  </div>
+  <p class="note blue">Curiosidad: nuestra A viene de la letra fenicia <i>alef</i>, que dibujaba una cabeza de buey (en griego, <i>alfa</i>).</p>
+
+  <div class="post pink">
+    <h4>La piedra de Roseta</h4>
+    <ul class="dash">
+      <li><b>196 a. C.</b>: se graba en Egipto un decreto <span class="ur">tres veces</span>: en jeroglíficos, en demótica y en griego.</li>
+      <li><b>1799</b>: se encuentra la piedra. Nadie sabía leer jeroglíficos, pero sí griego.</li>
+      <li><b>1822</b>: el francés <span class="hy">Champollion</span> descifra los jeroglíficos comparando los tres textos.</li>
+      <li><svg class="arr"><use href="#ar"/></svg> Por fin pudimos leer más de 3.000 años de historia, leyes y creencias egipcias.</li>
+    </ul>
+  </div>
+  <span class="pg">pág. 2</span>
+</section>
+
+<!-- ===================== TEMA 3 ===================== -->
+<section class="sheet" id="t3">
+  <h2 class="tema">Lenguas y variedades lingüísticas de España</h2>
+
+  <p>España es un <span class="hp">Estado plurilingüe</span>. La <span class="hy">lengua oficial en todo el Estado es el castellano o español</span>. En algunas comunidades autónomas se hablan otras lenguas que también son oficiales <svg class="arr"><use href="#ar"/></svg> <span class="ur">cooficiales</span>.</p>
+
+  <div class="tw"><table>
+    <tr><th>Lengua</th><th>¿Dónde es oficial?</th><th>Origen</th></tr>
+    <tr><td><span class="hy"><b>Castellano</b></span></td><td>En todo el Estado.</td><td>Del <b>latín</b>. Nace en la actual Cantabria y el norte de Burgos.</td></tr>
+    <tr><td><span class="ho"><b>Catalán</b></span></td><td>Cataluña, Illes Balears y Comunidad Valenciana (allí se llama <i>valenciano</i>).</td><td>Del <b>latín</b>. Surge en el noreste y se extiende por la costa levantina y Baleares.</td></tr>
+    <tr><td><span class="hb"><b>Gallego</b></span></td><td>Galicia.</td><td>Del <b>latín</b>. Surge en el noroeste.</td></tr>
+    <tr><td><span class="hg"><b>Euskera</b></span></td><td>País Vasco y Navarra (zona vascófona).</td><td><span class="ur">Lengua prerromana</span>: existía antes del latín. No se parece a ninguna otra.</td></tr>
+  </table></div>
+
+  <div class="cols">
+    <div>
+      <p><span class="stamp">¡OJO!</span> <span class="note">El <u>aranés</u> también es cooficial, pero solo en el Valle de Arán (Cataluña). Es una variedad del occitano.</span></p>
+      <p><b>Otras lenguas minoritarias:</b> asturiano, aragonés y <i>a fala</i> (Extremadura).</p>
+    </div>
+    <div class="post">
+      <h4>¿De dónde salen?</h4>
+      <p>Latín <svg class="arr"><use href="#ar"/></svg> evoluciona entre los siglos <b>V y X</b> <svg class="arr"><use href="#ar"/></svg> <span class="hp">lenguas románicas</span> (castellano, gallego, catalán…).</p>
+      <p class="note blue">Las <b>Glosas Emilianenses</b> (hacia el año 1000, San Millán de la Cogolla): notas escritas en romance en los márgenes de un texto en latín. ¡De lo primero escrito en romance!</p>
+    </div>
+  </div>
+
+  <h3>Las variedades del castellano</h3>
+  <p>Todos los hablantes de una lengua nos entendemos, pero <span class="hy">no todos hablamos exactamente igual</span>. Hay <span class="hp">variedades</span> asociadas a una zona geográfica. Se agrupan en <b class="circ">tres</b>:</p>
+  <div class="cols3">
+    <div class="box green">
+      <h4 style="margin-top:0">Español septentrional</h4>
+      <p><b>Dónde:</b> mitad norte peninsular.</p>
+      <p><b>Rasgo:</b> <span class="ur">no aspira la -s</span> a final de sílaba.</p>
+    </div>
+    <div class="box" style="border-color:#c2611f">
+      <h4 style="margin-top:0;color:#b4501c">Español meridional</h4>
+      <p><b>Dónde:</b> sur peninsular y Canarias.</p>
+      <ul class="dash">
+        <li><b>Aspiración</b> de consonantes finales: <span class="hg">«loh niñoh»</span></li>
+        <li><b>Seseo</b>: <i>z, ce, ci</i> suenan como <i>s</i>: <span class="hg">«sapato»</span></li>
+        <li><b>Ceceo</b>: la <i>s</i> suena como <i>z</i>: <span class="hg">«zeñora»</span></li>
+      </ul>
+    </div>
+    <div class="box" style="border-color:var(--purple)">
+      <h4 style="margin-top:0;color:var(--purple)">Variedades de contacto</h4>
+      <p><b>Dónde:</b> donde conviven dos lenguas.</p>
+      <p><b>Rasgo:</b> el castellano recibe influencia de la otra lengua. <span class="hg">Ej.: el castellano de Galicia, influido por el gallego.</span></p>
+    </div>
+  </div>
+  <p class="note tilt" style="font-size:1.6rem">Todos hablamos alguna variedad y <u>ninguna es más correcta que otra</u>.</p>
+  <span class="pg">pág. 3</span>
+</section>
+
+<!-- ===================== TEMA 4 ===================== -->
+<section class="sheet" id="t4">
+  <h2 class="tema">La comunicación</h2>
+  <div class="def">La comunicación es un <span class="hy">proceso a través del cual se transmite información</span>.</div>
+
+  <h3>Los 6 elementos</h3>
+  <div class="cols">
+    <div class="tw"><table>
+      <tr><th>Elemento</th><th>Qué es</th></tr>
+      <tr><td><b>Emisor</b></td><td>Persona que emite el mensaje.</td></tr>
+      <tr><td><b>Receptor</b></td><td>Persona que recibe el mensaje.</td></tr>
+      <tr><td><b>Mensaje</b></td><td>Información concreta que se transmite.</td></tr>
+      <tr><td><b>Canal</b></td><td>Medio por el que se transmite el mensaje.</td></tr>
+      <tr><td><b>Código</b></td><td>Signos y reglas para elaborar el mensaje. <span class="ur">Emisor y receptor deben conocerlo y compartirlo.</span></td></tr>
+      <tr><td><b>Situación</b></td><td>Circunstancias: lugar, momento y relación entre emisor y receptor.</td></tr>
+    </table></div>
+    <div>
+      <p class="note blue" style="margin:0">Mi ejemplo: mamá me escribe por WhatsApp «Compra pan al volver».</p>
+      <div class="flow" style="margin-top:.3em">
+        <div class="n"><b>emisor</b>mamá</div>
+        <svg class="arr" style="width:2.6em;height:1.4em"><use href="#ar"/></svg>
+        <div class="n" style="border-color:var(--red)"><b class="red">mensaje</b>«Compra pan»</div>
+        <svg class="arr" style="width:2.6em;height:1.4em"><use href="#ar"/></svg>
+        <div class="n"><b>receptor</b>yo</div>
+      </div>
+      <ul class="dash">
+        <li><b>Canal:</b> la red de telefonía / internet (ondas).</li>
+        <li><b>Código:</b> el castellano escrito.</li>
+        <li><b>Situación:</b> por la tarde, madre e hija, ella en el trabajo.</li>
+      </ul>
+      <p><span class="stamp">¡OJO!</span> <span class="note">El móvil NO es el canal: es el <u>soporte</u> técnico. El canal es la red / las ondas. Cara a cara, el canal es el aire.</span></p>
+    </div>
+  </div>
+
+  <h3>Clases de comunicación</h3>
+  <div class="cols">
+    <div class="box">
+      <h4 style="margin-top:0">VERBAL <span class="note blue" style="font-size:1.2rem">→ signos lingüísticos (palabras)</span></h4>
+      <ul class="dash"><li><b>Oral</b>: hablamos y escuchamos.</li><li><b>Escrita</b>: escribimos y leemos.</li></ul>
+      <p>El <span class="hp">signo lingüístico</span> tiene dos caras (como una moneda):</p>
+      <ul class="dash">
+        <li><b>significante</b> <svg class="arr blue"><use href="#ar"/></svg> la forma: sonidos o letras (<i>á-r-b-o-l</i>)</li>
+        <li><b>significado</b> <svg class="arr blue"><use href="#ar"/></svg> la idea que nos viene a la cabeza</li>
+      </ul>
+      <p class="note">Es <u>arbitrario</u>: no hay relación entre la palabra y la cosa.</p>
+    </div>
+    <div class="box red">
+      <h4 style="margin-top:0;color:var(--red)">NO VERBAL <span class="note blue" style="font-size:1.2rem">→ signos no lingüísticos</span></h4>
+      <p>Lenguaje corporal (gestos), imágenes, sonidos, colores…</p>
+      <ul class="dash">
+        <li><span class="hp">Iconos</span>: <span class="ur">se parecen</span> a lo que representan. <span class="hg">Ej.: el pictograma del autobús.</span></li>
+        <li><span class="hp">Indicios</span>: nos hacen <span class="ur">deducir</span> algo por una relación natural. <span class="hg">Ej.: humo → fuego; nubes negras → lluvia.</span></li>
+      </ul>
+      <p class="note blue">Estos signos NO son arbitrarios: están motivados.</p>
+    </div>
+  </div>
+
+  <h3>Las funciones del lenguaje</h3>
+  <p>Son las <span class="hy">distintas intenciones con las que nos comunicamos</span>. Cada una se relaciona con un elemento.</p>
+  <div class="row"><span class="mapfre"><i>M</i><i>A</i><i>P</i><i>F</i><i>R</i><i>E</i></span><span class="note">← así me acuerdo de las 6 (¡como la aseguradora!)</span></div>
+  <div class="tw"><table>
+    <tr><th>Función</th><th>Para qué</th><th>Elemento</th><th>Ejemplo</th></tr>
+    <tr><td><b><span class="red">M</span>etalingüística</b></td><td>Usar la lengua para hablar de la propia lengua.</td><td><span class="hy">código</span></td><td><span class="hg">«Blanco y negro son adjetivos».</span></td></tr>
+    <tr><td><b><span class="red">A</span>pelativa</b></td><td>Influir en el receptor con órdenes o preguntas.</td><td><span class="hy">receptor</span></td><td><span class="hg">«Tienes que apagar el televisor».</span></td></tr>
+    <tr><td><b><span class="red">P</span>oética</b></td><td>Fin estético; recursos estilísticos (poemas, refranes, eslóganes).</td><td><span class="hy">mensaje</span></td><td><span class="hg">«Verde que te quiero verde» (Lorca).</span></td></tr>
+    <tr><td><b><span class="red">F</span>ática</b></td><td>Comprobar que la comunicación está abierta.</td><td><span class="hy">canal</span></td><td><span class="hg">«¿Me oyes?», «¿Sí? ¿Dígame?»</span></td></tr>
+    <tr><td><b><span class="red">R</span>epresentativa</b></td><td>Expresar ideas objetivas, sin opinar.</td><td><span class="hy">contexto</span></td><td><span class="hg">«Hoy el cielo está azul».</span></td></tr>
+    <tr><td><b><span class="red">E</span>xpresiva</b></td><td>Comunicar opiniones y sentimientos.</td><td><span class="hy">emisor</span></td><td><span class="hg">«¡Me encanta la clase de lengua!»</span></td></tr>
+  </table></div>
+  <p><span class="stamp">¡OJO!</span> <span class="note">Un mismo enunciado puede tener VARIAS funciones a la vez. Ej.: un eslogan con rima que nos anima a comprar = apelativa + poética. En el examen digo la principal y explico por qué.</span></p>
+  <span class="pg">pág. 4</span>
+</section>
+
+<!-- ===================== TEMA 5 ===================== -->
+<section class="sheet" id="t5">
+  <h2 class="tema">Ortografía y vocabulario <small>24 palabras: cómo se escriben, qué significan y sus sinónimos</small></h2>
+
+  <p class="note blue">Cómo estudiar: tapo el significado y digo qué es; luego tapo la palabra y la escribo. (O pulso los botones y voy tocando cada ficha para destapar.)</p>
+  <div class="tools">
+    <button class="btn" id="btnSig" type="button" aria-pressed="false">Tapar significados</button>
+    <button class="btn" id="btnWord" type="button" aria-pressed="false">Tapar palabras</button>
+  </div>
+  <div class="voc" id="voc"></div>
+  <span class="pg">pág. 5</span>
+</section>
+
+<!-- ===================== TEMA 6 ===================== -->
+<section class="sheet" id="t6">
+  <h2 class="tema">El resumen de un texto</h2>
+  <div class="def">Un <b>resumen</b> es un texto <span class="hy">breve</span>, escrito <span class="hy">con mis propias palabras</span>, que recoge <span class="hy">solo las ideas principales</span> del texto original, <span class="ur">sin dar mi opinión</span>.</div>
+
+  <div class="cols">
+    <div>
+      <h3 style="margin-top:.5em">Pasos (en orden)</h3>
+      <ol>
+        <li><b>Leo</b> el texto entero para saber de qué trata.</li>
+        <li><b>Releo</b> despacio, busco las palabras que no entiendo y subrayo.</li>
+        <li><b>Subrayo</b> las ideas principales (suele haber una por párrafo).</li>
+        <li><b>Anoto</b> al margen la idea de cada párrafo en pocas palabras.</li>
+        <li><b>Redacto</b> uniendo las ideas con conectores (<i>porque, además, así que, por eso…</i>).</li>
+        <li><b>Reviso</b>: ortografía, puntos, y que ocupe más o menos <span class="circ">¼</span> del original.</li>
+      </ol>
+    </div>
+    <div class="cols" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:14px">
+      <div class="box green">
+        <h4 style="margin-top:0">SÍ</h4>
+        <ul class="dash">
+          <li>Mis palabras</li>
+          <li>3.ª persona</li>
+          <li>Ideas principales</li>
+          <li>Un solo párrafo, bien unido</li>
+          <li>Respetar lo que dice el autor</li>
+        </ul>
+      </div>
+      <div class="box red">
+        <h4 style="margin-top:0;color:var(--red)">NO</h4>
+        <ul class="dash">
+          <li>Copiar frases enteras</li>
+          <li>Mi opinión («me parece…»)</li>
+          <li>Ejemplos y detalles</li>
+          <li>Datos que no están en el texto</li>
+          <li>Que sea casi igual de largo</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>Ejemplo hecho por mí</h3>
+  <div class="cols" style="align-items:start">
+    <div class="texto">
+      <h5>Las lenguas también se mueren</h5>
+      <span class="mnote">idea 1 → muchas lenguas en peligro</span>
+      <p><span class="hy">En el mundo se hablan hoy más de 7.000 lenguas, pero casi la mitad podría desaparecer antes de que termine este siglo.</span> <span class="tach">Muchas de ellas tienen solo unos cientos de hablantes, la mayoría personas mayores,</span> y <span class="hy">los niños ya no las aprenden en casa.</span></p>
+      <span class="mnote">idea 2 → por qué: se pasan a lenguas mayoritarias</span>
+      <p>¿Por qué ocurre? <span class="hy">A menudo las familias abandonan su lengua porque creen que otra, más extendida, ofrecerá a sus hijos más oportunidades</span> <span class="tach">de trabajo y de estudio</span>. Además, <span class="hy">la televisión, internet y la escuela suelen funcionar en las lenguas mayoritarias.</span></p>
+      <span class="mnote">idea 3 → se pierde una cultura; se intenta salvarlas</span>
+      <p><span class="hy">Cuando una lengua desaparece, no se pierden solo palabras</span>: <span class="tach">se pierden canciones, leyendas, conocimientos sobre plantas o animales y</span> <span class="hy">una manera única de ver el mundo.</span> Por eso, <span class="hy">cada vez más comunidades</span> <span class="tach">graban a sus mayores, crean diccionarios y enseñan su lengua en las escuelas para</span> <span class="hy">mantenerla viva.</span></p>
+    </div>
+    <div>
+      <p class="note blue" style="margin-top:0">Lo tachado en rojo = ejemplos y detalles → ¡fuera del resumen!</p>
+      <div class="box" style="background:#fff">
+        <h4 style="margin-top:0">Mi resumen <span class="note blue" style="font-size:1.1rem">(≈ 55 palabras de 190)</span></h4>
+        <p>Casi la mitad de las más de 7.000 lenguas del mundo puede desaparecer este siglo, <span class="ub">porque</span> las familias dejan de transmitirlas y prefieren lenguas mayoritarias, más útiles para estudiar y trabajar y más presentes en los medios. Con cada lengua se pierde <span class="ub">también</span> una forma de ver el mundo, <span class="ub">así que</span> muchas comunidades intentan protegerlas.</p>
+      </div>
+      <div class="post blue">
+        <h4>No confundir</h4>
+        <p><b>Tema</b> = la idea central en una frase corta (<i>«La desaparición de las lenguas»</i>). <b>Resumen</b> = todas las ideas principales, en un párrafo.</p>
+      </div>
+    </div>
+  </div>
+  <span class="pg">pág. 6</span>
+</section>
+
+<!-- ===================== AUTOEXAMEN ===================== -->
+<section class="sheet" id="t7">
+  <span class="fecha">27 de octubre</span>
+  <h2 class="tema">Autoexamen <small>contesto en voz alta o en una hoja, y luego miro la respuesta</small></h2>
+  <div class="cols">
+    <div>
+      <details><summary>1. ¿Qué diferencia hay entre lenguaje y lengua?</summary><div class="ans">Lenguaje: capacidad innata de todos los humanos para comunicarnos. Lengua: sistema concreto que usa una comunidad (gallego, inglés…).</div></details>
+      <details><summary>2. ¿En qué se diferencian las lenguas orales y las de signos?</summary><div class="ans">En el canal: vocal-auditivo (sonidos y oído) frente a gestual-visual (manos, rostro y vista). Las dos son sistemas completos.</div></details>
+      <details><summary>3. ¿Cuántas lenguas hay en el mundo? ¿Cuentan los dialectos?</summary><div class="ans">Más de 7.000. Los dialectos no cuentan: son variedades de una misma lengua.</div></details>
+      <details><summary>4. Lengua oficial y cooficial. Pon el ejemplo de Galicia.</summary><div class="ans">Oficial: la que usan las instituciones del Estado (castellano). Cooficial: comparte la oficialidad en un territorio (gallego en Galicia).</div></details>
+      <details><summary>5. Tres ramas de la familia indoeuropea y una lengua de España que no sea indoeuropea.</summary><div class="ans">Románicas, germánicas, eslavas (también la helénica). El euskera no es indoeuropeo: es una lengua aislada.</div></details>
+      <details><summary>6. ¿De dónde viene nuestro alfabeto?</summary><div class="ans">Fenicio (solo consonantes) → griego (añade vocales) → latino.</div></details>
+    </div>
+    <div>
+      <details><summary>7. Lenguas cooficiales de España y dónde.</summary><div class="ans">Catalán (Cataluña, Baleares, C. Valenciana como valenciano), gallego (Galicia), euskera (País Vasco y Navarra). El aranés, en el Valle de Arán.</div></details>
+      <details><summary>8. ¿Qué tiene de especial el euskera?</summary><div class="ans">Es prerromana (anterior al latín) y no se parece a ninguna otra lengua.</div></details>
+      <details><summary>9. Rasgos del español meridional.</summary><div class="ans">Aspiración de consonantes finales, seseo y ceceo. Se habla en el sur y en Canarias.</div></details>
+      <details><summary>10. Elementos: «El profesor explica el tema a sus alumnos en clase».</summary><div class="ans">Emisor: profesor. Receptor: alumnos. Mensaje: el tema. Canal: el aire. Código: el castellano oral. Situación: el aula, en horario de clase.</div></details>
+      <details><summary>11. ¿Qué función? a) ¿Me escuchas bien? b) Mañana lloverá en Vigo. c) ¡Qué susto! d) Cierra la puerta. e) «Casa» es un sustantivo.</summary><div class="ans">a) fática · b) representativa · c) expresiva · d) apelativa · e) metalingüística</div></details>
+      <details><summary>12. Completa: e_igir · _quedad · vislum_rar · co_esión · obstru_ión · perspica_</summary><div class="ans">exigir · oquedad (¡sin h!) · vislumbrar · cohesión · obstrucción · perspicaz</div></details>
+      <details><summary>13. Tres cosas que NO se ponen en un resumen.</summary><div class="ans">Opiniones propias, ejemplos y detalles, frases copiadas tal cual.</div></details>
+    </div>
+  </div>
+  <p class="firma" style="margin-top:1.2em">¡Ánimo! Si lo entiendo, no tengo que memorizarlo como un loro ★</p>
+  <span class="pg">pág. 7</span>
+</section>
+
+</main>
+
+<script>
+(function(){
+  var V = [
+    ["e[x]pl[í]cito","Dicho con claridad.","claro, expreso","ex + pl → con x. Esdrújula: tilde.","bingo"],
+    ["[ps]ic[ó]logo","Profesional que estudia la mente y la conducta.","terapeuta, especialista","psico- = mente: la p no suena, pero se escribe.","bingo"],
+    ["[y]a[c]er","Estar tendido.","reposar, descansar","Familia: yace, yacimiento (n.º 18).","bingo"],
+    ["conser[j]e","Persona que cuida y vigila un edificio.","portero, vigilante","Acaba en -je → con j (como garaje, viaje).","bingo"],
+    ["e[x]traescolar","Que se hace fuera del horario de clases.","complementario, voluntario","extra- (= fuera de) siempre con x.","bingo"],
+    ["obstru[cc]i[ó]n","Hecho de impedir el paso.","bloqueo, atasco","obstructor tiene -ct- → -cción. Aguda en -n: tilde.","bingo"],
+    ["e[x]i[g]ir","Pedir con fuerza algo a lo que se tiene derecho.","reclamar, demandar","Verbos en -gir con g. Pero: exijo, exija.","bingo"],
+    ["co[h]esi[ó]n","Unión fuerte entre las partes.","unión, adhesión","h intercalada, como adhesión.","bingo"],
+    ["[o]quedad","Espacio hueco en una superficie.","hueco, cavidad","¡Trampa! hueco lleva h, oquedad NO.","bingo"],
+    ["bu[h]ardilla","Habitación en el último piso, bajo el tejado.","desván, ático","bu- con b; h intercalada; -illa con ll.","bingo"],
+    ["atra[y]ente","Que atrae.","atractivo, seductor","De atraer: la y sale como en atrayendo.","bingo"],
+    ["in[v]ersi[ó]n","Dinero que se pone en un negocio para ganar más.","desembolso, aportación","n + v. -sión porque existe inversor.","bingo"],
+    ["perspica[z]","Que tiene agudeza e ingenio para comprender las cosas con rapidez.","agudo, sagaz","z final → plural perspicaces.","vocabulario"],
+    ["[h]ip[é]r[b]ole","Figura retórica que consiste en exagerar aquello de lo que se habla.","exageración, ponderación","hiper- con h, -bole con b. Ej.: «Te lo he dicho mil veces».","vocabulario"],
+    ["desa[h]o[g]o","Alivio de una pena, un trabajo o una necesidad.","alivio, descanso","des + ahogo: la h se queda.","vocabulario"],
+    ["ad[v]er[b]io","Categoría gramatical que modifica el significado del verbo, del adjetivo o de otro adverbio.","modificador, partícula","Primero v, después b.","vocabulario"],
+    ["in[h][ó]spito","Que no ofrece condiciones agradables o de seguridad para vivir.","hostil, inhabitable","in + hóspito (hospedar): h intercalada. Esdrújula.","vocabulario"],
+    ["[y]a[c]imiento","Lugar donde se hallan naturalmente minerales, rocas o restos arqueológicos.","depósito, filón","Viene de yacer (n.º 3): y + c.","vocabulario"],
+    ["es[b]elto","Que tiene un cuerpo alto, delgado y de proporciones armoniosas.","delgado, estilizado","¡Con b! esBelto como un Bambú.","vocabulario"],
+    ["ur[g]en[c]ia","Cualidad de urgente: que necesita atención o solución inmediata.","emergencia, premura","g como en urgente; -encia con c.","vocabulario"],
+    ["apo[g]eo","Punto culminante o momento de mayor esplendor de algo.","culminación, esplendor","-geo con g, como geografía.","vocabulario"],
+    ["[v]a[ll]a","Cercado de tablas, estacas u otro material que delimita un terreno.","cercado, vallado","valla (cerca) ≠ vaya (de ir) ≠ baya (fruto).","vocabulario"],
+    ["[v]islum[b]rar","Ver algo de forma confusa o a lo lejos, o intuirlo por indicios.","entrever, atisbar","v inicial; tras m, siempre b.","vocabulario"],
+    ["e[s]par[c]ir","Extender o separar lo que estaba junto o amontonado.","dispersar, difundir","es-, no ex-. Verbos en -cir con c.","vocabulario"]
+  ];
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function mark(w){return esc(w).replace(/\[([^\]]+)\]/g,"<em>$1</em>");}
+  var box=document.getElementById("voc"), h="";
+  V.forEach(function(v,i){
+    h+='<article class="vcard" tabindex="0"><span class="vnum">'+(i+1)+'</span>'+
+       '<div class="vword">'+mark(v[0])+'</div>'+
+       '<div class="vorig">'+(v[4]==="bingo"?"bingo ortográfico":"presentación vocabulario")+'</div>'+
+       '<p class="vsig">'+esc(v[1])+'</p>'+
+       '<div class="vsyn">= '+esc(v[2])+'</div>'+
+       '<div class="vtip">→ '+esc(v[3])+'</div></article>';
+  });
+  box.innerHTML=h;
+  box.addEventListener("click",function(e){var c=e.target.closest(".vcard");if(c)c.classList.toggle("ver");});
+  box.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.classList.contains("vcard")){e.preventDefault();e.target.classList.toggle("ver");}});
+  function tog(btn,cls,other,ocls){
+    btn.addEventListener("click",function(){
+      var on=btn.getAttribute("aria-pressed")!=="true";
+      btn.setAttribute("aria-pressed",on?"true":"false");
+      box.classList.toggle(cls,on);
+      if(on){other.setAttribute("aria-pressed","false");box.classList.remove(ocls);}
+      Array.prototype.forEach.call(box.querySelectorAll(".ver"),function(c){c.classList.remove("ver");});
+    });
+  }
+  var b1=document.getElementById("btnSig"), b2=document.getElementById("btnWord");
+  tog(b1,"hide-sig",b2,"hide-word"); tog(b2,"hide-word",b1,"hide-sig");
+  var bp=document.getElementById("btnPrint");
+  if(bp)bp.addEventListener("click",function(){try{window.print();}catch(e){}});
+  var opened=[];
+  window.addEventListener("beforeprint",function(){opened=[];Array.prototype.forEach.call(document.querySelectorAll("details:not([open])"),function(d){d.open=true;opened.push(d);});});
+  window.addEventListener("afterprint",function(){opened.forEach(function(d){d.open=false;});});
+  // checklist recordada en este navegador
+  var KEY="apuntes1eso_entra";
+  var st={}; try{st=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){st={};}
+  Array.prototype.forEach.call(document.querySelectorAll("#entra input"),function(cb){
+    cb.checked=!!st[cb.id];
+    cb.addEventListener("change",function(){st[cb.id]=cb.checked;try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}});
+  });
+})();
+</script>
