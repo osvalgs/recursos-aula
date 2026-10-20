@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relaciones semánticas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#fff8e7; --ink:#1b1b1b; --red:#e63946; --yellow:#ffd23f;
+  --cyan:#2ec4b6; --blue:#3a86ff; --pink:#ff7aa2; --soft:#fff1c9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Nunito',sans-serif;color:var(--ink);
+  background-color:var(--paper);
+  background-image:radial-gradient(rgba(230,57,70,.13) 1.6px,transparent 1.7px);
+  background-size:18px 18px;
+}
+p,li,.just{text-align:justify;hyphens:auto;-webkit-hyphens:auto}
+h1,h2,h3,.comic{font-family:'Bangers',cursive;letter-spacing:1.5px;font-weight:400}
+
+/* ---------- estructura ---------- */
+#progress{position:fixed;top:0;left:0;height:7px;background:var(--red);z-index:20;transition:width .35s;border-bottom:2px solid var(--ink)}
+.slide{position:absolute;inset:0;padding:4.5vh 86px 7vh;overflow-y:auto;display:none;flex-direction:column;gap:2.2vh}
+.slide.active{display:flex;animation:pop .45s ease}
+@keyframes pop{from{opacity:0;transform:scale(.97) rotate(-.4deg)}to{opacity:1;transform:none}}
+.slide > *{width:100%}
+.nav{position:fixed;top:50%;transform:translateY(-50%);width:58px;height:58px;border-radius:50%;
+  border:3px solid var(--ink);background:var(--yellow);box-shadow:4px 4px 0 var(--ink);
+  font-size:30px;font-weight:800;cursor:pointer;z-index:30;display:flex;align-items:center;justify-content:center;transition:transform .15s}
+.nav:hover{transform:translateY(-50%) scale(1.08)}
+.nav:active{box-shadow:1px 1px 0 var(--ink)}
+#prev{left:14px} #next{right:14px}
+#counter{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--yellow);
+  font-family:'Bangers';letter-spacing:2px;padding:4px 16px;border-radius:20px;z-index:30;font-size:18px}
+
+/* ---------- piezas cómic ---------- */
+.tag{display:inline-block;align-self:flex-start;width:auto!important;background:var(--red);color:#fff;font-family:'Bangers';
+  letter-spacing:2px;font-size:clamp(16px,2vw,22px);padding:4px 16px;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);transform:rotate(-2deg)}
+h2.title{font-size:clamp(34px,5.4vw,64px);line-height:1;color:var(--ink);text-shadow:3px 3px 0 var(--yellow)}
+.panel{background:#fff;border:3px solid var(--ink);border-radius:12px;box-shadow:7px 7px 0 var(--ink);padding:2.4vh 2.2vw;font-size:clamp(16px,1.75vw,23px);line-height:1.5}
+.panel p+p{margin-top:1.2vh}
+.panel.yellow{background:var(--soft)} .panel.cyan{background:#dff7f4} .panel.pink{background:#ffe3ea} .panel.blue{background:#e2edff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2.4vw}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:2vw}
+.term{font-family:'Bangers';letter-spacing:1.5px;font-size:1.35em;color:var(--red)}
+.ex{font-style:italic;color:#264a9c;font-weight:600}
+.big-emoji{font-size:clamp(40px,6vw,80px);line-height:1}
+.sabias{position:relative;background:var(--yellow);border:3px solid var(--ink);border-radius:14px;box-shadow:7px 7px 0 var(--ink);
+  padding:2.4vh 2.2vw 2.4vh 2.2vw;font-size:clamp(16px,1.75vw,23px);line-height:1.5}
+.sabias h3{font-size:1.5em;margin-bottom:.6vh;color:var(--red)}
+ul.dash{list-style:none} ul.dash li{padding-left:1.4em;position:relative;margin:.8vh 0}
+ul.dash li::before{content:"➜";position:absolute;left:0;color:var(--red);font-weight:800}
+
+/* ejercicios */
+.exercise{background:#fff;border:3px dashed var(--ink);border-radius:12px;padding:2.6vh 2.2vw;font-size:clamp(17px,1.9vw,25px);line-height:1.55;position:relative}
+.exhead{display:flex;align-items:center;gap:14px}
+.exnum{flex:none;width:clamp(48px,5vw,66px);height:clamp(48px,5vw,66px);border-radius:50%;background:var(--cyan);border:3px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Bangers';font-size:clamp(26px,3vw,38px)}
+.words{display:flex;flex-wrap:wrap;gap:12px;margin-top:2vh}
+.words span{background:var(--soft);border:2.5px solid var(--ink);border-radius:30px;padding:6px 18px;font-style:italic;font-weight:600;box-shadow:3px 3px 0 var(--ink)}
+.reading{background:#fffdf5;border-left:8px solid var(--red);padding:2vh 2vw;font-size:clamp(15px,1.55vw,20px);line-height:1.55;border-radius:0 10px 10px 0}
+.reading h3{font-family:'Nunito';font-weight:800;letter-spacing:0;font-size:1.25em;margin-bottom:1vh}
+.reading p{text-indent:1.5em;margin-bottom:1vh}
+.src{text-align:right!important;color:var(--red);font-weight:700}
+ol.qs{list-style:none;counter-reset:q}
+ol.qs li{counter-increment:q;padding-left:2.2em;position:relative;margin:1.4vh 0}
+ol.qs li::before{content:counter(q,lower-alpha) ")";position:absolute;left:0;font-weight:800;color:var(--red)}
+
+/* portada */
+#s0{justify-content:center;align-items:center;background:var(--yellow);background-image:repeating-conic-gradient(from 0deg at 50% 50%,#ffdf5e 0 7.5deg,#ffd23f 7.5deg 15deg)}
+.cover-box{background:#fff;border:5px solid var(--ink);box-shadow:12px 12px 0 var(--ink);padding:5vh 4vw;transform:rotate(-1.5deg);text-align:center}
+.cover-box h1{font-size:clamp(50px,9vw,128px);line-height:.95;color:var(--red);text-shadow:5px 5px 0 var(--ink)}
+.cover-box .sub{font-family:'Bangers';font-size:clamp(22px,3vw,40px);letter-spacing:2px;margin-top:2vh}
+.burst{display:inline-block;background:var(--cyan);border:3px solid var(--ink);padding:10px 26px;font-family:'Bangers';font-size:clamp(20px,2.4vw,30px);
+  letter-spacing:2px;margin-top:3vh;box-shadow:5px 5px 0 var(--ink);cursor:pointer;transform:rotate(2deg);transition:transform .15s}
+.burst:hover{transform:rotate(-2deg) scale(1.06)}
+
+/* escenario */
+.stage{background:#140b16!important;background-image:radial-gradient(ellipse at 50% -10%,rgba(255,240,180,.45),transparent 55%),
+  linear-gradient(90deg,#7a0d18 0,#b3162a 4%,#7a0d18 8%,transparent 8%,transparent 92%,#7a0d18 92%,#b3162a 96%,#7a0d18 100%)!important;color:#fff}
+.stage h2.title{color:var(--yellow);text-shadow:4px 4px 0 var(--red)}
+.stage .lead{color:#ffe9b0;font-size:clamp(15px,1.6vw,21px);text-align:center!important}
+.jokes{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8vw}
+.jokes.j4{grid-template-columns:repeat(4,1fr);gap:1.4vw}
+@media (max-width:1100px){.jokes.j4{grid-template-columns:repeat(2,1fr)}}
+.joke{background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:16px;box-shadow:6px 6px 0 var(--yellow);padding:2vh 1.4vw;
+  cursor:pointer;min-height:18vh;display:flex;flex-direction:column;justify-content:space-between;gap:1vh;font-size:clamp(15px,1.55vw,21px);line-height:1.4;transition:transform .2s}
+.joke:hover{transform:translateY(-4px) rotate(-.5deg)}
+.joke .mic{font-size:1.6em}
+.joke .punch{display:none;background:var(--yellow);border:2px solid var(--ink);border-radius:10px;padding:1vh .8vw;font-weight:800;animation:pop .35s}
+.joke.open .punch{display:block}
+.joke .hint{font-size:.8em;color:#888;font-style:italic;text-align:right!important}
+.joke.open .hint{display:none}
+.laugh{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%) rotate(-8deg);font-family:'Bangers';font-size:clamp(50px,9vw,120px);
+  color:var(--yellow);text-shadow:5px 5px 0 var(--red),-2px -2px 0 var(--ink);pointer-events:none;z-index:50;opacity:0}
+.laugh.go{animation:laugh 1s ease forwards}
+@keyframes laugh{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-8deg)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.1) rotate(-8deg)}100%{opacity:0;transform:translate(-50%,-60%) scale(1) rotate(-8deg)}}
+
+/* detective */
+.clue{display:flex;gap:1.4vw;align-items:flex-start}
+.clue .big-emoji{flex:none}
+.btn{display:inline-block;background:var(--red);color:#fff;border:3px solid var(--ink);border-radius:30px;padding:6px 20px;font-family:'Bangers';
+  letter-spacing:1.5px;font-size:clamp(16px,1.7vw,21px);cursor:pointer;box-shadow:3px 3px 0 var(--ink);margin-top:1.2vh}
+.btn:active{box-shadow:0 0 0 var(--ink);transform:translate(3px,3px)}
+.hidden{display:none}
+.sol{background:#e7fbe9;border:2.5px solid #2a9d4b;border-radius:10px;padding:1.2vh 1.2vw;margin-top:1vh;animation:pop .35s}
+
+/* semas */
+.semas{display:flex;flex-wrap:wrap;gap:10px;margin-top:1vh}
+.semas span{background:var(--cyan);border:2.5px solid var(--ink);border-radius:8px;padding:4px 12px;font-weight:800;box-shadow:3px 3px 0 var(--ink)}
+.letters{display:flex;gap:8px;margin-top:1vh;flex-wrap:wrap}
+.letters span{width:44px;height:52px;background:var(--pink);border:2.5px solid var(--ink);border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:24px;box-shadow:3px 3px 0 var(--ink)}
+
+/* diagrama sinónimos/antónimos */
+.diagram{display:flex;justify-content:center;align-items:flex-end;gap:3vw;flex-wrap:wrap;text-align:center}
+.diagram .item{display:flex;flex-direction:column;align-items:center;gap:1vh;font-style:italic;font-weight:800;font-size:clamp(17px,1.9vw,25px)}
+.diagram .rel{font-family:'Bangers';letter-spacing:1.5px;font-size:clamp(18px,2vw,26px);padding:4px 14px;border:3px solid var(--ink);border-radius:20px;align-self:center}
+.rel.syn{background:var(--cyan)} .rel.ant{background:var(--pink)}
+
+/* vídeos */
+.vslide{align-items:center}
+.vslide .tag{align-self:flex-start}
+.video-wrap{width:min(100%,108vh);aspect-ratio:16/9;border:4px solid var(--ink);border-radius:14px;box-shadow:9px 9px 0 var(--ink);overflow:hidden;background:#000;margin:0 auto}
+.video-wrap iframe{width:100%;height:100%;border:0;display:block}
+.vlink{text-align:center!important;font-size:clamp(14px,1.4vw,18px)}
+.vlink a{color:var(--red);font-weight:800}
+
+/* esquema */
+.scheme{display:flex;flex-direction:column;gap:1.3vh;font-size:clamp(13px,1.35vw,18px)}
+.srow{display:grid;grid-template-columns:minmax(120px,15%) 30px 1fr 30px 1.2fr;align-items:center;gap:.6vw}
+.box{background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:.9vh .8vw;box-shadow:3px 3px 0 var(--ink);line-height:1.35}
+.box.k{font-family:'Bangers';letter-spacing:1.3px;font-size:1.3em;text-align:center;background:var(--yellow)}
+.arrow{font-size:1.6em;font-weight:800;text-align:center;color:var(--red)}
+.subs{display:flex;flex-wrap:wrap;gap:.6vw}
+.subs .box{background:var(--soft);flex:1 1 120px}
+.root{display:flex;align-items:center;gap:1vw;flex-wrap:wrap}
+.root .box{flex:1}
+.root .box.k{flex:0 0 auto;background:var(--red);color:#fff;font-size:1.5em}
+
+@media (max-width:820px){
+  .slide{padding:4vh 16px 80px}
+  .nav{top:auto;bottom:10px;transform:none;width:48px;height:48px;font-size:24px}
+  .nav:hover{transform:scale(1.05)}
+  .grid2,.grid3,.jokes,.jokes.j4{grid-template-columns:1fr}
+  .srow{grid-template-columns:1fr}
+  .srow .arrow{transform:rotate(90deg)}
+  #counter{bottom:20px}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="laugh" id="laugh">¡JA, JA, JA!</div>
+
+<!-- 0 PORTADA -->
+<section class="slide" id="s0">
+  <div class="cover-box" style="width:auto">
+    <div class="big-emoji">🎤😂📖</div>
+    <h1>RELACIONES<br>SEMÁNTICAS</h1>
+    <div class="sub">El significado de las palabras (I)</div>
+    <div class="burst" onclick="go(1)">¡QUE EMPIECE EL SHOW! ➜</div>
+  </div>
+</section>
+
+<!-- 1 CLUB DE LA COMEDIA -->
+<section class="slide stage">
+  <span class="tag">Esta noche, en directo…</span>
+  <h2 class="title">🎙️ EL CLUB DE LA COMEDIA SEMÁNTICA</h2>
+  <p class="lead">Ocho humoristas, ocho chistes. Pulsa cada tarjeta para descubrir el remate (sube el volumen 🔊).</p>
+  <div class="jokes j4">
+    <div class="joke" onclick="openJoke(this)"><span class="mic">🚗</span><div>—¿Cuánto cuesta alquilar un coche?<br>—Depende del tiempo.</div><div class="punch">—Vale, pongamos que llueve.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">🍷</span><div>En un restaurante, el camarero pregunta:<br>—¿Vino blanco el señor?</div><div class="punch">—No, ha sido al ver los precios.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">🛏️</span><div>—¿Qué es un pelo en una cama?</div><div class="punch">—El bello durmiente.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">👓</span><div>Va uno al oculista:<br>—Doctor, se me juntan las letras.</div><div class="punch">—Pues páguelas, hombre, páguelas.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">💊</span><div>En la farmacia:<br>—¿Tienen pastillas para el cansancio?</div><div class="punch">—Están agotadas.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">🌀</span><div>—¿Te has quedado alguna vez encerrado en un laberinto?<br>—No.</div><div class="punch">—Pues no sabes lo que te pierdes.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">🚪</span><div>En emergencias:<br>—Iba corriendo y me he golpeado contra una puerta de cristal.<br>—¿Se ha cortado?</div><div class="punch">—No, lo escucho perfectamente.</div><div class="hint">pulsa para el remate</div></div>
+    <div class="joke" onclick="openJoke(this)"><span class="mic">✂️</span><div>—¿Qué le dice un jardinero a otro?</div><div class="punch">—Nos vemos cuando podamos.</div><div class="hint">pulsa para el remate</div></div>
+  </div>
+</section>
+
+<!-- CANVA: VIÑETAS -->
+<section class="slide stage" style="justify-content:center">
+  <span class="tag">🎭 Segunda parte del show</span>
+  <h2 class="title">¡AHORA, EN VIÑETAS!</h2>
+  <p class="lead">El club sigue abierto: más chistes semánticos, esta vez en viñetas. Lee cada una, ríete… y fíjate bien en qué palabra está el truco.</p>
+  <div style="text-align:center;margin-top:2vh">
+    <a class="burst" style="text-decoration:none;color:var(--ink);font-size:clamp(24px,3vw,40px)" href="https://canva.link/tff9pdzut2ma36v" target="_blank" rel="noopener">🖼️ VER LAS VIÑETAS EN CANVA ➜</a>
+  </div>
+  <p class="lead" style="margin-top:2vh">(Se abre en una pestaña nueva. Al terminar, vuelve aquí para seguir con el show.)</p>
+</section>
+
+<!-- 2 ¿POR QUÉ NOS REÍMOS? -->
+<section class="slide">
+  <span class="tag">🔍 Investigación en curso</span>
+  <h2 class="title">¿POR QUÉ NOS HACE GRACIA?</h2>
+  <div class="panel yellow">
+    <p>Ninguno de esos chistes funciona por los personajes ni por la situación: <b>el truco está escondido dentro de las palabras</b>. Un chiste así juega con nuestro cerebro: nos hace pensar en un significado y, de repente, nos cambia a otro. ¡Zas! Sorpresa… y risa.</p>
+  </div>
+  <div class="grid3">
+    <div class="panel cyan clue"><span class="big-emoji">⏳</span><p>Una misma palabra puede tener <b>varios significados</b>: el <i>tiempo</i> que dura el alquiler no es el <i>tiempo</i> que hace en la calle.</p></div>
+    <div class="panel pink clue"><span class="big-emoji">👂</span><p>Dos palabras pueden <b>sonar igual</b> y significar cosas muy distintas: un príncipe <i>bello</i> no es lo mismo que un <i>vello</i> en la almohada.</p></div>
+    <div class="panel blue clue"><span class="big-emoji">👀</span><p>Dos palabras pueden incluso <b>escribirse igual</b> sin tener nada que ver: el <i>vino</i> blanco y el señor que <i>vino</i> blanco del susto.</p></div>
+  </div>
+  <div class="panel">
+    <p>Estas conexiones entre los significados de las palabras tienen nombre: son las <span class="term">relaciones semánticas</span>. Al final de la unidad volveremos al club… y serás tú quien descubra el truco de cada chiste.</p>
+  </div>
+</section>
+
+<!-- 3 SIGNIFICADO Y SIGNIFICANTE -->
+<section class="slide">
+  <span class="tag">Punto de partida</span>
+  <h2 class="title">SIGNIFICADO Y SIGNIFICANTE</h2>
+  <div class="panel">
+    <p>Las palabras están formadas por un <b>significado</b> y un <b>significante</b>.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel cyan">
+      <p><span class="term">Significado</span><br>Es el conjunto de unidades mínimas significativas, llamadas <b>semas</b>. Por ejemplo, el significado unitario de la palabra <i>sillón</i> está formado por los semas:</p>
+      <div class="semas"><span>«asiento»</span><span>«con respaldo»</span><span>«con brazos»</span><span>«para una persona»</span></div>
+    </div>
+    <div class="panel pink">
+      <p><span class="term">Significante</span><br>Es la forma fónica o gráfica con que representamos la palabra:</p>
+      <div class="letters"><span>s</span><span>i</span><span>ll</span><span>ó</span><span>n</span></div>
+      <p style="margin-top:1.4vh"><i>sillón</i>: s + i + ll + ó + n</p>
+    </div>
+  </div>
+  <div class="panel yellow"><p>🛋️ <b>Truco:</b> el significante es «cómo suena o se escribe» la palabra; el significado es «la idea que nos viene a la cabeza» al oírla o leerla.</p></div>
+</section>
+
+<!-- 4 MONOSEMIA Y POLISEMIA -->
+<section class="slide">
+  <span class="tag">Relaciones semánticas entre las palabras</span>
+  <h2 class="title">MONOSEMIA Y POLISEMIA</h2>
+  <div class="grid2">
+    <div class="panel cyan">
+      <div class="big-emoji">🎯</div>
+      <p><span class="term">Monosemia</span><br>Una palabra monosémica es la que posee un significante asociado a un solo significado.</p>
+      <p class="ex">hematíes, ecuación, microbio…</p>
+    </div>
+    <div class="panel pink">
+      <div class="big-emoji">🌳🏭🌿</div>
+      <p><span class="term">Polisemia</span><br>Una palabra polisémica es la que posee un significante al que se asocian varios significados.</p>
+      <p class="ex">cabo, planta, pendiente…</p>
+    </div>
+  </div>
+  <div class="panel yellow">
+    <p>Por ejemplo, <i>planta</i> puede ser un vegetal, cada uno de los pisos de un edificio o la parte inferior del pie: un solo significante y varios significados.</p>
+  </div>
+</section>
+
+<!-- 5 EJERCICIO 1 -->
+<section class="slide">
+  <span class="tag">✍️ A practicar</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">1</div><p>Consultando el diccionario, construye oraciones con estas palabras polisémicas utilizando sus diferentes significados:</p></div>
+    <div class="words"><span>cepillo</span><span>golondrina</span><span>alegría</span><span>pendiente</span><span>pie</span><span>puerto</span><span>ojo</span></div>
+  </div>
+</section>
+
+<!-- 6 HOMONIMIA -->
+<section class="slide">
+  <span class="tag">Relaciones semánticas entre las palabras</span>
+  <h2 class="title">HOMONIMIA</h2>
+  <div class="panel">
+    <p><span class="term">Homonimia</span><br>Las palabras homónimas son aquellas en las que coinciden sus significantes pero tienen significados distintos. Pueden ser:</p>
+  </div>
+  <div class="grid2">
+    <div class="panel cyan">
+      <div class="big-emoji">👂</div>
+      <p><b>Homófonas:</b> coincide solo la pronunciación.</p>
+      <p class="ex">ay, hay · ola, hola · vaca, baca</p>
+    </div>
+    <div class="panel pink">
+      <div class="big-emoji">👀</div>
+      <p><b>Homógrafas:</b> coincide también su forma.</p>
+      <p class="ex">falla, llama, pasa</p>
+    </div>
+  </div>
+  <div class="sabias">
+    <h3>💡 ¿Sabías que…?</h3>
+    <p>Es muy frecuente confundir la polisemia con la homonimia. El diccionario te ayudará: las palabras polisémicas tienen una sola entrada; las homónimas, entradas diferentes.</p>
+  </div>
+</section>
+
+<!-- 7 SINONIMIA -->
+<section class="slide">
+  <span class="tag">Relaciones semánticas entre las palabras</span>
+  <h2 class="title">SINONIMIA</h2>
+  <div class="panel">
+    <p><span class="term">Sinonimia</span><br>Es la relación que se produce entre palabras con significantes diferentes y significados similares (<span class="ex">perro, can, chucho…</span>). Dependiendo del contexto, la sinonimia puede ser:</p>
+  </div>
+  <div class="grid3">
+    <div class="panel cyan">
+      <p><b>Parcial:</b> el sinónimo puede usarse en un contexto pero en otros no. Por ejemplo, <i>memoria</i> y <i>recuerdo</i> son palabras sinónimas según el contexto:</p>
+      <p class="ex">María tiene poca memoria (no poco recuerdo).</p>
+      <p class="ex">Siempre tendré aquellas vacaciones en mi memoria (o en mi recuerdo).</p>
+    </div>
+    <div class="panel pink">
+      <p><b>Total:</b> las palabras sinónimas se pueden intercambiar en cualquier contexto. Por ejemplo:</p>
+      <p class="ex">El valiente (atrevido, audaz) protagonista de la novela emprendió un duro viaje.</p>
+    </div>
+    <div class="panel blue">
+      <p><b>Referencial:</b> varias palabras dentro de un mismo contexto se refieren a una palabra.</p>
+      <p class="ex">Cervantes = el autor del Quijote</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 EJERCICIO 3 -->
+<section class="slide">
+  <span class="tag">✍️ A practicar</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">3</div><p>Razona si la sinonimia entre estas palabras es total o parcial:</p></div>
+    <div class="words"><span>flaco / delgado</span><span>pulcro / limpio</span><span>derecho / diestro</span><span>fuego / lumbre</span></div>
+  </div>
+</section>
+
+<!-- 9 ANTONIMIA -->
+<section class="slide">
+  <span class="tag">Relaciones semánticas entre las palabras</span>
+  <h2 class="title">ANTONIMIA</h2>
+  <div class="panel">
+    <p><span class="term">Antonimia</span><br>Es la relación que se da entre palabras con significantes diferentes y significados opuestos o contrarios. Hay pocas palabras antónimas puras, es decir, que la negación de una suponga la afirmación de otra (<span class="ex">vivo / muerto, recuerdo / olvido</span>).</p>
+    <p>Normalmente consideramos antónimas pares de palabras como: <span class="ex">gordo / flaco, valiente / cobarde, rico / pobre…</span>; pero observa que, por ejemplo, no ser rico no significa necesariamente ser pobre.</p>
+  </div>
+  <div class="panel yellow">
+    <div class="diagram">
+      <div class="item"><span style="font-size:clamp(70px,10vw,130px)">🐘</span>enorme</div>
+      <div class="rel syn">⟵ SINÓNIMOS ⟶</div>
+      <div class="item"><span style="font-size:clamp(46px,6vw,80px)">🐞</span>grande</div>
+      <div class="rel ant">⟵ ANTÓNIMOS ⟶</div>
+      <div class="item"><span style="font-size:clamp(20px,2.4vw,32px)">🐞</span>pequeño</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 EJERCICIO 4 -->
+<section class="slide">
+  <span class="tag">✍️ A practicar</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">4</div><p>Razona por qué los siguientes pares de palabras no expresan una antonimia pura:</p></div>
+    <div class="words"><span>dulce / amargo</span><span>sentado / levantado</span><span>vertical / horizontal</span><span>blanco / negro</span><span>guapo / feo</span></div>
+  </div>
+</section>
+
+<!-- 11 EJERCICIO 2 -->
+<section class="slide">
+  <span class="tag">✍️ Sinónimos y antónimos a la vez</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">2</div><p>¿Qué relaciones semánticas se dan entre estos pares de palabras?</p></div>
+    <div class="words"><span>lamento / gemido</span><span>crujido / chasquido</span><span>ignorante / culto</span><span>romo / puntiagudo</span><span>puntiagudo / afilado</span><span>terminar / comenzar</span><span>teórico / práctico</span></div>
+  </div>
+</section>
+
+<!-- 12 FALSA SINONIMIA -->
+<section class="slide">
+  <span class="tag">⚠️ Cuidado con las trampas</span>
+  <h2 class="title">LA FALSA SINONIMIA</h2>
+  <div class="sabias">
+    <h3>💡 ¿Sabías que…?</h3>
+    <p>Algunas palabras guardan cierta similitud, sobre todo porque pertenecen al mismo campo semántico. No son sinónimos aunque se usen como tales, muchas veces para evitar la redundancia. Este defecto lingüístico se denomina <b>falsa sinonimia</b>. Por ejemplo, son falsos sinónimos <i>refugiado</i>, <i>expatriado</i>, <i>exiliado</i> e <i>inmigrante</i>.</p>
+  </div>
+  <div class="grid2">
+    <div class="panel cyan"><div class="big-emoji">🧳</div><p>Parecen decir lo mismo porque todas hablan de personas que están fuera de su país…</p></div>
+    <div class="panel pink"><div class="big-emoji">🚫=</div><p>…pero cada una tiene matices propios que las diferencian. Vamos a comprobarlo con un texto.</p></div>
+  </div>
+</section>
+
+<!-- 13 EJERCICIO 5 TEXTO -->
+<section class="slide">
+  <span class="tag">✍️ A practicar</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">5</div><p>Lee con atención este texto y después responde a las preguntas en tu cuaderno:</p></div>
+  </div>
+  <div class="reading">
+    <h3>Refugiado no es lo mismo que inmigrante</h3>
+    <p>El término <i>refugiado</i> se aplica al que huye por un conflicto o por persecución política, por lo que no equivale a <i>inmigrante</i>, que es cualquier persona que llega a un país para fijar su residencia en él.</p>
+    <p>En las noticias sobre la crisis que vive Europa con relación a la llegada masiva de personas procedentes de África y de Asia se encuentran ejemplos como los siguientes: «La Guardia Costera griega rescata a más de 700 inmigrantes en 48 horas», «Una crisis de inmigrantes sin precedentes obliga a la UE a buscar respuestas» y «Merkel y Rajoy preparan juntos la cumbre de los refugiados».</p>
+    <p>Como criterio general y según las definiciones del Diccionario académico, <i>inmigrante</i> es un término que incluye a todos aquellos que inmigran, es decir, que llegan a un país para establecerse en él; también puede hablarse de <i>emigrante</i>, si el punto de vista es el del país de salida, o <i>migrante</i>, que incluye a ambos y es más frecuente en el español de América.</p>
+    <p>Desde un punto de vista lingüístico, y con independencia de la definición precisa establecida en derecho internacional, un <i>refugiado</i> es aquel que 'se ve obligado a buscar refugio fuera de su país a consecuencia de guerras, revoluciones o persecuciones políticas'.</p>
+    <p>Dado que no todos los refugiados buscan establecerse en otro país, sino que solo huyen por su propia seguridad —a menudo de modo temporal, como se aprecia en los casos donde la protección la han encontrado en un campamento fronterizo con el país en conflicto—, es impropio llamarlos inmigrantes.</p>
+    <p class="src">(www.fundeu.es)</p>
+  </div>
+</section>
+
+<!-- 14 EJERCICIO 5 PREGUNTAS -->
+<section class="slide">
+  <span class="tag">✍️ Ejercicio 5 · Preguntas</span>
+  <div class="exercise">
+    <div class="exhead"><div class="exnum">5</div><p>Responde en tu cuaderno:</p></div>
+    <ol class="qs">
+      <li>Después de haber comprendido el contenido del texto, reflexiona sobre por qué las palabras <i>refugiado</i> e <i>inmigrante</i> no son sinónimas.</li>
+      <li>Explica si se usan correcta o incorrectamente estas dos palabras en los titulares de prensa que aparecen en el texto como ejemplos.</li>
+      <li>¿Qué relación semántica se da entre las palabras <i>emigrante</i> e <i>inmigrante</i>?</li>
+      <li>¿Qué otras palabras conoces relacionadas con estas?</li>
+    </ol>
+  </div>
+</section>
+
+<!-- VÍDEO 3 -->
+<section class="slide vslide">
+  <span class="tag">🎬 Antes del repaso · Los fenómenos semánticos en vídeo</span>
+  <div class="video-wrap"><iframe data-src="https://www.youtube-nocookie.com/embed/3ibL4xZWxDo?rel=0&start=0&end=240" title="Relaciones semánticas" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+  <p class="vlink">¿No se reproduce? <a href="https://www.youtube.com/watch?v=3ibL4xZWxDo" target="_blank" rel="noopener">Ábrelo en YouTube ➜</a></p>
+</section>
+
+<!-- 15 REPASO 1: VUELTA AL CLUB -->
+<section class="slide stage">
+  <span class="tag">🔁 Repaso · Vuelta al club</span>
+  <h2 class="title">¡DESCUBRE EL TRUCO DE CADA CHISTE!</h2>
+  <p class="lead">¿Qué relación semántica provoca la risa en cada chiste? Piénsalo y después comprueba la solución.</p>
+  <div class="jokes j4">
+    <div class="joke" style="cursor:default"><div><b>🚗 El alquiler:</b> «Depende del tiempo». «Pongamos que llueve».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Polisemia: <i>tiempo</i> (duración / estado de la atmósfera).</div></div>
+    <div class="joke" style="cursor:default"><div><b>🍷 El restaurante:</b> «¿Vino blanco el señor?».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Homonimia, palabras homógrafas: <i>vino</i> (bebida) / <i>vino</i> (del verbo <i>venir</i>).</div></div>
+    <div class="joke" style="cursor:default"><div><b>🛏️ La cama:</b> «El bello durmiente».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Homonimia, palabras homófonas: <i>bello</i> (hermoso) / <i>vello</i> (pelo).</div></div>
+    <div class="joke" style="cursor:default"><div><b>👓 El oculista:</b> «Se me juntan las letras». «Páguelas».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Polisemia: <i>letra</i> (signo del alfabeto / documento de pago, letra de cambio).</div></div>
+    <div class="joke" style="cursor:default"><div><b>💊 La farmacia:</b> «Están agotadas».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Polisemia: <i>agotado</i> (sin existencias / muy cansado).</div></div>
+    <div class="joke" style="cursor:default"><div><b>🌀 El laberinto:</b> «No sabes lo que te pierdes».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Polisemia: <i>perderse</i> (desorientarse / dejar de disfrutar algo).</div></div>
+    <div class="joke" style="cursor:default"><div><b>🚪 La puerta de cristal:</b> «¿Se ha cortado?». «Lo escucho perfectamente».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Polisemia: <i>cortarse</i> (hacerse una herida / interrumpirse la llamada).</div></div>
+    <div class="joke" style="cursor:default"><div><b>✂️ Los jardineros:</b> «Nos vemos cuando podamos».</div><button class="btn" onclick="sol(this)">Ver solución</button><div class="sol hidden">Homonimia, palabras homógrafas: <i>podamos</i> (del verbo <i>podar</i> / del verbo <i>poder</i>).</div></div>
+  </div>
+</section>
+
+<!-- 16 REPASO 2 -->
+<section class="slide">
+  <span class="tag">🔁 Ejercicios de repaso</span>
+  <div class="grid2">
+    <div class="exercise">
+      <div class="exhead"><div class="exnum">A</div><p>Clasifica estas palabras en monosémicas o polisémicas:</p></div>
+      <div class="words"><span>termómetro</span><span>hoja</span><span>fotosíntesis</span><span>sierra</span><span>ratón</span><span>oxígeno</span></div>
+      <button class="btn" onclick="sol(this)">Ver solución</button>
+      <div class="sol hidden">Monosémicas: <i>termómetro, fotosíntesis, oxígeno</i>. Polisémicas: <i>hoja, sierra, ratón</i>.</div>
+    </div>
+    <div class="exercise">
+      <div class="exhead"><div class="exnum">B</div><p>¿Son homófonas u homógrafas?</p></div>
+      <div class="words"><span>tubo / tuvo</span><span>vino / vino</span><span>hierba / hierva</span><span>vela / vela</span><span>bello / vello</span></div>
+      <button class="btn" onclick="sol(this)">Ver solución</button>
+      <div class="sol hidden">Homófonas: <i>tubo / tuvo, hierba / hierva, bello / vello</i>. Homógrafas: <i>vino / vino</i> (bebida / verbo venir), <i>vela / vela</i> (de cera / de un barco).</div>
+    </div>
+    <div class="exercise">
+      <div class="exhead"><div class="exnum">C</div><p>Escribe un sinónimo y un antónimo de cada palabra:</p></div>
+      <div class="words"><span>alegre</span><span>rápido</span><span>generoso</span><span>ancho</span></div>
+      <button class="btn" onclick="sol(this)">Ver solución</button>
+      <div class="sol hidden">Por ejemplo: alegre → contento / triste; rápido → veloz / lento; generoso → espléndido / tacaño; ancho → amplio / estrecho.</div>
+    </div>
+    <div class="exercise">
+      <div class="exhead"><div class="exnum">D</div><p>Evita la repetición usando la sinonimia referencial:</p></div>
+      <p class="ex" style="margin-top:1vh">«Lope de Vega escribió cientos de comedias. Lope de Vega fue tan admirado que Lope de Vega era conocido en toda España».</p>
+      <button class="btn" onclick="sol(this)">Ver solución</button>
+      <div class="sol hidden">Posible respuesta: «Lope de Vega escribió cientos de comedias. El dramaturgo madrileño fue tan admirado que el Fénix de los Ingenios era conocido en toda España».</div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 ESQUEMA -->
+<section class="slide">
+  <span class="tag">🗺️ Esquema final</span>
+  <h2 class="title">TODO EN UN VISTAZO</h2>
+  <div class="scheme">
+    <div class="root">
+      <div class="box k">EL SIGNIFICADO DE LAS PALABRAS</div>
+      <div class="arrow">➜</div>
+      <div class="box"><b>Significado:</b> conjunto de semas («asiento», «con respaldo»…)</div>
+      <div class="box"><b>Significante:</b> forma fónica o gráfica (s + i + ll + ó + n)</div>
+    </div>
+    <div class="arrow" style="text-align:left;padding-left:5%">⬇ RELACIONES SEMÁNTICAS</div>
+    <div class="srow"><div class="box k">Monosemia</div><div class="arrow">➜</div><div class="box">Un significante ↔ un solo significado</div><div class="arrow">➜</div><div class="subs"><div class="box"><i>hematíes, ecuación, microbio</i></div></div></div>
+    <div class="srow"><div class="box k">Polisemia</div><div class="arrow">➜</div><div class="box">Un significante ↔ varios significados (una sola entrada en el diccionario)</div><div class="arrow">➜</div><div class="subs"><div class="box"><i>cabo, planta, pendiente</i></div></div></div>
+    <div class="srow"><div class="box k">Homonimia</div><div class="arrow">➜</div><div class="box">Coinciden los significantes; significados distintos (entradas diferentes)</div><div class="arrow">➜</div><div class="subs"><div class="box"><b>Homófonas:</b> <i>vaca / baca</i></div><div class="box"><b>Homógrafas:</b> <i>falla, llama</i></div></div></div>
+    <div class="srow"><div class="box k">Sinonimia</div><div class="arrow">➜</div><div class="box">Significantes diferentes; significados similares (<i>perro, can</i>) · ⚠️ Ojo con la <b>falsa sinonimia</b></div><div class="arrow">➜</div><div class="subs"><div class="box"><b>Parcial</b></div><div class="box"><b>Total</b></div><div class="box"><b>Referencial</b></div></div></div>
+    <div class="srow"><div class="box k">Antonimia</div><div class="arrow">➜</div><div class="box">Significantes diferentes; significados opuestos o contrarios</div><div class="arrow">➜</div><div class="subs"><div class="box"><b>Puras:</b> <i>vivo / muerto</i></div><div class="box"><b>No puras:</b> <i>rico / pobre</i></div></div></div>
+  </div>
+</section>
+
+<button class="nav" id="prev" onclick="go(cur-1)" aria-label="Anterior">‹</button>
+<button class="nav" id="next" onclick="go(cur+1)" aria-label="Siguiente">›</button>
+<div id="counter"></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=0;
+function go(n){
+  if(n<0||n>=slides.length)return;
+  slides[cur].classList.remove('active');
+  slides[cur].querySelectorAll('iframe[data-src]').forEach(f=>f.removeAttribute('src'));
+  cur=n;slides[cur].classList.add('active');slides[cur].scrollTop=0;
+  slides[cur].querySelectorAll('iframe[data-src]').forEach(f=>f.src=f.dataset.src);
+  document.getElementById('counter').textContent=(cur+1)+' / '+slides.length;
+  document.getElementById('progress').style.width=((cur+1)/slides.length*100)+'%';
+  document.getElementById('prev').style.visibility=cur===0?'hidden':'visible';
+  document.getElementById('next').style.visibility=cur===slides.length-1?'hidden':'visible';
+}
+document.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown'].includes(e.key))go(cur+1);
+  if(['ArrowLeft','PageUp'].includes(e.key))go(cur-1);
+});
+let tx=null;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+document.addEventListener('touchend',e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>70)go(cur+(d<0?1:-1));tx=null;});
+
+/* redoble ba-dum-tss + risa */
+let ac=null;
+function rimshot(){
+  try{
+    ac=ac||new (window.AudioContext||window.webkitAudioContext)();
+    const t=ac.currentTime;
+    [0,0.14].forEach(d=>{
+      const o=ac.createOscillator(),g=ac.createGain();
+      o.frequency.setValueAtTime(180,t+d);o.frequency.exponentialRampToValueAtTime(60,t+d+0.12);
+      g.gain.setValueAtTime(0.7,t+d);g.gain.exponentialRampToValueAtTime(0.001,t+d+0.15);
+      o.connect(g).connect(ac.destination);o.start(t+d);o.stop(t+d+0.16);
+    });
+    const len=ac.sampleRate*0.6,buf=ac.createBuffer(1,len,ac.sampleRate),data=buf.getChannelData(0);
+    for(let i=0;i<len;i++)data[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+    const n=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();
+    n.buffer=buf;f.type='highpass';f.frequency.value=6000;g.gain.value=0.5;
+    n.connect(f).connect(g).connect(ac.destination);n.start(t+0.3);
+  }catch(e){}
+  const l=document.getElementById('laugh');l.classList.remove('go');void l.offsetWidth;l.classList.add('go');
+}
+function openJoke(el){if(el.classList.contains('open'))return;el.classList.add('open');rimshot();}
+function sol(btn){const s=btn.parentElement.querySelector('.sol');s.classList.toggle('hidden');btn.textContent=s.classList.contains('hidden')?'Ver solución':'Ocultar solución';}
+go(0);
+</script>
+</body>
+</html>
