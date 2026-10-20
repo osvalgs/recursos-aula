@@ -91,7 +91,9 @@ th{font-family:var(--f-note);font-size:1.4rem;color:var(--red);font-weight:700;b
 .bar span.v{display:block;height:1.35em;background:var(--hy);border-radius:3px 9px 4px 10px;font-family:var(--f-note);font-size:1.2rem;padding-left:8px;line-height:1.35em;white-space:nowrap}
 /* checklist */
 .plan tr.r0 td{background:var(--hb)} .plan tr.r1 td{background:var(--hg)} .plan tr.r2 td{background:var(--hp)}
-.printbar{display:flex;justify-content:center;margin:0 0 .6em}
+.printbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;margin:0 0 .2em}
+.printbar>*{min-width:0}
+@media (max-width:640px){.printbar{grid-template-columns:1fr;justify-items:center}.printbar>span{display:none}}
 .check{list-style:none;padding-left:0}
 .check li{display:flex;gap:10px;align-items:flex-start;text-align:left}
 .check input{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:22px;height:22px;margin-top:5px;border:2.2px solid var(--ink);border-radius:3px 6px 4px 5px;background:#fff;cursor:pointer;position:relative}
@@ -155,7 +157,8 @@ details .ans{font-family:var(--f-note);font-size:1.4rem;line-height:1.2;color:va
   .sheet::before{left:11mm}
   .sheet::after{left:2mm;width:6mm;background:radial-gradient(circle at 3mm 3mm,#fff 1.6mm,rgba(0,0,0,.25) 1.9mm,transparent 2.1mm) 0 0/6mm 12mm repeat-y}
   .brk{break-before:page}
-  .pg,.fecha,.tools,.printbar,.check input{display:none}
+  .pg,.fecha,.tools,.printbtn,.check input{display:none}
+  .printbar{display:block}
   .check li{display:list-item;list-style:"☐  "}
   h2.tema{font-size:16pt;margin:0 0 .2em}
   h2.tema small{font-size:11pt}
@@ -202,9 +205,7 @@ details .ans{font-family:var(--f-note);font-size:1.4rem;line-height:1.2;color:va
 
 <!-- ===================== PORTADA ===================== -->
 <section class="sheet" id="portada">
-  <span class="fecha">martes, 20 de octubre</span>
-  <div class="printbar"><button class="btn printbtn" type="button" id="btnPrint">Imprimir los apuntes</button></div>
-  <p class="note blue" style="margin:0">Lengua Castellana y Literatura · 1.º ESO</p>
+  <div class="printbar"><p class="note blue" style="margin:0">Lengua Castellana y Literatura · 1.º ESO</p><button class="btn printbtn" type="button" id="btnPrint">Imprimir los apuntes</button><span></span></div>
   <h1 class="cover-title">Apuntes de repaso <span>· 1.<sup>er</sup> examen</span></h1>
   <div class="row" style="margin:.4em 0 1em">
     <span class="stamp" style="font-size:1.25rem">EXAMEN: viernes 30 de octubre</span>
@@ -573,7 +574,6 @@ details .ans{font-family:var(--f-note);font-size:1.4rem;line-height:1.2;color:va
 
 <!-- ===================== AUTOEXAMEN ===================== -->
 <section class="sheet" id="t7">
-  <span class="fecha">27 de octubre</span>
   <h2 class="tema">Autoexamen <small>contesto en voz alta o en una hoja, y luego miro la respuesta</small></h2>
   <div class="cols">
     <div>
