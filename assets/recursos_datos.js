@@ -34,6 +34,10 @@ window.RECURSOS=[
        {
         "t": "Reto: ¿nos comunicamos?",
         "h": "01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html"
+       },
+       {
+        "t": "Taller de resumen: Amelia Earhart",
+        "h": "01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html"
        }
       ]
      },
@@ -448,7 +452,7 @@ window.RECURSOS=[
   ]
  }
 ];
-window.NUEVOS=["01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html","01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html","03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html","03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"];
+window.NUEVOS=["01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html","01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html","01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html","03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html","03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"];
 
 /* Recursos OCULTOS: no aparecen ni en la portada ni en la página del curso.
    Se puede ocultar un archivo concreto o una carpeta entera (terminada en «/»).
