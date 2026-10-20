@@ -63,6 +63,10 @@ window.RECURSOS=[
        {
         "t": "Presentación género lírico",
         "h": "01_ESO/1_Y_2/PRESENTACIONES/presentacion_genero_lirico.html"
+       },
+       {
+        "t": "Repaso vocabulario semana 1",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/vocabulario_1.html"
        }
       ]
      }
@@ -377,15 +381,6 @@ window.RECURSOS=[
      {
       "t": "Ruleta aleatoria grupos o individual",
       "h": "ACTIVIDADES_LUDICAS/SORTEOS/ruleta_aleatoria_grupos_o_individual.html"
-     }
-    ]
-   },
-   {
-    "n": "VOCABULARIO",
-    "c": [
-     {
-      "t": "Vocabulario 1",
-      "h": "ACTIVIDADES_LUDICAS/VOCABULARIO/vocabulario_1.html"
      }
     ]
    }
