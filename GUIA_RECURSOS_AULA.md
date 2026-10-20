@@ -37,7 +37,7 @@ assets/recursos_datos.js       ← LISTADO de recursos, novedades y ocultos
 1. Copiar el HTML a su carpeta, con el nombre en minúsculas, sin tildes ni ñ y con guiones bajos.
 2. Añadir `{ "t": "Título visible", "h": "RUTA/archivo.html" }` en su sitio dentro de `window.RECURSOS` (`assets/recursos_datos.js`), en el orden en que debe aparecer.
 3. Opcional: añadir su ruta a `window.NUEVOS` para que salga con la etiqueta «NUEVO».
-4. Si el curso tiene organización a medida (`layout` en `CATS`, p. ej. 1.º ESO por temas), añadir la ruta al apartado correspondiente.
+4. Si el curso tiene organización a medida (`layout` en `CATS`, p. ej. 1.º ESO en Presentaciones, Tareas y Obras de lectura), añadir la ruta al apartado correspondiente.
 
 **Ocultar o mostrar un recurso**
 - Añadir o quitar su ruta (o una carpeta terminada en `/`) en `window.OCULTOS`.

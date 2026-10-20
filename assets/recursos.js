@@ -10,10 +10,10 @@ const ALUM=/[?&]alumnado\b/.test(location.search);
 const CATS={
  '01. ESO':{name:'1.º ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º de ESO.',
    layout:{apartados:[
-    {titulo:'Tema Lenguaje y lenguas. Lenguas de España',icon:'🗺️',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html']},
-    {titulo:'Tema Comunicación',icon:'💬',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html']},
+    {titulo:'Presentaciones',icon:'🎞️',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html']},
+    {titulo:'Tareas',icon:'✏️',archivos:['01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html']},
     {titulo:'Obras de lectura',icon:'📚',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_nando_lopez_libro.html']}],
-    quitar:['1º','Presentaciones']}},
+    quitar:['1º','Presentaciones','Tareas']}},
  '02. BACH':{name:'Bachillerato',icon:'🎓',col:'--c2',desc:'Unidades didácticas, actividades y presentaciones de Lengua y Literatura para Bachillerato.'},
  '03. FPB':{name:'FP Básica',icon:'🔧',col:'--c3',desc:'Actividades y talleres para FP Básica.'},
  '04. PDC':{name:'PDC · Diversificación',icon:'🧭',col:'--c4',desc:'Materiales del Ámbito Lingüístico y Social de 3.º ESO PDC: presentaciones, actividades y tutorías.',

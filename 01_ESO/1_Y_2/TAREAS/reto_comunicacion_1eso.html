@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reto: la comunicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b1020;--bg2:#141b33;--card:#1b2443;--ink:#eef2ff;--soft:#a9b4d6;--line:#2c3763;--ph:#7cffb2;--sun:#ffd75e;--coral:#ff6b5b;
+--t1:#ff6b5b;--t2:#ffb03b;--t3:#ffd75e;--t4:#7cffb2;--t5:#5ec8ff;--t6:#b98cff}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:radial-gradient(circle at 20% 10%,#1d2a5c 0,var(--bg) 55%);color:var(--ink);font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:clamp(16px,1.45vw,23px);overflow:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.7;background-image:radial-gradient(1px 1px at 12% 18%,#fff 50%,transparent),radial-gradient(1px 1px at 72% 32%,#fff 50%,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#bfe 50%,transparent),radial-gradient(1px 1px at 88% 70%,#fff 50%,transparent),radial-gradient(1px 1px at 25% 55%,#9cf 50%,transparent),radial-gradient(1.5px 1.5px at 58% 12%,#fff 50%,transparent),radial-gradient(1px 1px at 95% 8%,#cfe 50%,transparent),radial-gradient(1px 1px at 33% 30%,#fff 50%,transparent)}
+h1,h2,h3,.disp{font-family:'Bricolage Grotesque',sans-serif;line-height:1.08}
+p,li{text-align:justify;hyphens:auto}
+#app{position:fixed;inset:0 0 var(--sbh,96px) 0;overflow-y:auto;padding:3.5vh 7vw 3vh}
+.screen{display:none;min-height:100%;flex-direction:column;justify-content:center;gap:2vh;animation:in .4s ease}
+.screen.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.tag{align-self:flex-start;font-family:'Space Mono',monospace;font-size:.72em;letter-spacing:.1em;text-transform:uppercase;padding:.35em .9em;border-radius:30px;background:rgba(124,255,178,.14);color:var(--ph)}
+h1{font-size:clamp(40px,6vw,84px);font-weight:800}
+h1 span{color:var(--sun)}
+h2{font-size:2.1em;font-weight:800}
+.lead{font-size:1.15em;color:#d6ddf5}
+.btn{font:inherit;font-weight:700;border:none;border-radius:40px;padding:.65em 1.4em;cursor:pointer;background:var(--ph);color:#04140b;transition:.15s;box-shadow:0 4px 0 #3aa86c}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);box-shadow:none}
+.btn.sun{background:var(--sun);color:#3a2a00;box-shadow:0 4px 0 #b8901d}
+.btn.sm{padding:.4em .9em;font-size:.85em}
+.row{display:flex;gap:1em;flex-wrap:wrap;align-items:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.1em 1.4em}
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw}
+@media (max-width:900px){.rules{grid-template-columns:1fr}}
+.rules .card>b{display:block;font-family:'Bricolage Grotesque';font-size:1.2em;margin-bottom:.3em;color:var(--sun)}
+.rules .card p{color:#d6ddf5;font-size:.95em}
+/* equipos */
+.teams{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2vw}
+@media (max-width:900px){.teams{grid-template-columns:1fr 1fr}}
+.tcard{border-radius:18px;padding:1em;background:var(--card);border:3px solid var(--tc);display:flex;flex-direction:column;gap:.5em}
+.tcard .em{font-size:2.2em;line-height:1}
+.tcard input{font:inherit;font-weight:700;background:transparent;border:none;border-bottom:2px dashed var(--tc);color:var(--ink);padding:.2em 0;outline:none;width:100%}
+.tcard small{color:var(--soft)}
+/* rondas */
+.roundhead{display:flex;align-items:center;gap:1em;flex-wrap:wrap}
+.rnum{font-family:'Space Mono',monospace;color:var(--sun);font-size:.85em;letter-spacing:.1em}
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:1em;flex-wrap:wrap}
+.pts{font-family:'Space Mono',monospace;font-size:.8em;background:rgba(255,215,94,.15);color:var(--sun);padding:.3em .8em;border-radius:20px}
+.q{font-size:1.3em;line-height:1.45}
+.q em{color:var(--sun);font-style:normal}
+.scene{background:linear-gradient(135deg,#22305e,#1b2443);border-left:6px solid var(--sun);border-radius:16px;padding:1em 1.3em;font-size:1.15em;line-height:1.5}
+.ask{color:#d6ddf5;font-size:1.05em}
+.ask b{color:var(--ph)}
+.timerbox{display:flex;align-items:center;gap:.8em}
+.timer{font-family:'Space Mono',monospace;font-size:2.2em;color:var(--ph);min-width:3.2em;text-align:center}
+.timer.low{color:var(--coral);animation:blink .5s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+.bar{height:8px;border-radius:8px;background:var(--line);overflow:hidden;flex:1;min-width:120px}
+.bar i{display:block;height:100%;background:var(--ph);width:100%;transition:width 1s linear}
+.sol{display:none;background:rgba(124,255,178,.1);border:2px solid var(--ph);border-radius:16px;padding:1em 1.3em;line-height:1.5;animation:in .35s ease}
+.sol.on{display:block}
+.sol b{color:var(--ph)}
+.sol table{width:100%;border-collapse:collapse}
+.sol td{padding:.3em .5em;border-bottom:1px solid rgba(124,255,178,.2);vertical-align:top;text-align:justify}
+.sol td:first-child{font-weight:700;color:var(--ph);white-space:nowrap;width:1%}
+.sol .why{margin-top:.5em;color:#d6ddf5}
+.portavoz{display:none;align-items:center;gap:.8em;background:rgba(255,215,94,.12);border:2px solid var(--sun);border-radius:16px;padding:.6em 1em}
+.portavoz.on{display:flex}
+.portavoz .num{font-family:'Bricolage Grotesque';font-weight:800;font-size:2.4em;color:var(--sun);min-width:1.2em;text-align:center}
+.dots{display:flex;gap:.4em;justify-content:center;margin:.3em 0}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--sun)}
+/* navegación */
+.nav{position:fixed;top:calc(50% - var(--sbh,96px)/2);transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:none;background:#fff;color:#0b1020;font-size:26px;cursor:pointer;z-index:20;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.nav:hover{background:var(--ph)}
+#prev{left:1vw}#next{right:1vw}
+.nav:disabled{opacity:.2;pointer-events:none}
+/* marcador */
+#sb{position:fixed;left:0;right:0;bottom:0;height:var(--sbh,96px);font-size:clamp(15px,1.45vw,23px);background:rgba(8,12,26,.96);border-top:2px solid var(--line);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.6vw;padding:.5em 1vw;z-index:30}
+.sbt{min-width:0;display:flex;align-items:center;gap:.35em;border-radius:14px;padding:.3em .6em;background:var(--card);border:2px solid var(--tc);position:relative;transition:transform .2s}
+.sbt.top{box-shadow:0 0 18px color-mix(in srgb,var(--tc) 60%,transparent)}
+.sbt .em{font-size:1.2em}
+.sbt .nm{font-weight:700;font-size:.7em;line-height:1.1;flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow-wrap:normal;hyphens:none;text-align:left}
+.sbt .sc{font-family:'Bricolage Grotesque';font-weight:800;font-size:1.6em;color:var(--tc);min-width:1.1em;text-align:center}
+.sbt .pm{display:flex;flex-direction:column;gap:2px}
+.sbt .pm button{font:inherit;font-weight:700;width:22px;height:22px;border:none;border-radius:6px;cursor:pointer;background:var(--line);color:var(--ink);font-size:.8em;line-height:1}
+.sbt .pm button:hover{background:var(--tc);color:#0b1020}
+.sbt .cm{position:absolute;top:-10px;right:6px;font-size:.62em;font-weight:700;border-radius:10px;padding:.1em .5em;border:none;cursor:pointer;background:var(--sun);color:#3a2a00}
+.sbt .cm.used{background:var(--line);color:var(--soft);text-decoration:line-through}
+.sbt.bump{animation:bump .4s}
+@keyframes bump{40%{transform:scale(1.08)}}
+@media (max-width:900px){#sb{grid-template-columns:repeat(3,1fr);--sbh:150px}:root{--sbh:150px}}
+#topbar{position:fixed;top:10px;right:1vw;z-index:25;display:flex;gap:6px}
+#topbar button{font:inherit;font-size:12px;border:none;border-radius:20px;padding:6px 11px;cursor:pointer;background:rgba(255,255,255,.9);color:#0b1020}
+/* final */
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:2vw;margin-top:2vh}
+.pod{display:flex;flex-direction:column;align-items:center;gap:.4em;width:min(220px,26vw)}
+.pod .blk{width:100%;border-radius:16px 16px 0 0;display:grid;place-items:center;font-family:'Bricolage Grotesque';font-weight:800;font-size:2.4em;color:#0b1020;background:var(--tc)}
+.pod .em{font-size:2.6em}
+.pod b{text-align:center}
+.rest{display:flex;gap:1em;justify-content:center;flex-wrap:wrap;color:var(--soft)}
+.index{display:grid;grid-template-columns:repeat(5,1fr);gap:1vw}
+@media (max-width:900px){.index{grid-template-columns:1fr}}
+.rcard{border-radius:18px;padding:1em;background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.2s}
+.rcard:hover{border-color:var(--sun);transform:translateY(-4px)}
+.rcard .n{font-family:'Space Mono',monospace;color:var(--sun);font-size:.8em}
+.rcard h3{margin:.3em 0;font-size:1.15em}
+.rcard p{font-size:.85em;color:var(--soft);text-align:left}
+.conf{position:fixed;inset:0;pointer-events:none;z-index:40}
+.res{width:100%;border-collapse:collapse;font-size:.85em}
+.res th{background:rgba(124,255,178,.15);color:var(--ph);padding:.45em .5em;font-size:.85em;text-align:center}
+.res td{padding:.4em .5em;border-bottom:1px solid var(--line);text-align:center}
+.res td:nth-child(2){text-align:left;font-weight:700}
+.res td.tot{font-family:'Bricolage Grotesque';font-weight:800;color:var(--sun);font-size:1.15em}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+</head>
+<body>
+<div id="topbar"><button onclick="toggleFS()">⛶ Pantalla completa</button><button onclick="resetAll()">↺ Reiniciar</button></div>
+<div id="app"></div>
+<button class="nav" id="prev" onclick="go(cur-1)" aria-label="Anterior">‹</button>
+<button class="nav" id="next" onclick="go(cur+1)" aria-label="Siguiente">›</button>
+<div id="sb"></div>
+<canvas class="conf" id="conf"></canvas>
+
+<script>
+/* ======================= CONTENIDO ======================= */
+const TEAMS0=[
+ {n:'Emisores',em:'🗣️',c:'--t1'},{n:'Receptores',em:'👂',c:'--t2'},{n:'Mensajeros',em:'✉️',c:'--t3'},
+ {n:'Canales',em:'📡',c:'--t4'},{n:'Códigos',em:'🔑',c:'--t5'},{n:'Contextos',em:'📍',c:'--t6'}];
+
+const ROUNDS=[
+{t:'Detectives de la situación',ic:'🔍',time:120,pts:'Hasta 3 puntos: 1 por cada dos elementos correctos',
+ intro:'Leed la escena y escribid los <b>seis elementos</b> de la comunicación: emisor, receptor, mensaje, canal, código y situación comunicativa. Cuidado: el canal y el código tienen que ser <b>precisos</b>.',
+ qs:[
+ {scene:'Final de la Copa. El árbitro detiene el partido, se acerca a un defensa y le muestra la tarjeta roja delante de 20.000 espectadores que estallan en pitos.',
+  sol:[['Emisor','El árbitro.'],['Receptor','El defensa (y, a la vez, el resto de jugadores y el público, que también reciben el mensaje).'],['Mensaje','«Estás expulsado».'],['Canal','La luz (canal visual): el mensaje se ve, no se oye.'],['Código','Los colores de las tarjetas del reglamento de fútbol (no verbal).'],['Situación','Un partido de fútbol oficial, en el campo; relación de autoridad entre árbitro y jugador.']],
+  why:'Trampa: los pitos del público son <b>otro</b> mensaje, con emisor distinto (el público) y receptor distinto (el árbitro).'},
+ {scene:'Lucía es sorda. Por la noche hace una videollamada con su prima Sara, que vive en Madrid, y le cuenta en lengua de signos que ha aprobado el examen de Matemáticas.',
+  sol:[['Emisor','Lucía.'],['Receptor','Sara, su prima.'],['Mensaje','Que ha aprobado el examen de Matemáticas.'],['Canal','La red de internet (fibra óptica / ondas del wifi y del móvil) y, en la pantalla, la luz.'],['Código','La lengua de signos española.'],['Situación','Por la noche, a distancia (Galicia–Madrid), relación familiar y de confianza.']],
+  why:'La lengua de signos es una <b>lengua</b> completa, con su propia gramática: es un código verbal aunque no se hable ni se escriba.'},
+ {scene:'Una noche de temporal, un pesquero sin radio lanza una bengala roja. Desde el puerto de Baiona, los vigilantes de Salvamento Marítimo la ven y avisan a la lancha de rescate.',
+  sol:[['Emisor','La tripulación del pesquero.'],['Receptor','Los vigilantes de Salvamento Marítimo.'],['Mensaje','«Estamos en peligro, necesitamos ayuda».'],['Canal','La luz que atraviesa el aire (canal visual).'],['Código','Las señales de socorro marítimas: bengala roja = peligro (no verbal, convencional).'],['Situación','De noche, con temporal, en el mar; emergencia entre desconocidos.']],
+  why:'Fíjate en que hay <b>dos</b> comunicaciones: la bengala (barco → vigilantes) y el aviso de los vigilantes a la lancha, que tiene otro emisor, otro receptor y otro canal.'},
+ {scene:'El viernes a las dos, la profesora escribe en la pizarra: «El lunes, examen del tema 1». El lunes a primera hora, los alumnos que entran en el aula lo leen.',
+  sol:[['Emisor','La profesora.'],['Receptor','Los alumnos que leen la pizarra.'],['Mensaje','Que el lunes hay examen del tema 1.'],['Canal','La pizarra (soporte escrito) y la luz.'],['Código','El castellano escrito.'],['Situación','En el aula, entre profesora y alumnado; el mensaje se escribe un día y se lee otro (comunicación diferida).']],
+  why:'Emisor y receptor <b>no coinciden en el tiempo</b>: en la comunicación escrita eso es posible, en una conversación oral cara a cara no.'}
+ ]},
+{t:'¿Dónde está el fallo?',ic:'⚠️',time:60,pts:'1 punto por el elemento + 1 por la justificación',
+ intro:'En cada situación la comunicación <b>falla</b>. Escribid qué elemento ha fallado y por qué. Puede haber más de una respuesta válida si la justificáis bien.',
+ qs:[
+ {scene:'Un turista japonés para a un vecino de Tomiño y le pregunta en japonés dónde está la estación. El vecino se encoge de hombros: no entiende nada.',
+  sol:[['Elemento','El <b>código</b>.']],why:'Emisor y receptor no comparten el mismo código (japonés / castellano y gallego). El canal funciona perfectamente: el vecino lo oye todo.'},
+ {scene:'Estás hablando por teléfono con tu abuela y, al entrar el tren en un túnel, la llamada se corta a mitad de frase.',
+  sol:[['Elemento','El <b>canal</b>.']],why:'La red telefónica (ondas de radio) se interrumpe. El código, el emisor y el receptor siguen siendo los mismos; lo que desaparece es el medio por el que viaja el mensaje.'},
+ {scene:'Marcos suspende y dice con cara seria: «¡Genial, otro cero!». Su hermano pequeño, que no lo ha visto, le responde: «¡Enhorabuena!».',
+  sol:[['Elemento','La <b>situación comunicativa</b> (el contexto) mal interpretada.']],why:'Marcos habla con ironía: el sentido real depende de la situación (acaba de suspender) y del tono y el gesto (comunicación no verbal), que su hermano no ha captado.'},
+ {scene:'Paula escribe «Mañana no voy al cumple, me aburre» y lo envía sin querer al grupo de WhatsApp de la familia del cumpleañero.',
+  sol:[['Elemento','El <b>receptor</b>.']],why:'El mensaje llega a quien no debía. El código, el canal y el mensaje son correctos; el problema es <i>a quién</i> llega, y la situación (relación con ese receptor) cambia por completo el efecto.'},
+ {scene:'El profesor explica la lección, pero en el patio están taladrando una pared y en la última fila solo se oyen palabras sueltas.',
+  sol:[['Elemento','El <b>canal</b>: hay <b>ruido</b>.']],why:'El ruido es cualquier interferencia que dificulta que el mensaje viaje por el canal (aquí, el aire). El código y el mensaje son correctos.'}
+ ]},
+{t:'¿Verbal, no verbal… o las dos?',ic:'🚦',time:45,pts:'1 punto por la clase + 1 por la justificación',
+ intro:'Decid qué clase de comunicación es: <b>verbal oral</b>, <b>verbal escrita</b>, <b>no verbal</b> o <b>mixta</b> (combina varias). Justificadlo.',
+ qs:[
+ {scene:'Un mensaje de WhatsApp: «Llego tarde 😅🏃‍♀️».',
+  sol:[['Clase','<b>Mixta</b>: verbal escrita + no verbal.']],why:'Las palabras son signos lingüísticos escritos; los emoticonos son imágenes (signos no lingüísticos) que añaden información: vergüenza y prisa.'},
+ {scene:'El silbato del árbitro que señala el final del partido.',
+  sol:[['Clase','<b>No verbal</b>.']],why:'Es un sonido, no una palabra. Su significado («se acabó») es convencional: lo marca el reglamento.'},
+ {scene:'Una persona sorda que conversa con otra en lengua de signos.',
+  sol:[['Clase','<b>Verbal</b>, aunque no es ni oral ni escrita.']],why:'La lengua de signos es una lengua con vocabulario y gramática propios: usa signos lingüísticos, pero se producen con las manos y el cuerpo y se perciben con la vista.'},
+ {scene:'Un anuncio de radio: suena una música alegre y una voz dice «Leche Valdeprado, la de toda la vida».',
+  sol:[['Clase','<b>Mixta</b>: verbal oral + no verbal.']],why:'La voz usa palabras (verbal oral); la música es un sonido que transmite alegría y busca atraer al oyente (no verbal).'},
+ {scene:'Un semáforo para peatones que, además de la luz verde, emite unos pitidos rápidos.',
+  sol:[['Clase','<b>No verbal</b> (doble: visual y sonora).']],why:'Ni la luz ni los pitidos son palabras. El sonido se añade para que las personas ciegas también reciban el mensaje: dos canales para el mismo mensaje.'}
+ ]},
+{t:'MAPFRE extremo',ic:'🔴',time:60,pts:'1 punto por la función que predomina + 1 por la que la acompaña',
+ intro:'En estos enunciados aparecen <b>dos funciones</b>. Escribid cuál <b>predomina</b> y cuál la <b>acompaña</b>, y por qué. Recordad: M-A-P-F-R-E.',
+ qs:[
+ {scene:'«¡Cállate ya, que no me dejas dormir!»',
+  sol:[['Predomina','<b>Apelativa</b>: es una orden al receptor.'],['Acompaña','<b>Expresiva</b>: muestra el enfado del emisor (exclamación).']],why:''},
+ {scene:'«¿Hola? ¿Me oyes? Creo que se está cortando…»',
+  sol:[['Predomina','<b>Fática</b>: comprueba que el canal sigue abierto.'],['Acompaña','<b>Representativa</b>: informa de un hecho (la llamada se corta).']],why:''},
+ {scene:'«Volverán las oscuras golondrinas / en tu balcón sus nidos a colgar» (Bécquer).',
+  sol:[['Predomina','<b>Poética</b>: busca la belleza con el ritmo del verso y el orden de las palabras (hipérbaton).'],['Acompaña','<b>Expresiva</b>: transmite los sentimientos del poeta.']],why:''},
+ {scene:'«“Golondrina” es una palabra llana, porque su sílaba tónica es la penúltima.»',
+  sol:[['Predomina','<b>Metalingüística</b>: habla de la propia lengua.'],['Acompaña','<b>Representativa</b>: da una información objetiva.']],why:'Toda explicación de gramática informa, pero lo que manda es que el tema es la lengua.'},
+ {scene:'«¡Qué horror! Mañana vuelve a llover en toda Galicia.»',
+  sol:[['Predomina','<b>Expresiva</b>: el emisor muestra su disgusto.'],['Acompaña','<b>Representativa</b>: informa de un hecho (la previsión de lluvia).']],why:''},
+ {scene:'Cartel de una campaña: «Pon más héroes en tu plato».',
+  sol:[['Predomina','<b>Apelativa</b>: anima al receptor a comer fruta y verdura (imperativo «pon»).'],['Acompaña','<b>Poética</b>: usa una metáfora (las verduras son «héroes»).']],why:''}
+ ]},
+{t:'Ronda final: creadores',ic:'✍️',time:120,pts:'De 0 a 3 puntos (los da el profesor)',
+ intro:'Ahora os toca crear. El profesor puntúa de 0 a 3 según lo bien que cumpláis <b>todas</b> las condiciones.',
+ qs:[
+ {scene:'Escribid un mensaje en el que <em>predomine la función apelativa</em> pero <em>aparezca también la fática</em>.',
+  sol:[['Ejemplo','«¿Me oyes bien? Pues apunta: trae mañana el libro de Lengua.»']],why:'«¿Me oyes bien?» es fático (comprueba el canal); «apunta» y «trae» son órdenes (apelativa), y es lo que más pesa.'},
+ {scene:'Escribid una frase sobre el instituto con <em>función poética</em>: tiene que llevar al menos un recurso (rima, metáfora, comparación…).',
+  sol:[['Ejemplo','«El instituto es una colmena: zumban las voces en cada aula llena.»']],why:'Metáfora (instituto = colmena) y rima (colmena / llena).'},
+ {scene:'El mensaje <em>«¡Qué bonito!»</em> puede significar dos cosas opuestas. Inventad <em>dos situaciones comunicativas</em> distintas, una para cada significado.',
+  sol:[['Ejemplo','1) Una amiga te enseña su dibujo y le dices «¡Qué bonito!» con una sonrisa → elogio sincero. 2) Tu hermano rompe tu móvil y le dices «¡Qué bonito!» cruzando los brazos → ironía, enfado.']],why:'El mensaje es el mismo; lo que cambia el significado es la <b>situación comunicativa</b> y la comunicación <b>no verbal</b> (tono, gesto).'},
+ {scene:'Inventad una situación en la que el <em>emisor</em> sea un <em>animal</em> o una <em>máquina</em>, y señalad su código y su canal.',
+  sol:[['Ejemplo','El perro ladra y rasca la puerta → quiere salir. Emisor: el perro; receptor: su dueño; código: ladridos y gestos (no verbal); canal: el aire (sonido) y la vista.'],['Otro','La alarma de incendios suena → hay que salir. Emisor: la alarma (programada por personas); código: sonido convencional; canal: el aire.']],why:'Se acepta cualquier ejemplo bien justificado.'}
+ ]}
+];
+
+/* ======================= ESTADO ======================= */
+const KEY='reto_comunicacion_1eso_v1';
+let S={teams:TEAMS0.map(t=>({...t,s:0,cm:false,r:[0,0,0,0,0,0]}))};
+try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&x.teams&&x.teams.length===6)S=x}catch(e){}
+S.teams.forEach(t=>{if(!t.r)t.r=[0,0,0,0,0,0]});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ======================= PANTALLAS ======================= */
+const screens=[];const app=document.getElementById('app');
+function add(html,id){const d=document.createElement('section');d.className='screen';if(id)d.id=id;d.innerHTML=html;app.appendChild(d);screens.push(d);return d}
+add(`<span class="tag">1.º ESO · Repaso · Tema Comunicación</span>
+ <h1>Reto: <span>¿nos comunicamos?</span></h1>
+ <p class="lead">Los seres de Raticulín han vuelto a escribir… y esta vez solo responderán al equipo que demuestre que domina la comunicación: sus <b>elementos</b>, sus <b>clases</b> y las <b>funciones del lenguaje</b>. Cinco rondas, seis equipos y una sola nave de vuelta.</p>
+ <div class="row"><button class="btn" onclick="go(1)">Ver las normas →</button><button class="btn ghost" onclick="go(2)">Equipos</button></div>`);
+add(`<span class="tag">Normas del reto</span><h2>Cómo se juega</h2>
+ <div class="rules">
+  <div class="card"><b>👥 6 equipos, respuesta a la vez</b><p>En cada pregunta <b>todos</b> los equipos responden al mismo tiempo en su mini pizarra o en un folio. Cuando acaba el tiempo, se levantan todas a la vez.</p></div>
+  <div class="card"><b>🎲 Portavoz al azar</b><p>Cada miembro del equipo tiene un número (1, 2, 3, 4). La ruleta elige qué número justifica la respuesta. Todos tenéis que entenderla.</p></div>
+  <div class="card"><b>⭐ Puntos</b><p>Cada pregunta indica su puntuación. Normalmente, 1 punto por acertar y 1 más por justificarlo bien. Una respuesta sin justificar vale la mitad.</p></div>
+  <div class="card"><b>🦊 Robo</b><p>Si un portavoz no sabe justificar, puede robar el punto de justificación el primer equipo que levante la mano y lo explique bien.</p></div>
+  <div class="card"><b>🃏 Comodín</b><p>Cada equipo tiene <b>un</b> comodín para todo el reto: 15 segundos para consultar el esquema o el cuaderno.</p></div>
+  <div class="card"><b>🤫 Silencio de nave</b><p>Hablar fuera de turno o soplar a otro equipo resta 1 punto. Se debate en voz baja dentro del equipo.</p></div>
+ </div>
+ <div class="row"><button class="btn" onclick="go(2)">Formar equipos →</button></div>`);
+add(`<span class="tag">Tripulaciones</span><h2>Los 6 equipos</h2>
+ <p class="lead">Podéis cambiar el nombre de cada equipo. Cinco equipos de 4 alumnos y uno de 3 (en el de 3, si sale el portavoz n.º 4, elige el propio equipo).</p>
+ <div class="teams" id="teamEdit"></div>
+ <div class="row"><button class="btn" onclick="go(3)">Empezar el reto →</button><button class="btn ghost sm" onclick="resetScores()">Poner marcador a cero</button></div>`,'sTeams');
+add(`<span class="tag">Mapa del reto</span><h2>Cinco rondas</h2>
+ <div class="index">${ROUNDS.map((r,i)=>`<div class="rcard" onclick="goRound(${i})"><span class="n">RONDA ${i+1}</span><h3>${r.ic} ${r.t}</h3><p>${r.qs.length} preguntas · ${r.time} s</p></div>`).join('')}</div>
+ <div class="row"><button class="btn" onclick="go(4)">Ronda 1 →</button></div>`);
+const roundStart=[];const screenRound=[];
+ROUNDS.forEach((r,ri)=>{
+ roundStart[ri]=screens.length;screenRound[screens.length]=ri;
+ add(`<span class="tag">Ronda ${ri+1} de ${ROUNDS.length}</span><h1 style="font-size:clamp(36px,5vw,70px)">${r.ic} ${r.t}</h1><p class="lead">${r.intro}</p>
+  <div class="row"><span class="pts">⏱ ${r.time} s por pregunta</span><span class="pts">⭐ ${r.pts}</span></div>`);
+ r.qs.forEach((q,qi)=>{
+  screenRound[screens.length]=ri;
+  const id=`q${ri}_${qi}`;
+  add(`<div class="qtop"><span class="rnum">RONDA ${ri+1} · ${r.t.toUpperCase()} · PREGUNTA ${qi+1}/${r.qs.length}</span><span class="pts">⭐ ${r.pts}</span></div>
+   <div class="scene q">${q.scene}</div>
+   <p class="ask">${ri===0?'Escribid los <b>seis elementos</b>.':ri===1?'¿Qué <b>elemento</b> ha fallado? ¿Por qué?':ri===2?'¿Qué <b>clase</b> de comunicación es? Justificadlo.':ri===3?'¿Qué función <b>predomina</b> y cuál la <b>acompaña</b>?':'Escribidlo en vuestra pizarra.'}</p>
+   <div class="row">
+     <div class="timerbox"><button class="btn sm" onclick="timer('${id}',${r.time})">▶ Tiempo</button><span class="timer" id="t_${id}">${fmt(r.time)}</span></div>
+     <div class="bar"><i id="b_${id}"></i></div>
+     <button class="btn sun sm" onclick="spin('${id}')">🎲 Portavoz</button>
+     <button class="btn ghost sm" onclick="showSol('${id}',this)">Ver solución</button>
+   </div>
+   <div class="portavoz" id="p_${id}"><span>Justifica el portavoz número</span><span class="num" id="pn_${id}">?</span><span style="color:var(--soft);font-size:.85em">de cada equipo</span></div>
+   <div class="sol" id="s_${id}"><table>${q.sol.map(([a,b])=>`<tr><td>${a}</td><td>${b}</td></tr>`).join('')}</table>${q.why?`<p class="why">💡 ${q.why}</p>`:''}</div>`);
+ });
+});
+add(`<span class="tag">Fin del reto</span><h1 style="text-align:center">🚀 ¡Contacto establecido!</h1>
+ <p class="lead" style="text-align:center">Los seres de Raticulín ya saben con quién quieren hablar…</p>
+ <div class="podium" id="podium"></div><div class="rest" id="rest"></div>
+ <div class="card" style="overflow-x:auto"><table class="res" id="resTable"></table></div>
+ <div class="row" style="justify-content:center"><button class="btn" onclick="exportXLSX()">⬇ Descargar Excel</button><button class="btn ghost" onclick="exportHTML()">💾 Guardar resultados (HTML)</button></div>
+ <div class="row" style="justify-content:center"><button class="btn sun" onclick="celebrate()">🎉 Celebrar</button></div>`,'sFinal');
+
+/* ======================= NAVEGACIÓN ======================= */
+let cur=0;
+function go(n){if(n<0||n>=screens.length)return;stopTimers();screens.forEach((s,i)=>s.classList.toggle('on',i===n));cur=n;app.scrollTop=0;
+ document.getElementById('prev').disabled=n===0;document.getElementById('next').disabled=n===screens.length-1;
+ if(screens[n].id==='sFinal')renderFinal();try{localStorage.setItem(KEY+'_cur',n)}catch(e){}}
+function goRound(i){go(roundStart[i])}
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight'||e.key==='PageDown')go(cur+1);if(e.key==='ArrowLeft'||e.key==='PageUp')go(cur-1)});
+function toggleFS(){if(!document.fullscreenElement)document.documentElement.requestFullscreen?.();else document.exitFullscreen?.()}
+
+/* ======================= EQUIPOS Y MARCADOR ======================= */
+function renderTeams(){document.getElementById('teamEdit').innerHTML=S.teams.map((t,i)=>`<div class="tcard" style="--tc:var(${t.c})"><span class="em">${t.em}</span><input value="${t.n.replace(/"/g,'&quot;')}" oninput="S.teams[${i}].n=this.value;save();renderSB()" aria-label="Nombre del equipo ${i+1}"><small>Equipo ${i+1}${i===5?' · 3 alumnos':' · 4 alumnos'}</small></div>`).join('')}
+function renderSB(bumpI){const max=Math.max(...S.teams.map(t=>t.s));document.getElementById('sb').innerHTML=S.teams.map((t,i)=>`<div class="sbt ${t.s===max&&max>0?'top':''} ${bumpI===i?'bump':''}" style="--tc:var(${t.c})"><span class="em">${t.em}</span><span class="nm">${t.n}</span><span class="sc">${t.s}</span><span class="pm"><button onclick="pt(${i},1)" aria-label="Sumar">+</button><button onclick="pt(${i},-1)" aria-label="Restar">−</button></span><button class="cm ${t.cm?'used':''}" onclick="useCm(${i})" title="Comodín">🃏 comodín</button></div>`).join('')}
+function pt(i,d){const t=S.teams[i];if(t.s+d<0)return;t.s+=d;const ri=screenRound[cur];t.r[ri===undefined?5:ri]+=d;save();renderSB(i);if(d>0)ding()}
+function useCm(i){S.teams[i].cm=!S.teams[i].cm;save();renderSB();if(S.teams[i].cm)timerFree(15)}
+function resetScores(){if(!confirm('¿Poner todos los marcadores a cero y recuperar los comodines?'))return;S.teams.forEach(t=>{t.s=0;t.cm=false;t.r=[0,0,0,0,0,0]});save();renderSB()}
+function resetAll(){if(!confirm('¿Reiniciar el reto completo (nombres, puntos y comodines)?'))return;S={teams:TEAMS0.map(t=>({...t,s:0,cm:false,r:[0,0,0,0,0,0]}))};save();renderTeams();renderSB();go(0)}
+
+/* ======================= TEMPORIZADOR ======================= */
+let T=null;function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function stopTimers(){clearInterval(T);T=null}
+function timer(id,total){stopTimers();let r=total;const el=document.getElementById('t_'+id),b=document.getElementById('b_'+id);el.classList.remove('low');el.textContent=fmt(r);b.style.width='100%';
+ T=setInterval(()=>{r--;el.textContent=fmt(Math.max(r,0));b.style.width=(r/total*100)+'%';if(r<=10)el.classList.add('low');if(r<=5&&r>0)beep(880,.08);if(r<=0){stopTimers();beep(330,.5);setTimeout(()=>beep(262,.6),250)}},1000)}
+function timerFree(sec){const box=document.createElement('div');box.style.cssText='position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;background:#ffd75e;color:#3a2a00;border-radius:24px;padding:1em 2em;font-family:Bricolage Grotesque;font-weight:800;font-size:2.4em;box-shadow:0 20px 60px rgba(0,0,0,.5);text-align:center';
+ let r=sec;box.innerHTML='🃏 Comodín<br><span>'+r+'</span> s';document.body.appendChild(box);const iv=setInterval(()=>{r--;box.querySelector('span').textContent=r;if(r<=0){clearInterval(iv);beep(330,.4);box.remove()}},1000);box.onclick=()=>{clearInterval(iv);box.remove()}}
+
+/* ======================= PORTAVOZ Y SOLUCIÓN ======================= */
+function spin(id){const box=document.getElementById('p_'+id),n=document.getElementById('pn_'+id);box.classList.add('on');let k=0;const fin=1+Math.floor(Math.random()*4);
+ const iv=setInterval(()=>{n.textContent=1+(k%4);beep(500+k*20,.04);k++;if(k>14+fin){clearInterval(iv);n.textContent=fin;beep(990,.25)}},70)}
+function showSol(id,btn){const s=document.getElementById('s_'+id);const on=s.classList.toggle('on');if(on)setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'nearest'}),60);btn.textContent=on?'Ocultar solución':'Ver solución';stopTimers()}
+
+/* ======================= FINAL ======================= */
+function resRows(){const o=S.teams.map(t=>t).slice().sort((a,b)=>b.s-a.s);const hdr=['Puesto','Equipo'].concat(ROUNDS.map((r,i)=>'R'+(i+1)+' '+r.t),['Ajustes','Comodín usado','TOTAL']);
+ return [hdr].concat(o.map((t,k)=>[k+1,t.n].concat(t.r.slice(0,5),[t.r[5],t.cm?'Sí':'No',t.s])))}
+function renderRes(){const rows=resRows();document.getElementById('resTable').innerHTML='<tr>'+rows[0].map(c=>'<th>'+c+'</th>').join('')+'</tr>'+rows.slice(1).map(r=>'<tr>'+r.map((c,j)=>'<td'+(j===r.length-1?' class="tot"':'')+'>'+c+'</td>').join('')+'</tr>').join('')}
+function stamp(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function exportXLSX(){const rows=resRows();const name='resultados_reto_comunicacion_'+stamp();
+ if(window.XLSX){const ws=XLSX.utils.aoa_to_sheet([['Reto: ¿nos comunicamos? · 1.º ESO · '+new Date().toLocaleDateString('es-ES')],[]].concat(rows));ws['!cols']=rows[0].map((c,i)=>({wch:i===1?18:Math.max(10,Math.min(32,String(c).length+2))}));const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Resultados');XLSX.writeFile(wb,name+'.xlsx')}
+ else{const csv='\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');dl(new Blob([csv],{type:'text/csv;charset=utf-8'}),name+'.csv')}}
+function exportHTML(){renderRes();const t=document.getElementById('resTable').outerHTML;const d=new Date().toLocaleString('es-ES');
+ const html='<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Resultados · Reto comunicación</title><style>body{font-family:Arial,sans-serif;margin:30px;color:#111}h1{font-size:22px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px 8px;text-align:center}th{background:#0f8b82;color:#fff}td:nth-child(2){text-align:left;font-weight:bold}.tot{font-weight:bold;background:#fff4c7}</style></head><body><h1>Reto: ¿nos comunicamos? · Resultados</h1><p>1.º ESO · Lengua Castellana y Literatura · '+d+'</p>'+t+'</body></html>';
+ dl(new Blob([html],{type:'text/html;charset=utf-8'}),'resultados_reto_comunicacion_'+stamp()+'.html')}
+function renderFinal(){renderRes();const o=S.teams.map((t,i)=>({...t,i})).sort((a,b)=>b.s-a.s);const order=[o[1],o[0],o[2]],h=[60,90,40];
+ document.getElementById('podium').innerHTML=order.map((t,k)=>t?`<div class="pod" style="--tc:var(${t.c})"><span class="em">${t.em}</span><b>${t.n}</b><div class="blk" style="height:${h[k]*2.2}px">${k===1?'1.º':k===0?'2.º':'3.º'}<small style="font-size:.5em;display:block">${t.s} pts</small></div></div>`:'').join('');
+ document.getElementById('rest').innerHTML=o.slice(3).map((t,k)=>`<span>${k+4}.º ${t.em} ${t.n} · ${t.s} pts</span>`).join('')}
+function celebrate(){const c=document.getElementById('conf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const cols=['#ff6b5b','#ffb03b','#ffd75e','#7cffb2','#5ec8ff','#b98cff'];
+ const P=Array.from({length:180},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*4,r:4+Math.random()*6,c:cols[Math.random()*6|0],a:Math.random()*6}));let f=0;
+ (function loop(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.y+=p.v;p.a+=.1;x.fillStyle=p.c;x.save();x.translate(p.x+Math.sin(p.a)*8,p.y);x.rotate(p.a);x.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);x.restore()});if(++f<260)requestAnimationFrame(loop);else x.clearRect(0,0,c.width,c.height)})();
+ [523,659,784,1047].forEach((n,i)=>setTimeout(()=>beep(n,.3),i*140))}
+
+/* ======================= SONIDO ======================= */
+let AC;function beep(f,d){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.type='triangle';g.gain.setValueAtTime(.15,AC.currentTime);g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+function ding(){beep(880,.12);setTimeout(()=>beep(1320,.15),90)}
+
+renderTeams();renderSB();
+let start=0;try{start=+localStorage.getItem(KEY+'_cur')||0}catch(e){}
+go(Math.min(start,screens.length-1));
+</script>
+</body>
+</html>
