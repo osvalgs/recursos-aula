@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vocabulario</title>
+<title>Vocabulario (1)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
@@ -126,7 +126,7 @@ main{flex:1;display:flex;align-items:stretch;padding:0 1.4rem 0 6.2rem;min-heigh
 
 /* ---------- portada ---------- */
 .cover{align-items:flex-start;gap:1.2rem}
-.cover h1{font-size:clamp(3rem,10vw,9rem);font-weight:800;letter-spacing:.01em;line-height:1}
+.cover h1{font-size:clamp(2.6rem,8vw,9rem);font-weight:800;letter-spacing:.01em;line-height:1}
 .cover p{font-size:clamp(1.1rem,2vw,1.6rem);color:var(--ink-soft);max-width:40ch}
 .cover .note{font-family:"Caveat",cursive;color:var(--red);font-size:clamp(1.4rem,2.4vw,2.2rem);transform:rotate(-2deg)}
 .big{
@@ -205,7 +205,7 @@ body.reto .pista:not(.shown){visibility:hidden}
 <body>
 
 <header class="top">
-  <div class="brand"><span class="pauta" style="display:inline-block">[V]OCA[B]ULARIO</span></div>
+  <div class="brand"><span class="pauta" style="display:inline-block">[V]OCA[B]ULARIO (1)</span></div>
   <label>
     <select class="ctl" id="week" aria-label="Filtrar por semana"></select>
   </label>
@@ -274,8 +274,8 @@ function render(){
   if(s.type==='cover'){
     const n = lista.length, w = $('#week').value;
     st.innerHTML = `<section class="slide cover">
-      <h1 class="pauta">${markup('[V]OCA[B]ULARIO')}</h1>
-      <p>Repaso colectivo de significados y sinónimos. ${n} palabras${w==='all' ? ` en ${semanas.length} ${semanas.length===1?'semana':'semanas'}` : `, semana ${w}`}.</p>
+      <h1 class="pauta">${markup('[V]OCA[B]ULARIO (1)')}</h1>
+      <p>Repaso colectivo de significados y sinónimos.</p>
       <span class="note">¡Ojo a las letras en rojo!</span>
       ${n ? `<button class="big" id="go">Empezar</button>` : `<p class="empty">No hay palabras en esta semana.</p>`}
     </section>`;
