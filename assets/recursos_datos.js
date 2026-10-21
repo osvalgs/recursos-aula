@@ -76,6 +76,10 @@ window.RECURSOS=[
        {
         "t": "Repaso vocabulario semana 1",
         "h": "01_ESO/1_Y_2/PRESENTACIONES/vocabulario_1.html"
+       },
+       {
+        "t": "Repaso vocabulario semana 2",
+        "h": "01_ESO/1_Y_2/PRESENTACIONES/vocabulario_2.html"
        }
       ]
      }
