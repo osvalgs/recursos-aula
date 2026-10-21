@@ -191,6 +191,15 @@ window.RECURSOS=[
   "n": "03. FPB",
   "c": [
    {
+    "n": "PRESENTACIONES",
+    "c": [
+     {
+      "t": "Presentación venganza tractorista",
+      "h": "03_FPB/PRESENTACIONES/presentacion_venganza_tractorista.html"
+     }
+    ]
+   },
+   {
     "n": "ACTIVIDADES",
     "c": [
      {
@@ -473,13 +482,15 @@ window.RECURSOS=[
   ]
  }
 ];
-window.NUEVOS=["04_PDC/APUNTES_EXAMENES/apuntes_primeros_dos_examenes.html","01_ESO/1_Y_2/APUNTES_EXAMENES/apuntes_repaso_primer_examen.html","04_PDC/PRESENTACIONES/LENGUA_LITERATURA_CASTELLANAS/presentacion_relaciones_semanticas.html","01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html","01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html","01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html","03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html","03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"];
+window.NUEVOS=["03_FPB/PRESENTACIONES/presentacion_venganza_tractorista.html","04_PDC/APUNTES_EXAMENES/apuntes_primeros_dos_examenes.html","01_ESO/1_Y_2/APUNTES_EXAMENES/apuntes_repaso_primer_examen.html","04_PDC/PRESENTACIONES/LENGUA_LITERATURA_CASTELLANAS/presentacion_relaciones_semanticas.html","01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html","01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html","01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html","03_FPB/ACTIVIDADES/actividad_busqueda_piezas.html","03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html"];
 
 /* Recursos OCULTOS: no aparecen ni en la portada ni en la página del curso.
    Se puede ocultar un archivo concreto o una carpeta entera (terminada en «/»).
    Para volver a mostrarlo, basta con borrar su línea.
    Para verlo todo como profesor, añade ?ver=todo al final de la dirección. */
 window.OCULTOS=[
+ '03_FPB/ACTIVIDADES/rock_and_road_dream_cars.html',
+ '03_FPB/ACTIVIDADES/ficha_actividad_busqueda_piezas.html',
  '01_ESO/1_Y_2/ACTIVIDADES/',
  '01_ESO/1_Y_2/PRESENTACIONES/presentacion_genero_lirico.html',
  '04_PDC/PRESENTACIONES/presentacion_pdc.html',
