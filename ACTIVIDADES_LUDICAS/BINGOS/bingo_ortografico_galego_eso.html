@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="gl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bingo Ortográfico Galego ESO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1f2a24;
+    --chalkboard:#1f3b33;
+    --chalkboard-2:#284a40;
+    --chalk:#f5f1e8;
+    --marigold:#f2a73b;
+    --marigold-dark:#c9860f;
+    --coral:#e2574c;
+    --paper:#fbf7ee;
+    --paper-line:#c9d6cf;
+    --paper-margin:#e2a39c;
+    --muted:#6b7a72;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Work Sans', sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{
+    font-family:'Baloo 2', sans-serif;
+  }
+
+  /* ---------- Top bar / tabs ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    background:var(--paper);
+    border-bottom:3px solid var(--ink);
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .brand{ display:flex; align-items:baseline; gap:10px; }
+  .brand .display{ font-size:24px; font-weight:800; letter-spacing:.3px; }
+  .brand .display span{ color:var(--coral); }
+  .brand small{ color:var(--muted); font-size:12.5px; }
+
+  .topbar-right{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+
+  .tabs{ display:flex; gap:6px; background:#eee6d6; padding:5px; border-radius:999px; }
+  .tab-btn{
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:9px 18px;
+    border:none;
+    border-radius:999px;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .tab-btn.active{ background:var(--ink); color:var(--paper); }
+  .tab-btn:not(.active):hover{ background:#e3d9c2; }
+  .tab-btn.hidden-tab{ display:none; }
+
+  .proj-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--muted);
+    background:#fff;
+    border:1.5px solid #d8cfb8;
+    border-radius:999px;
+    padding:6px 12px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .proj-toggle .dot{
+    width:10px; height:10px; border-radius:50%;
+    background:#c7bfa6;
+    transition:background .15s ease;
+  }
+  .proj-toggle.on{ border-color:var(--coral); color:var(--coral); font-weight:600; }
+  .proj-toggle.on .dot{ background:var(--coral); }
+
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* =====================================================
+     VISTA 0 — CÓMO SE JUEGA (para proyectar a la clase)
+  ===================================================== */
+  .rules-wrap{
+    background:var(--chalkboard);
+    min-height:calc(100vh - 74px);
+    color:var(--chalk);
+    padding:46px 24px 60px;
+  }
+  .rules-inner{ max-width:820px; margin:0 auto; }
+  .rules-inner h2{
+    font-size:15px;
+    letter-spacing:1.5px;
+    color:#bcd0c6;
+    font-weight:500;
+    margin:0 0 8px;
+    text-align:center;
+  }
+  .rules-title{
+    font-size:36px;
+    font-weight:800;
+    margin:0 0 40px;
+    text-align:center;
+  }
+  .rules-steps{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+  .rule-step{
+    display:flex;
+    gap:18px;
+    align-items:flex-start;
+    background:var(--chalkboard-2);
+    border:2px solid #3f6357;
+    border-radius:16px;
+    padding:20px 22px;
+  }
+  .rule-step .num{
+    font-family:'Baloo 2', sans-serif;
+    font-size:26px;
+    font-weight:800;
+    color:var(--marigold);
+    flex-shrink:0;
+    width:40px;
+    text-align:center;
+  }
+  .rule-step p{ margin:0; font-size:18px; line-height:1.55; }
+  .rule-step b{ color:var(--marigold); }
+
+  /* =====================================================
+     VISTA 1 — PREPARAR (solo profesorado, antes de clase)
+  ===================================================== */
+  .setup-wrap{ max-width:960px; margin:0 auto; padding:32px 24px 64px; }
+  .private-banner{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#fbe3e0;
+    color:#a3352a;
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:.3px;
+    padding:7px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .setup-intro h2{ font-size:22px; margin:0 0 6px; }
+  .setup-intro p{ color:var(--muted); margin:0 0 26px; font-size:15px; line-height:1.5; max-width:64ch; }
+
+  .setup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
+  @media (max-width:760px){ .setup-grid{ grid-template-columns:1fr; } }
+
+  .panel{ background:#fff; border:2px solid var(--ink); border-radius:14px; padding:20px 22px; }
+  .panel label{ display:block; font-weight:600; font-size:14px; margin-bottom:8px; }
+  textarea{
+    width:100%; min-height:220px; resize:vertical;
+    font-family:'Work Sans', sans-serif; font-size:14.5px; line-height:1.7;
+    padding:12px 14px; border-radius:8px; border:1.5px solid #d8cfb8;
+    background:#fffdf8; color:var(--ink);
+  }
+  textarea:focus{ outline:2px solid var(--marigold); border-color:transparent; }
+  .hint{ font-size:12.5px; color:var(--muted); margin-top:8px; }
+
+  .num-row{ display:flex; align-items:center; gap:10px; margin-top:16px; }
+  .num-row input{ width:70px; padding:8px 10px; font-size:14.5px; border-radius:8px; border:1.5px solid #d8cfb8; font-family:'Work Sans', sans-serif; }
+
+  .btn{
+    font-family:'Work Sans', sans-serif; font-weight:700; font-size:14px;
+    padding:11px 20px; border-radius:10px; border:2px solid var(--ink);
+    background:var(--marigold); color:var(--ink); cursor:pointer;
+    transition:transform .1s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn:active{ transform:translateY(0); }
+  .btn.secondary{ background:#fff; }
+  .btn.ghost{ background:transparent; border-color:#d8cfb8; color:var(--muted); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; transform:none; }
+  .btn.suggest{ background:var(--chalkboard); color:var(--chalk); border-color:var(--chalkboard); width:100%; margin-bottom:14px; }
+  .btn.primary{ background:#2f7a4f; color:#fff; border-color:#2f7a4f; }
+  .msg{ font-size:14px; margin:8px 0 0; min-height:1.4em; }
+  .sent-tag{ color:#2f7a4f; font-size:12px; font-weight:600; }
+
+  .actions-row{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+
+  .status-msg{ font-size:13.5px; margin-top:12px; padding:9px 12px; border-radius:8px; display:none; }
+  .status-msg.show{ display:block; }
+  .status-msg.error{ background:#fbe3e0; color:#a3352a; }
+  .status-msg.ok{ background:#e6efe6; color:#2c5c3a; }
+
+  .word-bank-preview{ display:flex; flex-direction:column; gap:10px; margin-top:14px; font-size:14.5px; }
+  .word-bank-preview .wb-row{ display:flex; flex-direction:column; gap:2px; }
+  .word-bank-preview .wb-row-top{ display:flex; gap:8px; align-items:baseline; }
+  .word-bank-preview .wb-row-top b{ color:var(--coral); min-width:20px; }
+  .wb-meaning{ margin-left:28px; font-size:13px; color:#5a5648; line-height:1.5; }
+  .swap-bar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:6px 0 2px; }
+  .wb-pick{ margin-left:auto; font-size:12px; color:#6b5a2a; display:inline-flex; align-items:center; gap:4px; cursor:pointer; }
+  .wb-editbtn{ margin-left:6px; font:inherit; font-size:12px; padding:1px 8px; border:1px solid #d8cfb8; border-radius:10px; background:#fffdf8; color:#6b5a2a; cursor:pointer; }
+  .wb-editbtn:hover{ background:#f6ecd0; }
+  .wb-edit{ display:flex; flex-direction:column; gap:6px; margin-top:4px; }
+  .wb-edit textarea,.wb-edit input{ font:inherit; font-size:13px; padding:5px 8px; border:1px solid #d8cfb8; border-radius:6px; width:100%; box-sizing:border-box; text-align:justify; }
+  .we-row{ display:flex; gap:6px; flex-wrap:wrap; }
+  .we-row input{ flex:1 1 140px; width:auto; }
+  .we-row button{ font:inherit; font-size:13px; padding:4px 12px; border-radius:6px; border:1px solid #c9b98a; background:#fffdf8; cursor:pointer; }
+  .we-save{ background:#1a1a1a !important; color:#fff; border-color:#1a1a1a !important; }
+  .wb-meaning .wb-syn{ font-style:italic; color:#847f6d; }
+  .wb-word{
+    padding:2px 4px; border-radius:4px; cursor:text;
+    border:1px solid transparent;
+  }
+  .wb-word:hover{ border-color:#d8cfb8; }
+  .wb-word:focus{ outline:none; border-color:var(--marigold); background:#fffdf8; }
+
+  #cardsPreview{ margin-top:30px; }
+  .cards-page{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  @media (max-width:600px){ .cards-page{ grid-template-columns:1fr; } }
+
+  .bingo-card{ background:#fffdf8; border:2px solid var(--ink); border-radius:10px; padding:16px 18px 18px; break-inside:avoid; page-break-inside:avoid; }
+  .bingo-card h3{ text-align:center; font-size:19px; letter-spacing:.5px; margin:0 0 12px; }
+  .card-name{ font-size:12.5px; display:flex; gap:6px; align-items:baseline; margin-bottom:14px; color:var(--muted); }
+  .card-name .line{ flex:1; border-bottom:1px solid var(--ink); height:14px; }
+  .card-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .word-list{ position:relative; padding-left:14px; border-left:2px solid var(--paper-margin); }
+  .word-list .col-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:6px; }
+  .ruled-line{ display:flex; gap:5px; align-items:baseline; border-bottom:1px solid var(--paper-line); padding:5px 0; font-size:12.5px; }
+  .ruled-line .n{ color:var(--muted); width:16px; flex-shrink:0; }
+  .ruled-line .write-space{ flex:1; }
+
+  .pick-title{ font-size:11px; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .pick-rows{ display:flex; flex-direction:column; gap:9px; }
+  .pick-row{ display:flex; align-items:center; gap:8px; border-bottom:1.5px solid var(--ink); padding-bottom:5px; }
+  .pick-num{ font-size:10.5px; color:var(--muted); border:1px solid var(--paper-line); border-radius:4px; padding:2px 5px; flex-shrink:0; }
+  .pick-line{ flex:1; height:16px; }
+
+  .result-sheet{ display:none; }
+  .result-sheet.showing{ display:block; }
+  .result-banner{ background:var(--marigold); color:var(--ink); font-weight:700; font-size:13px; letter-spacing:.5px; padding:10px 16px; border-radius:8px; margin-bottom:18px; display:inline-block; }
+  .result-grid{ display:flex; flex-direction:column; gap:2px; max-width:760px; }
+  .result-item{ font-size:14px; line-height:1.5; padding:9px 0; border-bottom:1px solid var(--paper-line); }
+  .result-item b{ color:var(--coral); display:block; margin-bottom:2px; }
+  .result-item .def{ color:var(--ink); }
+  .result-item .syn{ display:block; color:#6b6b6b; font-size:.92em; margin-top:2px; font-style:italic; }
+
+  /* =====================================================
+     VISTA 2 — SORTEO (pizarra, solo el número)
+  ===================================================== */
+  .stage-wrap{ background:var(--chalkboard); min-height:calc(100vh - 74px); padding:40px 20px 60px; color:var(--chalk); }
+  .stage-inner{ max-width:820px; margin:0 auto; text-align:center; }
+  .stage-inner h2{ font-size:16px; letter-spacing:1px; color:#bcd0c6; font-weight:500; margin:0 0 6px; }
+  .stage-title{ font-size:34px; font-weight:800; margin:0 0 34px; }
+
+  .reveal-box{
+    background:var(--chalkboard-2); border:3px solid #3f6357; border-radius:26px;
+    padding:44px 30px; margin:0 auto 26px; max-width:340px;
+    box-shadow:0 10px 0 rgba(0,0,0,.18);
+  }
+  .reveal-label{ font-size:14px; letter-spacing:2px; color:#bcd0c6; font-weight:600; margin-bottom:10px; }
+  .reveal-number{
+    font-family:'Baloo 2', sans-serif; font-size:104px; font-weight:800; color:var(--marigold);
+    line-height:1; min-height:110px; display:flex; align-items:center; justify-content:center;
+  }
+  .reveal-number.placeholder{ color:#5d7a70; font-size:22px; font-family:'Work Sans',sans-serif; font-weight:500; }
+  .reveal-number.pop{ animation:pop .38s ease; }
+  @keyframes pop{ 0%{ transform:scale(.8); opacity:.4; } 60%{ transform:scale(1.08); opacity:1; } 100%{ transform:scale(1); } }
+  .reveal-number.spinning{ color:#9db6ac; }
+
+  .stage-controls{ display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:34px; }
+  .btn.stage-btn{ border:2px solid var(--chalk); background:var(--marigold); color:var(--chalkboard); }
+  .btn.stage-btn.secondary{ background:transparent; color:var(--chalk); }
+  .btn.stage-btn:disabled{ opacity:.35; }
+
+  .stage-meta{ display:flex; justify-content:center; gap:28px; font-size:13.5px; color:#bcd0c6; margin-bottom:30px; }
+  .stage-meta b{ color:var(--chalk); font-size:16px; display:block; }
+
+  .history-title{ font-size:13px; letter-spacing:1px; color:#bcd0c6; margin-bottom:12px; text-align:left; }
+  .history-list{ display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start; }
+  .history-chip{ background:#0f261f; border:1px solid #3f6357; border-radius:8px; padding:8px 14px; font-family:'Baloo 2',sans-serif; font-size:17px; font-weight:700; color:var(--marigold); }
+  .empty-note{ color:#7f988e; font-size:13.5px; text-align:left; }
+
+  .meanings-stage{ margin-top:38px; text-align:left; }
+  .meanings-stage-list{ display:flex; flex-direction:column; gap:12px; margin-top:22px; }
+  .meanings-stage-item{ background:var(--chalkboard-2); border:2px solid #3f6357; border-radius:12px; padding:14px 18px; }
+  .meanings-stage-item b{ font-family:'Baloo 2', sans-serif; color:var(--marigold); font-size:17px; display:block; margin-bottom:4px; }
+  .meanings-stage-item span{ font-size:14.5px; line-height:1.5; color:var(--chalk); }
+
+  /* =====================================================
+     VISTA 3 — GANADORES
+  ===================================================== */
+  .winners-wrap{ max-width:820px; margin:0 auto; padding:32px 24px 64px; }
+  .winners-form{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .winners-form .field{ display:flex; flex-direction:column; gap:6px; }
+  .winners-form label{ font-size:12.5px; font-weight:600; color:var(--muted); }
+  .winners-form input[type="date"], .winners-form input[type="text"]{
+    padding:9px 12px; border-radius:8px; border:1.5px solid #d8cfb8;
+    font-family:'Work Sans', sans-serif; font-size:14px;
+  }
+  .winners-form input[type="text"]{ min-width:260px; flex:1; }
+  .winners-form .field.grow{ flex:1; }
+
+  .winners-table-wrap{ margin-top:26px; }
+  .winners-print-title{ display:none; }
+  table.winners-table{ width:100%; border-collapse:collapse; font-size:14.5px; }
+  table.winners-table th{
+    text-align:left; font-size:12px; letter-spacing:.3px; color:var(--muted);
+    border-bottom:2px solid var(--ink); padding:8px 6px;
+  }
+  table.winners-table td{ padding:10px 6px; border-bottom:1px solid var(--paper-line); }
+  table.winners-table td.date-col{ white-space:nowrap; color:var(--muted); width:110px; }
+  .row-del{
+    background:none; border:none; color:var(--coral); cursor:pointer; font-size:13px; font-weight:600;
+  }
+  .winners-empty{ color:var(--muted); font-size:14px; margin-top:16px; }
+
+  @media print{
+    .topbar, .setup-intro, .private-banner, .panel, .actions-row, .status-msg, .winners-form, .winners-actions, .row-del{ display:none !important; }
+    body{ background:#fff; }
+    #cardsPreview{ margin:0; }
+
+    /* Tarjetas: 3 tarjetas por hoja A4 vertical */
+    .cards-page{
+      display:block;
+      page: cards-portrait;
+    }
+    .bingo-card{
+      border-color:#000;
+      box-sizing:border-box;
+      width:100%;
+      height:86mm;
+      overflow:hidden;
+      padding:4mm 8mm;
+      margin-bottom:4mm;
+      page-break-inside:avoid;
+    }
+    .bingo-card:nth-child(3n):not(:last-child){ page-break-after:always; margin-bottom:0; }
+    .setup-wrap{ padding:0 !important; margin:0 !important; page: cards-portrait; }
+    .bingo-card h3{ font-size:15px; margin:0 0 2mm; }
+    .bingo-card .card-name{ font-size:10px; margin-bottom:2.5mm; }
+    .bingo-card .card-name .line{ height:12px; }
+    .bingo-card .card-cols{ gap:10mm; }
+    .bingo-card .word-list{ padding-left:10px; }
+    .bingo-card .word-list .col-title,
+    .bingo-card .pick-title{ font-size:9.5px; margin-bottom:3mm; }
+    .bingo-card .ruled-line{ font-size:11px; padding:1.5px 0; }
+    .bingo-card .ruled-line .n{ width:16px; }
+    .bingo-card .pick-row{ padding-bottom:3px; gap:8px; }
+    .bingo-card .pick-num{ font-size:10px; padding:2px 4px; }
+    .bingo-card .pick-line{ height:12px; }
+
+    .winners-print-title{ display:block; font-size:22px; margin:0 0 18px; }
+    @page{ margin:14mm; }
+    @page cards-portrait{ size: A4 portrait; margin:9mm 10mm; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="display">Bingo<span>Ortográfico</span></div>
+    <small>Galego · ESO</small>
+  </div>
+  <div class="topbar-right">
+    <div class="proj-toggle" id="projToggle"><span class="dot"></span><span id="projToggleLabel">Modo proxección: apagado</span></div>
+    <div class="tabs">
+      <button class="tab-btn" data-view="setup" id="tabSetup">Preparar (privado)</button>
+      <button class="tab-btn active" data-view="rules">Como se xoga</button>
+      <button class="tab-btn" data-view="stage">Sorteo</button>
+      <button class="tab-btn" data-view="winners">Gañadores</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 0: CÓMO SE JUEGA ================= -->
+<div class="view active" id="view-rules">
+  <div class="rules-wrap">
+    <div class="rules-inner">
+      <h2>ANTES DE COMEZAR</h2>
+      <div class="rules-title">En que consiste o Bingo Ortográfico?</div>
+      <div class="rules-steps">
+        <div class="rule-step"><span class="num">1</span><p>O profesor ou a profesora entrégavos unha folla cos <b>«cartóns» ou «tarxetas de bingo»</b> (ou xa volas entregou antes).</p></div>
+        <div class="rule-step"><span class="num">2</span><p>O profesor ou a profesora <b>dita 12 palabras</b>, unha a unha, <b>repetindo cada unha dúas veces</b>, sen soletrealas.</p></div>
+        <div class="rule-step"><span class="num">3</span><p>Escribes cada palabra <b>tal e como cres que se escribe</b>, numerada do 1 ao 12, na orde do ditado.</p></div>
+        <div class="rule-step"><span class="num">4</span><p>Escolles as <b>6 palabras</b> que cres que escribiches ben e cópialas na túa tarxeta, anotando o número de cada unha.</p></div>
+        <div class="rule-step"><span class="num">5</span><p>O profesor vai sacando <b>números ao chou, sen repetir</b>. Se tes ese número entre as túas 6, márcalo.</p></div>
+        <div class="rule-step"><span class="num">6</span><p>En canto teñas os teus <b>6 números marcados</b>, canta ben alto: <b>BINGO!</b></p></div>
+        <div class="rule-step"><span class="num">7</span><p>O profesor revisa a túa tarxeta. Se as <b>6 palabras están ben escritas, gañas</b>. Se algunha ten unha falta, o bingo non vale e o xogo segue ata o seguinte bingo válido.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 1: PREPARAR ================= -->
+<div class="view" id="view-setup">
+  <div class="setup-wrap">
+    <div class="private-banner">🔒 Só para o profesorado — prepara isto antes da clase</div>
+    <div class="setup-intro">
+      <h2>Banco de palabras</h2>
+      <p>Xera 12 palabras con dificultades ortográficas típicas do galego, ou escribe as túas, na orde en que as vas ditar. O alumnado non verá nunca esta pantalla.</p>
+    </div>
+
+    <div class="setup-grid">
+      <div class="panel">
+        <label>Palabras para ditar</label>
+        <button class="btn suggest" id="suggestBtn">🎲 Xerar 12 palabras con dificultade ortográfica</button>
+        <div id="suggestMeta" class="hint" style="margin-bottom:4px;"></div>
+        <div class="swap-bar" id="swapBar" style="display:none;">
+          <button class="btn ghost" id="swapBtn" disabled>↻ Cambiar as marcadas</button>
+          <span class="hint" id="swapHint">Marca as palabras que non che gusten coa caixa «cambiar» e preme o botón: só se substitúen esas.</span>
+        </div>
+        <div class="word-bank-preview" id="wordBankPreview"></div>
+        <div class="hint" style="margin-top:10px;">Podes facer clic sobre calquera palabra para corrixila a man.</div>
+
+        <div class="num-row">
+          <label style="margin:0;">N.º de tarxetas para imprimir</label>
+          <input type="number" id="cardCount" min="1" max="60" value="24">
+        </div>
+
+        <div class="hint" style="margin-top:14px; display:flex; align-items:center; gap:8px;">
+          <input type="checkbox" id="includeMeanings" checked style="width:auto; margin:0;">
+          <label for="includeMeanings" style="margin:0; font-weight:600; color:var(--ink); cursor:pointer;">Incluír significados (estilo DRAG) e sinónimos para revelalos ou repartilos ao rematar o bingo</label>
+        </div>
+
+        <div class="actions-row">
+          <button class="btn ghost" id="clearBtn">Baleirar</button>
+          <button class="btn ghost" id="resetHistoryBtn" title="Esquece que palabras se usaron xa, para comezar un novo curso ou ciclo">Reiniciar histórico (novo curso)</button>
+          <button class="btn ghost" id="exportWordsBtn">Exportar palabras (arquivo)</button>
+          <button class="btn ghost" id="importWordsBtn">Importar palabras (arquivo)</button>
+          <input type="file" id="importWordsFile" accept="application/json" style="display:none;">
+        </div>
+
+        <div class="hint" style="margin-top:8px;">Isto só serve para volver imprimir as mesmas tarxetas <b>noutro ordenador</b>. A pantalla de <i>«Sorteo»</i> é independente e non precisa este arquivo: só lle tes que dicir cantas palabras ten o bingo (por defecto, 12).</div>
+
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="actions-row" style="margin-top:18px;">
+          <button class="btn secondary" id="printCardsBtn" disabled>Imprimir tarxetas (alumnado)</button>
+          <button class="btn secondary" id="printResultBtn" disabled>Imprimir folla de corrección e significados</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <label style="margin-bottom:14px;">Como se usa esta lapela</label>
+        <div style="font-size:14px; line-height:1.75; color:var(--ink);">
+          <p style="margin:0 0 12px;"><b>1.</b> Antes da clase, preme <i>«Xerar 12 palabras»</i> (ou escribe as túas); as tarxetas prepáranse soas para imprimir.</p>
+          <p style="margin:0 0 12px;"><b>2.</b> Imprime as tarxetas en branco para o alumnado e, á parte, a <i>folla de corrección e significados</i>: sérveche a ti para corrixir e tamén para repasar o vocabulario coa clase ao rematar.</p>
+          <p style="margin:0 0 12px;"><b>3.</b> Activa <i>«Modo proxección»</i> arriba á dereita antes de proxectar: esta lapela desaparece da vista e só quedan «Como se xoga» e «Sorteo».</p>
+          <p style="margin:0;"><b>4.</b> Ao rematar, desactiva o modo proxección para volver editar o teu banco de palabras.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="cardsPreview"></div>
+  </div>
+</div>
+
+<!-- ================= VISTA 2: SORTEO ================= -->
+<div class="view" id="view-stage">
+  <div class="stage-wrap">
+    <div class="stage-inner">
+      <h2>SORTEO EN DIRECTO</h2>
+      <div class="stage-title">Bingo Ortográfico!</div>
+
+      <div class="total-numbers-row" style="display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:22px;">
+        <label for="totalNumbersInput" style="font-size:13px; color:#bcd0c6;">Números do bingo (segundo as tarxetas impresas):</label>
+        <input type="number" id="totalNumbersInput" min="1" max="99" value="12" style="width:70px; padding:6px 8px; border-radius:6px; border:1px solid #3f6357; background:#0f261f; color:#fff; text-align:center; font-size:15px;">
+      </div>
+
+      <div class="reveal-box">
+        <div class="reveal-label">NÚMERO</div>
+        <div class="reveal-number placeholder" id="revealNumber">?</div>
+      </div>
+
+      <div class="stage-controls">
+        <button class="btn stage-btn" id="spinBtn">Xirar</button>
+        <button class="btn stage-btn secondary" id="undoBtn">Desfacer a última</button>
+        <button class="btn stage-btn secondary" id="finishBtn">🏆 Bingo cantado! Rematar rolda</button>
+        <button class="btn stage-btn secondary" id="resetBtn">Reiniciar rolda</button>
+        <button class="btn stage-btn secondary" id="soundToggleBtn">🔊 Son</button>
+      </div>
+
+      <div class="stage-meta">
+        <div><b id="drawnCount">0</b>saídos</div>
+        <div><b id="remainingCount">0</b>quedan</div>
+        <div><b id="totalCount">0</b>en total</div>
+      </div>
+
+      <div class="history-title">NÚMEROS XA SAÍDOS</div>
+      <div class="history-list" id="historyList"></div>
+      <div class="empty-note" id="emptyNote">Aínda non saíu ningún número.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= VISTA 3: GANADORES ================= -->
+<div class="view" id="view-winners">
+  <div class="winners-wrap">
+    <h2 class="winners-print-title">Gañadores — Bingo Ortográfico</h2>
+    <div class="setup-intro">
+      <h2>Táboa de gañadores do trimestre</h2>
+      <p>Engade aquí a quen cante un bingo válido (coas 6 palabras ben escritas).<span id="formNote"> Con «Enviar resultados» mándase directamente ao teu formulario de Google.</span> A táboa de abaixo é a túa copia local neste navegador; usa «Exportar gañadores (Excel)» ou «Gardar táboa en PDF» se queres unha copia á parte.</p>
+    </div>
+
+    <div class="panel winners-form">
+      <div class="field">
+        <label for="winnerDate">Data</label>
+        <input type="date" id="winnerDate">
+      </div>
+      <div class="field grow">
+        <label for="winnerNames">Gañador/a (ou varios, separados por coma)</label>
+        <input type="text" id="winnerNames" placeholder="Nome e apelido">
+      </div>
+      <div class="field">
+        <label for="winnerGroup">Grupo</label>
+        <input type="text" id="winnerGroup" placeholder="Ex.: 1.º ESO A">
+      </div>
+      <button class="btn" id="addWinnerBtn">Engadir á táboa</button>
+      <button class="btn primary" id="sendWinnerBtn">Enviar resultados</button>
+    </div>
+    <p class="msg" id="sendWinnerMsg" role="status"></p>
+
+    <div class="actions-row winners-actions">
+      <button class="btn secondary" id="exportWinnersBtn">Exportar gañadores (Excel)</button>
+      <button class="btn secondary" id="printWinnersBtn">Gardar táboa en PDF</button>
+    </div>
+
+    <div class="winners-table-wrap" id="winnersTableWrap"></div>
+  </div>
+</div>
+
+<script>
+  // ---------------- word bank by orthographic difficulty ----------------
+  const WORD_BANK = {
+    "b / v": [
+      {"word": "avó", "def": "Pai do pai ou da nai dunha persoa.", "syn": ["antepasado", "devanceiro"]},
+      {"word": "avoa", "def": "Nai do pai ou da nai dunha persoa.", "syn": ["antepasada", "devanceira"]},
+      {"word": "avogado", "def": "Persoa licenciada en Dereito que defende os intereses doutras nun xuízo.", "syn": ["letrado", "defensor"]},
+      {"word": "voda", "def": "Cerimonia e festa na que dúas persoas se casan.", "syn": ["casamento", "matrimonio"]},
+      {"word": "varrer", "def": "Limpar o chan coa vasoira.", "syn": ["limpar", "recoller"]},
+      {"word": "vasoira", "def": "Utensilio formado por un feixe de fibras atado a un pau, que serve para varrer.", "syn": ["escoba"]},
+      {"word": "vermello", "def": "Da cor do sangue ou do tomate maduro.", "syn": ["encarnado", "roxo"]},
+      {"word": "móbil", "def": "Teléfono portátil sen fíos.", "syn": ["teléfono", "celular"]},
+      {"word": "automóbil", "def": "Vehículo con motor que serve para circular polas estradas.", "syn": ["coche", "auto"]},
+      {"word": "gobernar", "def": "Dirixir un país, unha comunidade ou unha institución.", "syn": ["dirixir", "rexer"]},
+      {"word": "goberno", "def": "Conxunto de persoas que dirixen un Estado ou unha comunidade.", "syn": ["executivo", "administración"]},
+      {"word": "cóbado", "def": "Articulación que une o brazo co antebrazo.", "syn": ["articulación"]},
+      {"word": "escaravello", "def": "Insecto de corpo duro, ovalado e escuro.", "syn": ["insecto", "coleóptero"]},
+      {"word": "vagalume", "def": "Insecto que emite unha luz verdosa pola noite.", "syn": ["lucecú", "pirilampo"]},
+      {"word": "covarde", "def": "Que non ten valor para enfrontarse ao perigo.", "syn": ["medoñento", "temeroso"]},
+      {"word": "envexa", "def": "Desgusto ou tristeza que se sente polo ben alleo.", "syn": ["cobiza", "celos"]},
+      {"word": "bágoa", "def": "Pinga de líquido que sae dos ollos ao chorar.", "syn": ["lágrima", "pinga"]},
+      {"word": "verán", "def": "Estación do ano máis calorosa, entre a primavera e o outono.", "syn": ["estío"]},
+      {"word": "bicar", "def": "Tocar cos beizos en sinal de cariño.", "syn": ["beixar"]},
+      {"word": "beizo", "def": "Cada unha das dúas partes carnosas que rodean a boca.", "syn": ["labio", "morro"]},
+      {"word": "vexetal", "def": "Ser vivo que se alimenta por fotosíntese; planta.", "syn": ["planta", "verdura"]},
+      {"word": "avelá", "def": "Froito da abeleira, de casca dura e semente comestible.", "syn": ["froito seco"]},
+      {"word": "vivenda", "def": "Lugar onde vive unha persoa ou unha familia.", "syn": ["casa", "fogar"]},
+      {"word": "haber", "def": "Verbo auxiliar que forma os tempos compostos; existir.", "syn": ["existir", "acontecer"]},
+      {"word": "beber", "def": "Inxerir un líquido.", "syn": ["tomar", "inxerir"]},
+      {"word": "escribir", "def": "Representar palabras ou ideas con letras ou outros signos.", "syn": ["redactar", "anotar"]},
+      {"word": "absorber", "def": "Atraer e reter un líquido ou unha substancia dentro de si.", "syn": ["empapar", "chuchar"]},
+      {"word": "absolver", "def": "Declarar a alguén libre de culpa ou dunha obriga.", "syn": ["perdoar", "exculpar"]},
+      {"word": "obvio", "def": "Que se ve ou se entende moi facilmente.", "syn": ["evidente", "claro"]},
+      {"word": "evitar", "def": "Impedir que suceda algo ou apartarse del.", "syn": ["previr", "esquivar"]},
+      {"word": "servir", "def": "Ser útil para algo; poñer comida ou bebida a alguén.", "syn": ["valer", "atender"]},
+      {"word": "bóveda", "def": "Teito curvo que cobre o espazo entre muros ou piares.", "syn": ["arco", "cúpula"]},
+      {"word": "berrar", "def": "Falar moi alto ou dar gritos.", "syn": ["gritar", "vociferar"]},
+      {"word": "trebón", "def": "Tempestade con tronos e lóstregos.", "syn": ["tormenta", "temporal"]},
+      {"word": "cabalo", "def": "Mamífero grande e veloz que se usa para montar e para tirar de carros.", "syn": ["equino", "corcel"]},
+      {"word": "vagar", "def": "Andar dun lado para outro sen rumbo fixo.", "syn": ["deambular", "errar"]},
+      {"word": "valado", "def": "Muro baixo de pedra ou sebe que pecha unha finca.", "syn": ["muro", "cerca"]},
+      {"word": "avestruz", "def": "Ave corredora moi grande que non pode voar.", "syn": ["ave"]},
+      {"word": "bulir", "def": "Moverse, axitarse; non estar quieto.", "syn": ["moverse", "axitarse"]},
+      {"word": "lavabo", "def": "Pía para lavar as mans e a cara.", "syn": ["pía", "baño"]},
+      {"word": "devolver", "def": "Restituír algo a quen o tiña antes.", "syn": ["restituír", "retornar"]},
+      {"word": "subvención", "def": "Axuda económica que se concede para facer algo.", "syn": ["axuda", "subsidio"]},
+      {"word": "biblioteca", "def": "Lugar onde se gardan libros ordenados para lelos ou consultalos.", "syn": ["arquivo", "mediateca"]},
+      {"word": "bambán", "def": "Asento colgado de dúas cordas que serve para abanear.", "syn": ["randeeira", "balancín"]},
+      {"word": "bébedo", "def": "Que bebeu alcol en exceso.", "syn": ["borracho", "ebrio"]},
+      {"word": "abrigo", "def": "Peza de roupa que se pon enriba das demais para protexerse do frío; lugar protexido.", "syn": ["chaquetón", "refuxio"]},
+      {"word": "abraiar", "def": "Causar moita admiración ou sorpresa.", "syn": ["asombrar", "sorprender"]},
+      {"word": "avanzar", "def": "Ir cara adiante.", "syn": ["progresar", "adiantar"]},
+      {"word": "avaliación", "def": "Valoración do rendemento ou dos coñecementos de alguén.", "syn": ["valoración", "cualificación"]},
+      {"word": "avisar", "def": "Dar noticia de algo a alguén.", "syn": ["advertir", "informar"]},
+      {"word": "varanda", "def": "Peitoril dun balcón ou dunha escaleira.", "syn": ["balaustrada", "pasamán"]},
+      {"word": "bocexar", "def": "Abrir a boca sen querer por sono ou aburrimento.", "syn": ["abrir a boca"]},
+      {"word": "aburrimento", "def": "Cansazo ou fastío que produce algo que non interesa.", "syn": ["tedio", "fastío"]},
+      {"word": "labarada", "def": "Chama grande e viva.", "syn": ["chama", "lapa"]},
+      {"word": "vagabundo", "def": "Persoa sen fogar que vai dun lugar a outro.", "syn": ["errante", "vagamundo"]},
+      {"word": "ribeira", "def": "Beira dun río ou do mar.", "syn": ["beira", "marxe"]},
+      {"word": "cobizar", "def": "Desexar con ansia algo alleo.", "syn": ["ansiar", "envexar"]},
+      {"word": "vulto", "def": "Corpo ou figura que non se distingue ben; tamén, volume dunha cousa.", "syn": ["silueta", "volume"]},
+      {"word": "vinganza", "def": "Dano que se fai a alguén como resposta a unha ofensa.", "syn": ["desquite", "represalia"]},
+      {"word": "bandullo", "def": "Ventre, barriga.", "syn": ["barriga", "ventre"]}
+    ],
+    "h / sen h / f": [
+      {"word": "hoxe", "def": "No día presente; nesta época.", "syn": ["agora", "actualmente"]},
+      {"word": "home", "def": "Ser humano de sexo masculino; tamén, persoa en xeral.", "syn": ["varón", "persoa"]},
+      {"word": "herba", "def": "Planta pequena de talo tenro.", "syn": ["pasto", "céspede"]},
+      {"word": "hedra", "def": "Planta trepadora de follas sempre verdes.", "syn": ["trepadeira"]},
+      {"word": "hai", "def": "Forma do verbo haber que indica que algo existe.", "syn": ["existe", "atópase"]},
+      {"word": "horta", "def": "Terreo onde se cultivan verduras e legumes.", "syn": ["eido", "leira"]},
+      {"word": "hórreo", "def": "Construción elevada de pedra ou madeira para gardar e secar o gran.", "syn": ["canastro", "cabaceiro"]},
+      {"word": "hucha", "def": "Recipiente cunha fenda para gardar cartos.", "syn": ["peto", "mealleira"]},
+      {"word": "harmonía", "def": "Combinación agradable e equilibrada de sons, cores ou elementos.", "syn": ["equilibrio", "concordia"]},
+      {"word": "herdanza", "def": "Bens que se reciben de alguén cando morre.", "syn": ["legado", "patrimonio"]},
+      {"word": "herdar", "def": "Recibir os bens dunha persoa que morreu; tamén, recibir trazos dos pais.", "syn": ["recibir", "suceder"]},
+      {"word": "humidade", "def": "Auga que impregna un corpo ou que está presente no aire.", "syn": ["vapor"]},
+      {"word": "irmán", "def": "Persoa que ten os mesmos pais ca outra.", "syn": ["mano", "parente"]},
+      {"word": "irmandade", "def": "Relación de afecto e solidariedade entre persoas; asociación.", "syn": ["fraternidade", "confraría"]},
+      {"word": "oco", "def": "Baleiro por dentro.", "syn": ["baleiro", "cavidade"]},
+      {"word": "ovo", "def": "Corpo ovalado que poñen as aves e outros animais, do que nacen as crías.", "syn": ["embrión"]},
+      {"word": "ombro", "def": "Parte superior e lateral do tronco, onde se une o brazo.", "syn": ["articulación"]},
+      {"word": "orfo", "def": "Que perdeu o pai, a nai ou os dous.", "syn": ["desamparado"]},
+      {"word": "ermida", "def": "Igrexa pequena, xeralmente afastada da poboación.", "syn": ["capela", "santuario"]},
+      {"word": "inchar", "def": "Aumentar de volume.", "syn": ["avultar", "dilatar"]},
+      {"word": "aí", "def": "Nese lugar, preto da persoa á que se fala.", "syn": ["alí", "acolá"]},
+      {"word": "cenoria", "def": "Raíz alaranxada, longa e comestible.", "syn": ["verdura", "hortaliza"]},
+      {"word": "facer", "def": "Producir, fabricar ou realizar algo.", "syn": ["realizar", "fabricar"]},
+      {"word": "fame", "def": "Gana e necesidade de comer.", "syn": ["apetito", "gana"]},
+      {"word": "fermoso", "def": "Moi bonito.", "syn": ["belo", "lindo"]},
+      {"word": "fígado", "def": "Órgano grande do abdome que produce a bile.", "syn": ["víscera"]},
+      {"word": "folla", "def": "Parte verde e plana das plantas; lámina de papel.", "syn": ["follaxe", "páxina"]},
+      {"word": "formiga", "def": "Insecto pequeno que vive en colonias moi organizadas.", "syn": ["insecto"]},
+      {"word": "forno", "def": "Espazo pechado onde se cocen ou se quentan alimentos ou outros materiais.", "syn": ["fornalla"]},
+      {"word": "fume", "def": "Gas escuro que se desprende ao queimar algo.", "syn": ["fumareda", "vapor"]},
+      {"word": "fungo", "def": "Ser vivo sen clorofila, como o cogomelo ou o mofo.", "syn": ["cogomelo", "mofo"]},
+      {"word": "fouce", "def": "Ferramenta de folla curva que serve para segar.", "syn": ["gadaña", "fouciño"]},
+      {"word": "foguete", "def": "Artefacto que sobe polo aire e estoupa; tamén, nave espacial.", "syn": ["petardo", "nave"]},
+      {"word": "mofo", "def": "Capa de fungos que aparece na materia orgánica que se descompón.", "syn": ["balor", "fungo"]},
+      {"word": "refén", "def": "Persoa retida por alguén para conseguir algo a cambio.", "syn": ["secuestrado", "prisioneiro"]},
+      {"word": "ferver", "def": "Bulir un líquido por efecto da calor.", "syn": ["cocer", "bulir"]},
+      {"word": "ferro", "def": "Metal duro, de cor gris, moi utilizado na industria.", "syn": ["metal"]},
+      {"word": "furar", "def": "Facer buratos nalgunha cousa.", "syn": ["perforar", "toradar"]},
+      {"word": "historia", "def": "Ciencia que estuda o pasado da humanidade; relato.", "syn": ["crónica", "relato"]},
+      {"word": "hospital", "def": "Centro onde se atende e se cura a persoas doentes.", "syn": ["clínica", "sanatorio"]},
+      {"word": "hábito", "def": "Costume adquirido pola repetición.", "syn": ["costume", "rutina"]},
+      {"word": "habitación", "def": "Cada unha das pezas dunha casa.", "syn": ["cuarto", "alcoba"]},
+      {"word": "horizonte", "def": "Liña na que parece que o ceo se xunta coa terra ou co mar.", "syn": ["confín", "perspectiva"]},
+      {"word": "humilde", "def": "Que non presume dos seus méritos.", "syn": ["modesto", "sinxelo"]},
+      {"word": "hexágono", "def": "Polígono de seis lados.", "syn": ["polígono"]},
+      {"word": "hipótese", "def": "Suposición que se fai para explicar algo.", "syn": ["suposición", "conxectura"]},
+      {"word": "heroe", "def": "Persoa admirada polas súas fazañas ou polas súas virtudes.", "syn": ["valente", "ídolo"]},
+      {"word": "helicóptero", "def": "Aeronave que se sostén e se move grazas a unhas hélices horizontais.", "syn": ["aeronave"]},
+      {"word": "prohibir", "def": "Non permitir algo.", "syn": ["vetar", "impedir"]},
+      {"word": "vehículo", "def": "Medio de transporte de persoas ou de cousas.", "syn": ["coche", "transporte"]},
+      {"word": "exhibición", "def": "Mostra pública de algo.", "syn": ["exposición", "demostración"]},
+      {"word": "deshonra", "def": "Perda da honra ou da boa reputación.", "syn": ["vergonza", "descrédito"]},
+      {"word": "inhumano", "def": "Cruel, sen compaixón.", "syn": ["cruel", "desalmado"]},
+      {"word": "hemorraxia", "def": "Saída abundante de sangue.", "syn": ["sangrado"]},
+      {"word": "hemisferio", "def": "Cada unha das dúas metades da esfera terrestre ou do cerebro.", "syn": ["metade"]},
+      {"word": "hipopótamo", "def": "Mamífero africano moi grande que vive nos ríos.", "syn": ["paquiderme"]},
+      {"word": "himno", "def": "Composición musical que identifica un país, unha rexión ou unha institución.", "syn": ["canto", "cántico"]},
+      {"word": "hostil", "def": "Contrario ou inimigo.", "syn": ["agresivo", "adverso"]},
+      {"word": "hortelán", "def": "Persoa que cultiva unha horta.", "syn": ["labrego", "horticultor"]},
+      {"word": "humor", "def": "Capacidade de facer rir ou de ver o lado cómico das cousas; estado de ánimo.", "syn": ["graza", "talante"]},
+      {"word": "rehabilitación", "def": "Recuperación dunha función do corpo ou dun edificio.", "syn": ["recuperación", "restauración"]}
+    ],
+    "x (non g nin j)": [
+      {"word": "xente", "def": "Conxunto de persoas.", "syn": ["persoas", "público"]},
+      {"word": "xeito", "def": "Modo ou maneira de facer algo; habilidade.", "syn": ["maneira", "habilidade"]},
+      {"word": "xogo", "def": "Actividade que se fai para divertirse, seguindo unhas regras.", "syn": ["entretemento", "partida"]},
+      {"word": "xoven", "def": "Que ten pouca idade.", "syn": ["mozo", "rapaz"]},
+      {"word": "xuventude", "def": "Etapa da vida entre a infancia e a idade adulta.", "syn": ["mocidade", "adolescencia"]},
+      {"word": "xaneiro", "def": "Primeiro mes do ano.", "syn": ["mes"]},
+      {"word": "xuño", "def": "Sexto mes do ano.", "syn": ["mes"]},
+      {"word": "xullo", "def": "Sétimo mes do ano.", "syn": ["mes"]},
+      {"word": "xardín", "def": "Terreo onde se cultivan plantas e flores de adorno.", "syn": ["parque", "vergel"]},
+      {"word": "xeografía", "def": "Ciencia que estuda e describe a Terra.", "syn": ["cartografía"]},
+      {"word": "xeometría", "def": "Parte das matemáticas que estuda as figuras no espazo.", "syn": ["matemáticas"]},
+      {"word": "xenial", "def": "Moi bo, extraordinario.", "syn": ["estupendo", "magnífico"]},
+      {"word": "xeneral", "def": "Común a todos ou á maioría; tamén, militar de alta graduación.", "syn": ["global", "universal"]},
+      {"word": "xénero", "def": "Conxunto de seres ou cousas con caracteres comúns; clase.", "syn": ["clase", "tipo"]},
+      {"word": "xeración", "def": "Conxunto de persoas que naceron por volta das mesmas datas; acción de xerar.", "syn": ["quinta", "creación"]},
+      {"word": "xirafa", "def": "Mamífero africano de pescozo moi longo.", "syn": ["rumiante"]},
+      {"word": "xigante", "def": "De tamaño moito maior do normal.", "syn": ["enorme", "colosal"]},
+      {"word": "ximnasio", "def": "Local preparado para facer exercicio físico.", "syn": ["polideportivo"]},
+      {"word": "laranxa", "def": "Froito redondo, de cor alaranxada e sabor doce e ácido.", "syn": ["cítrico"]},
+      {"word": "viaxe", "def": "Desprazamento dun lugar a outro, xeralmente distante.", "syn": ["traxecto", "percorrido"]},
+      {"word": "garaxe", "def": "Lugar onde se gardan os vehículos.", "syn": ["cocheira", "aparcadoiro"]},
+      {"word": "paisaxe", "def": "Extensión de terreo que se ve desde un lugar.", "syn": ["panorama", "vista"]},
+      {"word": "mensaxe", "def": "Noticia ou comunicación que se envía a alguén.", "syn": ["aviso", "recado"]},
+      {"word": "personaxe", "def": "Cada un dos seres que interveñen nunha obra literaria ou nun filme.", "syn": ["figura", "protagonista"]},
+      {"word": "linguaxe", "def": "Capacidade humana de comunicarse por medio de signos.", "syn": ["fala", "idioma"]},
+      {"word": "homenaxe", "def": "Acto en honra de alguén.", "syn": ["tributo", "recoñecemento"]},
+      {"word": "relixión", "def": "Conxunto de crenzas e prácticas sobre a divindade.", "syn": ["fe", "crenza"]},
+      {"word": "intelixente", "def": "Que ten capacidade para entender e resolver problemas.", "syn": ["listo", "espilido"]},
+      {"word": "enerxía", "def": "Capacidade para realizar un traballo ou unha acción; forza.", "syn": ["forza", "vigor"]},
+      {"word": "urxente", "def": "Que hai que facer ou resolver con rapidez.", "syn": ["inaprazable", "apremante"]},
+      {"word": "rexión", "def": "Parte dun territorio con características propias.", "syn": ["zona", "comarca"]},
+      {"word": "colexio", "def": "Centro de ensino.", "syn": ["escola", "centro"]},
+      {"word": "traxe", "def": "Vestido completo dunha persoa.", "syn": ["vestimenta", "indumentaria"]},
+      {"word": "xoia", "def": "Obxecto de adorno feito de metal precioso ou de pedras finas.", "syn": ["alfaia", "tesouro"]},
+      {"word": "xuíz", "def": "Persoa que ten autoridade para xulgar e sentenciar.", "syn": ["maxistrado", "árbitro"]},
+      {"word": "xustiza", "def": "Virtude que consiste en dar a cada un o que lle corresponde.", "syn": ["equidade", "dereito"]},
+      {"word": "xeado", "def": "Doce conxelado feito de leite, froitas ou outros ingredientes.", "syn": ["sorbete"]},
+      {"word": "xeo", "def": "Auga solidificada polo frío.", "syn": ["xeada", "carambelo"]},
+      {"word": "xesto", "def": "Movemento da cara ou das mans que expresa algo.", "syn": ["aceno", "expresión"]},
+      {"word": "xordo", "def": "Que non oe ou que oe mal.", "syn": ["surdo"]},
+      {"word": "xabón", "def": "Produto que se usa para lavar.", "syn": ["deterxente"]},
+      {"word": "xamón", "def": "Perna traseira do porco, curada ou cocida.", "syn": ["pernil"]},
+      {"word": "xantar", "def": "Comida do mediodía; tamén, comer a esa hora.", "syn": ["comida"]},
+      {"word": "xarope", "def": "Bebida espesa e doce, ás veces medicinal.", "syn": ["menciña", "almíbar"]},
+      {"word": "xefe", "def": "Persoa que manda ou dirixe un grupo.", "syn": ["director", "patrón"]},
+      {"word": "xinete", "def": "Persoa que monta a cabalo.", "syn": ["cabaleiro"]},
+      {"word": "xiz", "def": "Barra de material branco que serve para escribir no encerado.", "syn": ["tiza"]},
+      {"word": "xuntos", "def": "Unidos ou próximos uns doutros.", "syn": ["unidos", "reunidos"]},
+      {"word": "oxíxeno", "def": "Gas presente no aire que é necesario para respirar.", "syn": ["gas", "aire"]},
+      {"word": "imaxe", "def": "Figura ou representación de algo.", "syn": ["figura", "retrato"]},
+      {"word": "imaxinación", "def": "Capacidade de representar na mente cousas reais ou inventadas.", "syn": ["fantasía", "inventiva"]},
+      {"word": "orixe", "def": "Principio ou causa de algo.", "syn": ["comezo", "procedencia"]},
+      {"word": "máxico", "def": "Relativo á maxia; marabilloso.", "syn": ["marabilloso", "fantástico"]},
+      {"word": "lóxico", "def": "Que segue as regras da razón.", "syn": ["razoable", "coherente"]},
+      {"word": "anxo", "def": "Ser espiritual que, segundo algunhas relixións, serve de mensaxeiro de Deus.", "syn": ["querubín", "serafín"]},
+      {"word": "cirurxián", "def": "Médico especialista en facer operacións.", "syn": ["médico", "operador"]},
+      {"word": "dixestión", "def": "Proceso polo que o organismo transforma os alimentos.", "syn": ["asimilación"]},
+      {"word": "suxeito", "def": "Persoa indeterminada; en gramática, función de quen realiza ou sofre a acción.", "syn": ["individuo", "persoa"]},
+      {"word": "obxecto", "def": "Cousa material; tamén, finalidade.", "syn": ["cousa", "obxectivo"]},
+      {"word": "proxecto", "def": "Plan para realizar algo.", "syn": ["plan", "programa"]},
+      {"word": "adxectivo", "def": "Clase de palabra que acompaña ao substantivo e indica calidades.", "syn": ["cualificativo"]},
+      {"word": "traxedia", "def": "Obra dramática de final triste; suceso moi desgraciado.", "syn": ["drama", "desgraza"]},
+      {"word": "vertixe", "def": "Sensación de que todo xira ou de que imos caer.", "syn": ["mareo", "tontura"]}
+    ],
+    "x / s": [
+      {"word": "texto", "def": "Conxunto de palabras que forman un escrito.", "syn": ["escrito", "documento"]},
+      {"word": "contexto", "def": "Conxunto de circunstancias que rodean un feito.", "syn": ["contorno", "situación"]},
+      {"word": "exame", "def": "Proba para comprobar os coñecementos de alguén.", "syn": ["proba", "control"]},
+      {"word": "éxito", "def": "Bo resultado de algo.", "syn": ["triunfo", "logro"]},
+      {"word": "exemplo", "def": "Caso ou feito que serve para ilustrar algo.", "syn": ["mostra", "modelo"]},
+      {"word": "exacto", "def": "Preciso, sen erro.", "syn": ["preciso", "xusto"]},
+      {"word": "expresión", "def": "Palabra ou xesto co que se manifesta algo.", "syn": ["manifestación", "frase"]},
+      {"word": "explicar", "def": "Dar a coñecer a causa ou o sentido de algo.", "syn": ["aclarar", "expoñer"]},
+      {"word": "explosión", "def": "Rotura violenta de algo cun gran estrondo.", "syn": ["estoupido", "detonación"]},
+      {"word": "exterior", "def": "Que está fóra.", "syn": ["externo", "superficial"]},
+      {"word": "extremo", "def": "Parte final de algo; tamén, moi intenso.", "syn": ["remate", "límite"]},
+      {"word": "extraordinario", "def": "Fóra do común.", "syn": ["excepcional", "insólito"]},
+      {"word": "excepto", "def": "Agás, fóra de.", "syn": ["agás", "salvo"]},
+      {"word": "excelente", "def": "Moi bo.", "syn": ["magnífico", "estupendo"]},
+      {"word": "excursión", "def": "Saída ou viaxe curta por diversión ou para aprender.", "syn": ["saída", "paseo"]},
+      {"word": "exipcio", "def": "De Exipto.", "syn": ["faraónico"]},
+      {"word": "máximo", "def": "O maior posible.", "syn": ["supremo", "límite"]},
+      {"word": "taxi", "def": "Coche de aluguer con condutor.", "syn": ["coche"]},
+      {"word": "tóxico", "def": "Que é velenoso ou prexudicial.", "syn": ["velenoso", "nocivo"]},
+      {"word": "saxofón", "def": "Instrumento musical de vento, metálico.", "syn": ["saxo"]},
+      {"word": "auxiliar", "def": "Que axuda; persoa que axuda a outra.", "syn": ["axudante", "asistente"]},
+      {"word": "anexo", "def": "Unido a outra cousa; documento que se xunta a outro.", "syn": ["engadido", "apéndice"]},
+      {"word": "conexión", "def": "Unión ou relación entre dúas ou máis cousas.", "syn": ["enlace", "unión"]},
+      {"word": "reflexión", "def": "Acción de pensar con atención sobre algo.", "syn": ["meditación", "consideración"]},
+      {"word": "flexible", "def": "Que se pode dobrar sen romper; que se adapta.", "syn": ["elástico", "adaptable"]},
+      {"word": "sintaxe", "def": "Parte da gramática que estuda como se combinan as palabras na oración.", "syn": ["gramática"]},
+      {"word": "próximo", "def": "Que está preto; seguinte.", "syn": ["cercano", "seguinte"]},
+      {"word": "expoñer", "def": "Presentar algo para que se vexa; explicar.", "syn": ["mostrar", "explicar"]},
+      {"word": "experiencia", "def": "Coñecemento que se adquire coa práctica.", "syn": ["práctica", "vivencia"]},
+      {"word": "experimento", "def": "Proba que se fai para comprobar algo.", "syn": ["ensaio", "proba"]},
+      {"word": "explorar", "def": "Recorrer un lugar para coñecelo.", "syn": ["investigar", "percorrer"]},
+      {"word": "expulsar", "def": "Botar a alguén ou algo fóra dun lugar.", "syn": ["botar", "desaloxar"]},
+      {"word": "extinguir", "def": "Apagar o lume; facer que algo desapareza.", "syn": ["apagar", "eliminar"]},
+      {"word": "extraer", "def": "Sacar algo do lugar onde está.", "syn": ["sacar", "arrincar"]},
+      {"word": "extensión", "def": "Superficie que ocupa algo; acción de estender.", "syn": ["superficie", "amplitude"]},
+      {"word": "exótico", "def": "Estranxeiro, sobre todo de lugares afastados; raro.", "syn": ["estraño", "insólito"]},
+      {"word": "exixente", "def": "Que pide moito aos demais.", "syn": ["rigoroso", "estrito"]},
+      {"word": "existir", "def": "Ter ser real.", "syn": ["haber", "vivir"]},
+      {"word": "éxodo", "def": "Saída masiva dun pobo ou dun grupo de persoas.", "syn": ["emigración", "migración"]},
+      {"word": "oxidar", "def": "Formar ferruxe nun metal.", "syn": ["enferruxar", "corroer"]},
+      {"word": "boxeo", "def": "Deporte no que dúas persoas loitan coas mans protexidas por luvas.", "syn": ["puxilato"]},
+      {"word": "léxico", "def": "Conxunto de palabras dunha lingua.", "syn": ["vocabulario"]},
+      {"word": "sexto", "def": "Que ocupa o lugar número seis.", "syn": ["ordinal"]},
+      {"word": "excepción", "def": "Algo que se aparta da regra xeral.", "syn": ["exclusión", "anomalía"]},
+      {"word": "exceso", "def": "O que pasa da medida ou do normal.", "syn": ["abuso", "sobra"]},
+      {"word": "exhausto", "def": "Moi canso, sen forzas.", "syn": ["esgotado", "rendido"]},
+      {"word": "exportar", "def": "Vender produtos a outro país.", "syn": ["vender"]},
+      {"word": "expediente", "def": "Conxunto de documentos sobre un asunto ou unha persoa.", "syn": ["dosier", "informe"]},
+      {"word": "estender", "def": "Facer que algo ocupe máis espazo; despregar.", "syn": ["ampliar", "despregar"]},
+      {"word": "estranxeiro", "def": "Doutro país.", "syn": ["foráneo", "forasteiro"]},
+      {"word": "estraño", "def": "Raro, pouco común.", "syn": ["raro", "insólito"]},
+      {"word": "espontáneo", "def": "Que se fai de modo natural, sen preparalo.", "syn": ["natural", "instintivo"]},
+      {"word": "escusa", "def": "Razón que se dá para xustificar algo.", "syn": ["pretexto", "desculpa"]},
+      {"word": "estrutura", "def": "Disposición e orde das partes dun todo.", "syn": ["armazón", "organización"]},
+      {"word": "esaxerar", "def": "Presentar algo como máis grande ou importante do que é.", "syn": ["exceder", "inchar"]},
+      {"word": "espremer", "def": "Apertar algo para sacarlle o zume.", "syn": ["apertar"]},
+      {"word": "escavar", "def": "Facer buratos ou fochas na terra.", "syn": ["cavar", "furar"]},
+      {"word": "espectador", "def": "Persoa que asiste a un espectáculo.", "syn": ["público", "asistente"]},
+      {"word": "espléndido", "def": "Magnífico; tamén, xeneroso.", "syn": ["magnífico", "xeneroso"]},
+      {"word": "estremecer", "def": "Tremer de medo ou de emoción.", "syn": ["tremer", "arrepiarse"]},
+      {"word": "estratexia", "def": "Plan para conseguir un obxectivo.", "syn": ["táctica", "plan"]}
+    ],
+    "ñ / nh / n": [
+      {"word": "unha", "def": "Forma feminina do artigo indefinido e do numeral un.", "syn": ["algunha"]},
+      {"word": "algunha", "def": "Forma feminina de algún: unha persoa ou cousa indeterminada.", "syn": ["unha"]},
+      {"word": "ningunha", "def": "Forma feminina de ningún: nin unha soa.", "syn": ["nada"]},
+      {"word": "nunha", "def": "Contracción da preposición en e o artigo unha.", "syn": []},
+      {"word": "dunha", "def": "Contracción da preposición de e o artigo unha.", "syn": []},
+      {"word": "cunha", "def": "Contracción da preposición con e o artigo unha.", "syn": []},
+      {"word": "camiño", "def": "Vía pola que se pasa dun lugar a outro.", "syn": ["vereda", "senda"]},
+      {"word": "camiñar", "def": "Andar dun lugar a outro.", "syn": ["andar", "pasear"]},
+      {"word": "viño", "def": "Bebida alcohólica que se fai co zume das uvas.", "syn": ["bebida"]},
+      {"word": "cociña", "def": "Peza da casa onde se preparan os alimentos.", "syn": ["fogón", "lareira"]},
+      {"word": "cociñeiro", "def": "Persoa que ten por oficio cociñar.", "syn": ["chef"]},
+      {"word": "mañá", "def": "Parte do día desde que amence ata o mediodía; tamén, o día seguinte a hoxe.", "syn": ["madrugada", "amencer"]},
+      {"word": "raíña", "def": "Muller que reina ou esposa do rei.", "syn": ["soberana", "monarca"]},
+      {"word": "sobriño", "def": "Fillo do irmán ou da irmá dunha persoa.", "syn": ["parente"]},
+      {"word": "gañar", "def": "Conseguir unha vitoria ou un beneficio.", "syn": ["vencer", "obter"]},
+      {"word": "ensinar", "def": "Facer que alguén aprenda algo; mostrar.", "syn": ["educar", "mostrar"]},
+      {"word": "dano", "def": "Prexuízo ou dor que se causa a alguén ou a algo.", "syn": ["mal", "prexuízo"]},
+      {"word": "pano", "def": "Peza de tecido.", "syn": ["tea"]},
+      {"word": "sono", "def": "Gana de durmir; estado de quen dorme.", "syn": ["somnolencia", "descanso"]},
+      {"word": "soño", "def": "Imaxes que se representan na mente mentres se dorme; desexo.", "syn": ["ensoño", "ilusión"]},
+      {"word": "montaña", "def": "Gran elevación natural do terreo.", "syn": ["monte", "serra"]},
+      {"word": "castaña", "def": "Froito do castiñeiro.", "syn": ["froito seco"]},
+      {"word": "araña", "def": "Animal de oito patas que tece teas.", "syn": ["arácnido"]},
+      {"word": "viña", "def": "Terreo plantado de videiras.", "syn": ["viñedo", "parral"]},
+      {"word": "piñeiro", "def": "Árbore de folla perenne en forma de agulla, que dá piñas.", "syn": ["conífera"]},
+      {"word": "piña", "def": "Froito do piñeiro; tamén, froito tropical.", "syn": ["ananás"]},
+      {"word": "liña", "def": "Trazo continuo; fila de palabras nun texto.", "syn": ["raia", "ringleira"]},
+      {"word": "galiña", "def": "Femia do galo.", "syn": ["ave"]},
+      {"word": "pequeno", "def": "De tamaño reducido.", "syn": ["miúdo", "cativo"]},
+      {"word": "cana", "def": "Talo longo e oco dalgunhas plantas; vara para pescar.", "syn": ["vara", "xunco"]},
+      {"word": "dono", "def": "Persoa que posúe algo.", "syn": ["propietario", "amo"]},
+      {"word": "señor", "def": "Home, especialmente adulto; tratamento de respecto.", "syn": ["cabaleiro", "amo"]},
+      {"word": "baño", "def": "Acción de bañarse; cuarto de aseo.", "syn": ["ducha", "aseo"]},
+      {"word": "bañeira", "def": "Recipiente grande no que se toma un baño.", "syn": ["tina"]},
+      {"word": "muíño", "def": "Máquina ou edificio onde se moe o gran.", "syn": ["aceña"]},
+      {"word": "rabaño", "def": "Grupo de animais domésticos, sobre todo ovellas.", "syn": ["fato", "manda"]},
+      {"word": "puño", "def": "Man pechada.", "syn": ["man"]},
+      {"word": "unlla", "def": "Lámina dura que cobre a punta dos dedos.", "syn": ["garra"]},
+      {"word": "outono", "def": "Estación do ano entre o verán e o inverno.", "syn": ["estación"]},
+      {"word": "pestana", "def": "Cada un dos pelos que hai no bordo das pálpebras.", "syn": ["pelo"]},
+      {"word": "compañeiro", "def": "Persoa que acompaña a outra ou que comparte con ela unha actividade.", "syn": ["colega", "camarada"]},
+      {"word": "compañía", "def": "Acción de acompañar; empresa.", "syn": ["presenza", "empresa"]},
+      {"word": "cuñado", "def": "Irmán do cónxuxe ou cónxuxe do irmán.", "syn": ["parente"]},
+      {"word": "engano", "def": "Falta de verdade no que se di ou se fai.", "syn": ["mentira", "trampa"]},
+      {"word": "tamaño", "def": "Grandeza ou dimensión dunha cousa.", "syn": ["dimensión", "medida"]},
+      {"word": "sardiña", "def": "Peixe pequeno de mar, de cor azulada.", "syn": ["peixe"]},
+      {"word": "fariña", "def": "Po que resulta de moer cereais.", "syn": ["po"]},
+      {"word": "mariño", "def": "Relativo ao mar; persoa que traballa nun barco.", "syn": ["marítimo", "mariñeiro"]},
+      {"word": "veciño", "def": "Persoa que vive no mesmo lugar ou preto doutra.", "syn": ["habitante", "residente"]},
+      {"word": "padriño", "def": "Home que presenta ou acompaña a alguén nun bautizo ou nunha voda.", "syn": ["protector"]},
+      {"word": "madriña", "def": "Muller que presenta ou acompaña a alguén nun bautizo ou nunha voda.", "syn": ["protectora"]},
+      {"word": "adiviñar", "def": "Descubrir algo por intuición ou por sorte.", "syn": ["acertar", "intuír"]},
+      {"word": "fociño", "def": "Parte saínte da cabeza dalgúns animais, onde están a boca e o nariz.", "syn": ["morro"]},
+      {"word": "golfiño", "def": "Mamífero mariño intelixente, de fociño alongado.", "syn": ["cetáceo"]},
+      {"word": "andoriña", "def": "Paxaro de ás longas e cola en forma de tesoira.", "syn": ["ave"]},
+      {"word": "testemuña", "def": "Persoa que presenciou un feito.", "syn": ["espectador", "presente"]},
+      {"word": "neno", "def": "Persoa de poucos anos.", "syn": ["cativo", "rapaz"]},
+      {"word": "alguén", "def": "Algunha persoa.", "syn": ["unha persoa"]},
+      {"word": "ninguén", "def": "Ningunha persoa.", "syn": []},
+      {"word": "leña", "def": "Madeira que se usa para facer lume.", "syn": ["madeira", "acendallas"]}
+    ],
+    "cc / c / ct / t": [
+      {"word": "acción", "def": "Efecto de facer algo.", "syn": ["acto", "actuación"]},
+      {"word": "lección", "def": "Parte dunha materia que se ensina dunha vez.", "syn": ["tema", "clase"]},
+      {"word": "dirección", "def": "Camiño ou rumbo; enderezo; equipo que dirixe.", "syn": ["rumbo", "enderezo"]},
+      {"word": "selección", "def": "Elección dunha ou varias persoas ou cousas entre outras.", "syn": ["escolla", "elección"]},
+      {"word": "colección", "def": "Conxunto ordenado de cousas da mesma clase.", "syn": ["serie", "repertorio"]},
+      {"word": "corrección", "def": "Acción de corrixir; calidade de correcto.", "syn": ["emenda", "rectificación"]},
+      {"word": "construción", "def": "Acción de construír; edificio.", "syn": ["edificación", "obra"]},
+      {"word": "instrución", "def": "Coñecementos adquiridos; norma ou indicación para facer algo.", "syn": ["indicación", "formación"]},
+      {"word": "destrución", "def": "Acción de destruír.", "syn": ["ruína", "devastación"]},
+      {"word": "introdución", "def": "Parte inicial dun texto; acción de introducir.", "syn": ["prólogo", "comezo"]},
+      {"word": "produción", "def": "Acción de producir; conxunto de cousas producidas.", "syn": ["fabricación", "elaboración"]},
+      {"word": "redución", "def": "Diminución de algo.", "syn": ["diminución", "rebaixa"]},
+      {"word": "tradución", "def": "Paso dun texto dunha lingua a outra.", "syn": ["versión", "interpretación"]},
+      {"word": "condución", "def": "Acción de conducir un vehículo.", "syn": ["manexo", "guía"]},
+      {"word": "contradición", "def": "Afirmación que se opón a outra.", "syn": ["oposición", "incoherencia"]},
+      {"word": "dicionario", "def": "Libro que recolle e explica as palabras dunha lingua.", "syn": ["léxico", "vocabulario"]},
+      {"word": "ficción", "def": "Cousa inventada ou imaxinada.", "syn": ["invención", "fantasía"]},
+      {"word": "atracción", "def": "Forza que atrae; espectáculo de feira.", "syn": ["atractivo", "espectáculo"]},
+      {"word": "infección", "def": "Entrada no organismo de xermes que causan unha enfermidade.", "syn": ["contaxio", "contaminación"]},
+      {"word": "perfección", "def": "Calidade do que non ten defectos.", "syn": ["excelencia", "plenitude"]},
+      {"word": "protección", "def": "Acción de protexer.", "syn": ["amparo", "defensa"]},
+      {"word": "proxección", "def": "Acción de proxectar unha imaxe nunha pantalla; plan.", "syn": ["exhibición", "plan"]},
+      {"word": "satisfacción", "def": "Sentimento de pracer ao conseguir algo.", "syn": ["contento", "ledicia"]},
+      {"word": "reacción", "def": "Resposta a un estímulo.", "syn": ["resposta", "efecto"]},
+      {"word": "elección", "def": "Acción de escoller; votación.", "syn": ["escolla", "votación"]},
+      {"word": "inxección", "def": "Introdución dun líquido no corpo cunha agulla.", "syn": ["vacina", "picada"]},
+      {"word": "extracción", "def": "Acción de extraer ou sacar algo.", "syn": ["saca", "obtención"]},
+      {"word": "distracción", "def": "Falta de atención; diversión.", "syn": ["despiste", "entretemento"]},
+      {"word": "sección", "def": "Cada unha das partes en que se divide algo.", "syn": ["parte", "división"]},
+      {"word": "ditado", "def": "Texto que unha persoa le en voz alta para que outra o escriba.", "syn": ["exercicio"]},
+      {"word": "ditadura", "def": "Goberno que exerce unha persoa ou un grupo sen límites legais.", "syn": ["tiranía", "autoritarismo"]},
+      {"word": "ditador", "def": "Persoa que goberna con poder absoluto.", "syn": ["tirano", "déspota"]},
+      {"word": "conflito", "def": "Enfrontamento ou problema de difícil solución.", "syn": ["loita", "problema"]},
+      {"word": "contacto", "def": "Relación entre dúas cousas que se tocan; relación entre persoas.", "syn": ["roce", "relación"]},
+      {"word": "perfecto", "def": "Que non ten defectos.", "syn": ["impecable", "ideal"]},
+      {"word": "efecto", "def": "Resultado dunha causa.", "syn": ["consecuencia", "resultado"]},
+      {"word": "aspecto", "def": "Aparencia de algo ou de alguén.", "syn": ["aparencia", "presenza"]},
+      {"word": "insecto", "def": "Animal invertebrado de seis patas, como a formiga ou a mosca.", "syn": ["bicho"]},
+      {"word": "produto", "def": "Cousa producida; resultado dunha multiplicación.", "syn": ["artigo", "resultado"]},
+      {"word": "conduta", "def": "Maneira de comportarse unha persoa.", "syn": ["comportamento", "proceder"]},
+      {"word": "condutor", "def": "Persoa que conduce un vehículo.", "syn": ["chofer", "piloto"]},
+      {"word": "tradutor", "def": "Persoa que traduce textos dunha lingua a outra.", "syn": ["intérprete"]},
+      {"word": "doutor", "def": "Médico; persoa que ten o grao máis alto da universidade.", "syn": ["médico", "facultativo"]},
+      {"word": "vitoria", "def": "Triunfo nunha loita ou nunha competición.", "syn": ["triunfo", "éxito"]},
+      {"word": "vítima", "def": "Persoa que sofre un dano.", "syn": ["damnificado", "afectado"]},
+      {"word": "práctica", "def": "Exercicio dunha actividade; destreza que se adquire con ela.", "syn": ["experiencia", "exercicio"]},
+      {"word": "sector", "def": "Parte dunha cousa ou dun conxunto.", "syn": ["zona", "ámbito"]},
+      {"word": "lector", "def": "Persoa que le.", "syn": []},
+      {"word": "carácter", "def": "Conxunto de trazos que definen a maneira de ser de alguén.", "syn": ["temperamento", "personalidade"]},
+      {"word": "actor", "def": "Home que interpreta un papel no teatro, no cine ou na televisión.", "syn": ["intérprete", "artista"]},
+      {"word": "actividade", "def": "Conxunto de tarefas ou accións.", "syn": ["tarefa", "labor"]},
+      {"word": "actual", "def": "Que existe ou sucede no momento presente.", "syn": ["presente", "moderno"]},
+      {"word": "conectar", "def": "Unir dúas ou máis cousas.", "syn": ["unir", "enlazar"]},
+      {"word": "afecto", "def": "Sentimento de cariño.", "syn": ["cariño", "agarimo"]},
+      {"word": "factura", "def": "Documento que indica o que hai que pagar por un servizo ou unha compra.", "syn": ["recibo", "conta"]},
+      {"word": "fractura", "def": "Rotura dun óso.", "syn": ["rotura", "fisura"]},
+      {"word": "accidente", "def": "Suceso imprevisto que causa danos.", "syn": ["percance", "sinistro"]},
+      {"word": "acceso", "def": "Entrada ou paso a un lugar.", "syn": ["entrada", "paso"]},
+      {"word": "eléctrico", "def": "Que funciona coa electricidade.", "syn": []},
+      {"word": "impacto", "def": "Choque dun obxecto contra outro; efecto forte.", "syn": ["choque", "repercusión"]},
+      {"word": "pacto", "def": "Acordo entre dúas ou máis partes.", "syn": ["acordo", "trato"]}
+    ]
+  };
+
+  // ---- histórico de palabras ya usadas (para no repetir hasta agotar el banco) ----
+  const USED_WORDS_KEY = 'bingoGalegoUsedWordsHistory_v1';
+
+  function loadUsedWords(){
+    try{
+      const raw = localStorage.getItem(USED_WORDS_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return (parsed && typeof parsed === 'object') ? parsed : {};
+    }catch(e){ return {}; }
+  }
+
+  function saveUsedWords(used){
+    try{ localStorage.setItem(USED_WORDS_KEY, JSON.stringify(used)); }catch(e){}
+  }
+
+  const DATA_BY_WORD = {};
+  Object.values(WORD_BANK).forEach(list=>{
+    list.forEach(item=>{ DATA_BY_WORD[item.word.toLowerCase()] = { def:item.def, syn:item.syn || [] }; });
+  });
+
+  function proposeTwelveWords(){
+    const cats = Object.keys(WORD_BANK); // 6 categorías × 2 palabras = 12
+    const used = loadUsedWords();
+    const chosen = [];
+    const usedCats = [];
+    let recycledCats = [];
+    cats.forEach(cat=>{
+      const fullBank = WORD_BANK[cat];
+      const usedList = used[cat] || [];
+      let available = fullBank.filter(item => !usedList.includes(item.word));
+      if(available.length < 2){
+        // se han usado ya todas las palabras nuevas de esta categoría: empieza un nuevo ciclo
+        used[cat] = [];
+        available = [...fullBank];
+        recycledCats.push(cat);
+      }
+      const pool = [...available];
+      for(let k=0;k<2;k++){
+        const idx = Math.floor(Math.random()*pool.length);
+        const picked = pool[idx];
+        chosen.push(picked);
+        pool.splice(idx,1);
+        used[cat] = used[cat] || [];
+        used[cat].push(picked.word);
+      }
+      usedCats.push(cat);
+    });
+    saveUsedWords(used);
+    // shuffle so the dictation order doesn't reveal the category pattern
+    for(let i=chosen.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [chosen[i],chosen[j]] = [chosen[j],chosen[i]];
+    }
+    return { words: chosen, cats: usedCats, recycled: recycledCats };
+  }
+
+  // ---------------- state ----------------
+  let words = [];
+  let pool = [];
+  let history = [];
+  let spinning = false;
+  let projectionMode = false;
+
+  // ---------------- tabs ----------------
+  const tabSetup = document.getElementById('tabSetup');
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(btn.classList.contains('hidden-tab')) return;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+btn.dataset.view).classList.add('active');
+    });
+  });
+
+  const projToggle = document.getElementById('projToggle');
+  const projToggleLabel = document.getElementById('projToggleLabel');
+  projToggle.addEventListener('click', ()=>{
+    projectionMode = !projectionMode;
+    projToggle.classList.toggle('on', projectionMode);
+    projToggleLabel.textContent = 'Modo proxección: ' + (projectionMode ? 'activado' : 'apagado');
+    tabSetup.classList.toggle('hidden-tab', projectionMode);
+    if(projectionMode && tabSetup.classList.contains('active')){
+      tabSetup.classList.remove('active');
+      document.getElementById('view-setup').classList.remove('active');
+      const rulesTab = document.querySelector('.tab-btn[data-view="rules"]');
+      rulesTab.classList.add('active');
+      document.getElementById('view-rules').classList.add('active');
+    }
+  });
+
+  // ---------------- setup view ----------------
+  const statusMsg = document.getElementById('statusMsg');
+  const wordBankPreview = document.getElementById('wordBankPreview');
+  const cardsPreview = document.getElementById('cardsPreview');
+  const suggestMeta = document.getElementById('suggestMeta');
+
+  function showStatus(msg, type){
+    statusMsg.textContent = msg;
+    statusMsg.className = 'status-msg show ' + type;
+  }
+
+  const WORDS_STORAGE_KEY = 'bingoGalegoWords_v1';
+
+  function saveWordsToStorage(){
+    try{ localStorage.setItem(WORDS_STORAGE_KEY, JSON.stringify(words)); }catch(e){}
+  }
+
+  function loadWordsFromStorage(){
+    try{
+      const raw = localStorage.getItem(WORDS_STORAGE_KEY);
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length>0) return parsed;
+    }catch(e){}
+    return null;
+  }
+
+  // ---------------- diccionario personal (se guarda en este navegador) ----------------
+  const CUSTOM_KEY = 'bingoGalegoPersonalDict_v1';
+  function loadCustom(){
+    try{ const r = localStorage.getItem(CUSTOM_KEY); if(r){ const o = JSON.parse(r); if(o && typeof o==='object') return o; } }catch(e){}
+    return {};
+  }
+  function saveCustom(o){ try{ localStorage.setItem(CUSTOM_KEY, JSON.stringify(o)); }catch(e){} }
+  function lookupMeaning(word){
+    const k = String(word).trim().toLowerCase();
+    const c = loadCustom();
+    if(c[k]) return { def:c[k].def||'', syn:(c[k].syn||[]).slice(), custom:true };
+    const m = DATA_BY_WORD[k];
+    return m ? { def:m.def, syn:m.syn.slice(), custom:false } : null;
+  }
+  function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  function setWords(list){
+    words = list.map((w,i)=>{
+      const word = (typeof w === 'string' ? w : w.word);
+      const own = lookupMeaning(word);
+      return {
+        n:i+1,
+        word: word,
+        def: own ? own.def : (typeof w === 'string' ? '' : w.def),
+        syn: own ? own.syn : (typeof w === 'string' ? [] : (w.syn || []))
+      };
+    });
+    showStatus(words.length+' palabras numeradas do 1 ao '+words.length+'. As tarxetas están listas e o sorteo xa pode xirar. Gardáronse neste navegador: ao volver abrir o arquivo aquí mesmo, seguirán cargadas.', 'ok');
+    renderWordBank();
+    renderCards();
+    resetGameState();
+    saveWordsToStorage();
+  }
+
+  document.getElementById('suggestBtn').addEventListener('click', ()=>{
+    const { words: proposed, cats, recycled } = proposeTwelveWords();
+    let meta = 'Dificultades cubertas: ' + cats.join(' · ');
+    if(recycled && recycled.length>0){
+      meta += ' ⚠️ Xa se usaron todas as palabras novas de: ' + recycled.join(', ') + '. Esa(s) categoría(s) comeza(n) un novo ciclo.';
+    }
+    suggestMeta.textContent = meta;
+    setWords(proposed);
+  });
+
+  document.getElementById('resetHistoryBtn').addEventListener('click', ()=>{
+    try{ localStorage.removeItem(USED_WORDS_KEY); }catch(e){}
+    showStatus('Histórico de palabras usadas reiniciado. A próxima vez que xeres, todas as palabras volven estar dispoñibles.', 'ok');
+  });
+
+  document.getElementById('includeMeanings').addEventListener('change', ()=>{
+    if(words.length>0){
+      renderCards();
+      updateStageButtons();
+    }
+  });
+
+  // ---------------- cambiar solo algunas palabras ----------------
+  function updateSwapBar(){
+    const bar = document.getElementById('swapBar');
+    const btn = document.getElementById('swapBtn');
+    if(!bar || !btn) return;
+    bar.style.display = words.length ? 'flex' : 'none';
+    const n = wordBankPreview.querySelectorAll('[data-pick]:checked').length;
+    btn.disabled = n === 0;
+    btn.textContent = n ? '↻ Cambiar '+(n>1?'as ':'a ')+n+' marcada'+(n>1?'s':'') : '↻ Cambiar as marcadas';
+  }
+  function categoryOf(word){
+    const k = String(word).trim().toLowerCase();
+    return Object.keys(WORD_BANK).find(c=>WORD_BANK[c].some(x=>x.word.toLowerCase()===k)) || null;
+  }
+  document.getElementById('swapBtn').addEventListener('click', ()=>{
+    const picked = Array.from(wordBankPreview.querySelectorAll('[data-pick]:checked')).map(cb=>parseInt(cb.dataset.pick));
+    if(!picked.length) return;
+    const used = loadUsedWords();
+    const cats = Object.keys(WORD_BANK);
+    const next = words.map(w=>({word:w.word, def:w.def, syn:w.syn}));
+    let k = 0;
+    picked.forEach(n=>{
+      const idx = n-1;
+      const cat = categoryOf(words[idx].word) || cats[Math.floor(Math.random()*cats.length)];
+      const inList = new Set(next.map(w=>w.word.toLowerCase()));
+      const usedList = used[cat] || [];
+      let pool = WORD_BANK[cat].filter(x=>!usedList.includes(x.word) && !inList.has(x.word.toLowerCase()));
+      if(!pool.length){
+        used[cat] = [];
+        pool = WORD_BANK[cat].filter(x=>!inList.has(x.word.toLowerCase()));
+      }
+      if(!pool.length) return;
+      const choice = pool[Math.floor(Math.random()*pool.length)];
+      used[cat] = used[cat] || [];
+      used[cat].push(choice.word);
+      next[idx] = {word:choice.word, def:choice.def, syn:choice.syn};
+      k++;
+    });
+    saveUsedWords(used);
+    setWords(next);
+    showStatus(k+' palabra'+(k!==1?'s':'')+' cambiada'+(k!==1?'s':'')+' por outra'+(k!==1?'s':'')+' da mesma dificultade. As demais mantéñense.', 'ok');
+  });
+
+  function meaningHtml(item){
+    if(!item.def) return 'Definición non dispoñible (palabra editada a man).';
+    const synHtml = (item.syn && item.syn.length) ? ' <span class="wb-syn">· Sinónimos: '+item.syn.join(', ')+'</span>' : '';
+    return item.def + synHtml;
+  }
+  function editFormHtml(item){
+    return '<div class="wb-edit" data-edit-n="'+item.n+'">'+
+      '<textarea class="we-def" rows="2" placeholder="Significado de «'+escHtml(item.word)+'»">'+escHtml(item.def||'')+'</textarea>'+
+      '<div class="we-row"><input class="we-s1" placeholder="Sinónimo 1" value="'+escHtml((item.syn||[])[0]||'')+'">'+
+      '<input class="we-s2" placeholder="Sinónimo 2" value="'+escHtml((item.syn||[])[1]||'')+'">'+
+      '<button type="button" class="we-save">Gardar</button><button type="button" class="we-cancel">Cancelar</button></div></div>';
+  }
+
+  function renderWordBank(){
+    wordBankPreview.innerHTML = words.map(item=>
+      '<div class="wb-row">'+
+        '<div class="wb-row-top"><b>'+item.n+'.</b><span class="wb-word" contenteditable="true" data-n="'+item.n+'">'+item.word+'</span>'+
+          '<label class="wb-pick"><input type="checkbox" data-pick="'+item.n+'"> cambiar</label></div>'+
+        '<div class="wb-meaning" data-meaning-n="'+item.n+'">'+meaningHtml(item)+
+          ' <button type="button" class="wb-editbtn" data-editbtn="'+item.n+'">'+(item.def?'✎ Editar':'＋ Engadir significado')+'</button></div>'+
+      '</div>'
+    ).join('');
+    updateSwapBar();
+    wordBankPreview.querySelectorAll('[data-pick]').forEach(cb=>cb.addEventListener('change', updateSwapBar));
+    wordBankPreview.querySelectorAll('.wb-editbtn').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        const n = parseInt(b.dataset.editbtn);
+        const entry = words.find(w=>w.n===n);
+        const box = wordBankPreview.querySelector('[data-meaning-n="'+n+'"]');
+        if(!entry || !box) return;
+        box.innerHTML = editFormHtml(entry);
+        box.querySelector('.we-def').focus();
+        box.querySelector('.we-cancel').addEventListener('click', renderWordBank);
+        box.querySelector('.we-save').addEventListener('click', ()=>{
+          const def = box.querySelector('.we-def').value.trim();
+          const syn = [box.querySelector('.we-s1').value.trim(), box.querySelector('.we-s2').value.trim()].filter(Boolean);
+          if(!def){ box.querySelector('.we-def').focus(); return; }
+          const c = loadCustom();
+          c[entry.word.trim().toLowerCase()] = { def:def, syn:syn };
+          saveCustom(c);
+          entry.def = def; entry.syn = syn;
+          renderWordBank(); renderCards(); saveWordsToStorage();
+          showStatus('Significado de «'+entry.word+'» gardado no teu dicionario persoal: sairá sempre que escribas esa palabra.', 'ok');
+        });
+      });
+    });
+    wordBankPreview.querySelectorAll('.wb-word').forEach(el=>{
+      el.addEventListener('blur', ()=>{
+        const n = parseInt(el.dataset.n);
+        const newVal = el.textContent.trim();
+        const entry = words.find(w=>w.n===n);
+        if(entry && newVal){
+          entry.word = newVal;
+          const match = lookupMeaning(newVal);
+          entry.def = match ? match.def : '';
+          entry.syn = match ? match.syn : [];
+          renderWordBank();
+          renderCards();
+          saveWordsToStorage();
+        } else if(entry){
+          el.textContent = entry.word;
+        }
+      });
+      el.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter'){ e.preventDefault(); el.blur(); }
+      });
+    });
+  }
+
+  function buildCardHTML(){
+    const half = Math.ceil(words.length/2);
+    const colA = words.slice(0, half);
+    const colB = words.slice(half);
+    const rowsHTML = (col)=> col.map(item=>
+      '<div class="ruled-line"><span class="n">'+item.n+'.</span><span class="write-space">&nbsp;</span></div>'
+    ).join('');
+
+    const pickRows = Array.from({length:6}).map(()=>`
+      <div class="pick-row"><span class="pick-num">N.º</span><span class="pick-line"></span></div>`).join('');
+
+    return `
+      <div class="bingo-card">
+        <h3>BINGO ORTOGRÁFICO</h3>
+        <div class="card-name"><span>Nome:</span><span class="line"></span></div>
+        <div class="card-cols">
+          <div class="word-list">
+            <div class="col-title">ESCRIBE O QUE DITA O PROFESOR</div>
+            ${rowsHTML(colA)}
+            ${rowsHTML(colB)}
+          </div>
+          <div>
+            <div class="pick-title">AS TÚAS 6 PALABRAS (AS QUE CRES QUE ESTÁN BEN)</div>
+            <div class="pick-rows">${pickRows}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function buildResultSheet(){
+    const includeDefs = document.getElementById('includeMeanings').checked;
+    const items = words.map(item=>{
+      if(!includeDefs) return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b></div>';
+      const hasDef = !!item.def;
+      const defHtml = '<span class="def">'+(item.def || 'Definición non dispoñible (palabra editada a man).')+'</span>';
+      const synHtml = (hasDef && item.syn && item.syn.length)
+        ? '<span class="syn">Sinónimos: '+item.syn.join(', ')+'</span>'
+        : '';
+      return '<div class="result-item"><b>'+item.n+'. '+item.word+'</b>'+defHtml+synHtml+'</div>';
+    }).join('');
+    return `
+      <div class="result-banner">FOLLA DE CORRECCIÓN${includeDefs ? ' E SIGNIFICADOS' : ''} — para o profesorado e para repasar co alumnado ao rematar</div>
+      <h3 style="margin:0 0 16px;">Palabras do ditado${includeDefs ? ' e o seu significado' : ''}</h3>
+      <div class="result-grid">${items}</div>`;
+  }
+
+  const printCardsBtn = document.getElementById('printCardsBtn');
+  const printResultBtn = document.getElementById('printResultBtn');
+
+  function renderCards(){
+    if(words.length===0){
+      cardsPreview.innerHTML = '';
+      printCardsBtn.disabled = true;
+      printResultBtn.disabled = true;
+      return;
+    }
+    const count = Math.max(1, Math.min(60, parseInt(document.getElementById('cardCount').value) || 1));
+    let html = '<div class="cards-page" id="cardsPage">';
+    for(let i=0;i<count;i++){ html += buildCardHTML(); }
+    html += '</div>';
+    html += `<div class="result-sheet" id="resultSheet">${buildResultSheet()}</div>`;
+    cardsPreview.innerHTML = html;
+    printCardsBtn.disabled = false;
+    printResultBtn.disabled = false;
+  }
+
+  printCardsBtn.addEventListener('click', ()=>{
+    if(words.length===0) return;
+    window.print();
+  });
+  printResultBtn.addEventListener('click', ()=>{
+    if(words.length===0) return;
+    const cardsPage = document.getElementById('cardsPage');
+    const sheet = document.getElementById('resultSheet');
+    cardsPage.style.display = 'none';
+    sheet.classList.add('showing');
+    window.print();
+    const restore = ()=>{
+      cardsPage.style.display = '';
+      sheet.classList.remove('showing');
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    suggestMeta.textContent = '';
+    words = [];
+    wordBankPreview.innerHTML = '';
+    cardsPreview.innerHTML = '';
+    statusMsg.className = 'status-msg';
+    printCardsBtn.disabled = true;
+    printResultBtn.disabled = true;
+    resetGameState();
+    try{ localStorage.removeItem(WORDS_STORAGE_KEY); }catch(e){}
+  });
+
+  document.getElementById('exportWordsBtn').addEventListener('click', ()=>{
+    if(words.length===0){
+      showStatus('Primeiro xera ou escribe as palabras; aínda non hai ningunha para exportar.', 'error');
+      return;
+    }
+    const blob = new Blob([JSON.stringify({ words }, null, 2)], { type:'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo_ortografico_galego_palabras.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  const importWordsFile = document.getElementById('importWordsFile');
+  document.getElementById('importWordsBtn').addEventListener('click', ()=> importWordsFile.click());
+  importWordsFile.addEventListener('change', (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      try{
+        const data = JSON.parse(ev.target.result);
+        const loaded = Array.isArray(data.words) ? data.words : null;
+        if(!loaded || loaded.length===0) throw new Error('vacío');
+        words = loaded;
+        renderWordBank();
+        renderCards();
+        resetGameState();
+        saveWordsToStorage();
+        showStatus(words.length+' palabras importadas correctamente desde o arquivo. O sorteo xa pode xirar neste ordenador.', 'ok');
+      }catch(err){
+        showStatus('Non se puido ler ese arquivo. Comproba que sexa un .json exportado desde esta mesma ferramenta.', 'error');
+      }
+    };
+    reader.readAsText(file);
+    importWordsFile.value = '';
+  });
+
+  // ---------------- stage / sorteo view (independiente del resto) ----------------
+  const revealNumber = document.getElementById('revealNumber');
+  const spinBtn = document.getElementById('spinBtn');
+  const undoBtn = document.getElementById('undoBtn');
+  const finishBtn = document.getElementById('finishBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const historyList = document.getElementById('historyList');
+  const emptyNote = document.getElementById('emptyNote');
+  const drawnCount = document.getElementById('drawnCount');
+  const remainingCount = document.getElementById('remainingCount');
+  const totalCount = document.getElementById('totalCount');
+  const totalNumbersInput = document.getElementById('totalNumbersInput');
+  let manualFinish = false;
+  let totalNumbers = 12;
+
+  function getTotalNumbersInput(){
+    const val = Math.max(1, Math.min(99, parseInt(totalNumbersInput.value) || 12));
+    totalNumbersInput.value = val;
+    return val;
+  }
+
+  function resetGameState(){
+    totalNumbers = getTotalNumbersInput();
+    pool = Array.from({length: totalNumbers}, (_, i)=> i+1);
+    history = [];
+    spinning = false;
+    manualFinish = false;
+    revealNumber.textContent = '?';
+    revealNumber.className = 'reveal-number placeholder';
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function updateMeta(){
+    drawnCount.textContent = history.length;
+    remainingCount.textContent = pool.length;
+    totalCount.textContent = totalNumbers;
+  }
+
+  function updateStageButtons(){
+    const finished = pool.length===0 || manualFinish;
+    spinBtn.disabled = spinning || pool.length===0 || manualFinish;
+    undoBtn.disabled = spinning || history.length===0;
+    finishBtn.disabled = spinning || finished || history.length===0;
+    resetBtn.disabled = spinning;
+    if(pool.length===0 && !manualFinish){
+      revealNumber.textContent = 'Fin!';
+      revealNumber.className = 'reveal-number placeholder';
+    } else if(manualFinish){
+      revealNumber.textContent = 'Bingo!';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+  }
+
+  function renderHistory(){
+    historyList.innerHTML = '';
+    if(history.length===0){ emptyNote.style.display = 'block'; return; }
+    emptyNote.style.display = 'none';
+    history.forEach(n=>{
+      const chip = document.createElement('div');
+      chip.className = 'history-chip';
+      chip.textContent = n;
+      historyList.appendChild(chip);
+    });
+  }
+
+  // ---- sonido (Web Audio API, sin archivos externos) ----
+  let audioCtx = null;
+  let soundEnabled = true;
+
+  function getAudioCtx(){
+    if(!audioCtx){
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx) return null;
+      audioCtx = new Ctx();
+    }
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function playTick(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = 680;
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.05);
+    }catch(e){}
+  }
+
+  function playFinalSound(){
+    if(!soundEnabled) return;
+    const ctx = getAudioCtx();
+    if(!ctx) return;
+    try{
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, i)=>{
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const start = now + i*0.09;
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.25, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + 0.3);
+      });
+    }catch(e){}
+  }
+
+  function spin(){
+    if(spinning || pool.length===0) return;
+    spinning = true;
+    updateStageButtons();
+
+    let ticks = 0;
+    const maxTicks = 14;
+    revealNumber.className = 'reveal-number spinning';
+
+    const interval = setInterval(()=>{
+      const randNum = pool[Math.floor(Math.random()*pool.length)];
+      revealNumber.textContent = randNum;
+      playTick();
+      ticks++;
+      if(ticks >= maxTicks){
+        clearInterval(interval);
+        const finalPos = Math.floor(Math.random()*pool.length);
+        const finalNum = pool[finalPos];
+        pool.splice(finalPos,1);
+        history.push(finalNum);
+
+        revealNumber.textContent = finalNum;
+        revealNumber.className = 'reveal-number pop';
+        playFinalSound();
+
+        updateMeta();
+        renderHistory();
+        spinning = false;
+        updateStageButtons();
+      }
+    }, 80);
+  }
+
+  function undo(){
+    if(spinning) return;
+    if(manualFinish){
+      manualFinish = false;
+      updateStageButtons();
+      return;
+    }
+    if(history.length===0) return;
+    const lastN = history.pop();
+    pool.push(lastN);
+    if(history.length>0){
+      revealNumber.textContent = history[history.length-1];
+      revealNumber.className = 'reveal-number';
+    } else {
+      revealNumber.textContent = '?';
+      revealNumber.className = 'reveal-number placeholder';
+    }
+    updateMeta();
+    renderHistory();
+    updateStageButtons();
+  }
+
+  function finishRound(){
+    if(spinning || history.length===0 || manualFinish || pool.length===0) return;
+    manualFinish = true;
+    updateStageButtons();
+  }
+
+  spinBtn.addEventListener('click', spin);
+  undoBtn.addEventListener('click', undo);
+  finishBtn.addEventListener('click', finishRound);
+  resetBtn.addEventListener('click', resetGameState);
+  totalNumbersInput.addEventListener('change', resetGameState);
+
+  const soundToggleBtn = document.getElementById('soundToggleBtn');
+  soundToggleBtn.addEventListener('click', ()=>{
+    soundEnabled = !soundEnabled;
+    soundToggleBtn.textContent = soundEnabled ? '🔊 Son' : '🔇 Son';
+    if(soundEnabled) getAudioCtx();
+  });
+
+  // ---------------- winners ----------------
+  let winners = [];
+  let winnerIdSeq = 1;
+
+  // Formulario de Google para o Bingo ortográfico galego ESO (pega aquí a ligazón ...viewform; baleiro = sen envío)
+  const WINNER_FORM = '';
+  const WINNER_FIELDS = { ganador: 'entry.876372629', fecha: 'entry.1390636133', grupo: 'entry.772469891' };
+
+  const winnerDate = document.getElementById('winnerDate');
+  const winnerNames = document.getElementById('winnerNames');
+  const winnerGroup = document.getElementById('winnerGroup');
+  const winnersTableWrap = document.getElementById('winnersTableWrap');
+  const sendWinnerBtn = document.getElementById('sendWinnerBtn');
+  const sendWinnerMsg = document.getElementById('sendWinnerMsg');
+
+  function todayISO(){
+    const d = new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function formatDate(iso){
+    if(!iso) return '';
+    const [y,m,d] = iso.split('-');
+    return d+'/'+m+'/'+y;
+  }
+  winnerDate.value = todayISO();
+
+  function renderWinners(){
+    if(winners.length===0){
+      winnersTableWrap.innerHTML = '<div class="winners-empty">Aínda non hai gañadores rexistrados.</div>';
+      return;
+    }
+    const rows = winners.map(w=>
+      '<tr><td class="date-col">'+formatDate(w.date)+'</td><td>'+w.names+(w.sent ? ' <span class="sent-tag" title="Xa enviado ao formulario">✓ enviado</span>' : '')+'</td><td>'+(w.group||'')+'</td><td><button class="row-del" data-id="'+w.id+'">Quitar</button></td></tr>'
+    ).join('');
+    winnersTableWrap.innerHTML = `
+      <table class="winners-table">
+        <thead><tr><th>Data</th><th>Gañador/a(s)</th><th>Grupo</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+    winnersTableWrap.querySelectorAll('.row-del').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const id = parseInt(btn.dataset.id);
+        winners = winners.filter(w=>w.id!==id);
+        renderWinners();
+      });
+    });
+  }
+
+  document.getElementById('addWinnerBtn').addEventListener('click', ()=>{
+    const names = winnerNames.value.trim();
+    if(!names) return;
+    winners.push({ id: winnerIdSeq++, date: winnerDate.value || todayISO(), names, group: winnerGroup.value.trim(), sent: false });
+    winnerNames.value = '';
+    renderWinners();
+  });
+
+  // Envía los resultados directamente al formulario de Google, sin abrirlo
+  async function sendWinnerResults(){
+    const pending = winnerNames.value.trim();
+    const unsent = winners.filter(w=>!w.sent);
+    const allNames = unsent.map(w=>w.names).concat(pending ? [pending] : []);
+    const names = allNames.join(', ');
+    const say = (text, bad)=>{ sendWinnerMsg.style.color = bad ? '#a3352a' : ''; sendWinnerMsg.innerHTML = text; };
+    if(!names){ say('Non hai gañadores novos para enviar. Escribe un nome ou engade algún á táboa.', true); return; }
+    const params = new URLSearchParams();
+    params.set(WINNER_FIELDS.ganador, names);
+    params.set(WINNER_FIELDS.fecha, formatDate(winnerDate.value || todayISO()));
+    params.set(WINNER_FIELDS.grupo, winnerGroup.value.trim());
+    const manualLink = WINNER_FORM + '?usp=pp_url&' + params.toString();
+    const fail = ()=>{
+      say('Non se puideron enviar os resultados. Comproba a conexión e volve intentalo, ou <a href="'+manualLink+'" target="_blank" rel="noopener">abre o formulario</a> para envialos a man.', true);
+      sendWinnerBtn.disabled = false;
+      sendWinnerBtn.textContent = 'Enviar resultados';
+    };
+    if(!navigator.onLine){ fail(); return; }
+    sendWinnerBtn.disabled = true;
+    sendWinnerBtn.textContent = 'Enviando…';
+    try{
+      await fetch(WINNER_FORM.replace(/viewform$/, 'formResponse'), { method:'POST', mode:'no-cors', body: params });
+      sendWinnerBtn.textContent = 'Resultados enviados ✓';
+      say('Resultados enviados ao formulario.');
+      unsent.forEach(w=> w.sent = true);
+      renderWinners();
+      winnerNames.value = '';
+      winnerGroup.value = '';
+      setTimeout(()=>{ sendWinnerBtn.disabled = false; sendWinnerBtn.textContent = 'Enviar resultados'; }, 2500);
+    }catch(err){
+      fail();
+    }
+  }
+  sendWinnerBtn.addEventListener('click', sendWinnerResults);
+  if(!WINNER_FORM){ sendWinnerBtn.style.display = 'none'; const fn = document.getElementById('formNote'); if(fn) fn.style.display = 'none'; }
+
+  document.getElementById('exportWinnersBtn').addEventListener('click', ()=>{
+    const escapeCsv = (val)=> '"'+String(val).replace(/"/g,'""')+'"';
+    const rows = [['Data','Gañador/a','Grupo']];
+    winners.forEach(w=> rows.push([formatDate(w.date), w.names || '', w.group || '']));
+    const csv = rows.map(r=> r.map(escapeCsv).join(';')).join('\r\n');
+    const blob = new Blob(['\uFEFF'+csv], { type:'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'bingo_ortografico_galego_eso_ganadores.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('printWinnersBtn').addEventListener('click', ()=> window.print());
+
+  renderWinners();
+
+  // ---------------- init ----------------
+  const restoredWords = loadWordsFromStorage();
+  if(restoredWords){
+    words = restoredWords;
+    renderWordBank();
+    renderCards();
+    showStatus(words.length+' palabras recuperadas da sesión anterior neste navegador. Se queres outras novas, preme "Xerar" ou "Baleirar".', 'ok');
+  }
+  resetGameState();
+</script>
+
+</body>
+</html>
