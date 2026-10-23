@@ -192,7 +192,7 @@ textarea:focus,.txt:focus{outline:none;border-color:var(--violet)}
     <div>
       <h1>Expediente <span>Raticulín</span><br>Prueba: la comunicación</h1>
       <p class="sub">1.º ESO · Lengua Castellana y Literatura · Elementos, clases y funciones</p>
-      <p class="story">🛸 <b>ÚLTIMA HORA:</b> los seres del planeta Raticulín han abducido a vuestro profesor, Oswaldo, y se lo han llevado a su planeta. Solo lo devolverán a la Tierra si demostráis que los terrícolas sabéis comunicaros.</p>
+      <p class="story">🛸 <b>ÚLTIMA HORA:</b> los seres del planeta Raticulín han abducido a vuestro profesor, Oswaldo, y se lo han llevado a su planeta. Solo lo devolverán a la Tierra si demostráis que los terrícolas domináis el tema de la comunicación.</p>
       <div class="row2">
         <div class="field"><label for="fn">Nombre</label><input id="fn" autocomplete="off"></div>
         <div class="field"><label for="ln">Apellidos</label><input id="ln" autocomplete="off"></div>
@@ -239,7 +239,7 @@ textarea:focus,.txt:focus{outline:none;border-color:var(--violet)}
     <p id="endWho"></p>
     <div id="endStatus" class="status"></div>
     <p id="endInfo"></p>
-    <div class="mbtns"><button class="btn p" id="revBtn">🔑 Ver corrección</button><button class="btn s" id="dlBtn">⬇ Descargar copia de seguridad</button></div>
+    <div class="mbtns"><button class="btn p" id="revBtn">🔑 Ver corrección</button><button class="btn w" id="exitBtn" style="display:none;border:2px solid var(--red)">✕ Salir</button><button class="btn s" id="dlBtn">⬇ Descargar copia de seguridad</button></div>
     <div id="rev" style="display:none;max-height:52vh;overflow:auto;margin-top:1em"></div>
   </div>
 </section>
@@ -399,15 +399,54 @@ const JOKES=[
   q:[['¿Por qué falla la comunicación?',['Porque el candidato no domina el inglés y entiende «oil» como «hoy».','Porque hay ruido en la sala de la entrevista.','Porque el entrevistador no hace ninguna pregunta.','Porque el candidato habla demasiado bajo.']],
      ['¿Qué elemento de la comunicación falla?',['El código','El canal','El emisor','El mensaje']],
      ['¿Cuál es la situación comunicativa?',['Una entrevista de trabajo, con una relación formal entre entrevistador y candidato.','Una conversación entre dos amigos en un bar.','Una clase de inglés entre profesor y alumno.','Una llamada de teléfono entre desconocidos.']],
-     ['En «¿Qué es "oil"?» se pregunta por el significado de una palabra. ¿Qué función predomina?',['Metalingüística','Poética','Expresiva','Fática']]]}
+     ['En «¿Qué es "oil"?» se pregunta por el significado de una palabra. ¿Qué función predomina?',['Metalingüística','Poética','Expresiva','Fática']]]},
+ {l:['—Papá, papá, ¿«horchata» se escribe con «h»?','—Pues claro, si no sería «horcata».'],
+  q:[['¿Qué función predomina en la pregunta del hijo?',['Metalingüística','Fática','Poética','Expresiva']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El código','El canal','El receptor','El contexto']],
+     ['¿Por qué hace gracia la respuesta del padre?',['Piensa en la «h» de «ch» y no en la «h» del principio, que era la de la pregunta.','No ha oído bien la pregunta porque hay ruido.','Responde en otra lengua que el hijo no entiende.','Contesta con una orden en lugar de una explicación.']],
+     ['Si el hijo hiciera la pregunta por WhatsApp, sin emojis, ¿qué clase de comunicación sería?',['Verbal escrita','Verbal oral','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Doctor, soy asmático, ¿es grave?','—No, amigo, es esdrújula.'],
+  q:[['¿Por qué hace gracia el chiste?',['El paciente usa «grave» como «serio» y el médico la entiende como palabra llana, hablando de la acentuación.','El médico no oye bien al paciente.','El paciente y el médico hablan lenguas distintas.','El médico contesta con una pregunta.']],
+     ['En la respuesta del médico, que habla de la acentuación de la palabra «asmático», predomina la función…',['Metalingüística','Representativa','Apelativa','Fática']],
+     ['Las dos «grave» del chiste (la de «serio» y la de «palabra llana») tienen…',['el mismo significante y distinto significado','el mismo significado y distinto significante','distinto significante y distinto significado','el mismo significante y el mismo significado']],
+     ['En «¿Es grave?», el paciente hace una pregunta al médico. ¿Qué función predomina?',['Apelativa','Metalingüística','Poética','Fática']]]},
+ {l:['Llama uno por teléfono:','—Hola, ¿está María José?','—No, soy José María.','—Disculpe, he marcado al revés.'],
+  q:[['¿Por qué hace gracia el chiste?',['Como el nombre está «al revés», el que llama cree que también ha marcado el número al revés.','El que llama no conoce el código de los números.','La línea tiene mucho ruido y no se oye nada.','José María se niega a contestar.']],
+     ['¿Qué elemento de la comunicación no es el que esperaba el que llama?',['El receptor','El código','El canal','El mensaje']],
+     ['En esta conversación, ¿cuál es el canal?',['La línea telefónica','El castellano','El número de teléfono','José María']],
+     ['¿Qué clase de comunicación es una llamada de teléfono?',['Verbal oral','Verbal escrita','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Perdona, ¿cómo te llamas?','—Yo, Paco, ¿y tú?','—No, yo no.'],
+  q:[['¿Por qué hace gracia el chiste?',['El primero entiende «¿y tú?» como «¿y tú también te llamas Paco?» y contesta que no.','Paco no oye la pregunta.','Paco contesta en otra lengua.','El primero no deja hablar a Paco.']],
+     ['El malentendido se produce porque «¿y tú?» se puede entender de dos maneras. ¿Qué elemento causa el problema?',['El mensaje, que es ambiguo','El canal, que tiene ruido','El código, que no comparten','El emisor, que habla muy bajo']],
+     ['¿Qué función predomina en «Perdona, ¿cómo te llamas?»?',['Apelativa','Expresiva','Poética','Metalingüística']],
+     ['¿Cuál es la situación comunicativa más probable?',['Dos personas que no se conocen y se presentan.','Dos hermanos que hablan en casa.','Un profesor que pasa lista en clase.','Una locutora que habla por la radio.']]]},
+ {l:['—¿Qué le dice un jaguar a otro jaguar?','—«How are you?».'],
+  q:[['¿En qué se basa el chiste?',['En que «jaguar» suena parecido a la pregunta inglesa «How are you?».','En que los jaguares no saben hablar.','En que el mensaje está incompleto.','En que el canal tiene ruido.']],
+     ['En el chiste se mezclan el castellano y el inglés. ¿Qué elemento de la comunicación es cada lengua?',['Un código','Un canal','Un mensaje','Un receptor']],
+     ['Un compañero que no sabe nada de inglés no entiende el chiste. ¿Qué elemento falla?',['El código','El canal','El emisor','La situación comunicativa']],
+     ['Si el chiste se cuenta en voz alta, ¿qué clase de comunicación es?',['Verbal oral','Verbal escrita','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Hola, ¿Conchita?','—No, con Tarzán.'],
+  q:[['¿Por qué hace gracia?',['«Conchita» suena igual que «con Chita», la mona de Tarzán.','El que contesta no sabe quién es Conchita.','Los dos hablan lenguas distintas.','El que contesta da una orden.']],
+     ['Cuando cogemos el teléfono, decir «Hola, ¿sí?» para comprobar que hay alguien al otro lado es un ejemplo de función…',['Fática','Expresiva','Poética','Representativa']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El canal','El receptor','El código','El mensaje']],
+     ['«Conchita» y «con Chita»…',['se pronuncian igual pero tienen distinto significado','tienen el mismo significado','son signos no lingüísticos','son dos canales distintos']]]},
+ {l:['—¿Te cuesta decir «amigo» en italiano?','—Amicci.','—A mí no.'],
+  q:[['¿Por qué hace gracia el chiste?',['«Amicci» suena como «a mí sí», y el primero lo entiende como una respuesta a su pregunta.','El italiano y el castellano son el mismo código.','El primero no oye la respuesta.','El segundo no quiere contestar.']],
+     ['En la pregunta «¿Te cuesta decir “amigo” en italiano?» se habla de una palabra y de una lengua. ¿Qué función predomina?',['Metalingüística','Fática','Expresiva','Poética']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El código','El canal','El emisor','El contexto']],
+     ['Si quien escucha no supiera nada de italiano, ¿qué elemento fallaría?',['El código','El canal','El receptor','La situación comunicativa']]]}
 ];
-
 const DIARIOS=[
  [['Diario de Oswaldo, día 1 en Raticulín. Anoche me abdujeron mientras corregía exámenes. Los raticulinos no hablan: se comunican con destellos de colores, así que su comunicación es no '],[['verbal']],['. Al principio no entendía nada porque no compartíamos el mismo '],[['codigo']],['. La comandante Zyx, que es quien me envía los mensajes, es el '],[['emisor','emisora']],['; yo, que los recibo, soy el '],[['receptor']],['. Como su planeta no tiene aire, los mensajes viajan a través de la luz: ese es el '],[['canal']],['. Hoy les he enseñado mi primera palabra, «hola», y les he explicado que tiene dos caras: el '],[['significante']],[', que son sus letras y sus sonidos, y el '],[['significado']],[', que es la idea. Cuando les dije «“Planeta” es un sustantivo», usé la función '],[['metalinguistica']],['.']],
  [['Diario de Oswaldo, día 3 en Raticulín. Mis secuestradores ya me dejan llamar a la Tierra. Al empezar la llamada siempre pregunto «¿Me oís? ¿Hay cobertura?»: así uso la función '],[['fatica']],[', que se relaciona con el '],[['canal']],['. Después grito «¡Os echo muchísimo de menos!», donde predomina la función '],[['expresiva']],[', relacionada con el '],[['emisor']],['. A mis alumnos les digo «Estudiad el tema de la comunicación», donde predomina la función '],[['apelativa']],['. Un raticulino me ha escrito un poema lleno de rimas: en él predomina la función '],[['poetica']],[', que se relaciona con el '],[['mensaje']],['. Y cuando digo «En Raticulín hay tres soles», solo informo de forma objetiva: es la función '],[['representativa']],['.']],
  [['Diario de Oswaldo, día 5 en Raticulín. Hoy he dado mi primera clase a los alienígenas que me abdujeron. Les he explicado que la comunicación verbal puede ser '],[['oral']],[', como cuando hablamos, o '],[['escrita']],[', como en una carta. Les dije que el signo lingüístico es '],[['arbitrario']],[', porque no hay ninguna relación natural entre la palabra y lo que nombra. También aprendieron que el lugar, el momento y la relación entre los hablantes forman la '],[['situacion']],[' comunicativa. Para entendernos, emisor y receptor debemos compartir el mismo '],[['codigo']],['. Mi voz viaja por el aire de la nave: ese es el '],[['canal']],['. Si un raticulino me ordena «¡Siéntate!», usa la función '],[['apelativa']],[', que se relaciona con el '],[['receptor']],['.']]
 ];
-const CIFRAS=['SI ACERTAIS LA PRUEBA LIBERAREMOS A OSWALDO','OSWALDO YA CONOCE NUESTRO CODIGO SECRETO','OSWALDO VOLVERA A LA TIERRA ESTE VIERNES','EN RATICULIN OSWALDO DA CLASE DE LENGUA','TU PROFESOR ESTA BIEN Y OS MANDA RECUERDOS','OSWALDO HA ENTRADO EN NUESTRA NAVE ESPACIAL'];
+const CIFRAS=['SI ACERTAIS LA PRUEBA LIBERAREMOS A OSWALDO','OSWALDO YA CONOCE NUESTRO CODIGO SECRETO','OSWALDO VOLVERA A LA TIERRA ESTE VIERNES','EN RATICULIN OSWALDO DA CLASE DE LENGUA',
+ 'TU PROFESOR ESTA BIEN Y OS MANDA RECUERDOS','OSWALDO HA ENTRADO EN NUESTRA NAVE ESPACIAL','OSWALDO NOS EXPLICA LAS FUNCIONES DEL LENGUAJE','EL EMISOR DE ESTE MENSAJE ES LA COMANDANTE ZYX',
+ 'OSWALDO DUERME EN UNA CAMA FLOTANTE','EN NUESTRO PLANETA HAY TRES SOLES','OSWALDO QUIERE VOLVER A SU INSTITUTO','LOS RATICULINOS HABLAMOS CON LUCES DE COLORES',
+ 'OSWALDO COME SOPA DE METEORITOS','NUESTRA NAVE ATERRIZARA EN EL PATIO','OSWALDO YA SABE DECIR HOLA EN RATICULINO','SI SUSPENDEIS OSWALDO SE QUEDA AQUI',
+ 'OSWALDO CORRIGE EXAMENES EN LA LUNA','EL CANAL DE ESTE MENSAJE ES LA LUZ','OSWALDO PIDE QUE REPASEIS EL CODIGO','OSWALDO VIAJA EN UN PLATILLO VOLANTE',
+ 'DEVOLVEREMOS A OSWALDO SI APROBAIS','OSWALDO HA PERDIDO SU BOLIGRAFO ROJO','LOS TERRICOLAS NO SABEIS CALLAR','OSWALDO CUENTA CHISTES MALOS EN LA NAVE'];
 const INTERRO=[
  {t:'Si dos terrícolas hablan lenguas distintas, lo que falla es el canal.',v:false,r:['Lo que no comparten es el código, no el canal.','La lengua es el medio físico por el que viaja el mensaje.','Lo que falla es el receptor, porque no presta atención.']},
  {t:'En una conversación cara a cara, el canal es el aire.',v:true,r:['La voz del emisor viaja por el aire hasta el receptor.','El canal es la lengua que hablan los dos.','El canal es la boca del emisor.']},
@@ -836,7 +875,10 @@ function showEnd(r){
 }
 const CLAVE_REVISION='raticulin';
 $('#revBtn').onclick=()=>{const k=prompt('Clave del profesor para ver la corrección:');if(k===null)return;if(norm(k)!==CLAVE_REVISION){alert('Clave incorrecta.');return}
-  const det=(S.det||(S.result.detalle||'').split('\n'));$('#rev').innerHTML='<ul style="padding-left:1.2em;margin:0">'+det.map(l=>`<li style="text-align:left;margin:.25em 0;color:${l.includes('✘')?'#e0344b':'#0b6b52'}">${esc(l)}</li>`).join('')+'</ul>';$('#rev').style.display='block';$('#revBtn').style.display='none'};
+  const det=(S.det||(S.result.detalle||'').split('\n'));$('#rev').innerHTML='<ul style="padding-left:1.2em;margin:0">'+det.map(l=>`<li style="text-align:left;margin:.25em 0;color:${l.includes('✘')?'#e0344b':'#0b6b52'}">${esc(l)}</li>`).join('')+'</ul>';$('#rev').style.display='block';$('#revBtn').style.display='none';$('#exitBtn').style.display='inline-block'};
+$('#exitBtn').onclick=()=>{$('#rev').innerHTML='';$('#rev').style.display='none';$('#exitBtn').style.display='none';$('#revBtn').style.display='inline-block';
+  ['#fn','#ln','#cu','#ac'].forEach(x=>$(x).value='');$('#gateErr').textContent='';$('#loginErr').textContent='';S=null;EX=null;
+  $('#end').classList.remove('on');$('#gate').classList.add('on')};
 $('#dlBtn').onclick=()=>{
   const r=S.result;const cols=['nombre','apellidos','curso','variante','estado','inicio','fin','duracion','salidas','fuera','recargas','pegar','A','B','C','D','E','F','G','H1','H2','auto','nota40','detalle','log'];
   const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
