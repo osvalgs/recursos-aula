@@ -197,8 +197,11 @@ textarea:focus,.txt:focus{outline:none;border-color:var(--violet)}
         <div class="field"><label for="fn">Nombre</label><input id="fn" autocomplete="off"></div>
         <div class="field"><label for="ln">Apellidos</label><input id="ln" autocomplete="off"></div>
       </div>
-      <div class="field"><label for="cu">Curso y grupo</label><input id="cu" list="cursos" placeholder="Ej.: 1.º ESO A" autocomplete="off">
-        <datalist id="cursos"><option>1.º ESO A</option><option>1.º ESO B</option><option>1.º ESO C</option><option>1.º ESO D</option></datalist></div>
+      <div class="row2" style="grid-template-columns:1.6fr 1fr">
+        <div class="field"><label for="cu">Curso y grupo</label><input id="cu" list="cursos" placeholder="Ej.: 1.º ESO A" autocomplete="off">
+          <datalist id="cursos"><option>1.º ESO A</option><option>1.º ESO B</option><option>1.º ESO C</option><option>1.º ESO D</option></datalist></div>
+        <div class="field"><label for="pc">N.º de ordenador <span style="font-weight:400;color:#c9c2ff">(si lo tiene)</span></label><input id="pc" inputmode="numeric" maxlength="2" placeholder="Opcional" autocomplete="off"></div>
+      </div>
 
       <div class="rules">
         <b>Antes de empezar:</b>
@@ -495,11 +498,12 @@ function save(){try{localStorage.setItem(LSKEY+'_'+S.id,JSON.stringify(S));local
 /* =========================================================
    GENERACIÓN DE LA PRUEBA (determinista por alumno)
    ========================================================= */
-function generate(seedStr){
+function generate(seedStr,pc){
+  const sel=(arr,off)=>{const r=Math.floor(rng()*arr.length);return pc?arr[(pc-1+off)%arr.length]:arr[r]};
   rng=mulberry32(hashStr(seedStr));for(let i=0;i<25;i++)rng();
   const ex={};
   // A · escena
-  const sc=SCENES[Math.floor(rng()*SCENES.length)];
+  const sc=sel(SCENES,0);
   const opts=shuffle([...Object.values(sc.e),...sc.d]);
   ex.A={id:'A',title:'Detectives de la escena',pts:1.5,scene:sc,order:shuffle(ELS),opts};
   // B · fallos
@@ -512,17 +516,17 @@ function generate(seedStr){
   const dIt=FUNCS.map(([k])=>{const t=shuffle(FN_BANK[k]);return{k,txt:t[0],alt:t[1]}});const dEx=pick(dIt,2).map(x=>({k:x.k,txt:x.alt}));
   ex.D={id:'D',title:'MAPFRE al límite',pts:1.6,items:shuffle([...dIt.map(x=>({k:x.k,txt:x.txt})),...dEx]),fnOpts:shuffle(FUNCS),elOpts:shuffle(EL6)};
   // E · errores
-  ex.E={id:'E',title:'Los apuntes del alienígena',pts:1,segs:ERRS[Math.floor(rng()*ERRS.length)]};
+  ex.E={id:'E',title:'Los apuntes del alienígena',pts:1,segs:sel(ERRS,1)};
   // F · crucigrama
   ex.F={id:'F',title:'Crucigrama interplanetario',pts:1.2,cw:makeCross()};
   // G · chiste
-  const j=JOKES[Math.floor(rng()*JOKES.length)];
+  const j=sel(JOKES,0);
   ex.G={id:'G',title:'El chiste malo',pts:0.8,joke:j,qs:j.q.map(([q,o])=>({q,o:shuffle(o.map((t,i)=>({t,ok:i===0})))}))};
   // H · redacción
-  const msg=CIFRAS[Math.floor(rng()*CIFRAS.length)];const gl=shuffle(GLYPHS),map={};let k=0;
+  const msg=sel(CIFRAS,0);const gl=shuffle(GLYPHS),map={};let k=0;
   const used=[...new Set(msg.replace(/ /g,''))];used.forEach(c=>map[c]=gl[k++]);
   const dec=shuffle('ABCDEFGHIJLMNOPRSTUVYZ'.split('').filter(c=>!used.includes(c))).slice(0,4);dec.forEach(c=>map[c]=gl[k++]);
-  ex.H={id:'H',title:'El diario de Oswaldo, abducido',pts:1.7,diario:DIARIOS[Math.floor(rng()*DIARIOS.length)],msg,map,key:shuffle(Object.keys(map))};
+  ex.H={id:'H',title:'El diario de Oswaldo, abducido',pts:1.7,diario:sel(DIARIOS,2),msg,map,key:shuffle(Object.keys(map))};
   ex.I={id:'I',title:'Interrogatorio en la nave',pts:1.2,items:pick(INTERRO,8).map(x=>({t:x.t,v:x.v,r:shuffle(x.r.map((t,i)=>({t,ok:i===0})))}))};
   ex.order=shuffle(['A','B','C','D','E','F','G','H']);
   return ex;
@@ -824,6 +828,8 @@ $('#ac').addEventListener('keydown',e=>{if(e.key==='Enter')$('#gateBtn').click()
 $('#startBtn').onclick=()=>{
   const n=$('#fn').value.trim(),l=$('#ln').value.trim(),c=$('#cu').value.trim();
   if(n.length<2||l.length<2||c.length<2){$('#loginErr').textContent='Escribe tu nombre, tus apellidos y tu curso para empezar.';return}
+  const pcv=$('#pc').value.trim(),pc=/^\d{1,2}$/.test(pcv)&&+pcv>0?+pcv:0;
+  if(pcv&&!pc){$('#loginErr').textContent='El número de ordenador solo puede llevar cifras. Si no lo ves bien, déjalo en blanco.';return}
   actx=new(window.AudioContext||window.webkitAudioContext)();
   const seed=norm(n+'|'+l+'|'+c);
   const id=seed.replace(/[^a-z0-9]+/g,'_');
@@ -831,9 +837,10 @@ $('#startBtn').onclick=()=>{
   if(old){S=old;S.reloads++;S.log.push(`${hhmm()} Vuelve a abrir la prueba (recarga)`);}
   else S={id,nombre:n,apellidos:l,curso:c,variante:hashStr(seed).toString(36).toUpperCase(),start:Date.now(),cur:0,done:false,inc:{count:0,out:0},reloads:0,pastes:0,log:[],
     ans:{A:{},B:{},C:{},D:{},E:[],F:{},G:{},H1:{},H2:'',IV:{},IR:{}}};
+  if(S.pc===undefined){S.pc=pc;if(pc)S.variante+='-PC'+pc}
   S.ans.IV=S.ans.IV||{};S.ans.IR=S.ans.IR||{};
   if(S.done){showEnd(S.result);return}
-  EX=generate(seed);rng=Math.random;
+  EX=generate(seed,S.pc);rng=Math.random;
   save();
   fs();
   $('#login').classList.remove('on');$('#exam').classList.add('on');
@@ -877,7 +884,7 @@ const CLAVE_REVISION='raticulin';
 $('#revBtn').onclick=()=>{const k=prompt('Clave del profesor para ver la corrección:');if(k===null)return;if(norm(k)!==CLAVE_REVISION){alert('Clave incorrecta.');return}
   const det=(S.det||(S.result.detalle||'').split('\n'));$('#rev').innerHTML='<ul style="padding-left:1.2em;margin:0">'+det.map(l=>`<li style="text-align:left;margin:.25em 0;color:${l.includes('✘')?'#e0344b':'#0b6b52'}">${esc(l)}</li>`).join('')+'</ul>';$('#rev').style.display='block';$('#revBtn').style.display='none';$('#exitBtn').style.display='inline-block'};
 $('#exitBtn').onclick=()=>{$('#rev').innerHTML='';$('#rev').style.display='none';$('#exitBtn').style.display='none';$('#revBtn').style.display='inline-block';
-  ['#fn','#ln','#cu','#ac'].forEach(x=>$(x).value='');$('#gateErr').textContent='';$('#loginErr').textContent='';S=null;EX=null;
+  ['#fn','#ln','#cu','#pc','#ac'].forEach(x=>$(x).value='');$('#gateErr').textContent='';$('#loginErr').textContent='';S=null;EX=null;
   $('#end').classList.remove('on');$('#gate').classList.add('on')};
 $('#dlBtn').onclick=()=>{
   const r=S.result;const cols=['nombre','apellidos','curso','variante','estado','inicio','fin','duracion','salidas','fuera','recargas','pegar','A','B','C','D','E','F','G','H1','H2','auto','nota40','detalle','log'];
