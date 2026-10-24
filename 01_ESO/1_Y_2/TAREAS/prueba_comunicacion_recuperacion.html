@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prueba · La comunicación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ====== CONFIGURACIÓN DEL PROFESOR ======
+   Pega entre las comillas la URL de la aplicación web de Google Apps Script */
+</style>
+<script>
+const URL_HOJA = "https://script.google.com/macros/s/AKfycbzY4yGXcUMjppGrFTSO-0_cbL75cfhfZE47K6gF8gXunZ0fkQHy0V2ptdKzZ0jJ-t14sQ/exec";
+const DURACION_MIN = 35;
+const ACCESO = 391812687;
+</script>
+<style>
+:root{
+  --bg:#f3f1fb; --ink:#1e1b3a; --soft:#5b5880; --card:#fff; --line:#dcd8f0;
+  --violet:#5b3fd6; --violet2:#ede8ff; --green:#14a37f; --green2:#dff6ef;
+  --red:#e0344b; --red2:#fde6ea; --amber:#f2a516; --amber2:#fff3d6; --teal:#0e8fa8; --teal2:#ddf3f7;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",system-ui,sans-serif;font-size:17px}
+body{overflow:hidden}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}
+p,li,.just{text-align:justify;hyphens:auto}
+button{font-family:inherit;cursor:pointer}
+.screen{position:fixed;inset:0;display:none}
+.screen.on{display:flex}
+/* ---------- ACCESO ---------- */
+#gate{align-items:center;justify-content:center;background:#f3f1fb;padding:16px}
+.gatebox{width:min(860px,100%);background:#fff;border:1px solid var(--line);border-radius:20px;padding:1.4em 2em;box-shadow:0 10px 40px #1e1b3a14;text-align:center}
+.gtag{display:inline-block;background:var(--violet2);color:var(--violet);font-weight:700;padding:.3em .9em;border-radius:999px;font-size:.9em}
+.gatebox h1{font-size:clamp(26px,min(3.4vw,5.5vh),44px);line-height:1.05;margin:.4em 0 .15em}
+.gsub{color:var(--soft);margin:0 0 1em;text-align:center}
+.gatebox label{display:block;font-weight:700;margin-bottom:.3em;text-align:left}
+.grow{display:grid;grid-template-columns:1fr 1fr;gap:.6em 1.2em;margin-bottom:.7em}
+.gin{width:100%;font:inherit;font-size:1.05em;padding:.45em .7em;border:2px solid var(--line);border-radius:10px;outline:none}
+.gin:focus{border-color:var(--violet)}
+.ginst{text-align:left;background:var(--violet2);border-radius:12px;padding:.6em 1.1em;margin-top:.4em;font-size:.95em}
+.ginst ul{margin:.3em 0 0;padding-left:1.2em}.ginst li{margin:.2em 0;text-align:justify}
+#gate{overflow:auto}
+@media (max-width:640px){.grow{grid-template-columns:1fr}}
+#ac{width:100%;font:700 1.05em "Space Grotesk",sans-serif;letter-spacing:.15em;text-transform:uppercase;text-align:center;padding:.45em;border:2px solid var(--line);border-radius:12px;outline:none}
+#ac::placeholder{letter-spacing:0;font-weight:400;font-size:.7em;text-transform:none}
+#ac:focus{border-color:var(--violet)}
+.gbtn{margin-top:1em;width:100%;font-size:1.15em;font-weight:700;padding:.7em;border:0;border-radius:12px;background:var(--violet);color:#fff}
+.gerr{color:var(--red);min-height:1.4em;margin-top:.7em;font-weight:700;text-align:center}
+/* ---------- LOGIN ---------- */
+#login{align-items:safe center;background:radial-gradient(circle at 80% 10%,#3b2a8f 0,#15112e 55%);color:#fff;align-items:center;justify-content:center;overflow:auto}
+.stars{position:absolute;inset:0;background-image:radial-gradient(2px 2px at 20% 30%,#fff8,transparent),radial-gradient(1px 1px at 70% 60%,#fff9,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fff7,transparent),radial-gradient(1px 1px at 85% 25%,#fff,transparent),radial-gradient(2px 2px at 10% 70%,#fff6,transparent),radial-gradient(1px 1px at 55% 15%,#fffa,transparent);pointer-events:none}
+.logbox{position:relative;width:100%;margin:3vh 4vw;display:grid;grid-template-columns:1fr 1.25fr;gap:4vw;align-items:center}
+.logbox .alien{width:100%;height:min(72vh,560px);object-fit:cover;border-radius:22px;box-shadow:0 0 0 3px #9df0c955,0 20px 60px #000a}
+.logbox h1{font-size:clamp(26px,min(3.2vw,5.4vh),54px);line-height:1.05}
+.logbox h1 span{color:#9df0c9}
+.logbox .sub{color:#c9c2ff;margin:.4em 0 .7em;font-size:1em}
+.field{display:flex;flex-direction:column;margin-bottom:.55em}
+.field label{font-weight:700;margin-bottom:.25em;color:#e3dcff}
+.field input{font:inherit;font-size:1.05em;padding:.4em .7em;border-radius:10px;border:2px solid #6d5bd0;background:#221b4d;color:#fff;outline:none}
+.field input:focus{border-color:#9df0c9}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1em}
+.rules{background:#ffffff12;border:1px solid #ffffff2a;border-radius:12px;padding:.5em 1em;margin:.4em 0 .8em;font-size:.88em}
+.rules ul{margin:.3em 0;padding-left:1.2em}
+.rules li{margin:.2em 0}
+.bigbtn{font-size:1.15em;font-weight:700;padding:.7em 1.6em;border:0;border-radius:999px;background:#9df0c9;color:#15112e;box-shadow:0 6px 0 #4fb48a}
+.bigbtn:active{transform:translateY(3px);box-shadow:0 3px 0 #4fb48a}
+.bigbtn:disabled{opacity:.45;cursor:not-allowed}
+.story{background:#e0344b22;border:1px solid #e0344b88;border-radius:12px;padding:.6em 1em;margin:0 0 1em;text-align:justify}
+.err{color:#ffb3bf;min-height:1.3em;margin-top:.5em}
+/* ---------- EXAM ---------- */
+#exam{flex-direction:column}
+header.top{display:flex;align-items:center;gap:1em;padding:.5em 1.2em;background:#15112e;color:#fff}
+header.top .ttl{font-family:"Space Grotesk";font-weight:700;font-size:1.1em;white-space:nowrap}
+header.top .who{color:#c9c2ff;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.timer{font-family:"Space Grotesk";font-weight:700;font-size:1.35em;background:#2c2463;padding:.15em .6em;border-radius:10px;min-width:4.6em;text-align:center}
+.timer.low{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.incb{display:none;background:var(--red);color:#fff;font-weight:700;padding:.2em .7em;border-radius:999px}
+.incb.on{display:inline-block}
+.sendbtn{background:#9df0c9;color:#15112e;border:0;font-weight:700;padding:.45em 1.1em;border-radius:999px;font-size:1em}
+nav.tabs{display:flex;gap:.4em;padding:.5em 1.2em;background:#fff;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{flex:1;min-width:0;border:2px solid var(--line);background:#fff;border-radius:10px;padding:.3em .5em;text-align:left;font-size:.85em;color:var(--soft);display:flex;gap:.4em;align-items:center}
+.tab b{font-family:"Space Grotesk";font-size:1.25em;color:var(--ink)}
+.tab span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tab.cur{border-color:var(--violet);background:var(--violet2);color:var(--violet)}
+.tab.done{border-color:var(--green)}
+.tab.done::after{content:"✓";color:var(--green);font-weight:700;margin-left:auto}
+.stage{flex:1;position:relative;overflow:hidden}
+.pane{position:absolute;inset:0;overflow-y:auto;padding:1.2em 4.8em 3em;display:none}
+.pane.on{display:block}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:2.6em;height:2.6em;border-radius:50%;border:0;background:var(--violet);color:#fff;font-size:1.3em;box-shadow:0 4px 12px #5b3fd655}
+.arrow:disabled{opacity:.25}
+.arrow.l{left:.8em}.arrow.r{right:.8em}
+.sechead{display:flex;align-items:center;gap:1em;margin-bottom:.6em}
+.sechead .ico{width:3.2em;height:3.2em;flex:none}
+.sechead h2{font-size:1.6em}
+.sechead .pts{margin-left:auto;background:var(--amber2);color:#8a5a00;font-weight:700;padding:.25em .8em;border-radius:999px;white-space:nowrap}
+.enun{background:var(--violet2);border-left:5px solid var(--violet);padding:.6em 1em;border-radius:0 10px 10px 0;margin:.4em 0 1em}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:1em 1.2em;margin-bottom:1em}
+.scene{font-size:1.08em;line-height:1.5;background:#fffdf5;border:2px dashed #e7c96a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.8em 1.4em}
+.selrow{display:flex;flex-direction:column;gap:.25em}
+.selrow label{font-weight:700}
+select{font:inherit;padding:.45em .5em;border-radius:8px;border:2px solid var(--line);background:#fff;width:100%}
+select.ok-set{border-color:var(--violet)}
+.item{display:grid;grid-template-columns:2.2em 1fr;gap:.6em;align-items:start;padding:.8em 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.num{width:2em;height:2em;border-radius:50%;background:var(--violet);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-family:"Space Grotesk"}
+.chips{display:flex;flex-wrap:wrap;gap:.4em;margin-top:.5em}
+.chip{border:2px solid var(--line);background:#fff;border-radius:999px;padding:.35em .9em;font-size:.95em}
+.chip.sel{background:var(--violet);border-color:var(--violet);color:#fff}
+.quote{font-size:1.1em;font-style:italic}
+.cl-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 2em}
+.mini{font-size:.9em;color:var(--soft)}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:.6em;margin-top:.5em}
+/* errores */
+.notes{font-family:"Atkinson Hyperlegible";line-height:2.05;font-size:1.1em;background:repeating-linear-gradient(#fff 0 2.05em,#e5e9ff 2.05em calc(2.05em + 1px));padding:.4em 1.2em;border-radius:12px;border:1px solid var(--line)}
+.seg{border-bottom:2px dotted var(--violet);padding:0 .15em;cursor:pointer;border-radius:4px}
+.seg:hover{background:var(--violet2)}
+.seg.mk{background:var(--red2);color:var(--red);text-decoration:line-through;border-bottom-color:var(--red);font-weight:700}
+.counter{font-weight:700;color:var(--violet)}
+/* crucigrama */
+.cw-wrap{display:grid;grid-template-columns:auto 1fr;gap:1.6em;align-items:start}
+.cw{display:grid;gap:2px;background:transparent}
+.cell{width:var(--cs);height:var(--cs);position:relative}
+.cell.x{background:transparent}
+.cell input{width:100%;height:100%;border:2px solid #4b4675;border-radius:4px;text-align:center;font:700 calc(var(--cs)*.55) "Space Grotesk";text-transform:uppercase;padding:0;background:#fff;color:var(--ink)}
+.cell input:focus{outline:none;background:#fff3c4;border-color:var(--amber)}
+.cell input.hl{background:#efeaff}
+.cell .n{position:absolute;top:1px;left:3px;font-size:calc(var(--cs)*.28);font-weight:700;color:var(--violet);pointer-events:none}
+.clues h3{font-size:1.05em;margin:.2em 0 .3em;color:var(--violet)}
+.clues ol{margin:0 0 .8em;padding-left:0;list-style:none}
+.clues li{margin:.25em 0;text-align:left}
+.clues li b{color:var(--violet);margin-right:.3em}
+/* chiste */
+.joke{display:grid;grid-template-columns:9em 1fr;gap:1.2em;align-items:center;background:linear-gradient(135deg,#fff6d8,#ffe7f0);border-radius:16px;padding:1em 1.4em;margin-bottom:1em}
+.joke .line{font-size:1.25em;margin:.25em 0}
+.opts{display:grid;gap:.4em;margin-top:.5em}
+.opt{border:2px solid var(--line);background:#fff;border-radius:10px;padding:.5em .8em;text-align:left;font-size:.98em}
+.opt.sel{border-color:var(--violet);background:var(--violet2)}
+/* redacción */
+textarea,.txt{font:inherit;width:100%;border:2px solid var(--line);border-radius:10px;padding:.6em .8em;background:#fff;resize:vertical}
+textarea:focus,.txt:focus{outline:none;border-color:var(--violet)}
+.wc{font-size:.9em;color:var(--soft);text-align:right}
+.wc.ok{color:var(--green);font-weight:700}
+.diario{line-height:2.3;font-size:1.08em;text-align:justify}
+.gap{font:inherit;font-weight:700;width:9.5em;border:0;border-bottom:2px solid var(--violet);background:var(--violet2);border-radius:6px 6px 0 0;padding:.05em .4em;margin:0 .15em;color:var(--violet);text-align:center}
+.gap:focus{outline:none;background:#fff3c4}
+.ckey{display:flex;flex-wrap:wrap;gap:.4em;margin:.6em 0;padding:.6em;background:#15112e;border-radius:12px}
+.ckey span{display:flex;flex-direction:column;align-items:center;background:#fff;border-radius:8px;padding:.2em .5em;min-width:2.4em;font-weight:700}
+.ckey b{font-size:1.4em;color:var(--violet);font-weight:400}
+.cmsg{display:flex;flex-wrap:wrap;gap:.4em 1.6em;font-size:1.9em;letter-spacing:.12em;margin:.6em 0 .8em;color:var(--ink)}
+.cmsg span{border-bottom:3px solid var(--amber)}
+.fnrow{display:grid;grid-template-columns:11em 1fr;gap:.8em;align-items:center;margin:.45em 0}
+.fnrow b{background:var(--teal2);color:#075c6c;border-radius:8px;padding:.45em .6em;text-align:center}
+.rad{display:grid;grid-template-columns:7em 1fr;gap:1.2em;align-items:center;background:#15112e;color:#fff;border-radius:16px;padding:1em 1.4em;margin-bottom:1em}
+.rad p{margin:.2em 0}
+/* overlays */
+.ovl{position:fixed;inset:0;background:#15112ecc;display:none;align-items:center;justify-content:center;z-index:50}
+.ovl.on{display:flex}
+.modal{background:#fff;border-radius:18px;padding:1.6em 2em;width:min(92vw,820px);box-shadow:0 20px 60px #0008}
+.modal h2{margin-bottom:.4em}
+.warnm{background:var(--red);color:#fff;text-align:center;animation:shake .4s 2}
+.warnm h2{font-size:2em}
+.warnm .big{font-size:1.25em}
+@keyframes shake{25%{transform:translateX(-10px)}75%{transform:translateX(10px)}}
+.mbtns{display:flex;gap:1em;justify-content:flex-end;margin-top:1.2em;flex-wrap:wrap}
+.btn{border:0;border-radius:999px;padding:.6em 1.3em;font-weight:700;font-size:1em}
+.btn.p{background:var(--violet);color:#fff}.btn.s{background:#ece9f7;color:var(--ink)}.btn.w{background:#fff;color:var(--red)}
+/* end */
+#end{align-items:center;justify-content:center;background:radial-gradient(circle at 20% 20%,#3b2a8f,#15112e 60%);color:#fff;overflow:auto}
+#end .modal{color:var(--ink);max-height:94vh;overflow:auto}
+.status{padding:.6em 1em;border-radius:10px;margin:.8em 0;font-weight:700}
+.status.ok{background:var(--green2);color:#0b6b52}.status.ko{background:var(--red2);color:var(--red)}
+@media (max-width:1100px){.pane{padding:1em 3.6em 3em}.logbox{grid-template-columns:1fr}.logbox .alien{max-height:28vh}.cw-wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body oncontextmenu="return false">
+
+<!-- ===================== LOGIN ===================== -->
+<section class="screen on" id="gate">
+  <div class="gatebox">
+    <div class="gtag">1.º ESO · Lengua Castellana y Literatura</div>
+    <h1>Prueba<br>tema comunicación</h1>
+    <p class="gsub">Elementos, clases y funciones</p>
+    <div class="grow"><div><label for="fn">Nombre</label><input id="fn" class="gin" autocomplete="off"></div>
+      <div><label for="ln">Apellidos</label><input id="ln" class="gin" autocomplete="off"></div></div>
+    <div class="grow"><div><label for="cu">Curso y grupo</label><input id="cu" class="gin" list="cursos" placeholder="Ej.: 1.º ESO A" autocomplete="off">
+      <datalist id="cursos"><option>1.º ESO A</option><option>1.º ESO B</option><option>1.º ESO C</option><option>1.º ESO D</option></datalist></div>
+      <div><label for="ac">Código de acceso</label><input id="ac" autocomplete="off" spellcheck="false"></div></div>
+    <div class="ginst"><b>Instrucciones</b>
+      <ul>
+        <li>Tienes <b>35 minutos</b>. El tiempo empieza al pulsar «Empezar» y, cuando se acaba, la prueba se entrega sola.</li>
+        <li>Hay <b>8 actividades</b>. Puedes saltar de una a otra con las pestañas o las flechas y cambiar tus respuestas hasta que entregues.</li>
+        <li>La prueba se abre en pantalla completa. <b>No salgas de la pestaña ni abras otros programas</b>: sonará un aviso y la salida quedará registrada.</li>
+        <li>Solo se puede hacer <b>una vez</b>. No recargues la página ni cierres la pestaña hasta haber entregado.</li>
+        <li>Al entregar verás tu nota y la corrección.</li>
+      </ul></div>
+    <button class="gbtn" id="startBtn">Empezar la prueba</button>
+    <div class="gerr" id="loginErr"></div>
+  </div>
+</section>
+
+<!-- ===================== EXAM ===================== -->
+<section class="screen" id="exam">
+  <header class="top">
+    <div class="ttl">📝 Prueba · La comunicación</div>
+    <div class="who" id="who"></div>
+    <span class="incb" id="incb"></span>
+    <div class="timer" id="timer">35:00</div>
+    <button class="sendbtn" id="sendBtn">Entregar ✔</button>
+  </header>
+  <nav class="tabs" id="tabs"></nav>
+  <div class="stage">
+    <button class="arrow l" id="prev" aria-label="Anterior">◀</button>
+    <button class="arrow r" id="next" aria-label="Siguiente">▶</button>
+    <div id="panes"></div>
+  </div>
+</section>
+
+<!-- ===================== END ===================== -->
+<section class="screen" id="end">
+  <div class="modal" style="width:min(92vw,760px)">
+    <h2>📡 Prueba entregada</h2>
+    <p id="endWho"></p>
+    <div id="endStatus" class="status"></div>
+    <p id="endInfo"></p>
+    <div class="mbtns"><button class="btn p" id="revBtn">Ver corrección</button><button class="btn w" id="exitBtn" style="display:none;border:2px solid var(--red)">✕ Salir</button><button class="btn s" id="dlBtn">⬇ Descargar copia de seguridad</button></div>
+    <div id="rev" style="display:none;max-height:52vh;overflow:auto;margin-top:1em"></div>
+  </div>
+</section>
+
+<!-- overlays -->
+<div class="ovl" id="warn"><div class="modal warnm">
+  <h2>⚠️ ¡Has salido de la prueba!</h2>
+  <p class="big" id="warnTxt"></p>
+  <p>Esta salida ha quedado registrada y tu profesor la verá. Vuelve a la prueba y no salgas de esta pantalla.</p>
+  <div class="mbtns" style="justify-content:center"><button class="btn w" id="backBtn">Volver a la prueba (pantalla completa)</button></div>
+</div></div>
+
+<div class="ovl" id="confirm"><div class="modal">
+  <h2>¿Entregar la prueba?</h2>
+  <div id="confTxt"></div>
+  <p>Después de entregar ya no podrás cambiar nada.</p>
+  <div class="mbtns"><button class="btn s" id="confNo">Seguir revisando</button><button class="btn p" id="confYes">Sí, entregar</button></div>
+</div></div>
+
+<script>
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim();
+function hashStr(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return (h>>>0)}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+let rng=Math.random;
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(rng()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pick=(a,n)=>shuffle(a).slice(0,n);
+const r2=x=>Math.round(x*100)/100;
+const fmt=x=>r2(x).toLocaleString('es-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+/* =========================================================
+   BANCOS DE PREGUNTAS
+   ========================================================= */
+const ELS=[['emisor','Emisor'],['receptor','Receptor'],['mensaje','Mensaje'],['canal','Canal'],['codigo','Código'],['situacion','Situación comunicativa']];
+
+const SCENES=[
+ {t:'Viernes, 22:40. Lucía, capitana del equipo de baloncesto del instituto, escribe en el grupo de WhatsApp del equipo: «Mañana, partido a las 10 en el pabellón. ¡No lleguéis tarde! 🏀⏰».',
+  e:{emisor:'Lucía, la capitana',receptor:'las jugadoras del grupo del equipo',mensaje:'que mañana hay partido a las 10 y no deben llegar tarde',canal:'internet, a través del móvil',codigo:'el castellano escrito y los emojis',situacion:'un viernes por la noche, entre compañeras de equipo con confianza'},
+  d:['el pabellón de deportes','el entrenador del equipo','el baloncesto']},
+ {t:'En un control de la autovía, de madrugada, un agente de la Guardia Civil levanta la palma de la mano y después señala el arcén a una conductora que se acerca con su coche.',
+  e:{emisor:'el agente de la Guardia Civil',receptor:'la conductora',mensaje:'que debe detenerse en el arcén',canal:'el aire (la conductora lo ve)',codigo:'los gestos que usan los agentes de tráfico',situacion:'un control de tráfico de madrugada, entre una autoridad y una conductora'},
+  d:['el coche de la conductora','la autovía','la palma de la mano']},
+ {t:'A las 8:05 de la mañana, en el programa «Bos días, Galicia», la locutora Marta Rial informa a los oyentes: «Atención: la AP-9 está cortada a la altura de Rande por un accidente».',
+  e:{emisor:'la locutora Marta Rial',receptor:'los oyentes del programa',mensaje:'que la AP-9 está cortada en Rande por un accidente',canal:'las ondas de radio',codigo:'el castellano oral',situacion:'un programa matinal de radio, con una locutora que habla a un público desconocido'},
+  d:['el programa «Bos días, Galicia»','la AP-9','los conductores del accidente']},
+ {t:'Xosé, un vecino de Tui de 82 años, escribe a mano una carta en gallego a su nieta Carla, que estudia en Melbourne (Australia), y se la envía por correo postal para felicitarle el cumpleaños.',
+  e:{emisor:'Xosé, el abuelo',receptor:'su nieta Carla',mensaje:'la felicitación de cumpleaños',canal:'el correo postal (el papel de la carta)',codigo:'el gallego escrito',situacion:'abuelo y nieta, a miles de kilómetros, en el cumpleaños de ella'},
+  d:['Melbourne (Australia)','el cartero','el castellano escrito']},
+ {t:'Minuto 89 de la final del torneo escolar. La árbitra hace sonar el silbato con fuerza y señala el punto de penalti. Las jugadoras del equipo visitante protestan y el público se pone en pie.',
+  e:{emisor:'la árbitra',receptor:'las jugadoras y el público',mensaje:'que ha pitado penalti',canal:'el aire (se oye el silbato y se ve el gesto)',codigo:'el silbato y los gestos del reglamento',situacion:'el final de un partido decisivo, en un campo lleno de público'},
+  d:['el balón','el punto de penalti','el equipo visitante']},
+ {t:'En el aeropuerto de Peinador suena por los altavoces: «Último aviso para los pasajeros del vuelo IB-509 con destino Madrid: diríjanse inmediatamente a la puerta 4». Después, el aviso se repite en inglés.',
+  e:{emisor:'el personal del aeropuerto',receptor:'los pasajeros del vuelo a Madrid',mensaje:'que es el último aviso y deben ir a la puerta 4',canal:'las ondas sonoras que salen de los altavoces',codigo:'el castellano y el inglés orales',situacion:'un aeropuerto, con prisa, entre el personal y pasajeros desconocidos'},
+  d:['el avión IB-509','la ciudad de Madrid','la puerta 4']},
+ {t:'Una noche de temporal, frente a las islas Cíes, a un pescador se le avería el motor. Enciende y apaga su linterna: tres destellos cortos, tres largos y tres cortos. En el faro, la farera lo ve y avisa a Salvamento Marítimo.',
+  e:{emisor:'el pescador',receptor:'la farera',mensaje:'que necesita ayuda (SOS)',canal:'la luz de la linterna, que viaja por el aire',codigo:'el código morse',situacion:'una noche de temporal en el mar, una emergencia entre desconocidos'},
+  d:['Salvamento Marítimo','el motor averiado','las islas Cíes']},
+ {t:'Por la mañana, Iker y Noa han hablado de quedar por la tarde. En el recreo, Iker ve a Noa al otro lado del patio. Como hay muchísimo ruido, se señala la muñeca y levanta cinco dedos. Noa asiente con la cabeza.',
+  e:{emisor:'Iker',receptor:'Noa',mensaje:'que quedan a las cinco',canal:'el aire (Noa lo ve)',codigo:'unos gestos que los dos entienden',situacion:'el recreo, en un patio ruidoso, entre dos amigos'},
+  d:['el ruido del patio','la muñeca de Iker','los demás alumnos del patio']}
+];
+
+const FALLOS={
+ emisor:['El profesor de Física explica la lección hablando muy bajito y de espaldas a la clase, mirando a la pizarra. Al terminar, nadie sabe qué ha dicho.','Un niño de tres años intenta contarle a su madre lo que ha pasado en la guardería, pero llora tanto que solo consigue decir palabras sueltas.'],
+ receptor:['Le cuentas a tu hermano un secreto importantísimo, pero él está jugando a la consola y, cuando acabas, te pregunta: «¿Qué?».','Tu abuelo se queda dormido en el sofá mientras le explicas cómo hacer una videollamada.'],
+ mensaje:['En el tablón aparece un aviso: «La excursión a Santiago será el día de octubre a las 9:00». Nadie sabe qué día hay que ir.','Quieres quedar con tu amigo a las 17:00, pero escribes «Quedamos a las 7:00» y él se presenta a las siete de la mañana.'],
+ canal:['Intentas hablar por teléfono con tu tía mientras el tren pasa por un túnel: la llamada se corta una y otra vez.','En mitad de la videoconferencia con un instituto de Italia, se cae internet y la imagen se queda congelada.'],
+ codigo:['Una turista japonesa pregunta en japonés a un vecino de Vigo dónde está la estación de tren. Él solo habla castellano y gallego.','Tu hermana escribe en el grupo familiar «xq tkm bro, nos vms dsp» y tu abuela no entiende ni una palabra.'],
+ situacion:['En un funeral, un chico saluda a la familia del fallecido con un sonoro «¡Qué guay veros a todos!».','En la reunión de familias, un alumno saluda a la directora con un «¡Ey, tronca! ¿Qué pasa?».']
+};
+
+const CLASES={
+ oral:['Un audio de WhatsApp de tu madre','Un pódcast sobre fútbol','La lectura en voz alta de un poema en la radio','Un mensaje en el contestador automático','Una conferencia sobre el cambio climático'],
+ escrita:['Un tuit sin emojis','Los subtítulos de una película','Una nota en la nevera: «Compra leche»','Un cartel en una puerta que dice «Empujar»','La lista de la compra'],
+ noverbal:['La sirena de una ambulancia','Encogerse de hombros','El pictograma de un cigarro tachado','El timbre que indica el final del recreo','Un aplauso al final de una obra de teatro'],
+ mixta:['Un meme: foto de un gato dormido con el texto «Yo los lunes»','Un cómic con bocadillos de diálogo','Un anuncio de televisión con imágenes y una voz que dice el eslogan','El mensaje «Llego tarde 😅🏃»','Un mapa del metro con dibujos y nombres de estaciones']
+};
+const CL_LAB={oral:'Verbal oral',escrita:'Verbal escrita',noverbal:'No verbal',mixta:'Verbal y no verbal a la vez'};
+
+const FUNCS=[['representativa','Representativa'],['expresiva','Expresiva'],['apelativa','Apelativa'],['poetica','Poética'],['fatica','Fática'],['metalinguistica','Metalingüística']];
+const FN_EL={representativa:'contexto',expresiva:'emisor',apelativa:'receptor',poetica:'mensaje',fatica:'canal',metalinguistica:'codigo'};
+const EL6=[['emisor','Emisor'],['receptor','Receptor'],['mensaje','Mensaje'],['canal','Canal'],['codigo','Código'],['contexto','Contexto']];
+const FN_BANK={
+ representativa:['El agua hierve a 100 grados al nivel del mar.','El autobús de la línea 3 pasa cada veinte minutos.','Ayer llovió en Vigo durante toda la tarde.','La biblioteca del instituto cierra los viernes a las dos.'],
+ expresiva:['¡Qué rabia me da que siempre pierda mi equipo!','Ojalá mañana no haya examen sorpresa…','Estoy hecho polvo después del partido.','Uf, ¡qué asco de tiempo!'],
+ apelativa:['¿Me prestas tu calculadora un momento?','No toquéis los cuadros, por favor.','Baja la música ahora mismo.','¿Vienes a la fiesta del sábado?'],
+ poetica:['Bien vestido, bien recibido.','Las nubes, algodón de azúcar del cielo.','A quien madruga, Dios le ayuda.','Mi corazón es un tambor que redobla cuando te ve.'],
+ fatica:['¿Hola? ¿Se me oye? Creo que se ha cortado.','Ya, ya… sí, sí… te sigo, te sigo.','Un, dos, tres… probando, probando.','¿Sigues ahí? No te veo en la pantalla.'],
+ metalinguistica:['«Hola» se escribe con hache.','¿Qué significa la palabra «efímero»?','«Rápidamente» es un adverbio.','En gallego, «cadeira» significa «silla».']
+};
+
+const ERRS=[
+ [['La comunicación es un proceso en el que ',0],['se transmite información',1],['. Quien envía el mensaje se llama ',0],['receptor',2],['. El ',0],['canal',2],[' es el conjunto de signos y reglas que comparten emisor y receptor para entenderse. Cuando hablamos cara a cara, el canal es ',0],['el aire',1],['. La situación comunicativa incluye ',0],['el lugar, el momento y la relación',1],[' entre los hablantes. La comunicación verbal usa ',0],['signos lingüísticos',1],['. El signo lingüístico ',0],['se parece a lo que representa',2],['. Cada idioma es un ',0],['código',1],['. Cuando decimos «¿Me oyes?», usamos la función ',0],['apelativa',2],[', y cuando decimos que «mesa» es un sustantivo, usamos la función ',0],['metalingüística',1],['.',0]],
+ [['Existen dos clases de comunicación. La ',0],['verbal',1],[' puede ser oral o escrita. Un audio de WhatsApp es comunicación verbal ',0],['escrita',2],['. Los gestos, las imágenes y los sonidos forman la comunicación ',0],['no verbal',1],['. Los emojis de un mensaje forman parte del ',0],['canal',2],['. El signo lingüístico tiene dos caras: el ',0],['significante',1],[', que son los sonidos o las letras, y el ',0],['significado',1],[', que es la idea. Que el árbol se llame «árbol» en castellano y «tree» en inglés demuestra que el signo lingüístico es ',0],['motivado',2],['. Cuando alguien escribe un poema, predomina la función ',0],['poética',1],['. Si da una orden, predomina la función ',0],['expresiva',2],['. La función representativa se relaciona con el ',0],['contexto',1],['.',0]],
+ [['Para que haya comunicación hacen falta varios elementos. El ',0],['emisor',1],[' es quien envía el mensaje. Emisor y receptor deben compartir el ',0],['código',1],['; si no, no se entienden. En la radio, el canal son ',0],['las ondas de radio',1],['. El braille es un ',0],['canal',2],[' que usan las personas ciegas para leer. La función fática se relaciona con el ',0],['receptor',2],[' y la función expresiva, con el ',0],['emisor',1],['. «Hoy hace frío en Lugo» es un ejemplo de función ',0],['representativa',1],[' y «Cierra la ventana», de función ',0],['expresiva',2],['. Cuando preguntamos «¿Qué significa “efímero”?», predomina la función ',0],['fática',2],['. Las circunstancias de lugar, momento y relación forman la ',0],['situación comunicativa',1],['.',0]]
+];
+
+const CW_POOL=[
+ ['EMISOR',['Quien envía el mensaje.','En «¡Mamá, ya he llegado!», lo es el hijo.']],
+ ['RECEPTOR',['Quien recibe el mensaje.','Persona a la que va dirigida una carta.']],
+ ['MENSAJE',['Información concreta que se transmite.','Lo que dice un tuit, por ejemplo.']],
+ ['CANAL',['Medio por el que viaja el mensaje.','En una conversación cara a cara, es el aire.']],
+ ['CODIGO',['Conjunto de signos y reglas que comparten emisor y receptor.','El morse, el braille o el castellano lo son.']],
+ ['FATICA',['Función de «¿Me oyes? ¿Se ha cortado?».','Función del lenguaje relacionada con el canal.']],
+ ['POETICA',['Función que busca la belleza del mensaje.','Función que predomina en un poema o en un refrán.']],
+ ['EXPRESIVA',['Función que transmite los sentimientos del emisor.','Función relacionada con el emisor.']],
+ ['APELATIVA',['Función con la que queremos influir en el receptor.','Función que predomina en las órdenes.']],
+ ['VERBAL',['Comunicación que usa signos lingüísticos.','Comunicación que puede ser oral o escrita.']],
+ ['ORAL',['Comunicación verbal que usa sonidos.','Así es la comunicación en un pódcast.']],
+ ['ESCRITA',['Comunicación verbal de una novela o de un tuit.','Comunicación verbal que usa letras.']],
+ ['ICONO',['Signo que se parece a lo que representa.','El dibujo de un autobús en una parada lo es.']],
+ ['SIGNIFICADO',['Cara del signo lingüístico: la idea que nos viene a la mente.','Concepto mental de un signo lingüístico.']],
+ ['SIGNIFICANTE',['Cara del signo lingüístico formada por sonidos o letras.','Forma (sonidos o letras) de un signo lingüístico.']],
+ ['GESTOS',['Señales no verbales que hacemos con las manos o la cara.','El lenguaje corporal está hecho de ellos.']],
+ ['SITUACION',['El lugar, el momento y la relación forman la … comunicativa.','Circunstancias en las que se produce la comunicación.']],
+ ['ARBITRARIO',['Así es el signo lingüístico: no hay relación natural con lo que nombra.','Lo contrario de «motivado», hablando de signos.']],
+ ['CONTEXTO',['Elemento con el que se relaciona la función representativa.','Realidad de la que se habla en un mensaje informativo.']]
+];
+
+const JOKES=[
+ {l:['En el teléfono de emergencias:','—¿En qué puedo ayudarle?','—Iba corriendo y me he golpeado contra una puerta de cristal.','—¿Se ha cortado?','—No, lo escucho perfectamente.'],
+  q:[['¿Por qué hace gracia el chiste?',['«¿Se ha cortado?» puede significar herirse con el cristal o cortarse la llamada, y el herido entiende lo segundo.','El herido no oye bien porque hay ruido en la línea.','El operador y el herido hablan lenguas distintas.','El herido no explica qué le ha pasado.']],
+     ['Si «¿Se ha cortado?» se refiriera a la llamada, ¿qué función del lenguaje predominaría?',['Fática','Apelativa','Expresiva','Metalingüística']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El canal','El receptor','El código','El mensaje']],
+     ['En esta conversación telefónica, ¿cuál es el canal?',['La línea telefónica','El castellano','La puerta de cristal','El operador de emergencias']]]},
+ {l:['—Me encantan los mensajes de voz.','—Sí, yo los de texto.','—Sí, sí, esos también molan.'],
+  q:[['¿Dónde está el malentendido?',['«Los de texto» suena igual que «los detesto», y el primero entiende lo contrario de lo que quería decir el segundo.','El primero no sabe qué es un mensaje de texto.','Los dos hablan a la vez y no se oyen.','El segundo usa una palabra que no existe.']],
+     ['Los mensajes de voz son comunicación…',['verbal oral','verbal escrita','no verbal','verbal y no verbal a la vez']],
+     ['Y los mensajes de texto sin emojis son comunicación…',['verbal escrita','verbal oral','no verbal','verbal y no verbal a la vez']],
+     ['¿Qué función predomina en «Me encantan los mensajes de voz»?',['Expresiva','Representativa','Apelativa','Poética']]]},
+ {l:['—Hola, ¿es la carnicería?','—No, es la zapatería.','—Disculpe, me he equivocado de número.','—No importa, tráigalos, se los cambiamos.'],
+  q:[['¿En qué palabra está la gracia del chiste?',['En «número»: el del teléfono y el de los zapatos.','En «carnicería», porque suena como «zapatería».','En «disculpe», porque es una orden.','En «hola», porque es la función fática.']],
+     ['Las dos palabras «número» del chiste tienen…',['el mismo significante y distinto significado','el mismo significado y distinto significante','distinto significante y distinto significado','el mismo significante y el mismo significado']],
+     ['El cliente llama a una tienda que no es la que buscaba. ¿Qué elemento de la comunicación no es el que él quería?',['El receptor','El código','El canal','El mensaje']],
+     ['¿Qué función predomina en «Tráigalos, se los cambiamos»?',['Apelativa','Fática','Metalingüística','Expresiva']]]},
+ {l:['—¿Qué le dice un techo a otro?','—Techo de menos.'],
+  q:[['¿En qué se basa el chiste?',['En que «techo de menos» suena casi igual que «te echo de menos».','En que los techos no hablan, así que el código es no verbal.','En que el mensaje está incompleto.','En que el canal tiene ruido.']],
+     ['Dicha en serio a alguien que está lejos, la frase «Te echo de menos» tiene función…',['Expresiva','Representativa','Fática','Metalingüística']],
+     ['Un estudiante inglés que está aprendiendo castellano no entiende el chiste. ¿Qué elemento falla?',['El código: todavía no lo domina lo suficiente.','El canal.','El emisor.','La situación comunicativa.']],
+     ['Si mandas el chiste por WhatsApp así: «Techo de menos 🏠😢», ¿qué clase de comunicación es?',['Verbal escrita y no verbal a la vez','Solo verbal escrita','Solo no verbal','Verbal oral']]]},
+ {l:['—¿Cómo se escribe «sintaxis»?','—Con Uber.'],
+  q:[['¿Por qué hace gracia?',['Porque «sintaxis» suena como «sin taxis», y Uber es una forma de moverse sin taxi.','Porque la sintaxis se escribe con u.','Porque Uber es una palabra en otra lengua y falla el código.','Porque el que responde no ha oído la pregunta.']],
+     ['¿Qué función predomina en la pregunta «¿Cómo se escribe "sintaxis"?»?',['Metalingüística','Fática','Poética','Representativa']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El código','El canal','El emisor','El contexto']],
+     ['Si el chiste se cuenta en voz alta en clase, ¿qué clase de comunicación es?',['Verbal oral','Verbal escrita','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['En una entrevista de trabajo:','—Nivel de inglés.','—Alto.','—A ver, ¿qué es «oil»?','—Viernes.'],
+  q:[['¿Por qué falla la comunicación?',['Porque el candidato no domina el inglés y entiende «oil» como «hoy».','Porque hay ruido en la sala de la entrevista.','Porque el entrevistador no hace ninguna pregunta.','Porque el candidato habla demasiado bajo.']],
+     ['¿Qué elemento de la comunicación falla?',['El código','El canal','El emisor','El mensaje']],
+     ['¿Cuál es la situación comunicativa?',['Una entrevista de trabajo, con una relación formal entre entrevistador y candidato.','Una conversación entre dos amigos en un bar.','Una clase de inglés entre profesor y alumno.','Una llamada de teléfono entre desconocidos.']],
+     ['En «¿Qué es "oil"?» se pregunta por el significado de una palabra. ¿Qué función predomina?',['Metalingüística','Poética','Expresiva','Fática']]]},
+ {l:['—Papá, papá, ¿«horchata» se escribe con «h»?','—Pues claro, si no sería «horcata».'],
+  q:[['¿Qué función predomina en la pregunta del hijo?',['Metalingüística','Fática','Poética','Expresiva']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El código','El canal','El receptor','El contexto']],
+     ['¿Por qué hace gracia la respuesta del padre?',['Piensa en la «h» de «ch» y no en la «h» del principio, que era la de la pregunta.','No ha oído bien la pregunta porque hay ruido.','Responde en otra lengua que el hijo no entiende.','Contesta con una orden en lugar de una explicación.']],
+     ['Si el hijo hiciera la pregunta por WhatsApp, sin emojis, ¿qué clase de comunicación sería?',['Verbal escrita','Verbal oral','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Doctor, soy asmático, ¿es grave?','—No, amigo, es esdrújula.'],
+  q:[['¿Por qué hace gracia el chiste?',['El paciente usa «grave» como «serio» y el médico la entiende como palabra llana, hablando de la acentuación.','El médico no oye bien al paciente.','El paciente y el médico hablan lenguas distintas.','El médico contesta con una pregunta.']],
+     ['En la respuesta del médico, que habla de la acentuación de la palabra «asmático», predomina la función…',['Metalingüística','Representativa','Apelativa','Fática']],
+     ['Las dos «grave» del chiste (la de «serio» y la de «palabra llana») tienen…',['el mismo significante y distinto significado','el mismo significado y distinto significante','distinto significante y distinto significado','el mismo significante y el mismo significado']],
+     ['En «¿Es grave?», el paciente hace una pregunta al médico. ¿Qué función predomina?',['Apelativa','Metalingüística','Poética','Fática']]]},
+ {l:['Llama uno por teléfono:','—Hola, ¿está María José?','—No, soy José María.','—Disculpe, he marcado al revés.'],
+  q:[['¿Por qué hace gracia el chiste?',['Como el nombre está «al revés», el que llama cree que también ha marcado el número al revés.','El que llama no conoce el código de los números.','La línea tiene mucho ruido y no se oye nada.','José María se niega a contestar.']],
+     ['¿Qué elemento de la comunicación no es el que esperaba el que llama?',['El receptor','El código','El canal','El mensaje']],
+     ['En esta conversación, ¿cuál es el canal?',['La línea telefónica','El castellano','El número de teléfono','José María']],
+     ['¿Qué clase de comunicación es una llamada de teléfono?',['Verbal oral','Verbal escrita','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Perdona, ¿cómo te llamas?','—Yo, Paco, ¿y tú?','—No, yo no.'],
+  q:[['¿Por qué hace gracia el chiste?',['El primero entiende «¿y tú?» como «¿y tú también te llamas Paco?» y contesta que no.','Paco no oye la pregunta.','Paco contesta en otra lengua.','El primero no deja hablar a Paco.']],
+     ['El malentendido se produce porque «¿y tú?» se puede entender de dos maneras. ¿Qué elemento causa el problema?',['El mensaje, que es ambiguo','El canal, que tiene ruido','El código, que no comparten','El emisor, que habla muy bajo']],
+     ['¿Qué función predomina en «Perdona, ¿cómo te llamas?»?',['Apelativa','Expresiva','Poética','Metalingüística']],
+     ['¿Cuál es la situación comunicativa más probable?',['Dos personas que no se conocen y se presentan.','Dos hermanos que hablan en casa.','Un profesor que pasa lista en clase.','Una locutora que habla por la radio.']]]},
+ {l:['—¿Qué le dice un jaguar a otro jaguar?','—«How are you?».'],
+  q:[['¿En qué se basa el chiste?',['En que «jaguar» suena parecido a la pregunta inglesa «How are you?».','En que los jaguares no saben hablar.','En que el mensaje está incompleto.','En que el canal tiene ruido.']],
+     ['En el chiste se mezclan el castellano y el inglés. ¿Qué elemento de la comunicación es cada lengua?',['Un código','Un canal','Un mensaje','Un receptor']],
+     ['Un compañero que no sabe nada de inglés no entiende el chiste. ¿Qué elemento falla?',['El código','El canal','El emisor','La situación comunicativa']],
+     ['Si el chiste se cuenta en voz alta, ¿qué clase de comunicación es?',['Verbal oral','Verbal escrita','No verbal','Verbal y no verbal a la vez']]]},
+ {l:['—Hola, ¿Conchita?','—No, con Tarzán.'],
+  q:[['¿Por qué hace gracia?',['«Conchita» suena igual que «con Chita», la mona de Tarzán.','El que contesta no sabe quién es Conchita.','Los dos hablan lenguas distintas.','El que contesta da una orden.']],
+     ['Cuando cogemos el teléfono, decir «Hola, ¿sí?» para comprobar que hay alguien al otro lado es un ejemplo de función…',['Fática','Expresiva','Poética','Representativa']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El canal','El receptor','El código','El mensaje']],
+     ['«Conchita» y «con Chita»…',['se pronuncian igual pero tienen distinto significado','tienen el mismo significado','son signos no lingüísticos','son dos canales distintos']]]},
+ {l:['—¿Te cuesta decir «amigo» en italiano?','—Amicci.','—A mí no.'],
+  q:[['¿Por qué hace gracia el chiste?',['«Amicci» suena como «a mí sí», y el primero lo entiende como una respuesta a su pregunta.','El italiano y el castellano son el mismo código.','El primero no oye la respuesta.','El segundo no quiere contestar.']],
+     ['En la pregunta «¿Te cuesta decir “amigo” en italiano?» se habla de una palabra y de una lengua. ¿Qué función predomina?',['Metalingüística','Fática','Expresiva','Poética']],
+     ['¿Con qué elemento de la comunicación se relaciona esa función?',['El código','El canal','El emisor','El contexto']],
+     ['Si quien escucha no supiera nada de italiano, ¿qué elemento fallaría?',['El código','El canal','El receptor','La situación comunicativa']]]}
+];
+const DIARIOS=[
+ [['Diario de Lucía, lunes. En el recreo, mi amigo Hugo me ha hecho unos gestos desde la otra punta del patio: esa comunicación es no '],[['verbal']],['. Al principio no lo entendí, porque no compartíamos el mismo '],[['codigo']],['. Hugo, que enviaba el mensaje, era el '],[['emisor','emisora']],['; yo, que lo recibía, era la '],[['receptora','receptor']],['. Como estábamos lejos, sus gestos llegaban hasta mí a través del aire: ese es el '],[['canal']],['. En clase hemos aprendido que la palabra «hola» tiene dos caras: el '],[['significante']],[', que son sus letras y sus sonidos, y el '],[['significado']],[', que es la idea. Cuando el profesor dijo «“Patio” es un sustantivo», usó la función '],[['metalinguistica']],['.']],
+ [['Diario de Lucía, miércoles. Mi prima vive en Suiza y hoy hemos hablado por videollamada. Al empezar siempre le pregunto «¿Me oyes? ¿Hay cobertura?»: así uso la función '],[['fatica']],[', que se relaciona con el '],[['canal']],['. Después le digo «¡Te echo muchísimo de menos!», donde predomina la función '],[['expresiva']],[', relacionada con el '],[['emisor']],['. A mi hermano le grito «Baja el volumen de la tele», donde predomina la función '],[['apelativa']],['. Mi prima me ha leído un poema lleno de rimas: en él predomina la función '],[['poetica']],[', que se relaciona con el '],[['mensaje']],['. Y cuando me cuenta «En Ginebra hay un lago enorme», solo me informa de forma objetiva: es la función '],[['representativa']],['.']],
+ [['Diario de Lucía, viernes. Hoy le he explicado el tema de la comunicación a mi hermano pequeño. Le he contado que la comunicación verbal puede ser '],[['oral']],[', como cuando hablamos, o '],[['escrita']],[', como en una carta. Le dije que el signo lingüístico es '],[['arbitrario']],[', porque no hay ninguna relación natural entre la palabra y lo que nombra. También aprendió que el lugar, el momento y la relación entre los hablantes forman la '],[['situacion']],[' comunicativa. Para entendernos, emisor y receptor debemos compartir el mismo '],[['codigo']],['. Mi voz viaja por el aire de la habitación: ese es el '],[['canal']],['. Si mi madre nos dice «¡A cenar ya!», usa la función '],[['apelativa']],[', que se relaciona con el '],[['receptor']],['.']]
+];
+const CIFRAS=['EL EMISOR ES QUIEN ENVIA EL MENSAJE','EL RECEPTOR ES QUIEN RECIBE EL MENSAJE','EMISOR Y RECEPTOR COMPARTEN EL CODIGO','EN UNA CONVERSACION EL CANAL ES EL AIRE',
+ 'EL SIGNO LINGUISTICO ES ARBITRARIO','LA FUNCION FATICA COMPRUEBA EL CANAL','LA FUNCION POETICA CUIDA LA FORMA','UN GESTO ES COMUNICACION NO VERBAL',
+ 'UN AUDIO ES COMUNICACION VERBAL ORAL','UNA CARTA ES COMUNICACION VERBAL ESCRITA','LA FUNCION EXPRESIVA MUESTRA SENTIMIENTOS','CON LAS ORDENES USAMOS LA FUNCION APELATIVA',
+ 'EL MORSE Y EL BRAILLE SON CODIGOS','EL SIGNIFICANTE SON SONIDOS O LETRAS','EL SIGNIFICADO ES LA IDEA DE LA PALABRA','LA FUNCION METALINGUISTICA HABLA DE LA LENGUA',
+ 'LA FUNCION REPRESENTATIVA INFORMA','SIN CODIGO COMPARTIDO NO HAY COMUNICACION','LOS EMOJIS SON SIGNOS NO LINGUISTICOS','MAPFRE NOS AYUDA A RECORDAR LAS FUNCIONES',
+ 'LA SITUACION INCLUYE EL LUGAR Y EL MOMENTO','LA RADIO USA LAS ONDAS COMO CANAL','UN MEME MEZCLA IMAGEN Y PALABRAS','LA LENGUA SIRVE PARA COMUNICARNOS'];
+const INTERRO=[
+ {t:'Si dos terrícolas hablan lenguas distintas, lo que falla es el canal.',v:false,r:['Lo que no comparten es el código, no el canal.','La lengua es el medio físico por el que viaja el mensaje.','Lo que falla es el receptor, porque no presta atención.']},
+ {t:'En una conversación cara a cara, el canal es el aire.',v:true,r:['La voz del emisor viaja por el aire hasta el receptor.','El canal es la lengua que hablan los dos.','El canal es la boca del emisor.']},
+ {t:'El signo lingüístico es arbitrario.',v:true,r:['No hay ninguna relación natural entre la palabra y lo que significa.','Las palabras se parecen a las cosas que nombran.','Cada persona puede usar la palabra que quiera para cada cosa.']},
+ {t:'Un audio de WhatsApp es comunicación verbal escrita.',v:false,r:['Es verbal oral, porque el mensaje está hecho de sonidos.','Es verbal escrita porque se envía con el móvil.','Es comunicación no verbal, porque no hay nadie delante.']},
+ {t:'La función fática sirve para comprobar que la comunicación está abierta.',v:true,r:['Por ejemplo, «¿Me oyes?» comprueba que el canal funciona.','Sirve para dar órdenes al receptor, como «Cierra la puerta».','Sirve para expresar los sentimientos del emisor.']},
+ {t:'En «¡Qué miedo me dan las tormentas!» predomina la función apelativa.',v:false,r:['Predomina la expresiva: el emisor manifiesta un sentimiento.','Es apelativa porque lleva signos de exclamación.','Predomina la representativa, porque da un dato objetivo.']},
+ {t:'El significante es la idea que nos viene a la mente al oír una palabra.',v:false,r:['Esa idea es el significado; el significante son los sonidos o las letras.','El significante es el concepto mental de la palabra.','El significante es el objeto real del que hablamos.']},
+ {t:'La situación comunicativa incluye el lugar, el momento y la relación entre emisor y receptor.',v:true,r:['Son las circunstancias en las que se produce la comunicación.','La situación comunicativa es solo el lugar donde se habla.','La situación comunicativa es lo mismo que el mensaje.']},
+ {t:'La función representativa se relaciona con el receptor.',v:false,r:['Se relaciona con el contexto: informa de la realidad de forma objetiva.','Se relaciona con el receptor porque le da información.','Se relaciona con el canal porque comprueba la comunicación.']},
+ {t:'Un emoticono es un signo no lingüístico.',v:true,r:['Es una imagen, no una palabra formada por letras o sonidos.','Es una palabra escrita con letras especiales.','Es un sonido que hace el móvil al recibir el mensaje.']},
+ {t:'En los refranes suele predominar la función poética.',v:true,r:['Usan recursos como la rima para cuidar la forma del mensaje.','Sirven para comprobar que el receptor nos oye.','Siempre dan órdenes directas al receptor.']},
+ {t:'Emisor y receptor no necesitan compartir el código si el canal funciona bien.',v:false,r:['Sin un código compartido no se entienden, aunque el canal funcione.','El canal es lo único importante para que haya comunicación.','Lo único que deben compartir es la situación comunicativa.']},
+ {t:'En «“Camión” lleva tilde en la o» predomina la función metalingüística.',v:true,r:['Se usa la lengua para hablar de la propia lengua.','Predomina la poética, porque es un nombre bonito.','Es metalingüística porque es una pregunta.']}
+];
+const GLYPHS=['◆','●','▲','■','★','✦','☾','☀','✿','♣','♠','♥','✚','✖','▼','◀','▶','☁','☂','☘','♫','⌘','✈','✂','☎'];
+
+/* =========================================================
+   ILUSTRACIONES
+   ========================================================= */
+const ICO={
+ A:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ede8ff"/><circle cx="20" cy="26" r="7" fill="#5b3fd6"/><path d="M10 46c2-8 18-8 20 0" fill="#5b3fd6"/><circle cx="46" cy="26" r="7" fill="#14a37f"/><path d="M36 46c2-8 18-8 20 0" fill="#14a37f"/><path d="M26 18h12M34 14l4 4-4 4" stroke="#f2a516" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+ B:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fde6ea"/><path d="M14 34h12l4-8 6 16 4-8h10" stroke="#e0344b" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 16l8 8M52 16l-8 8" stroke="#e0344b" stroke-width="4" stroke-linecap="round"/></svg>',
+ C:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ddf3f7"/><rect x="10" y="16" width="26" height="18" rx="5" fill="#0e8fa8"/><path d="M16 34l-4 7 10-7z" fill="#0e8fa8"/><text x="23" y="29" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">abc</text><circle cx="44" cy="40" r="10" fill="#f2a516"/><circle cx="41" cy="38" r="1.6"/><circle cx="47" cy="38" r="1.6"/><path d="M40 43q4 3 8 0" stroke="#000" stroke-width="1.6" fill="none"/></svg>',
+ D:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff3d6"/><g font-weight="700" font-size="11" text-anchor="middle" fill="#e3000f"><text x="12" y="37">M</text><text x="20" y="37">A</text><text x="28" y="37">P</text><text x="36" y="37">F</text><text x="44" y="37">R</text><text x="52" y="37">E</text></g><path d="M10 42h44" stroke="#f2a516" stroke-width="3"/></svg>',
+ E:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ede8ff"/><rect x="16" y="12" width="28" height="38" rx="3" fill="#fff" stroke="#5b3fd6" stroke-width="2"/><path d="M21 22h18M21 29h18M21 36h12" stroke="#c9c2ff" stroke-width="2"/><circle cx="42" cy="42" r="9" fill="none" stroke="#e0344b" stroke-width="3"/><path d="M48 48l7 7" stroke="#e0344b" stroke-width="4" stroke-linecap="round"/></svg>',
+ F:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#dff6ef"/><g fill="#fff" stroke="#14a37f" stroke-width="2"><rect x="14" y="14" width="12" height="12"/><rect x="26" y="14" width="12" height="12"/><rect x="38" y="14" width="12" height="12"/><rect x="26" y="26" width="12" height="12"/><rect x="26" y="38" width="12" height="12"/></g><text x="32" y="23.5" font-size="9" text-anchor="middle" font-weight="700" fill="#14a37f">C</text></svg>',
+ G:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffe7f0"/><circle cx="32" cy="32" r="18" fill="#ffd23f"/><path d="M22 28q4-4 8 0M34 28q4-4 8 0" stroke="#000" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M22 36q10 12 20 0z" fill="#7a1f2b"/><path d="M14 18l4 4M50 18l-4 4" stroke="#0e8fa8" stroke-width="3" stroke-linecap="round"/></svg>',
+ I:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ddf3f7"/><path d="M14 40l18-22 18 22z" fill="#0e8fa8"/><circle cx="32" cy="16" r="5" fill="#ffd23f"/><text x="24" y="38" font-size="11" font-weight="700" fill="#fff">V</text><text x="35" y="38" font-size="11" font-weight="700" fill="#fff">F</text><path d="M20 46q12 8 24 0" stroke="#0e8fa8" stroke-width="3" fill="none"/></svg>',
+ H:'<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#fff3d6"/><rect x="18" y="12" width="28" height="40" rx="3" fill="#fff" stroke="#f2a516" stroke-width="2"/><path d="M23 22h18M23 29h18M23 36h12" stroke="#f2a516" stroke-width="2"/><text x="40" y="50" font-size="13" font-weight="700" fill="#5b3fd6">◆●</text></svg>'
+};
+const ALIEN_SM='';
+const JOKE_SVG='<svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" fill="#ffd23f"/><path d="M34 48q8-8 16 0M70 48q8-8 16 0" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M36 66q24 26 48 0z" fill="#7a1f2b"/><path d="M44 70h32" stroke="#fff" stroke-width="5"/><path d="M90 26q8 2 10 10" stroke="#0e8fa8" stroke-width="4" fill="none"/><text x="96" y="112" font-size="20">🥁</text></svg>';
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+let S=null;           // estado persistente
+let EX=null;          // prueba generada (no persistente, se regenera con la semilla)
+let cur=0;
+const LSKEY='prueba_comunicacion_recuperacion_v1';
+
+function save(){try{localStorage.setItem(LSKEY+'_'+S.id,JSON.stringify(S));localStorage.setItem(LSKEY+'_last',S.id)}catch(e){}}
+
+/* =========================================================
+   GENERACIÓN DE LA PRUEBA (determinista por alumno)
+   ========================================================= */
+function generate(seedStr,pc){
+  const sel=(arr,off)=>{const r=Math.floor(rng()*arr.length);return pc?arr[(pc-1+off)%arr.length]:arr[r]};
+  rng=mulberry32(hashStr(seedStr));for(let i=0;i<25;i++)rng();
+  const ex={};
+  // A · escena
+  const sc=sel(SCENES,0);
+  const opts=shuffle([...Object.values(sc.e),...sc.d]);
+  ex.A={id:'A',title:'Detectives de la escena',pts:1.5,scene:sc,order:shuffle(ELS),opts};
+  // B · fallos
+  const types=pick(Object.keys(FALLOS),5);
+  ex.B={id:'B',title:'¿Dónde está el fallo?',pts:1,items:types.map(t=>({t,txt:FALLOS[t][Math.floor(rng()*FALLOS[t].length)]}))};
+  // C · clases
+  let ci=[];Object.keys(CLASES).forEach(k=>pick(CLASES[k],3).forEach(x=>ci.push({k,txt:x})));
+  ex.C={id:'C',title:'Verbal, no verbal… ¿o las dos?',pts:1.2,items:shuffle(ci)};
+  // D · funciones
+  const dIt=FUNCS.map(([k])=>{const t=shuffle(FN_BANK[k]);return{k,txt:t[0],alt:t[1]}});const dEx=pick(dIt,2).map(x=>({k:x.k,txt:x.alt}));
+  ex.D={id:'D',title:'MAPFRE al límite',pts:1.6,items:shuffle([...dIt.map(x=>({k:x.k,txt:x.txt})),...dEx]),fnOpts:shuffle(FUNCS),elOpts:shuffle(EL6)};
+  // E · errores
+  ex.E={id:'E',title:'Los apuntes con errores',pts:1,segs:sel(ERRS,1)};
+  // F · crucigrama
+  ex.F={id:'F',title:'Crucigrama de la comunicación',pts:1.2,cw:makeCross()};
+  // G · chiste
+  const j=sel(JOKES,0);
+  ex.G={id:'G',title:'El chiste malo',pts:0.8,joke:j,qs:j.q.map(([q,o])=>({q,o:shuffle(o.map((t,i)=>({t,ok:i===0})))}))};
+  // H · redacción
+  const msg=sel(CIFRAS,0);const gl=shuffle(GLYPHS),map={};let k=0;
+  const used=[...new Set(msg.replace(/ /g,''))];used.forEach(c=>map[c]=gl[k++]);
+  const dec=shuffle('ABCDEFGHIJLMNOPRSTUVYZ'.split('').filter(c=>!used.includes(c))).slice(0,4);dec.forEach(c=>map[c]=gl[k++]);
+  ex.H={id:'H',title:'El diario de Lucía y el mensaje cifrado',pts:1.7,diario:sel(DIARIOS,2),msg,map,key:shuffle(Object.keys(map))};
+  ex.I={id:'I',title:'Verdadero o falso',pts:1.2,items:pick(INTERRO,8).map(x=>({t:x.t,v:x.v,r:shuffle(x.r.map((t,i)=>({t,ok:i===0})))}))};
+  ex.order=shuffle(['A','B','C','D','E','F','G','H']);
+  return ex;
+}
+
+/* ---------- crucigrama ---------- */
+function makeCross(){
+  for(const N of [10,9,8]){const r=makeCrossN(N);if(r)return r}
+}
+function makeCrossN(N){
+  let best=null;
+  for(let att=0;att<220;att++){
+    const cand=shuffle(CW_POOL).slice(0,17).map(([w,c])=>({w,clue:c[Math.floor(rng()*2)]}));
+    cand.sort((a,b)=>b.w.length-a.w.length);
+    const first=cand.splice(Math.floor(rng()*3),1)[0];
+    const grid=new Map(),placed=[];
+    const put=(o)=>{for(let i=0;i<o.w.length;i++){const r=o.r+(o.d?i:0),c=o.c+(o.d?0:i),k=r+','+c;const g=grid.get(k)||{ch:o.w[i],dirs:[]};g.dirs.push(o.d);grid.set(k,g)}placed.push(o)};
+    put({...first,r:0,c:0,d:0});
+    const can=(w,r,c,d)=>{let inter=0;
+      const b=d?[r-1,c]:[r,c-1],a=d?[r+w.length,c]:[r,c+w.length];
+      if(grid.has(b.join(','))||grid.has(a.join(',')))return false;
+      for(let i=0;i<w.length;i++){const rr=r+(d?i:0),cc=c+(d?0:i),g=grid.get(rr+','+cc);
+        if(g){if(g.ch!==w[i]||g.dirs.includes(d))return false;inter++}
+        else{const n1=d?[rr,cc-1]:[rr-1,cc],n2=d?[rr,cc+1]:[rr+1,cc];if(grid.has(n1.join(','))||grid.has(n2.join(',')))return false}}
+      return inter>0};
+    for(const o of cand){
+      if(placed.length>=N)break;
+      const opts=[];
+      for(const p of placed){for(let i=0;i<p.w.length;i++){const pr=p.r+(p.d?i:0),pc=p.c+(p.d?0:i);
+        for(let j=0;j<o.w.length;j++){if(o.w[j]!==p.w[i])continue;const d=1-p.d;const r=d?pr-j:pr,c=d?pc:pc-j;if(can(o.w,r,c,d))opts.push({r,c,d})}}}
+      if(opts.length){const ch=opts[Math.floor(rng()*opts.length)];put({...o,...ch})}
+    }
+    if(placed.length<N)continue;
+    let mr=1e9,Mr=-1e9,mc=1e9,Mc=-1e9;grid.forEach((v,k)=>{const[r,c]=k.split(',').map(Number);mr=Math.min(mr,r);Mr=Math.max(Mr,r);mc=Math.min(mc,c);Mc=Math.max(Mc,c)});
+    const H=Mr-mr+1,W=Mc-mc+1,area=H*W+Math.abs(H-W)*6;
+    if(H>16||W>18)continue;
+    if(!best||area<best.area)best={area,H,W,placed:placed.map(p=>({...p,r:p.r-mr,c:p.c-mc}))};
+  }
+  if(!best)return null;
+  // numeración
+  const starts={};let n=0;
+  const ps=best.placed.slice().sort((a,b)=>a.r-b.r||a.c-b.c);
+  ps.forEach(p=>{const k=p.r+','+p.c;if(!starts[k])starts[k]=++n;p.n=starts[k]});
+  best.placed=ps;return best;
+}
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+function head(sec,letter){return `<div class="sechead"><div class="ico">${ICO[letter]}</div><div><div class="mini">Actividad ${EX.order.indexOf(letter)+1} de ${EX.order.length}</div><h2>${sec.title}</h2></div><div class="pts">${fmt(sec.pts)} puntos</div></div>`}
+
+function renderA(s){
+  let h=head(s,'A')+`<p class="enun">Lee la escena con atención e identifica los seis elementos de la comunicación. Cuidado: entre las opciones hay algunas que <b>no son ningún elemento</b>.</p>
+  <div class="card scene">${esc(s.scene.t)}</div><div class="grid2">`;
+  s.order.forEach(([k,l])=>{h+=`<div class="selrow"><label>${l}</label><select data-a="A" data-k="${k}"><option value="">— Elige —</option>${s.opts.map((o,i)=>`<option value="${i}">${esc(o)}</option>`).join('')}</select></div>`});
+  return h+'</div>';
+}
+function renderB(s){
+  let h=head(s,'B')+`<p class="enun">En cada situación la comunicación <b>no funciona</b>. Indica qué elemento es el responsable del fallo.</p><div class="card">`;
+  s.items.forEach((it,i)=>{h+=`<div class="item"><div class="num">${i+1}</div><div><p style="margin:0">${esc(it.txt)}</p><div class="chips" data-a="B" data-i="${i}">${ELS.map(([k,l])=>`<button class="chip" data-v="${k}">${l}</button>`).join('')}</div></div></div>`});
+  return h+'</div>';
+}
+function renderC(s){
+  let h=head(s,'C')+`<p class="enun">Clasifica cada ejemplo según la clase de comunicación. Algunos combinan <b>signos lingüísticos y no lingüísticos</b>: piensa bien antes de elegir.</p><div class="card cl-grid">`;
+  s.items.forEach((it,i)=>{h+=`<div class="item"><div class="num">${i+1}</div><div><p style="margin:0">${esc(it.txt)}</p><div class="chips" data-a="C" data-i="${i}">${Object.entries(CL_LAB).map(([k,l])=>`<button class="chip" data-v="${k}">${l}</button>`).join('')}</div></div></div>`});
+  return h+'</div>';
+}
+function renderD(s){
+  let h=head(s,'D')+`<p class="enun">Indica qué función del lenguaje <b>predomina</b> en cada enunciado y con qué <b>elemento de la comunicación</b> se relaciona esa función.</p><div class="card">`;
+  s.items.forEach((it,i)=>{h+=`<div class="item"><div class="num">${i+1}</div><div><p class="quote" style="margin:0">${it.txt.startsWith("«")?esc(it.txt):"«"+esc(it.txt)+"»"}</p><div class="dual">
+    <select data-a="D" data-i="${i}" data-p="f"><option value="">Función que predomina…</option>${s.fnOpts.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select>
+    <select data-a="D" data-i="${i}" data-p="e"><option value="">Elemento con el que se relaciona…</option>${s.elOpts.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div></div></div>`});
+  return h+'</div>';
+}
+function renderE(s){
+  let h=head(s,'E')+`<p class="enun">Un compañero ha tomado estos apuntes sobre la comunicación, pero ha cometido <b>exactamente 4 errores</b>. Pulsa sobre las <b>4 expresiones subrayadas que son incorrectas</b> (puedes volver a pulsar para desmarcar). Cada error bien encontrado suma 0,25 puntos, pero <b>cada acierto marcado como error resta 0,25</b>.</p>
+  <div><div class="notes" id="notes">`;
+  s.segs.forEach(([t,f],i)=>{h+=f?`<span class="seg" data-a="E" data-i="${i}">${esc(t)}</span>`:esc(t)});
+  return h+`</div></div><p>Errores marcados: <span class="counter" id="ecount">0</span> de 4</p>`;
+}
+function renderF(s){
+  const cw=s.cw,cells={};
+  cw.placed.forEach((p,pi)=>{for(let i=0;i<p.w.length;i++){const r=p.r+(p.d?i:0),c=p.c+(p.d?0:i),k=r+','+c;cells[k]=cells[k]||{w:[]};cells[k].w.push(pi);if(i===0)cells[k].n=p.n}});
+  const cs=`min(40px, calc((100vw - 34em) / ${cw.W}), calc((100vh - 17em) / ${cw.H}))`;
+  let g=`<div class="cw" style="--cs:${cs};grid-template-columns:repeat(${cw.W},var(--cs))">`;
+  for(let r=0;r<cw.H;r++)for(let c=0;c<cw.W;c++){const k=r+','+c,x=cells[k];
+    g+=x?`<div class="cell">${x.n?`<span class="n">${x.n}</span>`:''}<input maxlength="1" data-a="F" data-k="${k}" data-w="${x.w.join(' ')}" autocomplete="off" spellcheck="false"></div>`:'<div class="cell x"></div>'}
+  g+='</div>';
+  const ac=cw.placed.filter(p=>!p.d),dn=cw.placed.filter(p=>p.d);
+  const lst=a=>a.map(p=>`<li><b>${p.n}.</b>${esc(p.clue)} <span class="mini">(${p.w.length})</span></li>`).join('');
+  return head(s,'F')+`<p class="enun">Completa el crucigrama con términos del tema. Escribe sin tildes. Cada palabra completa y correcta vale 0,12 puntos. Pulsa dos veces en una casilla para cambiar de dirección.</p>
+  <div class="cw-wrap">${g}<div class="clues"><h3>➡ Horizontales</h3><ol>${lst(ac)}</ol><h3>⬇ Verticales</h3><ol>${lst(dn)}</ol></div></div>`;
+}
+function renderG(s){
+  let h=head(s,'G')+`<p class="enun">Prepárate para reírte (o no). Lee el chiste y contesta a las preguntas: hasta los chistes malos están llenos de comunicación.</p>
+  <div class="joke"><div>${JOKE_SVG}</div><div>${s.joke.l.map(l=>`<p class="line">${esc(l)}</p>`).join('')}<p class="mini" style="text-align:right">Ba dum tss. 🥁</p></div></div><div class="card">`;
+  s.qs.forEach((q,i)=>{h+=`<div class="item"><div class="num">${i+1}</div><div><p style="margin:0"><b>${esc(q.q)}</b></p><div class="opts" data-a="G" data-i="${i}">${q.o.map((o,j)=>`<button class="opt" data-v="${j}">${String.fromCharCode(97+j)}) ${esc(o.t)}</button>`).join('')}</div></div></div>`});
+  return h+'</div>';
+}
+function renderH(s){
+  let h=head(s,'H')+`<div class="rad" style="grid-template-columns:1fr"><div><p><b>📓 EL DIARIO DE LUCÍA</b></p><p>Lucía, una alumna de 1.º ESO, escribe en su diario lo que aprende sobre la comunicación. Completa una página de su diario y descifra el mensaje secreto que ha escrito en clave.</p></div></div>
+  <div class="card"><h3 style="margin-bottom:.4em">1. La página del diario <span class="mini">(1,2 puntos · 0,15 cada hueco)</span></h3>
+  <p>Escribe en cada hueco <b>la palabra del tema</b> que falta (una sola palabra; las tildes no cuentan).</p><div class="diario">`;
+  let g=0;s.diario.forEach(seg=>{if(typeof seg[0]==='string')h+=esc(seg[0]);else{h+=`<input class="gap" data-a="H1" data-i="${g}" autocomplete="off" spellcheck="false">`;g++}});
+  h+=`</div></div><div class="card"><h3 style="margin-bottom:.4em">2. Descifra el mensaje secreto de Lucía <span class="mini">(0,5 puntos)</span></h3>
+  <p>Usa la tabla de correspondencias para descubrir qué dice el mensaje. Escríbelo debajo en letras, con las palabras separadas por espacios. Cada palabra bien descifrada suma puntos. ¡Cuidado: en la tabla hay símbolos que sobran!</p>
+  <div class="ckey">${s.key.map(c=>`<span><b>${s.map[c]}</b>${c}</span>`).join('')}</div>
+  <div class="cmsg">${s.msg.split(' ').map(w=>`<span>${[...w].map(c=>s.map[c]).join('')}</span>`).join('')}</div>
+  <input class="txt" data-a="H2" placeholder="Escribe aquí el mensaje descifrado" autocomplete="off" spellcheck="false" style="font-size:1.15em;text-transform:uppercase"></div>`;
+  return h;
+}
+function renderI(s){
+  let h=head(s,'I')+`<div class="rad"><div>${ALIEN_SM}</div><div><p><b>Verdadero o falso</b></p><p>Los alumnos creen que ya lo saben todo sobre la comunicación de los terrícolas. Decide si cada afirmación suya es <b>verdadera o falsa</b> y elige <b>la razón correcta</b>. Cada afirmación vale 0,15 puntos si aciertas las dos cosas (0,05 si solo aciertas «verdadero» o «falso»).</p></div></div><div class="card">`;
+  s.items.forEach((it,i)=>{h+=`<div class="item"><div class="num">${i+1}</div><div><p class="quote" style="margin:0">«${esc(it.t)}»</p>
+   <div class="chips" data-a="IV" data-i="${i}"><button class="chip" data-v="v">✔ Verdadero</button><button class="chip" data-v="f">✘ Falso</button></div>
+   <p class="mini" style="margin:.5em 0 0">¿Por qué?</p><div class="opts" data-a="IR" data-i="${i}">${it.r.map((o,j)=>`<button class="opt" data-v="${j}">${String.fromCharCode(97+j)}) ${esc(o.t)}</button>`).join('')}</div></div></div>`});
+  return h+'</div>';
+}
+function renderAll(){
+  const R={A:renderA,B:renderB,C:renderC,D:renderD,E:renderE,F:renderF,G:renderG,H:renderH,I:renderI};
+  $('#panes').innerHTML=EX.order.map((k,i)=>`<div class="pane" id="p${i}">${R[k](EX[k])}</div>`).join('');
+  $('#tabs').innerHTML=EX.order.map((k,i)=>`<button class="tab" data-i="${i}"><b>${i+1}</b><span>${EX[k].title}</span></button>`).join('');
+  restore();bind();show(S.cur||0);
+}
+
+/* =========================================================
+   RESPUESTAS
+   ========================================================= */
+function restore(){
+  const a=S.ans;
+  document.querySelectorAll('select[data-a="A"]').forEach(el=>{const v=a.A[el.dataset.k];if(v!==undefined)el.value=v});
+  document.querySelectorAll('select[data-a="D"]').forEach(el=>{const v=(a.D[el.dataset.i]||{})[el.dataset.p];if(v)el.value=v});
+  ['B','C','G','IV','IR'].forEach(L=>document.querySelectorAll(`[data-a="${L}"][data-i]`).forEach(box=>{const v=a[L][box.dataset.i];if(v!==undefined)box.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('sel',b.dataset.v==String(v)))}));
+  document.querySelectorAll('.seg').forEach(el=>el.classList.toggle('mk',a.E.includes(+el.dataset.i)));
+  document.querySelectorAll('input[data-a="F"]').forEach(el=>{el.value=a.F[el.dataset.k]||''});
+  document.querySelectorAll('input[data-a="H1"]').forEach(el=>{el.value=a.H1[el.dataset.i]||''});
+  const ta=document.querySelector('input[data-a="H2"]');if(ta)ta.value=a.H2||'';
+  updE();marks();
+}
+let cwDir=0,cwLast=null;
+function bind(){
+  document.querySelectorAll('select').forEach(el=>el.addEventListener('change',()=>{
+    if(el.dataset.a==='A')S.ans.A[el.dataset.k]=el.value===''?undefined:+el.value;
+    if(el.dataset.a==='D'){S.ans.D[el.dataset.i]=S.ans.D[el.dataset.i]||{};S.ans.D[el.dataset.i][el.dataset.p]=el.value}
+    save();marks()}));
+  document.querySelectorAll('.chips,.opts').forEach(box=>box.addEventListener('click',e=>{
+    const b=e.target.closest('[data-v]');if(!b)return;const L=box.dataset.a;
+    S.ans[L][box.dataset.i]=(L==='G'||L==='IR')?+b.dataset.v:b.dataset.v;
+    box.querySelectorAll('[data-v]').forEach(x=>x.classList.toggle('sel',x===b));save();marks()}));
+  document.querySelectorAll('.seg').forEach(el=>el.addEventListener('click',()=>{
+    const i=+el.dataset.i,ix=S.ans.E.indexOf(i);
+    if(ix>=0)S.ans.E.splice(ix,1);else{if(S.ans.E.length>=4){flashE();return}S.ans.E.push(i)}
+    el.classList.toggle('mk',ix<0);updE();save();marks()}));
+  // crucigrama
+  const cin=[...document.querySelectorAll('input[data-a="F"]')];
+  const byK={};cin.forEach(el=>byK[el.dataset.k]=el);
+  const wordsOf=el=>el.dataset.w.split(' ').map(Number);
+  const pl=EX.F.cw.placed;
+  const hl=el=>{cin.forEach(x=>x.classList.remove('hl'));const ws=wordsOf(el);let wi=ws.find(w=>pl[w].d===cwDir);if(wi===undefined){wi=ws[0];cwDir=pl[wi].d}const p=pl[wi];for(let i=0;i<p.w.length;i++){const k=(p.r+(p.d?i:0))+','+(p.c+(p.d?0:i));byK[k].classList.add('hl')}};
+  const step=(el,dlt)=>{const[r,c]=el.dataset.k.split(',').map(Number);const k=(r+(cwDir?dlt:0))+','+(c+(cwDir?0:dlt));if(byK[k])byK[k].focus()};
+  cin.forEach(el=>{
+    el.addEventListener('focus',()=>{hl(el)});
+    el.addEventListener('mousedown',()=>{if(cwLast===el){const ws=wordsOf(el);if(ws.length>1)cwDir=1-cwDir;setTimeout(()=>hl(el),0)}cwLast=el});
+    el.addEventListener('input',()=>{let v=norm(el.value).toUpperCase().replace(/[^A-ZÑ]/g,'');el.value=v.slice(-1);S.ans.F[el.dataset.k]=el.value;save();marks();if(el.value)step(el,1)});
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&!el.value){e.preventDefault();step(el,-1)}
+      const m={ArrowRight:[0,1],ArrowLeft:[0,-1],ArrowDown:[1,1],ArrowUp:[1,-1]}[e.key];
+      if(m){e.preventDefault();cwDir=m[0];step(el,m[1]);}
+    });
+  });
+  // redacción
+  document.querySelectorAll('input[data-a="H1"]').forEach(el=>el.addEventListener('input',()=>{S.ans.H1[el.dataset.i]=el.value;save();marks()}));
+  const ta=document.querySelector('input[data-a="H2"]');ta.addEventListener('input',()=>{S.ans.H2=ta.value;save();marks()});
+  document.querySelectorAll('input.txt,input.gap,textarea').forEach(el=>{el.addEventListener('paste',e=>{e.preventDefault();incident('Intento de pegar texto',0,true)});el.addEventListener('drop',e=>e.preventDefault())});
+  $('#tabs').onclick=e=>{const t=e.target.closest('.tab');if(t)show(+t.dataset.i)};
+}
+function updE(){const c=$('#ecount');if(c)c.textContent=S.ans.E.length}
+function flashE(){const c=$('#ecount');c.style.color='#e0344b';setTimeout(()=>c.style.color='',600)}
+const words=t=>(t||'').trim().split(/\s+/).filter(Boolean).length;
+function updWC(){const w=$('#wc');if(!w)return;const n=words(S.ans.H2);w.textContent=n+' palabras'+(n<70?' (mínimo 70)':n>110?' (máximo 110)':' ✓');w.classList.toggle('ok',n>=70&&n<=110)}
+
+function pending(){
+  const a=S.ans,p={};
+  p.A=EX.A.order.filter(([k])=>a.A[k]===undefined).length;
+  p.B=EX.B.items.filter((_,i)=>a.B[i]===undefined).length;
+  p.C=EX.C.items.filter((_,i)=>a.C[i]===undefined).length;
+  p.D=EX.D.items.reduce((n,_,i)=>n+(!(a.D[i]||{}).f?1:0)+(!(a.D[i]||{}).e?1:0),0);
+  p.E=4-a.E.length;
+  p.F=EX.F.cw.placed.filter(w=>{for(let i=0;i<w.w.length;i++){const k=(w.r+(w.d?i:0))+','+(w.c+(w.d?0:i));if(!a.F[k])return true}return false}).length;
+  p.G=EX.G.qs.filter((_,i)=>a.G[i]===undefined).length;
+  p.H=Object.keys(gapsOf()).filter(i=>!(a.H1[i]||'').trim()).length+(words(a.H2)<EX.H.msg.split(' ').length?1:0);
+  if(EX.I&&EX.order.includes('I'))p.I=EX.I.items.reduce((n,_,i)=>n+(a.IV[i]===undefined?1:0)+(a.IR[i]===undefined?1:0),0);
+  return p;
+}
+function marks(){const p=pending();document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('done',p[EX.order[i]]===0))}
+function show(i){const L=EX.order.length-1;cur=Math.max(0,Math.min(L,i));S.cur=cur;
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',j===cur));
+  document.querySelectorAll('.tab').forEach((t,j)=>t.classList.toggle('cur',j===cur));
+  $('#prev').disabled=cur===0;$('#next').disabled=cur===L;save()}
+$('#prev').onclick=()=>show(cur-1);$('#next').onclick=()=>show(cur+1);
+
+/* =========================================================
+   CORRECCIÓN
+   ========================================================= */
+function grade(){
+  const a=S.ans,sc={},det=[];
+  // A
+  let s=0;EX.A.order.forEach(([k,l])=>{const v=a.A[k],ans=v===undefined?'—':EX.A.opts[v],ok=v!==undefined&&EX.A.opts[v]===EX.A.scene.e[k];if(ok)s+=.25;det.push(`A·${l}: ${ok?'✔':'✘'} «${ans}»${ok?'':' (correcto: «'+EX.A.scene.e[k]+'»)'}`)});sc.A=r2(s);
+  // B
+  s=0;EX.B.items.forEach((it,i)=>{const v=a.B[i],ok=v===it.t;if(ok)s+=.2;det.push(`B${i+1}: ${ok?'✔':'✘'} ${lab(ELS,v)}${ok?'':' (correcto: '+lab(ELS,it.t)+')'}`)});sc.B=r2(s);
+  // C
+  s=0;EX.C.items.forEach((it,i)=>{const v=a.C[i],ok=v===it.k;if(ok)s+=.1;det.push(`C${i+1} «${it.txt}»: ${ok?'✔':'✘'} ${CL_LAB[v]||'—'}${ok?'':' (correcto: '+CL_LAB[it.k]+')'}`)});sc.C=r2(s);
+  // D
+  s=0;EX.D.items.forEach((it,i)=>{const v=a.D[i]||{},okf=v.f===it.k,oke=v.e===FN_EL[it.k];if(okf)s+=.12;if(oke)s+=.08;det.push(`D${i+1} «${it.txt}»: función ${okf?'✔':'✘'} ${lab(FUNCS,v.f)}${okf?'':' ('+lab(FUNCS,it.k)+')'} · elemento ${oke?'✔':'✘'} ${lab(EL6,v.e)}${oke?'':' ('+lab(EL6,FN_EL[it.k])+')'}`)});sc.D=r2(s);
+  // E
+  let hit=0,miss=0;a.E.forEach(i=>{if(EX.E.segs[i][1]===2)hit++;else miss++});sc.E=r2(Math.max(0,Math.min(1,(hit-miss)*.25)));
+  det.push(`E: ${hit} errores encontrados, ${miss} aciertos marcados por error. Marcó: ${a.E.map(i=>'«'+EX.E.segs[i][0]+'»').join(', ')||'—'}`);
+  // F
+  s=0;EX.F.cw.placed.forEach(w=>{let t='';for(let i=0;i<w.w.length;i++){const k=(w.r+(w.d?i:0))+','+(w.c+(w.d?0:i));t+=a.F[k]||'·'}const ok=t===w.w;if(ok)s+=.12;det.push(`F${w.n}${w.d?'↓':'→'}: ${ok?'✔':'✘'} ${t}${ok?'':' ('+w.w+')'}`)});sc.F=r2(s);
+  // G
+  s=0;EX.G.qs.forEach((q,i)=>{const v=a.G[i],ok=v!==undefined&&q.o[v].ok;if(ok)s+=.2;det.push(`G${i+1}: ${ok?'✔':'✘'} ${v===undefined?'—':q.o[v].t}`)});sc.G=r2(s);
+  // H
+  const gaps=gapsOf();let sh1=0;Object.keys(gaps).forEach(i=>{const v=a.H1[i]||'',ok=gapOk(v,gaps[i]);if(ok)sh1+=.15;det.push(`H·diario hueco ${+i+1}: ${ok?'✔':'✘'} «${v||'—'}»${ok?'':' ('+gaps[i][0]+')'}`)});
+  const mw=EX.H.msg.split(' '),aw=norm(a.H2).toUpperCase().replace(/[^A-ZÑ ]/g,'').split(' ').filter(Boolean);let okw=0;mw.forEach((w,i)=>{if(aw[i]===w)okw++});
+  const sh2=.5*okw/mw.length;det.push(`H·cifrado: ${okw}/${mw.length} palabras. Escribió «${a.H2||'—'}» (correcto: ${EX.H.msg})`);
+  sc.H1=r2(sh1);sc.H2=r2(sh2);sc.H=r2(sh1+sh2);
+  // I (desactivada)
+  if(EX.order.includes('I'))EX.I.items.forEach((it,i)=>{const v=a.IV[i],r=a.IR[i],okv=v===(it.v?'v':'f'),okr=r!==undefined&&it.r[r].ok;if(okv&&okr)s+=.15;else if(okv)s+=.05;
+    det.push(`I${i+1} «${it.t}»: ${okv?'✔':'✘'} ${v==='v'?'Verdadero':v==='f'?'Falso':'—'} · razón ${okr?'✔':'✘'}${okr?'':' (correcta: '+it.r.find(x=>x.ok).t+')'}`)});
+  sc.auto=r2(sc.A+sc.B+sc.C+sc.D+sc.E+sc.F+sc.G+sc.H);
+  return{sc,det};
+}
+function gapsOf(){const o={};let g=0;EX.H.diario.forEach(seg=>{if(typeof seg[0]!=='string'){o[g]=seg[0];g++}});return o}
+function gapOk(v,acc){const n=norm(v).replace(/^(la |el |funcion )+/,'').replace(/[^a-zñ]/g,'');return acc.includes(n)}
+function lab(list,k){const f=list.find(x=>x[0]===k);return f?f[1]:'—'}
+
+/* =========================================================
+   ENVÍO A LA HOJA
+   ========================================================= */
+function send(obj){
+  if(!URL_HOJA)return Promise.resolve(false);
+  return fetch(URL_HOJA,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(obj),keepalive:true}).then(()=>true).catch(()=>false);
+}
+function base(){return{id:S.id,nombre:S.nombre,apellidos:S.apellidos,curso:S.curso,variante:S.variante,inicio:new Date(S.start).toLocaleString('es-ES'),salidas:S.inc.count,fuera:Math.round(S.inc.out/1000),recargas:S.reloads,pegar:S.pastes,log:S.log.join(' | ')}}
+
+/* =========================================================
+   VIGILANCIA
+   ========================================================= */
+let actx=null,outSince=null,running=false;
+function beep(n=3){try{actx=actx||new(window.AudioContext||window.webkitAudioContext)();actx.resume();const t0=actx.currentTime;
+  for(let i=0;i<n;i++){const o=actx.createOscillator(),g=actx.createGain();o.type='square';o.frequency.value=i%2?660:990;g.gain.setValueAtTime(.0001,t0+i*.35);g.gain.exponentialRampToValueAtTime(.6,t0+i*.35+.02);g.gain.exponentialRampToValueAtTime(.0001,t0+i*.35+.3);o.connect(g).connect(actx.destination);o.start(t0+i*.35);o.stop(t0+i*.35+.32)}}catch(e){}}
+const hhmm=()=>new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+function incident(tipo,ms,countIt){
+  if(countIt){if(tipo.startsWith('Intento de pegar'))S.pastes++;else S.inc.count++}
+  S.inc.out+=ms||0;
+  const line=`${hhmm()} ${tipo}${ms?` (${Math.round(ms/1000)} s fuera)`:''}`;S.log.push(line);save();updBadge();
+  send({...base(),tipo:'incidencia',evento:tipo,segundos:Math.round((ms||0)/1000),hora:hhmm()});
+}
+function updBadge(){const b=$('#incb');const n=S.inc.count;b.classList.toggle('on',n>0);b.textContent=`⚠ ${n} salida${n===1?'':'s'}`}
+function goOut(){if(!running||outSince)return;outSince=Date.now();beep(4)}
+function comeBack(reason){
+  if(!running||!outSince)return;const ms=Date.now()-outSince;outSince=null;
+  if(ms<400)return;
+  incident(reason,ms,true);beep(3);
+  $('#warnTxt').textContent=`Salidas registradas: ${S.inc.count}. Tiempo fuera en total: ${Math.round(S.inc.out/1000)} s.`;
+  $('#warn').classList.add('on');
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)goOut();else comeBack('Salida de la pestaña o del navegador')});
+window.addEventListener('blur',()=>goOut());
+window.addEventListener('focus',()=>comeBack('Salida de la ventana (otro programa)'));
+document.addEventListener('fullscreenchange',()=>{if(running&&!document.fullscreenElement){incident('Salida de la pantalla completa',0,true);beep(3);$('#warnTxt').textContent=`Salidas registradas: ${S.inc.count}.`;$('#warn').classList.add('on')}});
+$('#backBtn').onclick=()=>{$('#warn').classList.remove('on');fs()};
+function fs(){const d=document.documentElement;if(!document.fullscreenElement&&d.requestFullscreen)d.requestFullscreen().catch(()=>{})}
+document.addEventListener('keydown',e=>{if(!running)return;const k=e.key.toLowerCase();
+  if(e.key==='F12'||(e.ctrlKey&&e.shiftKey&&['i','j','c'].includes(k))||(e.ctrlKey&&k==='u')){e.preventDefault();incident('Intento de abrir herramientas del navegador',0,true);beep(2)}});
+window.addEventListener('beforeunload',e=>{if(running){e.preventDefault();e.returnValue=''}});
+
+/* =========================================================
+   TEMPORIZADOR
+   ========================================================= */
+let tick=null,warned5=false;
+function startTimer(){
+  const T=()=>{const left=S.start+DURACION_MIN*60000-Date.now();
+    if(left<=0){$('#timer').textContent='00:00';finish(true);return}
+    const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+    $('#timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    $('#timer').classList.toggle('low',left<5*60000);
+    if(left<5*60000&&!warned5){warned5=true;beep(2)}};
+  T();tick=setInterval(T,1000);
+}
+
+/* =========================================================
+   INICIO
+   ========================================================= */
+$('#ac').addEventListener('keydown',e=>{if(e.key==='Enter')$('#startBtn').click()});
+$('#startBtn').onclick=()=>{
+  const n=$('#fn').value.trim(),l=$('#ln').value.trim(),c=$('#cu').value.trim();
+  if(n.length<2||l.length<2||c.length<2){$('#loginErr').textContent='Escribe tu nombre, tus apellidos y tu curso para empezar.';return}
+  if(hashStr(norm($('#ac').value).replace(/\s/g,''))!==ACCESO){$('#loginErr').textContent='El código de acceso no es correcto.';$('#ac').select();return}
+  const pc=0;
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  const seed=norm(n+'|'+l+'|'+c);
+  const id=seed.replace(/[^a-z0-9]+/g,'_');
+  let old=null;try{old=JSON.parse(localStorage.getItem(LSKEY+'_'+id))}catch(e){}
+  if(old){S=old;S.reloads++;S.log.push(`${hhmm()} Vuelve a abrir la prueba (recarga)`);}
+  else S={id,nombre:n,apellidos:l,curso:c,variante:hashStr(seed).toString(36).toUpperCase(),start:Date.now(),cur:0,done:false,inc:{count:0,out:0},reloads:0,pastes:0,log:[],
+    ans:{A:{},B:{},C:{},D:{},E:[],F:{},G:{},H1:{},H2:'',IV:{},IR:{}}};
+  if(S.pc===undefined){S.pc=pc;if(pc)S.variante+='-PC'+pc}
+  S.ans.IV=S.ans.IV||{};S.ans.IR=S.ans.IR||{};
+  if(S.done){showEnd(S.result);return}
+  EX=generate(seed,S.pc);rng=Math.random;
+  save();
+  fs();
+  $('#gate').classList.remove('on');$('#exam').classList.add('on');
+  $('#who').textContent=`${S.nombre} ${S.apellidos} · ${S.curso} · Variante ${S.variante}`;
+  renderAll();show(0);updBadge();running=true;startTimer();
+  send({...base(),tipo:old?'recarga':'inicio'});
+};
+
+/* =========================================================
+   ENTREGA
+   ========================================================= */
+$('#sendBtn').onclick=()=>{
+  const p=pending(),lines=EX.order.map((k,i)=>p[k]?`<li>Actividad ${i+1} (${EX[k].title}): ${p[k]} ${p[k]===1?'respuesta pendiente':'respuestas pendientes'}</li>`:'').join('');
+  const left=Math.max(0,Math.round((S.start+DURACION_MIN*60000-Date.now())/60000));
+  $('#confTxt').innerHTML=(lines?`<p><b>Todavía te falta por contestar:</b></p><ul>${lines}</ul>`:'<p>Has contestado todas las preguntas. 👏</p>')+`<p>Te quedan unos <b>${left} minutos</b>: aprovéchalos para revisar.</p>`;
+  $('#confirm').classList.add('on')};
+$('#confNo').onclick=()=>$('#confirm').classList.remove('on');
+$('#confYes').onclick=()=>{$('#confirm').classList.remove('on');finish(false)};
+
+async function finish(timeout){
+  if(!running)return;running=false;clearInterval(tick);
+  const{sc,det}=grade();
+  const fin=Date.now();
+  const payload={...base(),tipo:'entrega',estado:timeout?'Entregada en recuperación (tiempo agotado)':'Entregada en recuperación',fin:new Date(fin).toLocaleString('es-ES'),
+    duracion:r2((fin-S.start)/60000),A:sc.A,B:sc.B,C:sc.C,D:sc.D,E:sc.E,F:sc.F,G:sc.G,H1:sc.H1,H2:sc.H2,auto:sc.auto,nota40:r2(sc.auto*0.04),detalle:det.join('\n')};
+  S.done=true;S.result=payload;S.det=det;save();
+  const ok=await send(payload);
+  S.result.enviado=ok;save();
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  showEnd(S.result);
+}
+function showEnd(r){
+  $('#gate').classList.remove('on');$('#exam').classList.remove('on');$('#end').classList.add('on');
+  $('#endWho').innerHTML=`<b>${esc(r.nombre)} ${esc(r.apellidos)}</b> · ${esc(r.curso)} · Variante ${esc(r.variante)}`;
+  const st=$('#endStatus');
+  if(r.enviado){st.className='status ok';st.textContent='✔ Tus respuestas se han enviado a tu profesor.'}
+  else{st.className='status ko';st.textContent='⚠ No se han podido enviar. Avisa a tu profesor antes de cerrar esta ventana.'}
+  $('#endInfo').innerHTML=`${r.estado.replace(' en recuperación','')}. Tu nota: <b>${fmt(r.auto)} sobre 10</b>.`;
+}
+$('#revBtn').onclick=()=>{
+  const det=(S.det||(S.result.detalle||'').split('\n'));$('#rev').innerHTML='<ul style="padding-left:1.2em;margin:0">'+det.map(l=>`<li style="text-align:left;margin:.25em 0;color:${l.includes('✘')?'#e0344b':'#0b6b52'}">${esc(l)}</li>`).join('')+'</ul>';$('#rev').style.display='block';$('#revBtn').style.display='none';$('#exitBtn').style.display='inline-block'};
+$('#exitBtn').onclick=()=>{$('#rev').innerHTML='';$('#rev').style.display='none';$('#exitBtn').style.display='none';$('#revBtn').style.display='inline-block';
+  ['#fn','#ln','#cu','#ac'].forEach(x=>$(x).value='');$('#loginErr').textContent='';S=null;EX=null;
+  $('#end').classList.remove('on');$('#gate').classList.add('on')};
+$('#dlBtn').onclick=()=>{
+  const r=S.result;const cols=['nombre','apellidos','curso','variante','estado','inicio','fin','duracion','salidas','fuera','recargas','pegar','A','B','C','D','E','F','G','H1','H2','auto','nota40','detalle','log'];
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const csv='\ufeff'+cols.join(';')+'\n'+cols.map(c=>q(r[c])).join(';');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='prueba_comunicacion_'+S.id+'.csv';a.click();
+};
+
+</script>
+</body>
+</html>
