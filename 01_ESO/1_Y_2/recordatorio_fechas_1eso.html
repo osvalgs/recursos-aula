@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recordatorio fechas 1º ESO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DATOS: lo único que hay que tocar para actualizar el recordatorio.
+   Están más abajo, en el bloque <script> (const EVALUACIONES).
+   ============================================================ */
+:root{
+  --papel:#fbfbf8; --linea:#cfd8e3; --margen:#f3a1a1;
+  --azul:#1a2fd6; --rojo:#e3141b; --verde:#0a9b55; --tinta:#1b1b1b;
+  --fondo:#e9eef3; --sombra:#3b3f45;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--fondo)}
+body{
+  font-family:'Patrick Hand',cursive; color:var(--tinta);
+  min-height:100vh; padding:28px 16px 40px;
+  background:
+    radial-gradient(circle at 20% 10%, #f6f9fc 0, transparent 40%),
+    radial-gradient(circle at 80% 90%, #dfe7ef 0, transparent 45%),
+    var(--fondo);
+}
+.libreta{position:relative;width:100%;max-width:900px;margin:0 auto}
+.libreta::after{ /* sombra de la libreta */
+  content:"";position:absolute;inset:18px -10px -14px 10px;
+  background:var(--sombra);border-radius:22px;z-index:0;
+}
+.hoja{
+  position:relative;z-index:1;background:var(--papel);
+  border-radius:4px 4px 26px 26px;
+  padding:64px 6% 44px 12%;
+  background-image:
+    linear-gradient(90deg, transparent calc(8% - 1px), var(--margen) calc(8% - 1px), var(--margen) calc(8% + 1px), transparent calc(8% + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 41px, var(--linea) 41px 42px);
+  background-position:0 0, 0 22px;
+  box-shadow:0 2px 0 #d6d6d0, 0 10px 24px rgba(0,0,0,.12);
+}
+/* anillas */
+.anillas{position:absolute;top:-16px;left:0;right:0;display:flex;justify-content:space-around;padding:0 7%;z-index:3}
+.anilla{width:22px;height:46px;position:relative}
+.anilla::before{content:"";position:absolute;left:3px;top:24px;width:16px;height:16px;border-radius:50%;background:#555;box-shadow:inset 0 2px 3px #000}
+.anilla::after{content:"";position:absolute;left:8px;top:0;width:7px;height:34px;border:3px solid #9aa0a6;border-radius:8px;border-bottom:none;transform:rotate(14deg);background:transparent}
+/* cinta adhesiva */
+.cinta{position:absolute;left:-14px;top:300px;width:64px;height:230px;z-index:4;
+  background:repeating-linear-gradient(0deg, rgba(244,120,120,.72) 0 10px, rgba(250,140,140,.72) 10px 20px);
+  clip-path:polygon(0 3%,10% 0,20% 3%,30% 0,40% 3%,50% 0,60% 3%,70% 0,80% 3%,90% 0,100% 3%,100% 97%,90% 100%,80% 97%,70% 100%,60% 97%,50% 100%,40% 97%,30% 100%,20% 97%,10% 100%,0 97%);
+  transform:rotate(-2deg);
+}
+h1{
+  font-family:'Gochi Hand',cursive;font-weight:400;text-align:center;
+  font-size:clamp(34px,8vw,78px);line-height:1;letter-spacing:1px;margin-bottom:6px;
+}
+.curso{text-align:center;font-family:'Caveat',cursive;font-size:clamp(22px,3.2vw,30px);color:#555;margin-bottom:14px}
+/* pestañas de evaluación */
+.pestanas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
+.pestanas button{
+  font-family:'Gochi Hand',cursive;font-size:22px;cursor:pointer;
+  background:#fff;border:2px dashed #9aa6b2;color:#555;padding:4px 16px;border-radius:12px;
+  transform:rotate(-1deg);transition:transform .15s;
+}
+.pestanas button:nth-child(2){transform:rotate(1deg)}
+.pestanas button[aria-selected="true"]{background:#fff6b8;border:2px solid var(--azul);color:var(--azul)}
+.pestanas button:hover{transform:rotate(0) scale(1.05)}
+/* pósit con la próxima cita */
+.proxima{
+  background:#fff6b8;border-radius:3px;padding:12px 18px 14px;margin:0 0 26px;
+  box-shadow:3px 4px 0 rgba(0,0,0,.08);transform:rotate(-.6deg);
+  font-family:'Caveat',cursive;font-size:clamp(22px,3vw,28px);line-height:1.15;text-align:justify;
+}
+.proxima b{font-family:'Gochi Hand',cursive;font-weight:400;color:var(--azul)}
+.proxima .cuenta{color:var(--rojo);font-weight:700}
+/* bloques */
+.bloque{margin-bottom:22px}
+.tit{
+  font-family:'Gochi Hand',cursive;color:var(--azul);font-weight:400;
+  font-size:clamp(28px,4.6vw,44px);line-height:1.05;
+}
+.ptos{display:inline-block;font-size:.42em;letter-spacing:.5px;vertical-align:middle;white-space:nowrap}
+.sub{font-family:'Gochi Hand',cursive;color:var(--azul);font-size:clamp(20px,3vw,30px);line-height:1.15;font-style:italic}
+.nota{font-family:'Caveat',cursive;color:var(--rojo);font-size:clamp(20px,2.8vw,27px);line-height:1.2;text-align:justify;margin:4px 0}
+.fecha{font-family:'Caveat',cursive;color:var(--rojo);font-weight:700;font-size:clamp(26px,4vw,40px);line-height:1.1;padding-left:4%}
+.fecha.centro{padding-left:0;text-align:center}
+.plazo{font-family:'Caveat',cursive;color:var(--rojo);font-size:clamp(22px,3vw,30px);text-align:center}
+.plazo span{font-weight:700}
+.prueba{margin:8px 0 0 2%}
+.prueba .tit{color:var(--verde)}
+/* tachado de lo ya hecho */
+.hecho{position:relative;opacity:.8}
+.hecho .tit,.hecho .fecha,.hecho .sub,.hecho .nota,.hecho .plazo{
+  text-decoration:line-through;text-decoration-color:var(--rojo);text-decoration-thickness:4px;
+}
+.sello{
+  display:inline-block;margin-left:10px;font-family:'Gochi Hand',cursive;font-size:18px;
+  color:var(--verde);border:2px solid var(--verde);border-radius:8px;padding:0 8px;
+  transform:rotate(-6deg);vertical-align:middle;text-decoration:none;
+}
+/* próxima cita destacada */
+.siguiente{background:rgba(255,236,110,.38);border-radius:10px;padding:4px 10px 6px;margin-left:-10px;outline:2px dashed rgba(227,20,27,.45);outline-offset:2px}
+.flecha{display:inline-block;font-family:'Gochi Hand',cursive;color:var(--rojo);font-size:20px;margin-left:8px;white-space:nowrap}
+.vacio{font-family:'Caveat',cursive;font-size:30px;color:#777;text-align:center;padding:40px 0}
+.pie{text-align:center;font-family:'Caveat',cursive;color:#888;font-size:18px;margin-top:20px}
+@media (max-width:600px){
+  .hoja{padding:56px 6% 34px 13%}
+  .cinta{width:40px;top:260px;height:170px;left:-8px}
+  .anilla{transform:scale(.8)}
+}
+</style>
+</head>
+<body>
+<div class="libreta">
+  <div class="anillas" id="anillas"></div>
+  <div class="cinta" aria-hidden="true"></div>
+  <main class="hoja">
+    <h1 id="titulo">1ª EVALUACIÓN</h1>
+    <p class="curso">Lengua Castellana y Literatura · 1º ESO</p>
+    <nav class="pestanas" id="pestanas" role="tablist"></nav>
+    <div id="proxima"></div>
+    <div id="contenido"></div>
+    <p class="pie" id="pie"></p>
+  </main>
+</div>
+
+<script>
+/* =====================================================================
+   DATOS DEL RECORDATORIO
+   - fecha: AAAA-MM-DD (sirve para la cuenta atrás y la "próxima cita")
+   - hecho: true  -> aparece tachado con el sello "¡Hecha!"
+   - actual: la evaluación que se abre por defecto
+   ===================================================================== */
+const EVALUACIONES = [
+  {
+    nombre: "1ª EVALUACIÓN",
+    actual: true,
+    bloques: [
+      { titulo: "FECHA PRUEBA LECTURA", ptos: "0,50 ptos.",
+        sub: "Por qué tiene que ser todo tan difícil",
+        texto_fecha: "Viernes 6 de noviembre", fecha: "2026-11-06", centrada: true, hecho: false },
+
+      { titulo: "FECHA 2ª PRUEBA LECTURA", ptos: "0,50 ptos.",
+        sub: "Libre elección",
+        nota: "Me enviáis un mensaje por el aula virtual con el título del libro del que queréis hacer la prueba y os envío kahoot o quizizz (también podéis hacer exposición oral).",
+        plazo: "hasta el viernes 13 de noviembre", fecha: "2026-11-13", hecho: false },
+
+      { titulo: "FECHAS PRUEBAS EVALUACIÓN",
+        pruebas: [
+          { titulo: "PRUEBA 1: Reto lenguas", ptos: "0,25 ptos.", texto_fecha: "Viernes 2 de octubre",  fecha: "2026-10-02", hecho: true },
+          { titulo: "PRUEBA 2",               ptos: "0,25 ptos.", texto_fecha: "Viernes 23 de octubre", fecha: "2026-10-23", hecho: true },
+          { titulo: "PRUEBA 3",               ptos: "0,25 ptos.", texto_fecha: "Viernes 27 de noviembre", fecha: "2026-11-27", hecho: false }
+        ] },
+
+      { titulo: "FECHA PRIMER EXAMEN",  ptos: "4 ptos.", texto_fecha: "Viernes 30 de octubre", fecha: "2026-10-30", hecho: false },
+      { titulo: "FECHA SEGUNDO EXAMEN", ptos: "4 ptos.", texto_fecha: "Viernes 4 de diciembre", fecha: "2026-12-04", hecho: false }
+    ]
+  },
+  { nombre: "2ª EVALUACIÓN", bloques: [] },
+  { nombre: "3ª EVALUACIÓN", bloques: [] }
+];
+const ACTUALIZADO = "25 de octubre de 2026";
+/* ===================================================================== */
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.getElementById('anillas').innerHTML = '<span class="anilla"></span>'.repeat(9);
+
+function hoy(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+function dias(f){ return Math.round((new Date(f + "T00:00:00") - hoy()) / 86400000); }
+function cuenta(n){ return n === 0 ? "¡es hoy!" : n === 1 ? "¡es mañana!" : n > 1 ? `faltan ${n} días` : ""; }
+
+/* todas las citas pendientes de una evaluación, en orden de fecha */
+function pendientes(ev){
+  const l = [];
+  ev.bloques.forEach(b => {
+    if (b.pruebas) b.pruebas.forEach(p => l.push({ ...p, nombre: p.titulo }));
+    else l.push({ ...b, nombre: b.titulo.replace(/^FECHA\s+/i, "") });
+  });
+  return l.filter(x => !x.hecho && x.fecha && dias(x.fecha) >= 0)
+          .sort((a, b) => a.fecha.localeCompare(b.fecha));
+}
+
+function linea(item, prox){
+  const marca = item.hecho ? '<span class="sello">¡Hecha!</span>'
+              : (prox && item === prox.ref ? `<span class="flecha">⟵ ${cuenta(dias(item.fecha))}</span>` : "");
+  return marca;
+}
+
+function pinta(i){
+  const ev = EVALUACIONES[i];
+  $('#titulo').textContent = ev.nombre;
+  document.querySelectorAll('#pestanas button').forEach((b, k) => b.setAttribute('aria-selected', k === i));
+  const pend = pendientes(ev);
+  const prox = pend[0] ? { ref: findRef(ev, pend[0]) } : null;
+
+  $('#proxima').innerHTML = prox ? `<div class="proxima">📌 Próxima cita: <b>${esc(pend[0].nombre.replace(/:.*/, ""))}</b> — ${esc(pend[0].texto_fecha || pend[0].plazo)} · <span class="cuenta">${cuenta(dias(pend[0].fecha))}</span></div>` : "";
+
+  if (!ev.bloques.length){ $('#contenido').innerHTML = '<p class="vacio">Aún no hay fechas para esta evaluación ✏️</p>'; return; }
+
+  $('#contenido').innerHTML = ev.bloques.map(b => {
+    const ptos = b.ptos ? ` <span class="ptos">(${esc(b.ptos)})</span>` : "";
+    if (b.pruebas){
+      return `<section class="bloque"><h2 class="tit">${esc(b.titulo)}</h2>` +
+        b.pruebas.map(p => `<div class="prueba ${p.hecho ? 'hecho' : ''} ${prox && p === prox.ref ? 'siguiente' : ''}">
+            <h3 class="tit">– ${esc(p.titulo)} <span class="ptos">(${esc(p.ptos)})</span>${linea(p, prox)}</h3>
+            <p class="fecha">${esc(p.texto_fecha)}</p></div>`).join("") + `</section>`;
+    }
+    return `<section class="bloque ${b.hecho ? 'hecho' : ''} ${prox && b === prox.ref ? 'siguiente' : ''}">
+      <h2 class="tit">${esc(b.titulo)}${ptos}${linea(b, prox)}</h2>
+      ${b.sub ? `<p class="sub">${esc(b.sub)}</p>` : ""}
+      ${b.nota ? `<p class="nota">${esc(b.nota)}</p>` : ""}
+      ${b.plazo ? `<p class="plazo">PLAZO: <span>${esc(b.plazo)}</span></p>` : ""}
+      ${b.texto_fecha ? `<p class="fecha ${b.centrada ? 'centro' : ''}">${esc(b.texto_fecha)}</p>` : ""}
+    </section>`;
+  }).join("");
+}
+function findRef(ev, p){
+  for (const b of ev.bloques){
+    if (b.pruebas){ const r = b.pruebas.find(x => x.fecha === p.fecha && x.titulo === p.titulo); if (r) return r; }
+    else if (b.fecha === p.fecha && b.titulo === p.titulo) return b;
+  }
+}
+
+$('#pestanas').innerHTML = EVALUACIONES.map((e, k) => `<button role="tab" data-i="${k}">${esc(e.nombre.replace(" EVALUACIÓN", " Ev."))}</button>`).join("");
+$('#pestanas').addEventListener('click', e => { const b = e.target.closest('button'); if (b) pinta(+b.dataset.i); });
+$('#pie').textContent = "Actualizado el " + ACTUALIZADO;
+pinta(Math.max(0, EVALUACIONES.findIndex(e => e.actual)));
+</script>
+</body>
+</html>
