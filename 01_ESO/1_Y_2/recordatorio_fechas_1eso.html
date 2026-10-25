@@ -6,7 +6,7 @@
 <title>Recordatorio fechas 1º ESO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    DATOS: lo único que hay que tocar para actualizar el recordatorio.
@@ -20,7 +20,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--fondo)}
 body{
-  font-family:'Patrick Hand',cursive; color:var(--tinta);
+  font-family:'Atkinson Hyperlegible',system-ui,sans-serif; color:var(--tinta);
   min-height:100vh; padding:28px 16px 40px;
   background:
     radial-gradient(circle at 20% 10%, #f6f9fc 0, transparent 40%),
@@ -42,11 +42,9 @@ body{
   background-position:0 0, 0 22px;
   box-shadow:0 2px 0 #d6d6d0, 0 10px 24px rgba(0,0,0,.12);
 }
-/* anillas */
-.anillas{position:absolute;top:-16px;left:0;right:0;display:flex;justify-content:space-around;padding:0 7%;z-index:3}
-.anilla{width:22px;height:46px;position:relative}
-.anilla::before{content:"";position:absolute;left:3px;top:24px;width:16px;height:16px;border-radius:50%;background:#555;box-shadow:inset 0 2px 3px #000}
-.anilla::after{content:"";position:absolute;left:8px;top:0;width:7px;height:34px;border:3px solid #9aa0a6;border-radius:8px;border-bottom:none;transform:rotate(14deg);background:transparent}
+/* anillas (espiral metálica) */
+.anillas{position:absolute;top:-30px;left:0;right:0;display:flex;justify-content:space-between;padding:0 5%;z-index:3;pointer-events:none}
+.anilla{width:34px;height:64px;display:block;filter:drop-shadow(1px 2px 1.5px rgba(0,0,0,.35))}
 /* cinta adhesiva */
 .cinta{position:absolute;left:-14px;top:300px;width:64px;height:230px;z-index:4;
   background:repeating-linear-gradient(0deg, rgba(244,120,120,.72) 0 10px, rgba(250,140,140,.72) 10px 20px);
@@ -54,14 +52,14 @@ body{
   transform:rotate(-2deg);
 }
 h1{
-  font-family:'Gochi Hand',cursive;font-weight:400;text-align:center;
+  font-family:'Fredoka',system-ui,sans-serif;font-weight:700;text-align:center;
   font-size:clamp(34px,8vw,78px);line-height:1;letter-spacing:1px;margin-bottom:6px;
 }
-.curso{text-align:center;font-family:'Caveat',cursive;font-size:clamp(22px,3.2vw,30px);color:#555;margin-bottom:14px}
+.curso{text-align:center;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:clamp(16px,2.3vw,21px);color:#555;margin-bottom:16px}
 /* pestañas de evaluación */
 .pestanas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 18px}
 .pestanas button{
-  font-family:'Gochi Hand',cursive;font-size:22px;cursor:pointer;
+  font-family:'Fredoka',system-ui,sans-serif;font-size:19px;font-weight:600;cursor:pointer;
   background:#fff;border:2px dashed #9aa6b2;color:#555;padding:4px 16px;border-radius:12px;
   transform:rotate(-1deg);transition:transform .15s;
 }
@@ -72,22 +70,22 @@ h1{
 .proxima{
   background:#fff6b8;border-radius:3px;padding:12px 18px 14px;margin:0 0 26px;
   box-shadow:3px 4px 0 rgba(0,0,0,.08);transform:rotate(-.6deg);
-  font-family:'Caveat',cursive;font-size:clamp(22px,3vw,28px);line-height:1.15;text-align:justify;
+  font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:clamp(18px,2.5vw,23px);line-height:1.35;text-align:justify;
 }
-.proxima b{font-family:'Gochi Hand',cursive;font-weight:400;color:var(--azul)}
-.proxima .cuenta{color:var(--rojo);font-weight:700}
+.proxima b{font-family:'Fredoka',system-ui,sans-serif;font-weight:600;color:var(--azul)}
+.proxima .cuenta{color:var(--rojo);font-weight:700;white-space:nowrap}
 /* bloques */
 .bloque{margin-bottom:22px}
 .tit{
-  font-family:'Gochi Hand',cursive;color:var(--azul);font-weight:400;
-  font-size:clamp(28px,4.6vw,44px);line-height:1.05;
+  font-family:'Fredoka',system-ui,sans-serif;color:var(--azul);font-weight:600;
+  font-size:clamp(26px,4.2vw,40px);line-height:1.1;
 }
 .ptos{display:inline-block;font-size:.42em;letter-spacing:.5px;vertical-align:middle;white-space:nowrap}
-.sub{font-family:'Gochi Hand',cursive;color:var(--azul);font-size:clamp(20px,3vw,30px);line-height:1.15;font-style:italic}
-.nota{font-family:'Caveat',cursive;color:var(--rojo);font-size:clamp(20px,2.8vw,27px);line-height:1.2;text-align:justify;margin:4px 0}
-.fecha{font-family:'Caveat',cursive;color:var(--rojo);font-weight:700;font-size:clamp(26px,4vw,40px);line-height:1.1;padding-left:4%}
+.sub{font-family:'Fredoka',system-ui,sans-serif;font-weight:500;color:#3346d8;font-size:clamp(19px,2.7vw,26px);line-height:1.15}
+.nota{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-size:clamp(17px,2.3vw,21px);line-height:1.45;text-align:justify;margin:4px 0}
+.fecha{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-weight:700;font-size:clamp(22px,3.3vw,32px);line-height:1.25;padding-left:4%}
 .fecha.centro{padding-left:0;text-align:center}
-.plazo{font-family:'Caveat',cursive;color:var(--rojo);font-size:clamp(22px,3vw,30px);text-align:center}
+.plazo{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-size:clamp(18px,2.6vw,24px);text-align:center}
 .plazo span{font-weight:700}
 .prueba{margin:8px 0 0 2%}
 .prueba .tit{color:var(--verde)}
@@ -97,19 +95,20 @@ h1{
   text-decoration:line-through;text-decoration-color:var(--rojo);text-decoration-thickness:4px;
 }
 .sello{
-  display:inline-block;margin-left:10px;font-family:'Gochi Hand',cursive;font-size:18px;
+  display:inline-block;margin-left:10px;font-family:'Fredoka',system-ui,sans-serif;font-size:15px;font-weight:600;
   color:var(--verde);border:2px solid var(--verde);border-radius:8px;padding:0 8px;
   transform:rotate(-6deg);vertical-align:middle;text-decoration:none;
 }
 /* próxima cita destacada */
 .siguiente{background:rgba(255,236,110,.38);border-radius:10px;padding:4px 10px 6px;margin-left:-10px;outline:2px dashed rgba(227,20,27,.45);outline-offset:2px}
-.flecha{display:inline-block;font-family:'Gochi Hand',cursive;color:var(--rojo);font-size:20px;margin-left:8px;white-space:nowrap}
-.vacio{font-family:'Caveat',cursive;font-size:30px;color:#777;text-align:center;padding:40px 0}
-.pie{text-align:center;font-family:'Caveat',cursive;color:#888;font-size:18px;margin-top:20px}
+.flecha{display:inline-block;font-family:'Fredoka',system-ui,sans-serif;color:var(--rojo);font-size:17px;font-weight:600;margin-left:8px;white-space:nowrap}
+.vacio{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-size:22px;color:#777;text-align:center;padding:40px 0}
+.pie{text-align:center;font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:#888;font-size:14px;margin-top:20px}
 @media (max-width:600px){
   .hoja{padding:56px 6% 34px 13%}
   .cinta{width:40px;top:260px;height:170px;left:-8px}
-  .anilla{transform:scale(.8)}
+  .anillas{top:-24px}
+  .anilla{width:26px;height:50px}
 }
 </style>
 </head>
@@ -167,7 +166,9 @@ const ACTUALIZADO = "25 de octubre de 2026";
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-document.getElementById('anillas').innerHTML = '<span class="anilla"></span>'.repeat(9);
+const ANILLA = '<svg class="anilla" viewBox="0 0 34 64" aria-hidden="true"><defs><linearGradient id="met" x1="0" x2="1"><stop offset="0" stop-color="#5f666e"/><stop offset=".35" stop-color="#e9edf0"/><stop offset=".6" stop-color="#9aa2aa"/><stop offset="1" stop-color="#4a5057"/></linearGradient><radialGradient id="agu" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#1b1e22"/><stop offset="1" stop-color="#4b5058"/></radialGradient></defs><ellipse cx="17" cy="50" rx="7.5" ry="6.5" fill="url(#agu)"/><path d="M11 50 C 4 36, 5 10, 17 7 C 29 4, 31 26, 23 46" fill="none" stroke="url(#met)" stroke-width="5.5" stroke-linecap="round"/><path d="M12 44 C 8 32, 9 14, 16 11" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.4" stroke-linecap="round"/></svg>';
+function ponAnillas(){ const w = document.querySelector('.libreta').offsetWidth; const n = Math.max(6, Math.min(16, Math.round(w / 62))); document.getElementById('anillas').innerHTML = ANILLA.repeat(n); }
+ponAnillas(); addEventListener('resize', ponAnillas);
 
 function hoy(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
 function dias(f){ return Math.round((new Date(f + "T00:00:00") - hoy()) / 86400000); }
