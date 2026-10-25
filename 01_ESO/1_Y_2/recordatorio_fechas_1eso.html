@@ -6,7 +6,7 @@
 <title>Recordatorio fechas 1º ESO</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,700&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
    DATOS: lo único que hay que tocar para actualizar el recordatorio.
@@ -83,6 +83,7 @@ h1{
 .ptos{display:inline-block;font-size:.42em;letter-spacing:.5px;vertical-align:middle;white-space:nowrap}
 .sub{font-family:'Fredoka',system-ui,sans-serif;font-weight:500;color:#3346d8;font-size:clamp(19px,2.7vw,26px);line-height:1.15}
 .nota{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-size:clamp(17px,2.3vw,21px);line-height:1.45;text-align:justify;margin:4px 0}
+.sub.obra{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;font-style:italic;font-weight:700}
 .fecha{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-weight:700;font-size:clamp(22px,3.3vw,32px);line-height:1.25;padding-left:4%}
 .fecha.centro{padding-left:0;text-align:center}
 .plazo{font-family:'Atkinson Hyperlegible',system-ui,sans-serif;color:var(--rojo);font-size:clamp(18px,2.6vw,24px);text-align:center}
@@ -139,7 +140,7 @@ const EVALUACIONES = [
     actual: true,
     bloques: [
       { titulo: "FECHA PRUEBA LECTURA", ptos: "0,50 ptos.",
-        sub: "Por qué tiene que ser todo tan difícil",
+        sub: "Por qué tiene que ser todo tan difícil", obra: true,
         texto_fecha: "Viernes 6 de noviembre", fecha: "2026-11-06", centrada: true, hecho: false },
 
       { titulo: "FECHA 2ª PRUEBA LECTURA", ptos: "0,50 ptos.",
@@ -212,7 +213,7 @@ function pinta(i){
     }
     return `<section class="bloque ${b.hecho ? 'hecho' : ''} ${prox && b === prox.ref ? 'siguiente' : ''}">
       <h2 class="tit">${esc(b.titulo)}${ptos}${linea(b, prox)}</h2>
-      ${b.sub ? `<p class="sub">${esc(b.sub)}</p>` : ""}
+      ${b.sub ? `<p class="sub${b.obra ? ' obra' : ''}">${esc(b.sub)}</p>` : ""}
       ${b.nota ? `<p class="nota">${esc(b.nota)}</p>` : ""}
       ${b.plazo ? `<p class="plazo">PLAZO: <span>${esc(b.plazo)}</span></p>` : ""}
       ${b.texto_fecha ? `<p class="fecha ${b.centrada ? 'centro' : ''}">${esc(b.texto_fecha)}</p>` : ""}
