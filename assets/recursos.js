@@ -10,7 +10,7 @@ const ALUM=/[?&]alumnado\b/.test(location.search);
 const CATS={
  '01. ESO':{name:'1.º ESO',icon:'🎒',col:'--c1',desc:'Presentaciones y actividades de Lengua Castellana y Literatura para 1.º de ESO.',
    layout:{apartados:[
-    {titulo:'Presentaciones',icon:'🎞️',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html']},
+    {titulo:'Presentaciones',icon:'🎞️',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_mundo.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_lenguas_espana.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_comunicacion.html','01_ESO/1_Y_2/PRESENTACIONES/presentacion_propiedades_textuales_cca.html']},
     {titulo:'Tareas',icon:'✏️',archivos:['01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html','01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html']},
     {titulo:'Ortografía y vocabulario',icon:'🔤',archivos:['01_ESO/1_Y_2/PRESENTACIONES/vocabulario_1.html','01_ESO/1_Y_2/PRESENTACIONES/vocabulario_2.html']},
     {titulo:'Apuntes exámenes',icon:'📒',archivos:['01_ESO/1_Y_2/APUNTES_EXAMENES/apuntes_repaso_primer_examen.html']},
