@@ -255,7 +255,7 @@ window.RECURSOS=[
     ]
    },
    {
-    "n": "TAREAS",
+    "n": "MODELOS EXÁMENES",
     "c": [
      {
       "t": "Modelo primer parcial 1.ª evaluación (lengua y xeografía)",
