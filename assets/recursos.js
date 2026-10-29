@@ -14,6 +14,7 @@ const CATS={
     {titulo:'Tareas',icon:'✏️',archivos:['01_ESO/1_Y_2/TAREAS/practica_comunicacion_1eso.html','01_ESO/1_Y_2/TAREAS/reto_comunicacion_1eso.html','01_ESO/1_Y_2/TAREAS/taller_resumen_earhart.html']},
     {titulo:'Ortografía y vocabulario',icon:'🔤',archivos:['01_ESO/1_Y_2/PRESENTACIONES/vocabulario_1.html','01_ESO/1_Y_2/PRESENTACIONES/vocabulario_2.html']},
     {titulo:'Apuntes exámenes',icon:'📒',archivos:['01_ESO/1_Y_2/APUNTES_EXAMENES/apuntes_repaso_primer_examen.html']},
+    {titulo:'Modelos resueltos exámenes',icon:'📝',archivos:['01_ESO/1_Y_2/MODELOS_EXAMENES/modelo_examen_primer_parcial_1a_evaluacion_1eso.html']},
     {titulo:'Obras de lectura',icon:'📚',archivos:['01_ESO/1_Y_2/PRESENTACIONES/presentacion_nando_lopez_libro.html']}],
     quitar:['1º','Presentaciones','Tareas']}},
  '02. BACH':{name:'Bachillerato',icon:'🎓',col:'--c2',desc:'Unidades didácticas, actividades y presentaciones de Lengua y Literatura para Bachillerato.'},
